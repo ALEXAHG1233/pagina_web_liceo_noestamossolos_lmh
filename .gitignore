@@ -1,0 +1,22 @@
+# Entorno virtual de Python
+venv/
+__pycache__/
+*.pyc
+
+# Base de datos local: NUNCA se sube — contiene conversaciones y datos
+# sensibles de estudiantes. En producción, Render empieza con una base
+# de datos vacía y nueva.
+*.db
+
+# Fotos subidas por estudiantes en las reseñas, y videos propios — contenido
+# del administrador del sitio, no del código fuente.
+static/uploads/
+static/videos/*
+!static/videos/.gitkeep
+
+# Archivos de entorno / secretos locales
+.env
+
+# Configuración local de la herramienta de desarrollo (Claude Code), no es
+# parte del sitio
+.claude/

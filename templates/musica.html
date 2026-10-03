@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Música — Tu Espacio Seguro</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 64 64%22><path fill=%22%231f4d2c%22 d=%22M32 56s-20-12.6-27-24.4C-.2 21.6 4.6 10 15.4 8.4c6-.9 11.6 2 16.6 7.6 5-5.6 10.6-8.5 16.6-7.6C59.4 10 64.2 21.6 59 31.6 52 43.4 32 56 32 56Z%22/></svg>">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/diario.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/musica.css') }}">
+</head>
+<body class="diario-body">
+
+  <header class="diario-header">
+    <a href="{{ url_for('index') }}" class="volver">← Volver</a>
+    <h1>Música para acompañarte</h1>
+  </header>
+
+  <section class="pregunta-hoy musica-intro">
+    <p>A veces una canción conocida ayuda más que mil palabras. Elige el ambiente que quieras escuchar mientras estás aquí — son listas oficiales de Spotify, puedes darle play sin necesidad de cuenta.</p>
+  </section>
+
+  <section class="historial-semana lista-playlists">
+    {% for p in playlists %}
+      <div class="playlist-card">
+        <h2>{{ p.nombre }}</h2>
+        <p>{{ p.descripcion }}</p>
+        <div class="playlist-embed">
+          <iframe
+            style="border-radius:12px"
+            src="https://open.spotify.com/embed/playlist/{{ p.id }}?utm_source=generator&theme=0"
+            width="100%"
+            height="152"
+            frameborder="0"
+            allowfullscreen=""
+            allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+            loading="lazy">
+          </iframe>
+        </div>
+      </div>
+    {% endfor %}
+  </section>
+
+  <section class="pregunta-hoy musica-intro">
+    <h2>Podcasts de motivación</h2>
+    <p>Para cuando te provoca escuchar a alguien hablar, en vez de música.</p>
+  </section>
+
+  <section class="historial-semana lista-playlists">
+    {% for p in podcasts %}
+      <div class="playlist-card">
+        <h2>{{ p.nombre }}</h2>
+        <p>{{ p.descripcion }}</p>
+        <div class="playlist-embed">
+          <iframe
+            style="border-radius:12px"
+            src="https://open.spotify.com/embed/show/{{ p.id }}?utm_source=generator&theme=0"
+            width="100%"
+            height="152"
+            frameborder="0"
+            allowfullscreen=""
+            allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+            loading="lazy">
+          </iframe>
+        </div>
+      </div>
+    {% endfor %}
+  </section>
+
+  <section class="pregunta-hoy musica-nota">
+    <p class="nota-privacidad">Estas listas y podcasts se reproducen directamente desde Spotify, así que al darle play tu navegador se conecta con ellos (como al ver un video de YouTube). Nada de lo que hables en tus chats se comparte con Spotify.</p>
+  </section>
+
+  <script src="{{ url_for('static', filename='js/common.js') }}"></script>
+</body>
+</html>

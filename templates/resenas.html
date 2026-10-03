@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reseñas — Tu Espacio Seguro</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 64 64%22><path fill=%22%231f4d2c%22 d=%22M32 56s-20-12.6-27-24.4C-.2 21.6 4.6 10 15.4 8.4c6-.9 11.6 2 16.6 7.6 5-5.6 10.6-8.5 16.6-7.6C59.4 10 64.2 21.6 59 31.6 52 43.4 32 56 32 56Z%22/></svg>">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/diario.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/resenas.css') }}">
+</head>
+<body class="diario-body">
+
+  <header class="diario-header">
+    <a href="{{ url_for('index') }}" class="volver">← Volver</a>
+    <h1>Reseñas</h1>
+  </header>
+
+  {% with mensajes = get_flashed_messages(with_categories=true) %}
+    {% if mensajes %}
+      <div class="avisos-flash">
+        {% for categoria, texto in mensajes %}
+          <div class="aviso-flash aviso-{{ categoria }}">{{ texto }}</div>
+        {% endfor %}
+      </div>
+    {% endif %}
+  {% endwith %}
+
+  <section class="racha-card resumen-resenas">
+    <span class="racha-numero">{{ resumen.promedio if resumen.total else "—" }}</span>
+    <span class="racha-texto">
+      {% if resumen.total %}
+        promedio de {{ resumen.total }} {{ "reseña" if resumen.total == 1 else "reseñas" }}
+      {% else %}
+        Aún no hay reseñas. ¡Sé el primero!
+      {% endif %}
+    </span>
+  </section>
+
+  <section class="pregunta-hoy nueva-resena">
+    <h2>¿Cómo ha sido tu experiencia aquí?</h2>
+    <form method="POST" action="{{ url_for('resenas') }}" class="form-resena" enctype="multipart/form-data">
+      <div class="estrellas-input">
+        <input type="radio" id="e5" name="estrellas" value="5" required><label for="e5">★</label>
+        <input type="radio" id="e4" name="estrellas" value="4"><label for="e4">★</label>
+        <input type="radio" id="e3" name="estrellas" value="3"><label for="e3">★</label>
+        <input type="radio" id="e2" name="estrellas" value="2"><label for="e2">★</label>
+        <input type="radio" id="e1" name="estrellas" value="1"><label for="e1">★</label>
+      </div>
+      <textarea name="comentario" maxlength="280" rows="3" placeholder="Cuéntanos qué te pareció (opcional)"></textarea>
+      <label class="campo-foto">
+        <span>Agregar una foto (opcional, solo si quieres)</span>
+        <input type="file" name="foto" accept="image/png,image/jpeg,image/gif,image/webp">
+      </label>
+      <p class="nota-privacidad">Esto se muestra públicamente a otros estudiantes, sin tu nombre. No compartas datos personales aquí, ni fotos donde se te vea la cara u otra información tuya — para eso está el espacio privado con la psicóloga.</p>
+      <button type="submit">Enviar reseña</button>
+    </form>
+  </section>
+
+  <section class="historial-semana lista-resenas">
+    <h2>Lo que dicen otros estudiantes</h2>
+    {% if resenas %}
+      {% for estrellas, comentario, fecha, foto in resenas %}
+        <div class="resena-card">
+          <div class="resena-estrellas">{{ "★" * estrellas }}{{ "☆" * (5 - estrellas) }}</div>
+          {% if foto %}<img src="{{ url_for('static', filename=foto) }}" class="resena-foto" alt="Foto compartida en la reseña" loading="lazy">{% endif %}
+          {% if comentario %}<p class="resena-texto">{{ comentario }}</p>{% endif %}
+          <span class="resena-fecha">{{ fecha[:10] }}</span>
+        </div>
+      {% endfor %}
+    {% else %}
+      <p class="sin-registros">Todavía no hay reseñas publicadas.</p>
+    {% endif %}
+  </section>
+
+  <script src="{{ url_for('static', filename='js/common.js') }}"></script>
+</body>
+</html>

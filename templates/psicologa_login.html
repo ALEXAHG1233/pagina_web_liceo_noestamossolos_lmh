@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Acceso psicóloga — Tu Espacio Seguro</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 64 64%22><path fill=%22%231f4d2c%22 d=%22M32 56s-20-12.6-27-24.4C-.2 21.6 4.6 10 15.4 8.4c6-.9 11.6 2 16.6 7.6 5-5.6 10.6-8.5 16.6-7.6C59.4 10 64.2 21.6 59 31.6 52 43.4 32 56 32 56Z%22/></svg>">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
+</head>
+<body class="login-body">
+  <div class="login-card">
+    <h1>Panel de la psicóloga</h1>
+    <p class="login-nota">Acceso privado. Solo para el personal autorizado del liceo.</p>
+
+    {% if error %}
+      <p class="login-error">{{ error }}</p>
+    {% endif %}
+
+    <form method="POST" action="{{ url_for('psicologa_login') }}" class="login-form">
+      <input type="text" name="usuario" placeholder="Usuario" autocomplete="username" required autofocus>
+      <input type="password" name="clave" placeholder="Clave" autocomplete="current-password" required>
+      <button type="submit">Entrar</button>
+    </form>
+
+    <a href="{{ url_for('index') }}" class="login-volver">← Volver al inicio</a>
+  </div>
+  <script src="{{ url_for('static', filename='js/common.js') }}"></script>
+</body>
+</html>

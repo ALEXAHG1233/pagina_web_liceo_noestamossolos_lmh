@@ -1,0 +1,67 @@
+.futuro-pregunta, .futuro-resultado { text-align: center; }
+.futuro-ayuda { font-size: 13px; color: #7a7870; margin: -6px 0 16px; }
+
+.form-futuro {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+.form-futuro input {
+  width: 100%;
+  max-width: 320px;
+  padding: 12px 14px;
+  border: 1px solid #d3d1c7;
+  border-radius: 20px;
+  font-size: 15px;
+  text-align: center;
+  transition: border-color var(--transicion-suave), box-shadow var(--transicion-suave);
+}
+.form-futuro input:focus {
+  border-color: var(--azul-honduras);
+  box-shadow: 0 0 0 3px rgba(0, 114, 206, 0.15);
+  outline: none;
+}
+.form-futuro button {
+  padding: 10px 22px;
+  border: none;
+  border-radius: 20px;
+  background: var(--verde-liceo);
+  color: #fff;
+  font-size: 14px;
+  cursor: pointer;
+}
+.form-futuro button:hover { background: var(--verde-liceo-claro); transform: translateY(-1px); box-shadow: var(--sombra-suave); }
+
+.futuro-panel {
+  margin: 4px auto 18px;
+  max-width: 420px;
+  padding: 22px 20px;
+  border-radius: 16px;
+  animation: entrarMensaje 400ms ease both;
+}
+.futuro-panel-bonito {
+  background: linear-gradient(135deg, var(--dorado), #e8c766);
+  color: #4a3900;
+  box-shadow: var(--sombra-media);
+}
+.futuro-panel-bonito h2 { margin: 4px 0 12px; font-size: 20px; }
+.futuro-panel-bonito p { margin: 0; font-size: 14px; line-height: 1.6; text-align: left; }
+
+.futuro-panel-riesgo {
+  background: #fcebeb;
+  color: #791f1f;
+  border-left: 3px solid #c94b4b;
+  text-align: left;
+}
+.futuro-panel-riesgo h2 { margin: 0 0 8px; font-size: 16px; }
+.futuro-panel-riesgo p { margin: 0; font-size: 14px; line-height: 1.5; }
+
+.futuro-otra {
+  display: inline-block;
+  font-size: 13px;
+  color: var(--verde-liceo);
+  text-decoration: none;
+  font-weight: 500;
+}
+.futuro-otra:hover { text-decoration: underline; }

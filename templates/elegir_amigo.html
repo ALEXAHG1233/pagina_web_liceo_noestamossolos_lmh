@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Elige con quién hablar — Tu Espacio Seguro</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 64 64%22><path fill=%22%231f4d2c%22 d=%22M32 56s-20-12.6-27-24.4C-.2 21.6 4.6 10 15.4 8.4c6-.9 11.6 2 16.6 7.6 5-5.6 10.6-8.5 16.6-7.6C59.4 10 64.2 21.6 59 31.6 52 43.4 32 56 32 56Z%22/></svg>">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/landing.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/amigos.css') }}">
+</head>
+<body class="landing-body">
+
+  <section class="hero hero-amigos">
+    <a href="{{ url_for('index') }}" class="volver volver-hero">← Volver</a>
+    <h1>¿Con cuál quieres hablar?</h1>
+    <p class="hero-frase">Todos son asistentes automáticos, disponibles siempre. Cada uno tiene su propio estilo, pero si algo pesa de verdad, siempre te van a poner en contacto con la psicóloga real del liceo.</p>
+  </section>
+
+  <section class="seccion reveal">
+    <div class="amigos-grid">
+      {% for id, p in personajes.items() %}
+        <a href="{{ url_for('chatbot_persona', persona=id) }}" class="tarjeta amigo-card">
+          <span class="amigo-avatar" style="background:{{ p.color }}">{{ p.avatar }}</span>
+          <h3>{{ p.nombre }}</h3>
+          <p>{{ p.tagline }}</p>
+        </a>
+      {% endfor %}
+      <a href="{{ url_for('chatbot_sorpresa') }}" class="tarjeta amigo-card amigo-sorpresa">
+        <span class="amigo-avatar amigo-avatar-sorpresa">?</span>
+        <h3>Sorpréndeme</h3>
+        <p>Elige uno al azar por mí.</p>
+      </a>
+    </div>
+  </section>
+
+  <section class="seccion cta-final reveal">
+    <p class="recordatorio">¿Prefieres hablar con una persona real? <a href="{{ url_for('estudiante') }}">Habla con la psicóloga</a>.</p>
+  </section>
+
+  <script src="{{ url_for('static', filename='js/common.js') }}"></script>
+  <script>
+    if (typeof activarRevelado === "function") {
+      activarRevelado();
+    } else {
+      document.querySelectorAll(".reveal").forEach((el) => el.classList.add("visible"));
+    }
+  </script>
+</body>
+</html>

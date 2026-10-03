@@ -1,0 +1,159 @@
+.diario-body {
+  max-width: 480px;
+  margin: 0 auto;
+  padding-bottom: 40px;
+  position: relative;
+  overflow-x: hidden;
+}
+
+.diario-header {
+  padding: 16px 20px;
+  background: linear-gradient(135deg, var(--verde-liceo), var(--verde-liceo-claro));
+  color: #fff;
+}
+.diario-header .volver {
+  color: #fff;
+  text-decoration: none;
+  font-size: 13px;
+  opacity: 0.9;
+  display: inline-block;
+  transition: transform var(--transicion-suave);
+}
+.diario-header .volver:hover { transform: translateX(-3px); }
+.diario-header h1 { margin: 6px 0 0; font-size: 20px; }
+
+.racha-card {
+  margin: 20px;
+  padding: 24px;
+  border-radius: 16px;
+  background: linear-gradient(135deg, var(--dorado), #e8c766);
+  text-align: center;
+  color: #4a3900;
+  box-shadow: var(--sombra-media);
+  animation: entrarMensaje 420ms ease both;
+}
+.racha-numero {
+  display: block;
+  font-size: 42px;
+  font-weight: 700;
+  animation: pulsoNumero 2.4s ease-in-out infinite;
+}
+@keyframes pulsoNumero {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.06); }
+}
+.racha-texto { font-size: 13px; }
+
+.pregunta-hoy { padding: 0 20px; text-align: center; }
+.pregunta-hoy h2 { font-size: 16px; margin-bottom: 14px; }
+
+.opciones-animo {
+  display: flex;
+  justify-content: space-between;
+  gap: 6px;
+}
+.animo-btn {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  text-decoration: none;
+  color: var(--negro);
+  background: #fff;
+  border-radius: 12px;
+  border-top: 4px solid transparent;
+  padding: 16px 4px 14px;
+  font-size: 13px;
+  font-weight: 600;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+  transition: transform var(--transicion-suave), box-shadow var(--transicion-suave);
+}
+.animo-btn span { font-size: 12px; }
+.animo-btn:hover { transform: translateY(-4px) scale(1.05); box-shadow: var(--sombra-media); }
+.animo-btn:active { background: var(--azul-suave); transform: scale(0.95); }
+
+.mood-genial { border-top-color: #2e6b41; }
+.mood-bien { border-top-color: #0072ce; }
+.mood-normal { border-top-color: #c9a227; }
+.mood-mal { border-top-color: #d98a3d; }
+.mood-muy_mal { border-top-color: #c94b4b; }
+
+.historial-semana { padding: 28px 20px 0; }
+.historial-semana h2 { font-size: 15px; margin-bottom: 12px; text-align: center; }
+
+.tira-dias { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; }
+
+@media (max-width: 360px) {
+  .opciones-animo { gap: 3px; }
+  .animo-btn { padding: 10px 2px; }
+  .animo-btn span { font-size: 10px; }
+}
+.dia-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  opacity: 0;
+  transform: translateY(8px);
+  animation: entrarMensaje 400ms ease forwards;
+}
+.dia-item:nth-child(1) { animation-delay: 0.02s; }
+.dia-item:nth-child(2) { animation-delay: 0.08s; }
+.dia-item:nth-child(3) { animation-delay: 0.14s; }
+.dia-item:nth-child(4) { animation-delay: 0.2s; }
+.dia-item:nth-child(5) { animation-delay: 0.26s; }
+.dia-item:nth-child(6) { animation-delay: 0.32s; }
+.dia-item:nth-child(7) { animation-delay: 0.38s; }
+.dia-punto {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #d3d1c7;
+}
+.dia-punto.mood-genial { background: #2e6b41; }
+.dia-punto.mood-bien { background: #0072ce; }
+.dia-punto.mood-normal { background: #c9a227; }
+.dia-punto.mood-mal { background: #d98a3d; }
+.dia-punto.mood-muy_mal { background: #c94b4b; }
+.dia-fecha { font-size: 10px; color: #7a7870; }
+
+.sin-registros { text-align: center; font-size: 13px; color: #7a7870; }
+
+/* --- Celebración al registrar ánimo --- */
+.confeti-contenedor {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 40;
+}
+.confeti-pieza {
+  position: absolute;
+  top: -12px;
+  width: 8px;
+  height: 8px;
+  border-radius: 2px;
+  animation: caerConfeti 1.6s ease-in forwards;
+}
+@keyframes caerConfeti {
+  0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+  100% { transform: translateY(105vh) rotate(340deg); opacity: 0; }
+}
+
+.mensaje-celebracion {
+  position: fixed;
+  left: 50%;
+  bottom: 26px;
+  transform: translateX(-50%) translateY(12px);
+  background: var(--verde-liceo);
+  color: #fff;
+  padding: 10px 18px;
+  border-radius: 20px;
+  font-size: 13px;
+  box-shadow: var(--sombra-media);
+  opacity: 0;
+  transition: opacity 320ms ease, transform 320ms ease;
+  z-index: 41;
+}
+.mensaje-celebracion.visible { opacity: 1; transform: translateX(-50%) translateY(0); }

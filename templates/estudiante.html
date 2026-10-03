@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Espacio seguro</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 64 64%22><path fill=%22%231f4d2c%22 d=%22M32 56s-20-12.6-27-24.4C-.2 21.6 4.6 10 15.4 8.4c6-.9 11.6 2 16.6 7.6 5-5.6 10.6-8.5 16.6-7.6C59.4 10 64.2 21.6 59 31.6 52 43.4 32 56 32 56Z%22/></svg>">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+  <div class="chat-container">
+    <header class="chat-header">
+      <div class="chat-header-top">
+        <div>
+          <h1>Espacio seguro</h1>
+          <p>Tu conversación es anónima. Nadie más que la psicóloga la verá.</p>
+        </div>
+        <div class="acciones-header">
+          <button id="btn-musica" class="btn-sonido" type="button">Música</button>
+          <button id="btn-sonido" class="btn-sonido" type="button">Sonido</button>
+        </div>
+      </div>
+      <div id="selector-fondo" class="selector-fondo">
+        <span>Fondo:</span>
+      </div>
+    </header>
+
+    <div id="mensajes" class="mensajes"></div>
+
+    <div id="apoyo-emergencia" class="apoyo-emergencia" hidden></div>
+
+    <form id="form-mensaje" class="form-mensaje">
+      <input type="text" id="input-mensaje" placeholder="Escribe aquí, con confianza..." autocomplete="off" required>
+      <button type="submit">Enviar</button>
+    </form>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.5/socket.io.min.js"></script>
+  <script>
+    const TOKEN = "{{ token }}";
+  </script>
+  <script src="{{ url_for('static', filename='js/sonidos.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/common.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/estudiante.js') }}"></script>
+</body>
+</html>

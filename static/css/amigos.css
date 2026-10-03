@@ -1,0 +1,51 @@
+.hero-amigos { position: relative; text-align: left; padding-top: 20px; }
+.hero-amigos h1 { font-size: 24px; text-align: center; }
+.hero-amigos .hero-frase { text-align: center; max-width: 480px; }
+.volver-hero {
+  display: inline-block;
+  color: #fff;
+  text-decoration: none;
+  font-size: 13px;
+  opacity: 0.85;
+  margin-bottom: 14px;
+  transition: transform var(--transicion-suave);
+}
+.volver-hero:hover { transform: translateX(-3px); }
+
+.amigos-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 14px;
+}
+
+.amigo-card {
+  text-decoration: none;
+  color: inherit;
+  text-align: center;
+  cursor: pointer;
+}
+.amigo-avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  margin: 0 auto 10px;
+  border-radius: 50%;
+  color: #fff;
+  font-family: "Poppins", sans-serif;
+  font-size: 18px;
+  font-weight: 600;
+  box-shadow: var(--sombra-suave);
+}
+.amigo-avatar-sorpresa { background: var(--azul-honduras); }
+.amigo-card h3 { text-align: center; }
+.amigo-card p { text-align: center; }
+.amigo-sorpresa { border-top-color: var(--azul-honduras); }
+
+.cta-final .recordatorio a {
+  color: var(--azul-honduras);
+  font-weight: 600;
+  text-decoration: none;
+}
+.cta-final .recordatorio a:hover { text-decoration: underline; }

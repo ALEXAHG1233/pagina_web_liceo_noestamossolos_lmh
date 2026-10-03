@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Autoevaluaciones — Tu Espacio Seguro</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 64 64%22><path fill=%22%231f4d2c%22 d=%22M32 56s-20-12.6-27-24.4C-.2 21.6 4.6 10 15.4 8.4c6-.9 11.6 2 16.6 7.6 5-5.6 10.6-8.5 16.6-7.6C59.4 10 64.2 21.6 59 31.6 52 43.4 32 56 32 56Z%22/></svg>">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/diario.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/tests.css') }}">
+</head>
+<body class="diario-body">
+
+  <header class="diario-header">
+    <a href="{{ url_for('index') }}" class="volver">← Volver</a>
+    <h1>Autoevaluaciones</h1>
+  </header>
+
+  <section class="pregunta-hoy tests-intro">
+    <p>Esto NO son pruebas clínicas ni diagnósticos — son preguntas para ayudarte a ver con más claridad cómo estás. El resultado es solo una señal; si algo te preocupa, hablarlo con la psicóloga siempre es la mejor opción.</p>
+  </section>
+
+  <section class="historial-semana tests-lista">
+    {% for id, t in tests.items() %}
+      <a href="{{ url_for('test_detalle', test_id=id) }}" class="test-card">
+        <h2>{{ t.titulo }}</h2>
+        <p>{{ t.descripcion }}</p>
+      </a>
+    {% endfor %}
+  </section>
+
+  <script src="{{ url_for('static', filename='js/common.js') }}"></script>
+</body>
+</html>

@@ -1,0 +1,39 @@
+.articulo-card { position: relative; padding-top: 34px; }
+.articulo-categoria {
+  position: absolute;
+  top: 14px;
+  left: 18px;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 3px 9px;
+  border-radius: 10px;
+  display: inline-block;
+}
+.articulo-contenido .articulo-categoria { position: static; margin-bottom: 14px; }
+
+.cat-identifica { background: var(--azul-suave); color: var(--azul-honduras); }
+.cat-infórmate { background: var(--dorado-suave); color: #7a5000; }
+.cat-cuídate { background: var(--verde-suave); color: var(--verde-liceo); }
+
+.articulo-contenido { padding: 0 20px 30px; max-width: 480px; margin: 0 auto; }
+.articulo-contenido p {
+  font-size: 14px;
+  line-height: 1.6;
+  color: #2c2c2a;
+  margin: 0 0 14px;
+}
+
+.articulo-cta { text-align: center; margin-top: 24px; }
+.articulo-cta a {
+  display: inline-block;
+  padding: 10px 20px;
+  border-radius: 20px;
+  background: var(--verde-liceo);
+  color: #fff;
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 600;
+}
+.articulo-cta a:hover { background: var(--verde-liceo-claro); }

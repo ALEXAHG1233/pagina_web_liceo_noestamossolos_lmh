@@ -1,0 +1,30 @@
+.musica-intro p, .musica-nota p {
+  font-size: 14px;
+  color: #4a4a46;
+  line-height: 1.5;
+  max-width: 420px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.lista-playlists {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.playlist-card {
+  background: #fff;
+  border-radius: 14px;
+  padding: 14px 16px 16px;
+  box-shadow: var(--sombra-suave);
+  border-top: 3px solid var(--dorado);
+  animation: entrarMensaje 360ms ease both;
+}
+.playlist-card h2 { margin: 0 0 4px; font-size: 16px; color: var(--verde-liceo); }
+.playlist-card p { margin: 0 0 10px; font-size: 13px; color: #7a7870; }
+
+.playlist-embed { border-radius: 12px; overflow: hidden; }
+.playlist-embed iframe { display: block; }
+
+.musica-nota { margin-top: 24px; }

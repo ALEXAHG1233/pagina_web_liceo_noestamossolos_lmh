@@ -1,0 +1,125 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 500" width="1600" height="500">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="10%" x2="100%" y2="90%">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="42%" stop-color="#eef6ee"/>
+      <stop offset="72%" stop-color="#4f9a5e"/>
+      <stop offset="100%" stop-color="#163a20"/>
+    </linearGradient>
+    <radialGradient id="ringGrad" cx="35%" cy="25%" r="85%">
+      <stop offset="0%" stop-color="#6fdc82"/>
+      <stop offset="55%" stop-color="#2e9a45"/>
+      <stop offset="100%" stop-color="#123319"/>
+    </radialGradient>
+    <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffe28a"/>
+      <stop offset="100%" stop-color="#c9a227"/>
+    </linearGradient>
+    <path id="curveTop" d="M -108,-88 A 128,128 0 0 1 108,-88" fill="none"/>
+    <path id="curveBottomRibbon" d="M -128,158 Q 0,190 128,158" fill="none"/>
+  </defs>
+
+  <!-- Fondo: degradado blanco a verde -->
+  <rect width="1600" height="500" fill="url(#bgGrad)"/>
+
+  <!-- Formas decorativas suaves -->
+  <circle cx="1510" cy="60" r="150" fill="#ffffff" opacity="0.07"/>
+  <circle cx="1430" cy="430" r="110" fill="#ffffff" opacity="0.08"/>
+  <circle cx="1220" cy="120" r="60" fill="#ffffff" opacity="0.06"/>
+
+  <!-- Icono decorativo de psicologia: perfil de cabeza con una hoja creciendo (bienestar / crecimiento) -->
+  <g transform="translate(1230,250)" opacity="0.14" fill="#ffffff">
+    <path d="M0,-140 C90,-140 150,-70 150,0 C150,55 120,95 90,120 L90,175 L40,175 L40,135 C20,140 -5,140 -25,132
+             C-70,150 -120,130 -130,90 C-150,90 -160,60 -140,45 C-150,20 -130,-10 -100,-15
+             C-95,-70 -55,-140 0,-140 Z"/>
+    <path d="M-10,-135 C25,-165 80,-160 95,-120 C60,-135 30,-125 10,-100 C0,-120 -10,-128 -10,-135 Z" opacity="0.9"/>
+  </g>
+
+  <!-- ============ ESCUDO (recreacion vectorial) ============ -->
+  <g transform="translate(280,255)">
+    <!-- Anillo exterior -->
+    <circle r="168" fill="url(#ringGrad)"/>
+    <circle r="150" fill="#ffffff"/>
+
+    <!-- Arcos azules -->
+    <path d="M -95,-15 A 110,110 0 0 1 95,-15" fill="none" stroke="#6fa8dc" stroke-width="16" opacity="0.9"/>
+    <path d="M -78,-40 A 95,95 0 0 1 78,-40" fill="none" stroke="#bcd9f2" stroke-width="10" opacity="0.9"/>
+
+    <!-- Cinta roja curva "LICEO MILITAR" -->
+    <path d="M -118,-88 A 128,128 0 0 1 118,-88" fill="none" stroke="#b53228" stroke-width="30" stroke-linecap="round"/>
+    <text font-family="'Poppins', sans-serif" font-weight="700" font-size="21" fill="#ffffff" letter-spacing="1">
+      <textPath href="#curveTop" startOffset="50%" text-anchor="middle">LICEO MILITAR</textPath>
+    </text>
+
+    <!-- Estallido dorado central -->
+    <g transform="translate(0,-28)">
+      <g stroke="#c9a227" stroke-width="2.5" opacity="0.85">
+        <line x1="0" y1="-34" x2="0" y2="-52"/>
+        <line x1="24" y1="-24" x2="37" y2="-37"/>
+        <line x1="-24" y1="-24" x2="-37" y2="-37"/>
+        <line x1="34" y1="0" x2="52" y2="0"/>
+        <line x1="-34" y1="0" x2="-52" y2="0"/>
+        <line x1="24" y1="24" x2="37" y2="37"/>
+        <line x1="-24" y1="24" x2="-37" y2="37"/>
+      </g>
+      <polygon points="0,-16 5,-5 17,-5 7,3 11,15 0,7 -11,15 -7,3 -17,-5 -5,-5"
+               fill="url(#goldGrad)"/>
+    </g>
+
+    <!-- Espada y pluma cruzadas -->
+    <g transform="translate(0,15)">
+      <g transform="rotate(-28)">
+        <rect x="-4" y="-78" width="8" height="90" rx="2" fill="#8a8f98"/>
+        <rect x="-13" y="10" width="26" height="10" rx="3" fill="#3b3f45"/>
+        <rect x="-4" y="20" width="8" height="26" rx="2" fill="#2b2e33"/>
+      </g>
+      <g transform="rotate(28)">
+        <path d="M0,-88 C16,-60 18,-10 0,44 C-8,-10 -10,-60 0,-88 Z" fill="#2e6b41"/>
+        <path d="M0,-70 C6,-40 6,-5 0,30" stroke="#1f4d2c" stroke-width="2" fill="none"/>
+      </g>
+    </g>
+
+    <!-- HONDURAS -->
+    <text x="0" y="66" text-anchor="middle" font-family="'Poppins', sans-serif" font-weight="700"
+          font-size="22" fill="#b53228" letter-spacing="1">HONDURAS</text>
+
+    <!-- Corona de laurel -->
+    <g fill="#2e8b3d">
+      <g id="laurel">
+        <ellipse cx="-98" cy="30" rx="16" ry="7" transform="rotate(-20 -98 30)"/>
+        <ellipse cx="-105" cy="5" rx="17" ry="7.5" transform="rotate(-40 -105 5)"/>
+        <ellipse cx="-102" cy="-22" rx="17" ry="7.5" transform="rotate(-62 -102 -22)"/>
+        <ellipse cx="-88" cy="-48" rx="16" ry="7" transform="rotate(-82 -88 -48)"/>
+        <ellipse cx="-65" cy="-70" rx="15" ry="6.5" transform="rotate(-105 -65 -70)"/>
+      </g>
+      <use href="#laurel" transform="scale(-1,1)"/>
+    </g>
+    <path d="M -100,45 C -110,10 -100,-35 -60,-78" stroke="#1f7a3d" stroke-width="4" fill="none" opacity="0.6"/>
+    <path d="M 100,45 C 110,10 100,-35 60,-78" stroke="#1f7a3d" stroke-width="4" fill="none" opacity="0.6"/>
+
+    <!-- Puño -->
+    <g transform="translate(0,92)">
+      <rect x="-20" y="18" width="40" height="16" rx="4" fill="#a9744f"/>
+      <path d="M-30,18 C-32,-6 -18,-20 0,-20 C18,-20 32,-6 30,18 C22,26 -22,26 -30,18 Z" fill="#c48a5a"/>
+      <rect x="-26" y="-2" width="9" height="18" rx="4" fill="#a9744f" opacity="0.7"/>
+      <rect x="-9" y="-8" width="9" height="24" rx="4" fill="#a9744f" opacity="0.5"/>
+      <rect x="8" y="-8" width="9" height="24" rx="4" fill="#a9744f" opacity="0.5"/>
+      <rect x="17" y="-2" width="9" height="18" rx="4" fill="#a9744f" opacity="0.7"/>
+    </g>
+
+    <!-- Cinta amarilla inferior -->
+    <path d="M -132,152 L 132,152 L 118,172 L 132,192 L -132,192 L -118,172 Z" fill="url(#goldGrad)" stroke="#a5801c" stroke-width="1.5"/>
+    <text font-family="'Poppins', sans-serif" font-weight="700" font-size="15.5" fill="#1a1a1a" letter-spacing="0.5">
+      <textPath href="#curveBottomRibbon" startOffset="50%" text-anchor="middle">VERDAD HONOR SERVICIO</textPath>
+    </text>
+  </g>
+
+  <!-- ============ TEXTO ============ -->
+  <g font-family="'Poppins', sans-serif">
+    <text x="500" y="185" font-weight="700" font-size="50" fill="#163a20">PROGRAMA DE</text>
+    <text x="500" y="245" font-weight="700" font-size="50" fill="#163a20">PSICO-PEDAGOGÍA</text>
+    <text x="500" y="288" font-weight="500" font-size="26" fill="#2e6b41">Liceo Militar de Honduras</text>
+    <line x1="500" y1="312" x2="850" y2="312" stroke="#c9a227" stroke-width="3"/>
+    <text x="500" y="352" font-family="Georgia, serif" font-style="italic" font-weight="600" font-size="27" fill="#a3791f">Tu bienestar, nuestra prioridad.</text>
+  </g>
+</svg>

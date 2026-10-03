@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tu Espacio Seguro — Liceo Militar de Honduras</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 64 64%22><path fill=%22%231f4d2c%22 d=%22M32 56s-20-12.6-27-24.4C-.2 21.6 4.6 10 15.4 8.4c6-.9 11.6 2 16.6 7.6 5-5.6 10.6-8.5 16.6-7.6C59.4 10 64.2 21.6 59 31.6 52 43.4 32 56 32 56Z%22/></svg>">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/landing.css') }}">
+</head>
+<body class="landing-body">
+
+  <section class="hero">
+    <svg class="hero-blob b1" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+      <path fill="#ffffff" d="M45.9,-58.7C58.9,-49.5,68.4,-34.5,72.1,-18.1C75.8,-1.7,73.7,16.1,65.5,30.6C57.3,45.1,43,56.3,27,62.6C11,68.9,-6.7,70.3,-23.4,65.9C-40.1,61.5,-55.8,51.3,-64.6,36.8C-73.4,22.3,-75.3,3.5,-71.4,-13.2C-67.5,-29.9,-57.8,-44.5,-44.8,-53.8C-31.8,-63.1,-15.9,-67.1,0.8,-68.2C17.5,-69.3,32.9,-67.9,45.9,-58.7Z" transform="translate(100 100)" />
+    </svg>
+    <svg class="hero-blob b2" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+      <path fill="#ffffff" d="M39.6,-51.3C52.1,-42.9,63.5,-31.4,68.4,-17C73.3,-2.6,71.7,14.7,63.9,28.6C56.1,42.5,42.1,52.9,26.7,59.2C11.3,65.5,-5.5,67.6,-21.4,63.6C-37.3,59.6,-52.3,49.4,-61.3,35.2C-70.3,21,-73.3,2.8,-69.7,-13.7C-66.1,-30.2,-55.9,-45,-42.5,-53.4C-29.1,-61.8,-14.6,-63.8,0.4,-64.3C15.3,-64.9,27.1,-59.7,39.6,-51.3Z" transform="translate(100 100)" />
+    </svg>
+    <svg class="hero-icono" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <path d="M32 56s-20-12.6-27-24.4C-.2 21.6 4.6 10 15.4 8.4c6-.9 11.6 2 16.6 7.6 5-5.6 10.6-8.5 16.6-7.6C59.4 10 64.2 21.6 59 31.6 52 43.4 32 56 32 56Z" fill="#ffffff" fill-opacity="0.9"/>
+    </svg>
+    <h1>Tu Espacio Seguro</h1>
+    <p class="subtitulo">Programa de Apoyo Psicopedagógico — Liceo Militar de Honduras</p>
+    <p class="hero-frase">Lo que escribas aquí es completamente anónimo. Nadie sabrá que fuiste tú.</p>
+    <button id="btn-musica" class="btn-sonido btn-musica-hero" type="button">Música relajante</button>
+  </section>
+
+  <section class="seccion reveal">
+    <h2>¿Por qué hablar ayuda?</h2>
+    <div class="tarjetas">
+      <div class="tarjeta">
+        <h3>Poner en palabras lo que sientes</h3>
+        <p>Cuando lo dices o lo escribes, tu mente empieza a ordenarlo. Muchas veces las cosas pesan menos en cuanto dejan de dar vueltas solo en tu cabeza.</p>
+      </div>
+      <div class="tarjeta">
+        <h3>No estás solo/a en esto</h3>
+        <p>Muchos estudiantes han sentido lo mismo que tú, aunque no lo digan. Hablar de lo que te pasa es más común de lo que crees.</p>
+      </div>
+      <div class="tarjeta">
+        <h3>Entenderte a ti mismo/a</h3>
+        <p>A veces no sabes bien qué te pasa hasta que alguien te ayuda a verlo con claridad. Esa es la parte más valiosa de hablarlo con alguien preparado.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="seccion historias reveal">
+    <h2>Historias de quienes ya dieron el paso</h2>
+    <p class="nota-ilustrativa">Ejemplos ilustrativos de lo que puede pasar cuando alguien decide hablar.</p>
+
+    <div class="historia">
+      <p>"Sentía que nadie me entendía y que hablar no iba a cambiar nada. Un día solo empecé a escribir cómo me sentía, sin pensarlo mucho. Después de unas semanas, me di cuenta de que ya no cargaba todo yo solo."</p>
+      <span class="historia-autor">— Estudiante, 2° año</span>
+    </div>
+
+    <div class="historia">
+      <p>"Tenía miedo de que se enteraran en mi casa o en el liceo. Cuando supe que era anónimo, me animé a escribir por primera vez. Ahora hablo seguido, y me siento más tranquilo/a."</p>
+      <span class="historia-autor">— Estudiante, 4° año</span>
+    </div>
+  </section>
+
+  <section class="seccion como-funciona reveal">
+    <h2>¿Cómo funciona?</h2>
+    <ol class="pasos">
+      <li><strong>Entra sin registrarte.</strong> No pedimos tu nombre ni tu correo.</li>
+      <li><strong>Elige con quién hablar.</strong> Un asistente disponible siempre, o la psicóloga del liceo.</li>
+      <li><strong>Habla con confianza.</strong> Es un espacio privado, a tu ritmo.</li>
+    </ol>
+  </section>
+
+  <section class="seccion cta-final reveal">
+    <h2>¿Con quién quieres hablar hoy?</h2>
+    <div class="opciones">
+      <a href="{{ url_for('estudiante') }}" class="opcion opcion-psicologa">
+        <h3>Hablar con la psicóloga</h3>
+        <p>Una persona real, capacitada, te escucha. Ideal si quieres hablar de algo más a fondo.</p>
+      </a>
+      <a href="{{ url_for('chatbot') }}" class="opcion opcion-chatbot">
+        <h3>Hablar con el asistente</h3>
+        <p>Disponible al instante, a cualquier hora. Bueno para empezar a ordenar tus ideas.</p>
+      </a>
+    </div>
+    <p class="recordatorio">Sea cual sea tu elección, es 100% anónimo.</p>
+
+    <div class="enlaces-extra">
+      <a href="{{ url_for('diario') }}">Mi diario de ánimo</a>
+      <a href="{{ url_for('fe') }}">Fe y Esperanza</a>
+      <a href="{{ url_for('musica') }}">Música</a>
+      <a href="{{ url_for('resenas') }}">Reseñas</a>
+      <a href="{{ url_for('futuro') }}">Mi futuro</a>
+      <a href="{{ url_for('video') }}">Video</a>
+      <a href="{{ url_for('tests') }}">Autoevaluaciones</a>
+      <a href="{{ url_for('informate') }}">Infórmate</a>
+      <a href="{{ url_for('herramientas') }}">Herramientas</a>
+    </div>
+  </section>
+
+  <noscript><style>.reveal { opacity: 1 !important; transform: none !important; }</style></noscript>
+  <script src="{{ url_for('static', filename='js/sonidos.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/common.js') }}"></script>
+  <script>
+    if (typeof activarRevelado === "function") {
+      activarRevelado();
+    } else {
+      document.querySelectorAll(".reveal").forEach((el) => el.classList.add("visible"));
+    }
+    crearBotonMusica(document.getElementById("btn-musica"));
+  </script>
+</body>
+</html>

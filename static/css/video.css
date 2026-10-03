@@ -1,0 +1,25 @@
+.video-seccion { text-align: center; }
+
+.video-reproductor {
+  width: 100%;
+  max-width: 440px;
+  border-radius: 14px;
+  box-shadow: var(--sombra-media);
+  background: #000;
+}
+
+.video-vacio {
+  background: #fff;
+  border-radius: 14px;
+  padding: 28px 20px;
+  box-shadow: var(--sombra-suave);
+  border-top: 3px solid var(--dorado);
+}
+.video-vacio p { margin: 0 0 8px; font-size: 14px; color: #4a4a46; }
+.video-vacio-nota { font-size: 12px; color: #7a7870; }
+.video-vacio-nota code {
+  background: #f1efe8;
+  padding: 2px 6px;
+  border-radius: 6px;
+  font-size: 11px;
+}

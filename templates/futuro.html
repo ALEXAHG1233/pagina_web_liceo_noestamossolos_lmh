@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mi futuro — Tu Espacio Seguro</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 64 64%22><path fill=%22%231f4d2c%22 d=%22M32 56s-20-12.6-27-24.4C-.2 21.6 4.6 10 15.4 8.4c6-.9 11.6 2 16.6 7.6 5-5.6 10.6-8.5 16.6-7.6C59.4 10 64.2 21.6 59 31.6 52 43.4 32 56 32 56Z%22/></svg>">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/diario.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/futuro.css') }}">
+</head>
+<body class="diario-body">
+
+  <header class="diario-header">
+    <a href="{{ url_for('index') }}" class="volver">← Volver</a>
+    <h1>Mi futuro</h1>
+  </header>
+
+  {% if not resultado %}
+    <section class="pregunta-hoy futuro-pregunta">
+      <h2>¿Qué te gustaría ser en el futuro?</h2>
+      <p class="futuro-ayuda">Puede ser una profesión, o simplemente algo que quieras llegar a ser. Escribe lo primero que se te venga a la mente.</p>
+      <form method="POST" action="{{ url_for('futuro') }}" class="form-futuro">
+        <input type="text" name="respuesta" maxlength="120" placeholder="Ej: médico, maestra, feliz..." required autocomplete="off">
+        <button type="submit">Ver por qué es hermoso</button>
+      </form>
+    </section>
+  {% else %}
+    <section class="pregunta-hoy futuro-resultado">
+      {% if resultado.riesgo %}
+        <div class="futuro-panel futuro-panel-riesgo">
+          <h2>Antes de seguir…</h2>
+          <p>{{ resultado.mensaje }}</p>
+        </div>
+      {% else %}
+        <div class="futuro-panel futuro-panel-bonito">
+          <h2>Ser {{ resultado.nombre }}</h2>
+          <p>{{ resultado.mensaje }}</p>
+        </div>
+      {% endif %}
+      <a href="{{ url_for('futuro') }}" class="futuro-otra">← Escribir otra respuesta</a>
+    </section>
+  {% endif %}
+
+  <script src="{{ url_for('static', filename='js/common.js') }}"></script>
+</body>
+</html>

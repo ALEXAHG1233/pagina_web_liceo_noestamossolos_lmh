@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mi diario — Tu Espacio Seguro</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 64 64%22><path fill=%22%231f4d2c%22 d=%22M32 56s-20-12.6-27-24.4C-.2 21.6 4.6 10 15.4 8.4c6-.9 11.6 2 16.6 7.6 5-5.6 10.6-8.5 16.6-7.6C59.4 10 64.2 21.6 59 31.6 52 43.4 32 56 32 56Z%22/></svg>">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/diario.css') }}">
+</head>
+<body class="diario-body">
+
+  <div id="confeti" class="confeti-contenedor" aria-hidden="true"></div>
+  <div id="mensaje-celebracion" class="mensaje-celebracion">¡Gracias por registrar cómo te sientes!</div>
+
+  <header class="diario-header">
+    <a href="{{ url_for('index') }}" class="volver">← Volver</a>
+    <h1>Mi diario</h1>
+  </header>
+
+  <section class="racha-card">
+    <span class="racha-numero">{{ racha }}</span>
+    <span class="racha-texto">{{ "día" if racha == 1 else "días" }} seguidos registrando cómo te sientes</span>
+  </section>
+
+  <section class="pregunta-hoy">
+    <h2>¿Cómo te sientes hoy?</h2>
+    <div class="opciones-animo">
+      <a href="{{ url_for('diario_registrar', estado='genial') }}" class="animo-btn mood-genial"><span>Genial</span></a>
+      <a href="{{ url_for('diario_registrar', estado='bien') }}" class="animo-btn mood-bien"><span>Bien</span></a>
+      <a href="{{ url_for('diario_registrar', estado='normal') }}" class="animo-btn mood-normal"><span>Normal</span></a>
+      <a href="{{ url_for('diario_registrar', estado='mal') }}" class="animo-btn mood-mal"><span>Mal</span></a>
+      <a href="{{ url_for('diario_registrar', estado='muy_mal') }}" class="animo-btn mood-muy_mal"><span>Muy mal</span></a>
+    </div>
+  </section>
+
+  <section class="historial-semana">
+    <h2>Últimos días</h2>
+    {% if historial %}
+      <div class="tira-dias">
+        {% for fecha, estado in historial %}
+          <div class="dia-item">
+            <span class="dia-punto mood-{{ estado }}" title="{{ estado.replace('_', ' ') }}"></span>
+            <span class="dia-fecha">{{ fecha[5:] }}</span>
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <p class="sin-registros">Aún no tienes registros. ¡Empieza hoy!</p>
+    {% endif %}
+  </section>
+
+  <script src="{{ url_for('static', filename='js/sonidos.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/common.js') }}"></script>
+  <script>
+    const REGISTRO_NUEVO = {{ "true" if nuevo else "false" }};
+
+    function lanzarConfeti() {
+      const contenedor = document.getElementById("confeti");
+      const colores = ["#c9a227", "#1f4d2c", "#0072ce", "#e8c766", "#2e6b41"];
+      for (let i = 0; i < 26; i++) {
+        const pieza = document.createElement("span");
+        pieza.className = "confeti-pieza";
+        pieza.style.left = Math.random() * 100 + "%";
+        pieza.style.background = colores[Math.floor(Math.random() * colores.length)];
+        pieza.style.animationDelay = (Math.random() * 0.35) + "s";
+        pieza.style.transform = `rotate(${Math.random() * 360}deg)`;
+        contenedor.appendChild(pieza);
+        pieza.addEventListener("animationend", () => pieza.remove());
+      }
+    }
+
+    if (REGISTRO_NUEVO) {
+      window.addEventListener("load", () => {
+        lanzarConfeti();
+        Sonidos.logro();
+        const aviso = document.getElementById("mensaje-celebracion");
+        aviso.classList.add("visible");
+        setTimeout(() => aviso.classList.remove("visible"), 2600);
+        if (window.history.replaceState) {
+          window.history.replaceState({}, document.title, window.location.pathname);
+        }
+      });
+    }
+  </script>
+</body>
+</html>
