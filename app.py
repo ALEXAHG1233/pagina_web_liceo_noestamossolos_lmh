@@ -309,7 +309,7 @@ def obtener_resumen_resenas():
 @app.route("/")
 def index():
     registrar_visita()
-    return render_template("index.html")
+    return render_template("index.html", categorias_video=VIDEOS_CURADOS)
 
 
 @app.route("/estudiante")
@@ -421,20 +421,59 @@ CARPETA_VIDEOS = os.path.join("static", "videos")
 EXTENSIONES_VIDEO_PERMITIDAS = (".mp4", ".webm", ".ogg")
 os.makedirs(CARPETA_VIDEOS, exist_ok=True)
 
+# Videos curados, embebidos directo desde YouTube (oficial, con licencia de
+# YouTube — nunca se descarga ni se aloja el video). Organizados por a quién
+# van dirigidos, cada uno en su propio recuadro.
+VIDEOS_CURADOS = {
+    "adolescentes": {
+        "titulo": "Para adolescentes",
+        "videos": [
+            {
+                "tipo": "embed",
+                "youtube_id": "QVZdMXK4kvk",
+                "titulo": "La salud mental juvenil no es tan complicada como creemos",
+                "descripcion": "Charla TEDx sobre salud mental en adolescentes, de forma cercana y sin tecnicismos.",
+            },
+        ],
+    },
+    "lgbt": {
+        "titulo": "Comunidad LGBT+",
+        "videos": [
+            {
+                "tipo": "enlace",
+                "url": "https://www.youtube.com/user/itgetsbetterproject/videos",
+                "titulo": "It Gets Better Project",
+                "descripcion": "Canal oficial del proyecto internacional que acompaña a jóvenes LGBT+ con historias reales de que las cosas mejoran.",
+            },
+        ],
+    },
+    "hombres_adultos": {
+        "titulo": "Para hombres adultos",
+        "videos": [
+            {
+                "tipo": "embed",
+                "youtube_id": "ExqTHyfHN-c",
+                "titulo": "Hombres, hablemos de salud mental",
+                "descripcion": "Charla TEDx sobre por qué a los hombres les cuesta más pedir ayuda, y por qué vale la pena hacerlo.",
+            },
+        ],
+    },
+}
+
 
 @app.route("/video")
 def video():
     """
-    Espacio para un video propio (motivacional, institucional, etc.) que el
-    administrador del sitio coloca directamente en static/videos/ — no es un
-    formulario público de subida, para evitar que cualquier visitante suba
-    contenido sin control.
+    Videos curados por categoría (embebidos desde YouTube), más un espacio
+    para un video propio (institucional) que el administrador coloca
+    directamente en static/videos/ — no es un formulario público de subida,
+    para evitar que cualquier visitante suba contenido sin control.
     """
     archivos = sorted(
         f for f in os.listdir(CARPETA_VIDEOS) if f.lower().endswith(EXTENSIONES_VIDEO_PERMITIDAS)
     )
     video_archivo = archivos[0] if archivos else None
-    return render_template("video.html", video_archivo=video_archivo)
+    return render_template("video.html", video_archivo=video_archivo, categorias=VIDEOS_CURADOS)
 
 
 @app.route("/tests")

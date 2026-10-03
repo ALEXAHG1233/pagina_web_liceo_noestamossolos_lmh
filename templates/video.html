@@ -7,6 +7,7 @@
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 64 64%22><path fill=%22%231f4d2c%22 d=%22M32 56s-20-12.6-27-24.4C-.2 21.6 4.6 10 15.4 8.4c6-.9 11.6 2 16.6 7.6 5-5.6 10.6-8.5 16.6-7.6C59.4 10 64.2 21.6 59 31.6 52 43.4 32 56 32 56Z%22/></svg>">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/diario.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/musica.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/video.css') }}">
 </head>
 <body class="diario-body">
@@ -16,6 +17,42 @@
     <h1>Video</h1>
   </header>
 
+  <section class="pregunta-hoy musica-intro">
+    <p>Cada quien vive cosas distintas — aquí hay videos pensados para distintas realidades. Elige el que te haga sentido.</p>
+  </section>
+
+  {% for cat_id, cat in categorias.items() %}
+    <section class="pregunta-hoy musica-intro">
+      <h2>{{ cat.titulo }}</h2>
+    </section>
+    <section class="historial-semana lista-playlists">
+      {% for v in cat.videos %}
+        <div class="playlist-card">
+          <h2>{{ v.titulo }}</h2>
+          <p>{{ v.descripcion }}</p>
+          {% if v.tipo == "embed" %}
+            <div class="playlist-embed video-embed">
+              <iframe
+                src="https://www.youtube.com/embed/{{ v.youtube_id }}"
+                width="100%"
+                height="220"
+                frameborder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowfullscreen
+                loading="lazy">
+              </iframe>
+            </div>
+          {% else %}
+            <a href="{{ v.url }}" target="_blank" rel="noopener noreferrer" class="video-enlace-externo">Ver en YouTube →</a>
+          {% endif %}
+        </div>
+      {% endfor %}
+    </section>
+  {% endfor %}
+
+  <section class="pregunta-hoy musica-intro">
+    <h2>Video propio del liceo</h2>
+  </section>
   <section class="pregunta-hoy video-seccion">
     {% if video_archivo %}
       <video class="video-reproductor" controls preload="metadata">
@@ -24,10 +61,14 @@
       </video>
     {% else %}
       <div class="video-vacio">
-        <p>Todavía no se ha colocado ningún video aquí.</p>
+        <p>Todavía no se ha colocado ningún video propio aquí.</p>
         <p class="video-vacio-nota">Para agregarlo: coloca el archivo (.mp4, .webm o .ogg) dentro de la carpeta <code>static/videos/</code> del proyecto.</p>
       </div>
     {% endif %}
+  </section>
+
+  <section class="pregunta-hoy musica-nota">
+    <p class="nota-privacidad">Los videos incrustados se reproducen directamente desde YouTube — al darle play tu navegador se conecta con ellos. Nada de lo que hables en tus chats se comparte con YouTube.</p>
   </section>
 
   <script src="{{ url_for('static', filename='js/common.js') }}"></script>

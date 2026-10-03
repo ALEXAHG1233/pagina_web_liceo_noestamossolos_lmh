@@ -23,3 +23,17 @@
   border-radius: 6px;
   font-size: 11px;
 }
+
+.video-embed iframe { display: block; }
+
+.video-enlace-externo {
+  display: inline-block;
+  padding: 9px 18px;
+  border-radius: 18px;
+  background: #ff0000;
+  color: #fff;
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 600;
+}
+.video-enlace-externo:hover { background: #cc0000; }
