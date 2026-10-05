@@ -88,7 +88,12 @@
 @media (min-width: 700px) {
   .banner-seccion-img { max-width: 900px; border-radius: 0 0 16px 16px; }
 }
-.seccion-con-banner .tarjetas { padding: 0 24px; }
+.seccion-con-banner .tarjetas,
+.seccion-con-banner .opciones,
+.seccion-con-banner .opcion-recurso,
+.seccion-con-banner .video-landing-grid,
+.seccion-con-banner .video-landing-intro,
+.seccion-con-banner .video-ver-mas { padding-left: 24px; padding-right: 24px; }
 
 /* Revelado progresivo al hacer scroll */
 .reveal {

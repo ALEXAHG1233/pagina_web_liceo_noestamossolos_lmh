@@ -45,20 +45,6 @@
     </div>
   </section>
 
-  <section class="seccion historias reveal">
-    <h2>Historias de quienes ya dieron el paso</h2>
-
-    <div class="historia">
-      <p>"Sentía que nadie me entendía y que hablar no iba a cambiar nada. Un día solo empecé a escribir cómo me sentía, sin pensarlo mucho. Después de unas semanas, me di cuenta de que ya no cargaba todo yo solo."</p>
-      <span class="historia-autor">— Estudiante, 2° año</span>
-    </div>
-
-    <div class="historia">
-      <p>"Tenía miedo de que se enteraran en mi casa o en el liceo. Cuando supe que era anónimo, me animé a escribir por primera vez. Ahora hablo seguido, y me siento más tranquilo/a."</p>
-      <span class="historia-autor">— Estudiante, 4° año</span>
-    </div>
-  </section>
-
   <section class="seccion seccion-con-banner reveal">
     <h2 class="sr-only">Muro interactivo — Describe tu experiencia</h2>
     <a href="{{ url_for('muro') }}">
@@ -73,8 +59,26 @@
     </a>
   </section>
 
-  <section class="seccion como-funciona reveal">
-    <h2>¿Cómo funciona?</h2>
+  <section class="seccion historias reveal">
+    <h2>Historias de quienes ya dieron el paso</h2>
+
+    <div class="historia">
+      <p>"Sentía que nadie me entendía y que hablar no iba a cambiar nada. Un día solo empecé a escribir cómo me sentía, sin pensarlo mucho. Después de unas semanas, me di cuenta de que ya no cargaba todo yo solo."</p>
+      <span class="historia-autor">— Estudiante, 2° año</span>
+    </div>
+
+    <div class="historia">
+      <p>"Tenía miedo de que se enteraran en mi casa o en el liceo. Cuando supe que era anónimo, me animé a escribir por primera vez. Ahora hablo seguido, y me siento más tranquilo/a."</p>
+      <span class="historia-autor">— Estudiante, 4° año</span>
+    </div>
+  </section>
+
+  <section class="seccion seccion-con-banner como-funciona reveal">
+    <h2 class="sr-only">¿Cómo funciona? Pasos para charlar anónimamente</h2>
+    <img
+      src="{{ url_for('static', filename='images/banner_pasos_charlar.webp') }}"
+      alt="Pasos para charlar anónimamente"
+      class="banner-seccion-img">
     <div class="pasos-caja">
       <ol class="pasos">
         <li>
@@ -88,8 +92,12 @@
     </div>
   </section>
 
-  <section id="elegir-con-quien" class="seccion cta-final reveal">
-    <h2>¿Con quién quieres hablar hoy?</h2>
+  <section id="elegir-con-quien" class="seccion seccion-con-banner cta-final reveal">
+    <h2 class="sr-only">¿Con quién quieres hablar hoy?</h2>
+    <img
+      src="{{ url_for('static', filename='images/banner_con_quien_hablar.webp') }}"
+      alt="¿Con quién deseas hablar el día de hoy?"
+      class="banner-seccion-img">
     <div class="opciones">
       <a href="{{ url_for('estudiante') }}" class="opcion opcion-psicologa">
         <h3>Hablar con la psicóloga</h3>
@@ -102,16 +110,24 @@
     </div>
   </section>
 
-  <section class="seccion recurso-individual reveal">
-    <h2>Herramientas</h2>
+  <section class="seccion seccion-con-banner recurso-individual reveal">
+    <h2 class="sr-only">Herramientas técnicas</h2>
+    <img
+      src="{{ url_for('static', filename='images/banner_herramientas.webp') }}"
+      alt="Herramientas técnicas — TCC, TDC, respiración y meditación"
+      class="banner-seccion-img">
     <a href="{{ url_for('herramientas') }}" class="opcion opcion-recurso opcion-naranja">
       <h3>Técnicas para el momento</h3>
       <p>TCC, TDC, respiración y meditación — disponibles las 24 horas, a tu ritmo, sin necesidad de que nadie esté conectado.</p>
     </a>
   </section>
 
-  <section class="seccion recurso-individual reveal">
-    <h2>Infórmate</h2>
+  <section class="seccion seccion-con-banner recurso-individual reveal">
+    <h2 class="sr-only">Infórmate</h2>
+    <img
+      src="{{ url_for('static', filename='images/banner_informate.webp') }}"
+      alt="Infórmate"
+      class="banner-seccion-img">
     <a href="{{ url_for('informate') }}" class="opcion opcion-recurso opcion-naranja">
       <h3>Entiende lo que sientes y lo que te rodea</h3>
       <p>Artículos sobre salud mental, fobias, maltrato hacia la mujer, y más — explicados con claridad.</p>
@@ -126,8 +142,12 @@
     </a>
   </section>
 
-  <section class="seccion recurso-individual reveal">
-    <h2>Video</h2>
+  <section class="seccion seccion-con-banner recurso-individual reveal">
+    <h2 class="sr-only">Videos informativos — Salud mental</h2>
+    <img
+      src="{{ url_for('static', filename='images/banner_videos.webp') }}"
+      alt="Videos informativos — Salud mental"
+      class="banner-seccion-img">
     <div class="video-landing-grid">
       {% for cat_id, cat in categorias_video.items() %}
         {% for v in cat.videos %}
