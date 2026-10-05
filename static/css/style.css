@@ -8,6 +8,7 @@
   --dorado-suave: #fbead2;
   --naranja: #e8732a;
   --naranja-suave: #fde3cc;
+  --amarillo: #f0b400;
   --azul-honduras: #0072ce;
   --azul-suave: #e1f0fb;
   --negro: #1a1a1a;
@@ -35,6 +36,55 @@ body {
   background: var(--fondo);
   color: var(--negro);
   animation: aparecerPagina 480ms ease both;
+}
+
+/* Texto amarillo en todo el sitio. Se deja fuera a los campos donde se
+   escribe (input/textarea/select), para que lo que el estudiante está
+   tecleando se siga leyendo bien mientras lo escribe. */
+body :not(input):not(textarea):not(select):not(option) {
+  color: var(--amarillo) !important;
+}
+
+/* Fondo verde en todas las tarjetas y superficies del sitio (no solo
+   detrás de ellas). Los campos de escritura quedan fuera para que se
+   sigan viendo como campos de formulario normales, y el área de mensajes
+   del chat queda fuera para que el selector de "Fondo" siga funcionando. */
+body *:not(input):not(textarea):not(select):not(option):not(:where(.mensajes)) {
+  background-color: var(--verde-liceo) !important;
+}
+
+/* Los cuadros/tarjetas de contenido vuelven a blanco (con su texto
+   legible otra vez), para que lo que hay adentro se pueda leer bien
+   sobre el verde general de la página. */
+.tarjeta, .tarjeta *,
+.opcion, .opcion *,
+.historia, .historia *,
+.pasos-caja, .pasos-caja *,
+.playlist-card, .playlist-card *,
+.test-card, .test-card *,
+.racha-card, .racha-card *,
+.muro-card, .muro-card *,
+.resena-card, .resena-card *,
+.stat-card, .stat-card *,
+.login-card, .login-card *,
+.amigo-card, .amigo-card *,
+.chat-container {
+  background-color: var(--blanco) !important;
+}
+.tarjeta, .tarjeta *,
+.opcion, .opcion *,
+.historia, .historia *,
+.pasos-caja, .pasos-caja *,
+.playlist-card, .playlist-card *,
+.test-card, .test-card *,
+.racha-card, .racha-card *,
+.muro-card, .muro-card *,
+.resena-card, .resena-card *,
+.stat-card, .stat-card *,
+.login-card, .login-card *,
+.amigo-card, .amigo-card *,
+.chat-container, .chat-container * {
+  color: var(--negro) !important;
 }
 
 /* Fundido de entrada puramente en CSS: nunca depende de que el JS cargue,
@@ -429,6 +479,17 @@ a, button { transition: var(--transicion-suave); }
   transition: transform 150ms ease, box-shadow 150ms ease;
 }
 .whatsapp-flotante:hover { transform: scale(1.08); box-shadow: 0 6px 18px rgba(0,0,0,0.32); }
+
+/* En las páginas de chat, el botón flotante de WhatsApp se sube para no
+   taparle el botón "Enviar" al formulario de mensajes, que vive pegado
+   abajo del todo igual que él. */
+body:has(.chat-container) .whatsapp-flotante {
+  bottom: 86px;
+}
+@media (max-width: 420px) {
+  .whatsapp-flotante { width: 46px; height: 46px; bottom: 14px; right: 14px; }
+  body:has(.chat-container) .whatsapp-flotante { bottom: 78px; }
+}
 
 .panel-container .chat-container { max-width: none; flex: 1; box-shadow: none; }
 

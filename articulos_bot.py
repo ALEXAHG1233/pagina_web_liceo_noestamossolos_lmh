@@ -571,4 +571,23 @@ ARTICULOS = {
             "Si te identificaste con alguno de estos patrones, no es una sentencia — es solo información útil sobre ti mismo/a, y un buen punto de partida para hablarlo con la psicóloga si quieres entenderlo mejor.",
         ],
     },
+    "personajes-y-trastornos": {
+        "titulo": "10 personajes con un trastorno psicológico",
+        "categoria": "Identifica",
+        "resumen": "Varios personajes conocidos están escritos mostrando un trastorno psicológico real — verlo en ellos ayuda a reconocerlo y a quitarle el estigma.",
+        "contenido": [
+            "Antes de empezar: estos son personajes ficticios, escritos por guionistas — no son diagnósticos clínicos exactos. Se usan aquí solo como ejemplo para reconocer mejor cómo se siente un trastorno en la vida real, y para recordar que tenerlo no te hace menos.",
+            "Katniss Everdeen, de \"Los Juegos del Hambre\", muestra trastorno de estrés postraumático (TEPT) después de la violencia que vivió: pesadillas, sobresaltos, y recuerdos que regresan de golpe (flashbacks).",
+            "Tony Stark / Iron Man, de Marvel, tiene ataques de pánico después de la batalla de Nueva York (se ve claro en \"Iron Man 3\"): el corazón acelerado, la sensación de que algo malo va a pasar, de la nada.",
+            "John Nash, de \"Una Mente Brillante\", vive con esquizofrenia: ve y escucha cosas que parecen completamente reales pero no lo son, y tiene que aprender a distinguirlas con ayuda y tratamiento.",
+            "Adrian Monk, de la serie \"Monk\", tiene trastorno obsesivo-compulsivo (TOC): pensamientos repetitivos que no puede apagar, y rituales (como ordenar o limpiar) que hace para bajar la ansiedad que esos pensamientos le causan.",
+            "Charlie Brown, de \"Snoopy\" (Peanuts), refleja distimia y ansiedad social: una tristeza de fondo que no se va del todo, e inseguridad fuerte en situaciones donde otros lo pueden juzgar.",
+            "Piglet, de \"Winnie Pooh\", representa el trastorno de ansiedad generalizada: se preocupa de forma constante por cosas que todavía no han pasado, y le cuesta calmar ese miedo incluso cuando todo está bien.",
+            "Raymond, de \"Rain Man\", es autista. El autismo no es un trastorno en el sentido de \"algo roto\" — es una forma distinta de procesar el mundo, con sus propias fortalezas (como la memoria de Raymond) y sus propios retos (como el cambio repentino de rutina).",
+            "Bart Simpson, de \"Los Simpson\", es interpretado seguido (no de forma oficial) con rasgos de TDAH: dificultad para quedarse quieto, para concentrarse, e impulsividad para actuar antes de pensar.",
+            "Bruce Wayne / Batman carga trastorno de estrés postraumático desde la infancia, por la muerte violenta de sus padres — un ejemplo de cómo un trauma de niño puede marcar la forma de reaccionar al miedo y a la pérdida de adulto.",
+            "Riley, de \"Intensa-Mente\" (Inside Out), muestra qué pasa cuando se reprime la tristeza y solo se deja actuar a la alegría: con el tiempo aparecen síntomas depresivos — justo lo que la película usa para enseñar que sentir tristeza también es necesario.",
+            "Ver un trastorno en un personaje no es \"ponerle una etiqueta\" — es reconocer que es algo real, que le puede pasar a cualquiera, y que no define todo lo que esa persona (o tú) es. Si algo de esto te sonó parecido a lo que sientes, hablarlo con la psicóloga es el siguiente paso, no un diagnóstico por tu cuenta.",
+        ],
+    },
 }
