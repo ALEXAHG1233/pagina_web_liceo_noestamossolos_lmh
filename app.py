@@ -128,6 +128,15 @@ def init_db():
         )
         """
     )
+    cur.execute(
+        """
+        CREATE TABLE IF NOT EXISTS muro_posts (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            contenido TEXT,
+            fecha TEXT
+        )
+        """
+    )
     conn.commit()
     conn.close()
 
@@ -289,6 +298,29 @@ def guardar_contacto_emergencia(token, telefono, plataforma):
     )
     conn.commit()
     conn.close()
+
+
+def guardar_muro_post(contenido):
+    conn = sqlite3.connect(DB_PATH)
+    cur = conn.cursor()
+    cur.execute(
+        "INSERT INTO muro_posts (contenido, fecha) VALUES (?, ?)",
+        (contenido, datetime.now().isoformat()),
+    )
+    conn.commit()
+    conn.close()
+
+
+def obtener_muro_posts(limite=50):
+    conn = sqlite3.connect(DB_PATH)
+    cur = conn.cursor()
+    cur.execute(
+        "SELECT contenido, fecha FROM muro_posts ORDER BY id DESC LIMIT ?",
+        (limite,),
+    )
+    filas = cur.fetchall()
+    conn.close()
+    return filas
 
 
 def obtener_resumen_resenas():
@@ -623,6 +655,47 @@ def resenas():
     resumen = obtener_resumen_resenas()
     lista = obtener_resenas()
     return render_template("resenas.html", resenas=lista, resumen=resumen)
+
+
+@app.route("/muro", methods=["GET", "POST"])
+def muro():
+    if "token" not in session:
+        session["token"] = f"Usuario-{uuid.uuid4().hex[:6]}"
+        registrar_sesion(session["token"])
+
+    if request.method == "POST":
+        contenido = (request.form.get("contenido") or "").strip()[:300]
+
+        if contenido:
+            analisis = analizar_riesgo(contenido)
+
+            if analisis["nivel"] in ("medio", "alto", "critico"):
+                # No se publica en un muro público algo que suene a una crisis
+                # real: se guarda en el historial de la sesión y se avisa a la
+                # psicóloga, igual que en el resto de la plataforma.
+                guardar_mensaje(session["token"], "estudiante", contenido, analisis)
+                socketio.emit(
+                    "alerta_riesgo",
+                    {
+                        "token": session["token"],
+                        "nivel": analisis["nivel"],
+                        "categorias": analisis["categorias"],
+                    },
+                    room="panel_psicologa",
+                )
+                flash(
+                    "Lo que escribiste suena importante y merece más que una publicación. "
+                    "Ya se lo avisamos a la psicóloga; también puedes escribirle directamente.",
+                    "aviso",
+                )
+            else:
+                guardar_muro_post(contenido)
+                flash("Tu experiencia ya está en el muro. Gracias por compartirla.", "exito")
+
+        return redirect(url_for("muro"))
+
+    posts = obtener_muro_posts()
+    return render_template("muro.html", posts=posts)
 
 
 @app.route("/psicologa/login", methods=["GET", "POST"])

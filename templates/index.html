@@ -23,8 +23,12 @@
     <div id="panel-musica" class="panel-musica-embebida"></div>
   </section>
 
-  <section class="seccion reveal">
-    <h2>¿Por qué hablar ayuda?</h2>
+  <section class="seccion seccion-con-banner reveal">
+    <h2 class="sr-only">¿Por qué hablar ayuda?</h2>
+    <img
+      src="{{ url_for('static', filename='images/banner_por_que_hablar.webp') }}"
+      alt="¿Por qué hablar ayuda? Tigrito te lo explica"
+      class="banner-seccion-img">
     <div class="tarjetas">
       <div class="tarjeta tarjeta-naranja">
         <h3>Poner en palabras lo que sientes</h3>
@@ -53,6 +57,20 @@
       <p>"Tenía miedo de que se enteraran en mi casa o en el liceo. Cuando supe que era anónimo, me animé a escribir por primera vez. Ahora hablo seguido, y me siento más tranquilo/a."</p>
       <span class="historia-autor">— Estudiante, 4° año</span>
     </div>
+  </section>
+
+  <section class="seccion seccion-con-banner reveal">
+    <h2 class="sr-only">Muro interactivo — Describe tu experiencia</h2>
+    <a href="{{ url_for('muro') }}">
+      <img
+        src="{{ url_for('static', filename='images/banner_muro_interactivo.webp') }}"
+        alt="Muro interactivo — Describe tu experiencia"
+        class="banner-seccion-img">
+    </a>
+    <a href="{{ url_for('muro') }}" class="opcion opcion-recurso opcion-naranja">
+      <h3>Escribe en el muro</h3>
+      <p>Comparte tu experiencia de forma anónima y lee lo que otros estudiantes han vivido.</p>
+    </a>
   </section>
 
   <section class="seccion como-funciona reveal">
@@ -196,6 +214,7 @@
       <a href="{{ url_for('fe') }}">Fe y Esperanza</a>
       <a href="{{ url_for('musica') }}">Música</a>
       <a href="{{ url_for('resenas') }}">Reseñas</a>
+      <a href="{{ url_for('muro') }}">Muro interactivo</a>
       <a href="{{ url_for('futuro') }}">Mi futuro</a>
     </div>
   </section>

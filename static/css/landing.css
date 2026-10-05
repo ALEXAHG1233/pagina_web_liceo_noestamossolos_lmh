@@ -78,6 +78,18 @@
 .seccion { padding: 36px 24px; }
 .seccion h2 { font-size: 20px; margin-bottom: 18px; text-align: center; color: var(--verde-liceo); }
 
+.seccion-con-banner { padding-top: 0; padding-left: 0; padding-right: 0; }
+.banner-seccion-img {
+  display: block;
+  width: 100%;
+  height: auto;
+  margin: 0 auto 28px;
+}
+@media (min-width: 700px) {
+  .banner-seccion-img { max-width: 900px; border-radius: 0 0 16px 16px; }
+}
+.seccion-con-banner .tarjetas { padding: 0 24px; }
+
 /* Revelado progresivo al hacer scroll */
 .reveal {
   opacity: 0;

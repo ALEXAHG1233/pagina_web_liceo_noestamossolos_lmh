@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Muro interactivo — No Estás Solo LMH</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 64 64%22><path fill=%22%231f4d2c%22 d=%22M32 56s-20-12.6-27-24.4C-.2 21.6 4.6 10 15.4 8.4c6-.9 11.6 2 16.6 7.6 5-5.6 10.6-8.5 16.6-7.6C59.4 10 64.2 21.6 59 31.6 52 43.4 32 56 32 56Z%22/></svg>">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/diario.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/muro.css') }}">
+</head>
+<body class="diario-body">
+
+  <header class="diario-header">
+    <a href="{{ url_for('index') }}" class="volver">← Volver</a>
+    <h1>Muro interactivo</h1>
+  </header>
+
+  {% with mensajes = get_flashed_messages(with_categories=true) %}
+    {% if mensajes %}
+      <div class="avisos-flash">
+        {% for categoria, texto in mensajes %}
+          <div class="aviso-flash aviso-{{ categoria }}">{{ texto }}</div>
+        {% endfor %}
+      </div>
+    {% endif %}
+  {% endwith %}
+
+  <section class="pregunta-hoy nuevo-post-muro">
+    <h2>Describe tu experiencia</h2>
+    <p class="muro-intro">Comparte algo que viviste o cómo te sientes, de forma anónima. Otros estudiantes podrán leerlo.</p>
+    <form method="POST" action="{{ url_for('muro') }}" class="form-muro">
+      <textarea name="contenido" maxlength="300" rows="4" placeholder="Escribe aquí tu experiencia..." required></textarea>
+      <p class="nota-privacidad">Esto se muestra públicamente a otros estudiantes, sin tu nombre. No compartas datos personales. Si lo que escribes suena a una crisis real, no se publica aquí — se avisa directo a la psicóloga.</p>
+      <button type="submit">Publicar en el muro</button>
+    </form>
+  </section>
+
+  <section class="historial-semana lista-muro">
+    <h2>Lo que han compartido otros estudiantes</h2>
+    {% if posts %}
+      {% for contenido, fecha in posts %}
+        <div class="muro-card">
+          <p class="muro-texto">{{ contenido }}</p>
+          <span class="muro-fecha">{{ fecha[:10] }}</span>
+        </div>
+      {% endfor %}
+    {% else %}
+      <p class="sin-registros">Todavía no hay publicaciones en el muro. ¡Sé el primero!</p>
+    {% endif %}
+  </section>
+
+  <script src="{{ url_for('static', filename='js/common.js') }}"></script>
+</body>
+</html>

@@ -1,0 +1,72 @@
+.avisos-flash { padding: 0 20px; margin-top: 16px; }
+.aviso-flash {
+  padding: 12px 14px;
+  border-radius: 10px;
+  font-size: 13px;
+  margin-bottom: 10px;
+  animation: entrarMensaje 320ms ease both;
+}
+.aviso-exito { background: var(--verde-suave); color: var(--verde-liceo); }
+.aviso-aviso { background: #fcebeb; color: #791f1f; border-left: 3px solid #c94b4b; }
+
+.nuevo-post-muro { text-align: center; }
+.muro-intro {
+  font-size: 13px;
+  color: #7a7870;
+  max-width: 360px;
+  margin: 0 auto 14px;
+}
+
+.form-muro {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  margin-top: 4px;
+}
+.form-muro textarea {
+  width: 100%;
+  max-width: 380px;
+  padding: 10px 12px;
+  border: 1px solid #d3d1c7;
+  border-radius: 12px;
+  font-family: inherit;
+  font-size: 14px;
+  resize: vertical;
+  transition: border-color var(--transicion-suave), box-shadow var(--transicion-suave);
+}
+.form-muro textarea:focus {
+  border-color: var(--azul-honduras);
+  box-shadow: 0 0 0 3px rgba(0, 114, 206, 0.15);
+  outline: none;
+}
+
+.nota-privacidad {
+  font-size: 11px;
+  color: #7a7870;
+  max-width: 340px;
+  margin: 0;
+}
+
+.form-muro button {
+  padding: 10px 24px;
+  border: none;
+  border-radius: 20px;
+  background: var(--verde-liceo);
+  color: #fff;
+  font-size: 14px;
+  cursor: pointer;
+}
+.form-muro button:hover { background: var(--verde-liceo-claro); transform: translateY(-1px); box-shadow: var(--sombra-suave); }
+
+.lista-muro { display: flex; flex-direction: column; gap: 10px; }
+.muro-card {
+  background: var(--naranja-suave);
+  border: 2px solid var(--verde-liceo);
+  border-radius: 12px;
+  padding: 14px 16px;
+  box-shadow: var(--sombra-suave);
+  animation: entrarMensaje 320ms ease both;
+}
+.muro-texto { margin: 0; font-size: 14px; color: #2c2c2a; line-height: 1.5; }
+.muro-fecha { display: block; margin-top: 6px; font-size: 11px; color: #7a7870; }
