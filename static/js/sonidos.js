@@ -70,22 +70,9 @@ const Sonidos = (() => {
 })();
 
 /**
- * Música ambiental: abre la lista "lofi beats" de Spotify (oficial, con
- * licencia de Spotify) en una ventanita aparte, con nombre fijo. Al usar
- * siempre el mismo nombre de ventana, un segundo clic (incluso desde otra
- * página del sitio) reutiliza esa misma ventana en vez de abrir otra —
- * así la música sigue sonando aunque el estudiante navegue entre páginas,
- * algo que un <audio> normal no puede hacer en un sitio de páginas múltiples.
+ * Playlist ambiental por defecto: "lofi beats" oficial de Spotify.
+ * El reproductor se embebe directamente en la página (ver crearBotonMusica
+ * en common.js), nunca en una ventana aparte, para que el estudiante no
+ * tenga que salir de donde está para escuchar música.
  */
-const NOMBRE_VENTANA_MUSICA = "espacio_seguro_musica_ambiental";
-
-function abrirMusicaAmbiental(playlistId = "37i9dQZF1DWWQRwui0ExPn") {
-  const url = `https://open.spotify.com/embed/playlist/${playlistId}?utm_source=generator&theme=0`;
-  const ventana = window.open(
-    url,
-    NOMBRE_VENTANA_MUSICA,
-    "width=380,height=300,noopener,noreferrer"
-  );
-  if (ventana) ventana.focus();
-  return ventana;
-}
+const SPOTIFY_PLAYLIST_LOFI = "37i9dQZF1DWWQRwui0ExPn";

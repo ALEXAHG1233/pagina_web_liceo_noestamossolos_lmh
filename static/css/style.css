@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&family=Nunito+Sans:wght@400;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Poppins:wght@500;600;700&family=Nunito+Sans:wght@400;600;700&display=swap');
 
 :root {
   --verde-liceo: #1f4d2c;
@@ -6,6 +6,8 @@
   --verde-suave: #e3efe6;
   --dorado: #c9a227;
   --dorado-suave: #fbead2;
+  --naranja: #e8732a;
+  --naranja-suave: #fde3cc;
   --azul-honduras: #0072ce;
   --azul-suave: #e1f0fb;
   --negro: #1a1a1a;
@@ -46,7 +48,11 @@ body {
   to { opacity: 1; }
 }
 
-h1, h2, h3 { font-family: Helvetica, "Helvetica Neue", Arial, "Poppins", "Nunito Sans", sans-serif; }
+h1, h2, h3 {
+  font-family: "Oswald", Helvetica, Arial, sans-serif;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
 
 a, button { transition: var(--transicion-suave); }
 
@@ -54,6 +60,17 @@ a, button { transition: var(--transicion-suave); }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: #d3d1c7; border-radius: 8px; }
 ::-webkit-scrollbar-thumb:hover { background: #b9b6a9; }
+
+.panel-musica-embebida {
+  display: none;
+  max-width: 340px;
+  margin: 14px auto 0;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: var(--sombra-suave);
+}
+.panel-musica-embebida.visible { display: block; }
+.panel-musica-embebida iframe { display: block; border: 0; }
 
 :focus-visible {
   outline: 2px solid var(--azul-honduras);

@@ -309,7 +309,11 @@ def obtener_resumen_resenas():
 @app.route("/")
 def index():
     registrar_visita()
-    return render_template("index.html", categorias_video=VIDEOS_CURADOS)
+    return render_template(
+        "index.html",
+        categorias_video=VIDEOS_CURADOS,
+        video_prevencion_id=VIDEO_PREVENCION_SUICIDIO_ID,
+    )
 
 
 @app.route("/estudiante")
@@ -420,6 +424,10 @@ def musica():
 CARPETA_VIDEOS = os.path.join("static", "videos")
 EXTENSIONES_VIDEO_PERMITIDAS = (".mp4", ".webm", ".ogg")
 os.makedirs(CARPETA_VIDEOS, exist_ok=True)
+
+# Video opcional para la sección "10 de septiembre" de la portada — se deja
+# en None hasta que se tenga un ID real de YouTube para poner ahí.
+VIDEO_PREVENCION_SUICIDIO_ID = None
 
 # Videos curados, embebidos directo desde YouTube (oficial, con licencia de
 # YouTube — nunca se descarga ni se aloja el video). Organizados por a quién

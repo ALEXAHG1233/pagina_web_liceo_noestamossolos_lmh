@@ -12,26 +12,21 @@
 </head>
 <body class="landing-body">
 
-  <section class="hero">
-    <svg class="hero-blob b1" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-      <path fill="#ffffff" d="M45.9,-58.7C58.9,-49.5,68.4,-34.5,72.1,-18.1C75.8,-1.7,73.7,16.1,65.5,30.6C57.3,45.1,43,56.3,27,62.6C11,68.9,-6.7,70.3,-23.4,65.9C-40.1,61.5,-55.8,51.3,-64.6,36.8C-73.4,22.3,-75.3,3.5,-71.4,-13.2C-67.5,-29.9,-57.8,-44.5,-44.8,-53.8C-31.8,-63.1,-15.9,-67.1,0.8,-68.2C17.5,-69.3,32.9,-67.9,45.9,-58.7Z" transform="translate(100 100)" />
-    </svg>
-    <svg class="hero-blob b2" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-      <path fill="#ffffff" d="M39.6,-51.3C52.1,-42.9,63.5,-31.4,68.4,-17C73.3,-2.6,71.7,14.7,63.9,28.6C56.1,42.5,42.1,52.9,26.7,59.2C11.3,65.5,-5.5,67.6,-21.4,63.6C-37.3,59.6,-52.3,49.4,-61.3,35.2C-70.3,21,-73.3,2.8,-69.7,-13.7C-66.1,-30.2,-55.9,-45,-42.5,-53.4C-29.1,-61.8,-14.6,-63.8,0.4,-64.3C15.3,-64.9,27.1,-59.7,39.6,-51.3Z" transform="translate(100 100)" />
-    </svg>
-    <svg class="hero-icono" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-      <path d="M32 56s-20-12.6-27-24.4C-.2 21.6 4.6 10 15.4 8.4c6-.9 11.6 2 16.6 7.6 5-5.6 10.6-8.5 16.6-7.6C59.4 10 64.2 21.6 59 31.6 52 43.4 32 56 32 56Z" fill="#ffffff" fill-opacity="0.9"/>
-    </svg>
-    <h1>No Estás Solo LMH</h1>
-    <p class="subtitulo">Programa de Apoyo Psicopedagógico — Liceo Militar de Honduras</p>
+  <section class="hero hero-con-banner">
+    <h1 class="sr-only">No Estás Solo LMH — Programa de Apoyo Psicopedagógico, Liceo Militar de Honduras</h1>
+    <img
+      src="{{ url_for('static', filename='images/banner_no_estas_solo.webp') }}"
+      alt="No Estás Solo — Programa Psicopedagógico, Liceo Militar de Honduras"
+      class="hero-banner-img">
     <p class="hero-frase">Lo que escribas aquí es completamente anónimo. Nadie sabrá que fuiste tú.</p>
     <button id="btn-musica" class="btn-sonido btn-musica-hero" type="button">Música relajante</button>
+    <div id="panel-musica" class="panel-musica-embebida"></div>
   </section>
 
   <section class="seccion reveal">
     <h2>¿Por qué hablar ayuda?</h2>
     <div class="tarjetas">
-      <div class="tarjeta">
+      <div class="tarjeta tarjeta-naranja">
         <h3>Poner en palabras lo que sientes</h3>
         <p>Cuando lo dices o lo escribes, tu mente empieza a ordenarlo. Muchas veces las cosas pesan menos en cuanto dejan de dar vueltas solo en tu cabeza.</p>
       </div>
@@ -48,7 +43,6 @@
 
   <section class="seccion historias reveal">
     <h2>Historias de quienes ya dieron el paso</h2>
-    <p class="nota-ilustrativa">Ejemplos ilustrativos de lo que puede pasar cuando alguien decide hablar.</p>
 
     <div class="historia">
       <p>"Sentía que nadie me entendía y que hablar no iba a cambiar nada. Un día solo empecé a escribir cómo me sentía, sin pensarlo mucho. Después de unas semanas, me di cuenta de que ya no cargaba todo yo solo."</p>
@@ -63,14 +57,20 @@
 
   <section class="seccion como-funciona reveal">
     <h2>¿Cómo funciona?</h2>
-    <ol class="pasos">
-      <li><strong>Entra sin registrarte.</strong> No pedimos tu nombre ni tu correo.</li>
-      <li><strong>Elige con quién hablar.</strong> Un asistente disponible siempre, o la psicóloga del liceo.</li>
-      <li><strong>Habla con confianza.</strong> Es un espacio privado, a tu ritmo.</li>
-    </ol>
+    <div class="pasos-caja">
+      <ol class="pasos">
+        <li>
+          <a href="#elegir-con-quien" class="paso-seleccionable">
+            <strong>Entra sin registrarte.</strong> No pedimos tu nombre ni tu correo.
+          </a>
+        </li>
+        <li><strong>Elige con quién hablar.</strong> Un asistente disponible siempre, o la psicóloga del liceo.</li>
+        <li><strong>Habla con confianza.</strong> Es un espacio privado, a tu ritmo.</li>
+      </ol>
+    </div>
   </section>
 
-  <section class="seccion cta-final reveal">
+  <section id="elegir-con-quien" class="seccion cta-final reveal">
     <h2>¿Con quién quieres hablar hoy?</h2>
     <div class="opciones">
       <a href="{{ url_for('estudiante') }}" class="opcion opcion-psicologa">
@@ -82,12 +82,11 @@
         <p>Disponible al instante, a cualquier hora. Bueno para empezar a ordenar tus ideas.</p>
       </a>
     </div>
-    <p class="recordatorio">Sea cual sea tu elección, es 100% anónimo.</p>
   </section>
 
   <section class="seccion recurso-individual reveal">
     <h2>Herramientas</h2>
-    <a href="{{ url_for('herramientas') }}" class="opcion opcion-recurso opcion-azul">
+    <a href="{{ url_for('herramientas') }}" class="opcion opcion-recurso opcion-naranja">
       <h3>Técnicas para el momento</h3>
       <p>TCC, TDC, respiración y meditación — disponibles las 24 horas, a tu ritmo, sin necesidad de que nadie esté conectado.</p>
     </a>
@@ -95,7 +94,7 @@
 
   <section class="seccion recurso-individual reveal">
     <h2>Infórmate</h2>
-    <a href="{{ url_for('informate') }}" class="opcion opcion-recurso opcion-dorado">
+    <a href="{{ url_for('informate') }}" class="opcion opcion-recurso opcion-naranja">
       <h3>Entiende lo que sientes y lo que te rodea</h3>
       <p>Artículos sobre salud mental, fobias, maltrato hacia la mujer, y más — explicados con claridad.</p>
     </a>
@@ -111,7 +110,6 @@
 
   <section class="seccion recurso-individual reveal">
     <h2>Video</h2>
-    <p class="video-landing-intro">Cada quien vive cosas distintas — aquí hay videos pensados para distintas realidades.</p>
     <div class="video-landing-grid">
       {% for cat_id, cat in categorias_video.items() %}
         {% for v in cat.videos %}
@@ -142,8 +140,28 @@
   </section>
 
   <section class="seccion recurso-individual prevencion-suicidio reveal">
-    <h2>10 de septiembre — Día Mundial para la Prevención del Suicidio</h2>
+    <img
+      src="{{ url_for('static', filename='images/banner_prevencion_suicidio.webp') }}"
+      alt="10 de septiembre — Día Mundial para la Prevención del Suicidio"
+      class="prevencion-banner-img">
     <p>Esta fecha existe para recordar algo simple pero importante: si alguna vez tienes pensamientos así, no estás solo/a, y sí hay ayuda real. Hablarlo —aquí, con un adulto de confianza, o con la psicóloga— es el primer paso, y ya es un acto de valentía.</p>
+
+    <div class="prevencion-video">
+      {% if video_prevencion_id %}
+        <iframe
+          src="https://www.youtube.com/embed/{{ video_prevencion_id }}"
+          width="100%"
+          height="220"
+          frameborder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowfullscreen
+          loading="lazy">
+        </iframe>
+      {% else %}
+        <p class="prevencion-video-placeholder">Video explicativo — próximamente.</p>
+      {% endif %}
+    </div>
+
     <a href="{{ url_for('estudiante') }}" class="opcion opcion-recurso opcion-rojo">
       <h3>Hablar con la psicóloga ahora</h3>
       <p>Es anónimo, y es gratis. No tienes que esperar a que algo esté "lo suficientemente grave".</p>

@@ -68,8 +68,24 @@ function crearToggleSonido(boton, opciones = {}) {
 }
 
 function crearBotonMusica(boton, playlistId) {
-  if (!boton || typeof abrirMusicaAmbiental !== "function") return;
-  boton.addEventListener("click", () => abrirMusicaAmbiental(playlistId));
+  if (!boton) return;
+  const panel = document.getElementById("panel-musica");
+  if (!panel) return;
+  const lista = playlistId || (typeof SPOTIFY_PLAYLIST_LOFI !== "undefined" ? SPOTIFY_PLAYLIST_LOFI : "37i9dQZF1DWWQRwui0ExPn");
+
+  boton.addEventListener("click", () => {
+    if (panel.classList.contains("visible")) {
+      panel.classList.remove("visible");
+      panel.innerHTML = "";
+      return;
+    }
+    panel.innerHTML = `<iframe
+      src="https://open.spotify.com/embed/playlist/${lista}?utm_source=generator&theme=0"
+      width="100%" height="152" frameborder="0"
+      allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+      loading="lazy"></iframe>`;
+    panel.classList.add("visible");
+  });
 }
 
 /**

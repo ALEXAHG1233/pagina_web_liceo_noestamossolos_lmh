@@ -61,3 +61,20 @@
   align-items: center;
   justify-content: center;
 }
+
+.herramienta-video {
+  margin: 0 0 24px;
+  border-radius: 12px;
+  overflow: hidden;
+}
+.herramienta-video iframe { display: block; border: 0; }
+.herramienta-video-placeholder {
+  margin: 0;
+  background: var(--naranja-suave);
+  border: 2px dashed var(--verde-liceo);
+  border-radius: 12px;
+  padding: 24px 16px;
+  text-align: center;
+  font-size: 13px;
+  color: var(--verde-liceo);
+}

@@ -17,6 +17,7 @@ TECNICAS = {
             "reestructuracion": {
                 "nombre": "Reestructuración cognitiva",
                 "resumen": "Cuestionar un pensamiento que te está pesando, paso a paso.",
+                "video_youtube_id": None,
                 "pasos": [
                     "Identifica el pensamiento exacto que te está afectando (ej: \"soy un fracaso\").",
                     "Pregúntate: ¿qué evidencia tengo de que esto es cierto? ¿Qué evidencia tengo de que NO lo es?",
@@ -27,6 +28,7 @@ TECNICAS = {
             "activacion": {
                 "nombre": "Activación conductual",
                 "resumen": "Cuando el ánimo está bajo, hacer algo (aunque no den ganas) ayuda a que el ánimo suba — no al revés.",
+                "video_youtube_id": None,
                 "pasos": [
                     "Elige una actividad pequeña y concreta (no \"sentirme mejor\", sino algo específico: salir a caminar 10 minutos, bañarte, escribirle a alguien).",
                     "Hazla aunque no tengas ganas — la motivación muchas veces llega DESPUÉS de empezar, no antes.",
@@ -37,6 +39,7 @@ TECNICAS = {
             "respiracion": {
                 "nombre": "Respiración 4-4-4",
                 "resumen": "Para bajar la ansiedad en el momento, en menos de un minuto.",
+                "video_youtube_id": None,
                 "pasos": [
                     "Inhala contando lentamente hasta 4.",
                     "Sostén el aire contando hasta 4.",
@@ -47,6 +50,7 @@ TECNICAS = {
             "relajacion_muscular": {
                 "nombre": "Relajación muscular progresiva",
                 "resumen": "Para soltar la tensión física acumulada, grupo de músculos por grupo de músculos.",
+                "video_youtube_id": None,
                 "pasos": [
                     "Siéntate o acuéstate cómodamente.",
                     "Tensa los músculos de los pies con fuerza por 5 segundos, luego suelta de golpe.",
@@ -64,6 +68,7 @@ TECNICAS = {
             "tipp": {
                 "nombre": "TIPP (para crisis emocional intensa)",
                 "resumen": "Para cuando la emoción es tan fuerte que sientes que vas a explotar o colapsar.",
+                "video_youtube_id": None,
                 "pasos": [
                     "Temperatura: moja tu cara con agua fría, o sostén un hielo un momento — esto baja la intensidad física de la emoción rápido.",
                     "Ejercicio intenso: si puedes, haz algo físico breve e intenso (saltar, correr en el lugar) por un minuto.",
@@ -74,6 +79,7 @@ TECNICAS = {
             "autocalma_sentidos": {
                 "nombre": "Autocalma con los 5 sentidos",
                 "resumen": "Para regresar al presente cuando todo se siente abrumador.",
+                "video_youtube_id": None,
                 "pasos": [
                     "Vista: busca 3 cosas que puedas ver y nómbralas en voz baja.",
                     "Oído: identifica 2 sonidos que puedas escuchar ahora mismo.",
@@ -84,6 +90,7 @@ TECNICAS = {
             "stop": {
                 "nombre": "La habilidad STOP",
                 "resumen": "Para no reaccionar de forma impulsiva en un momento difícil.",
+                "video_youtube_id": None,
                 "pasos": [
                     "S — Para (Stop): detente, no hagas nada todavía.",
                     "T — Toma distancia: da un paso atrás, mental o físicamente.",
@@ -94,6 +101,7 @@ TECNICAS = {
             "dear_man": {
                 "nombre": "DEAR MAN (para pedir algo o poner un límite)",
                 "resumen": "Una forma de comunicarte de manera clara y respetuosa en una conversación difícil.",
+                "video_youtube_id": None,
                 "pasos": [
                     "Describe la situación con hechos, sin juzgar (\"Cuando pasó X...\").",
                     "Expresa cómo te sientes al respecto (\"...me sentí Y\").",
@@ -111,6 +119,7 @@ TECNICAS = {
             "respiracion_diafragmatica": {
                 "nombre": "Respiración diafragmática (desde el estómago)",
                 "resumen": "La base de casi todas las técnicas de calma — respirar profundo de verdad, no superficial.",
+                "video_youtube_id": None,
                 "pasos": [
                     "Pon una mano en el pecho y otra en el estómago.",
                     "Inhala por la nariz dejando que se infle el estómago (la mano del pecho se mueve poco).",
@@ -121,6 +130,7 @@ TECNICAS = {
             "respiracion_caja": {
                 "nombre": "Respiración en caja (box breathing)",
                 "resumen": "Usada incluso por equipos de rescate para mantener la calma bajo presión.",
+                "video_youtube_id": None,
                 "pasos": [
                     "Inhala contando hasta 4.",
                     "Sostén el aire contando hasta 4.",
@@ -131,6 +141,7 @@ TECNICAS = {
             "meditacion_breve": {
                 "nombre": "Meditación breve guiada (3 minutos)",
                 "resumen": "Una meditación simple de atención plena, sin necesidad de experiencia previa.",
+                "video_youtube_id": None,
                 "pasos": [
                     "Siéntate cómodo/a, cierra los ojos o baja la mirada.",
                     "Lleva la atención a tu respiración, sin cambiarla, solo notándola entrar y salir.",
@@ -141,6 +152,7 @@ TECNICAS = {
             "escaneo_corporal": {
                 "nombre": "Escaneo corporal",
                 "resumen": "Para reconectar con tu cuerpo y bajar la tensión que no habías notado que tenías.",
+                "video_youtube_id": None,
                 "pasos": [
                     "Acuéstate o siéntate cómodamente y cierra los ojos.",
                     "Lleva la atención a tus pies: ¿qué sientes ahí? Sin cambiar nada, solo nota.",
