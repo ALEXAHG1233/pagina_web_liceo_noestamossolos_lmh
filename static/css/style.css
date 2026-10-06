@@ -32,9 +32,19 @@ body {
      de descargarla ni alojarla nosotros (no se puede, es de pago). Si no la
      tiene, cae en Arial, que es prácticamente idéntica visualmente. */
   font-family: Helvetica, "Helvetica Neue", Arial, "Nunito Sans", -apple-system, "Segoe UI", Roboto, sans-serif;
-  background: var(--fondo);
+  background: linear-gradient(180deg, var(--verde-suave) 0%, #cfe6d6 100%);
+  /* "background-attachment: fixed" crea el efecto parallax: el fondo se
+     queda quieto mientras el contenido se desliza encima al hacer scroll. */
+  background-attachment: fixed;
   color: var(--negro);
   animation: aparecerPagina 480ms ease both;
+}
+
+@media (max-width: 760px) {
+  /* En muchos navegadores móviles, "background-attachment: fixed" no
+     funciona bien con el scroll de la página y puede verse entrecortado,
+     así que ahí se deja el fondo normal (se desplaza con el contenido). */
+  body { background-attachment: scroll; }
 }
 
 /* Fundido de entrada puramente en CSS: nunca depende de que el JS cargue,
