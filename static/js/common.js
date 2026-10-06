@@ -23,6 +23,55 @@ function crearBotonWhatsAppFlotante() {
 
 document.addEventListener("DOMContentLoaded", crearBotonWhatsAppFlotante);
 
+/**
+ * Fondo parallax con imágenes, visible en todas las páginas que cargan
+ * este script. Cada "capa" es una imagen que se mueve a su propia
+ * velocidad al hacer scroll (las más lentas se sienten "más atrás").
+ * Para agregar una imagen nueva, solo hay que añadir un objeto aquí
+ * con su archivo (en static/images/parallax/) y su velocidad (0 = fija,
+ * 1 = se mueve igual que la página). Si la lista está vacía, simplemente
+ * no se crea ninguna capa — no rompe nada.
+ */
+const PARALLAX_CAPAS = [
+  // Ejemplo de cómo agregar una capa cuando haya una imagen real:
+  // { archivo: "capa_hojas.webp", velocidad: 0.2 },
+  // { archivo: "capa_tigre.webp", velocidad: 0.45 },
+];
+
+function crearFondoParallax() {
+  if (!PARALLAX_CAPAS.length || document.getElementById("fondo-parallax")) return;
+
+  const contenedor = document.createElement("div");
+  contenedor.id = "fondo-parallax";
+  contenedor.className = "fondo-parallax";
+  contenedor.setAttribute("aria-hidden", "true");
+
+  const capas = PARALLAX_CAPAS.map((capa) => {
+    const img = document.createElement("img");
+    img.className = "parallax-capa";
+    img.src = `/static/images/parallax/${capa.archivo}`;
+    img.dataset.velocidad = capa.velocidad;
+    img.alt = "";
+    contenedor.appendChild(img);
+    return img;
+  });
+
+  document.body.prepend(contenedor);
+
+  function actualizar() {
+    const scrollY = window.scrollY || window.pageYOffset;
+    capas.forEach((img) => {
+      const velocidad = parseFloat(img.dataset.velocidad) || 0;
+      img.style.transform = `translateY(${scrollY * velocidad}px)`;
+    });
+  }
+
+  window.addEventListener("scroll", actualizar, { passive: true });
+  actualizar();
+}
+
+document.addEventListener("DOMContentLoaded", crearFondoParallax);
+
 function activarRevelado(selector = ".reveal") {
   const elementos = document.querySelectorAll(selector);
   if (!elementos.length) return;

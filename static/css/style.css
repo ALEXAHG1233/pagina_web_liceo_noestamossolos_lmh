@@ -40,6 +40,31 @@ body {
   animation: aparecerPagina 480ms ease both;
 }
 
+/* Fondo parallax de imágenes (ver crearFondoParallax en common.js).
+   Va detrás de todo el contenido, fijo en el viewport; cada capa se
+   mueve a su propia velocidad con el scroll. */
+.fondo-parallax {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+}
+.parallax-capa {
+  position: absolute;
+  top: -10%;
+  left: 0;
+  width: 100%;
+  height: 120%;
+  object-fit: cover;
+  will-change: transform;
+}
+@media (max-width: 760px) {
+  /* En celulares, el parallax por scroll puede sentirse brusco y pesar
+     más en el rendimiento — se deja la imagen quieta, sin el movimiento. */
+  .parallax-capa { transform: none !important; }
+}
+
 @media (max-width: 760px) {
   /* En muchos navegadores móviles, "background-attachment: fixed" no
      funciona bien con el scroll de la página y puede verse entrecortado,
