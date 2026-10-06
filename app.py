@@ -9,6 +9,7 @@ from flask_socketio import SocketIO, join_room, emit
 from werkzeug.utils import secure_filename
 
 from filtro_riesgo import analizar_riesgo
+from filtro_ofensivo import contiene_lenguaje_ofensivo
 from respuestas_bot import generar_respuesta, RESPUESTA_DERIVACION, PERSONAJES
 from futuro_bot import generar_mensaje_futuro
 from tests_bot import TESTS, obtener_test, calcular_resultado
@@ -27,6 +28,15 @@ DB_PATH = "apoyo_emocional.db"
 
 PSICOLOGA_USUARIO = os.environ.get("PSICOLOGA_USUARIO", "psicologa")
 PSICOLOGA_CLAVE = os.environ.get("PSICOLOGA_CLAVE", "cambia-esta-clave")
+
+# IDs de conexión (socket.io) de la psicóloga con el panel abierto ahora mismo.
+# Sirve solo para avisarle al estudiante si hay alguien del otro lado o no —
+# no decide nada, solo informa.
+PSICOLOGA_SIDS = set()
+
+
+def psicologa_esta_conectada():
+    return len(PSICOLOGA_SIDS) > 0
 
 CARPETA_FOTOS_RESENAS = os.path.join("static", "uploads", "resenas")
 EXTENSIONES_FOTO_PERMITIDAS = {"png", "jpg", "jpeg", "gif", "webp"}
@@ -740,6 +750,21 @@ def on_unirse(data):
     token = data["token"]
     join_room(token)
 
+    if data.get("quien") == "estudiante":
+        conectada = psicologa_esta_conectada()
+        if conectada:
+            mensaje = (
+                "La psicóloga está conectada ahora mismo. Puede tardar unos minutos "
+                "en responder — tu mensaje no se pierde, ella lo va a leer."
+            )
+        else:
+            mensaje = (
+                "En este momento la psicóloga no está conectada. Tu mensaje queda "
+                "guardado y te va a responder en cuanto pueda. Si es una emergencia, "
+                "usa el botón de WhatsApp."
+            )
+        emit("estado_psicologa", {"conectada": conectada, "mensaje": mensaje})
+
 
 @socketio.on("unirse_panel")
 def on_unirse_panel():
@@ -747,6 +772,12 @@ def on_unirse_panel():
     if not session.get("es_psicologa"):
         return
     join_room("panel_psicologa")
+    PSICOLOGA_SIDS.add(request.sid)
+
+
+@socketio.on("disconnect")
+def on_disconnect():
+    PSICOLOGA_SIDS.discard(request.sid)
 
 
 @socketio.on("escribiendo")

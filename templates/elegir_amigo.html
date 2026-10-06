@@ -21,13 +21,21 @@
     <div class="amigos-grid">
       {% for id, p in personajes.items() %}
         <a href="{{ url_for('chatbot_persona', persona=id) }}" class="tarjeta amigo-card">
-          <span class="amigo-avatar" style="background:{{ p.color }}">{{ p.avatar }}</span>
+          {% if p.imagen %}
+            <span class="amigo-avatar amigo-avatar-img">
+              <img src="{{ url_for('static', filename=p.imagen) }}" alt="Avatar de {{ p.nombre }}">
+            </span>
+          {% else %}
+            <span class="amigo-avatar" style="background:{{ p.color }}">{{ p.avatar }}</span>
+          {% endif %}
           <h3>{{ p.nombre }}</h3>
           <p>{{ p.tagline }}</p>
         </a>
       {% endfor %}
       <a href="{{ url_for('chatbot_sorpresa') }}" class="tarjeta amigo-card amigo-sorpresa">
-        <span class="amigo-avatar amigo-avatar-sorpresa">?</span>
+        <span class="amigo-avatar amigo-avatar-img">
+          <img src="{{ url_for('static', filename='images/avatares/avatar_sticker.webp') }}" alt="Avatar sorpresa">
+        </span>
         <h3>Sorpréndeme</h3>
         <p>Elige uno al azar por mí.</p>
       </a>

@@ -7,13 +7,29 @@ const apoyoDiv = document.getElementById("apoyo-emergencia");
 const btnSonido = document.getElementById("btn-sonido");
 const btnMusica = document.getElementById("btn-musica");
 
-socket.emit("unirse", { token: TOKEN });
+socket.emit("unirse", { token: TOKEN, quien: "estudiante" });
 crearToggleSonido(btnSonido);
 crearBotonMusica(btnMusica);
 crearSelectorFondo("selector-fondo", mensajesDiv, "fondo_chat_estudiante");
 
+const AVATAR_PSICOLOGA_STORAGE_KEY = "avatar_psicologa_estudiante";
+crearSelectorAvatar("selector-avatar", AVATAR_PSICOLOGA_STORAGE_KEY, () => {
+  document.querySelectorAll(".msg-fila.psicologa .avatar").forEach(aplicarImagenAvatar);
+});
+
 const AVATARES = { estudiante: "E", psicologa: "P", asistente: "A" };
 let filaEscribiendo = null;
+
+function aplicarImagenAvatar(avatarEl) {
+  const url = obtenerAvatarPsicologaElegido(AVATAR_PSICOLOGA_STORAGE_KEY);
+  if (url) {
+    avatarEl.classList.add("con-imagen");
+    avatarEl.innerHTML = `<img src="${url}" alt="Avatar de la psicóloga">`;
+  } else {
+    avatarEl.classList.remove("con-imagen");
+    avatarEl.textContent = "P";
+  }
+}
 
 function agregarMensaje(emisor, contenido) {
   const fila = document.createElement("div");
@@ -21,7 +37,11 @@ function agregarMensaje(emisor, contenido) {
 
   const avatar = document.createElement("div");
   avatar.classList.add("avatar");
-  avatar.textContent = AVATARES[emisor] || "?";
+  if (emisor === "psicologa") {
+    aplicarImagenAvatar(avatar);
+  } else {
+    avatar.textContent = AVATARES[emisor] || "?";
+  }
 
   const contenedor = document.createElement("div");
   contenedor.classList.add("msg-contenido");
@@ -47,10 +67,11 @@ function mostrarEscribiendo() {
   filaEscribiendo = document.createElement("div");
   filaEscribiendo.classList.add("msg-fila", "psicologa", "escribiendo");
   filaEscribiendo.innerHTML = `
-    <div class="avatar">P</div>
+    <div class="avatar"></div>
     <div class="msg-contenido">
       <div class="msg psicologa"><span class="typing-dots"><span></span><span></span><span></span></span></div>
     </div>`;
+  aplicarImagenAvatar(filaEscribiendo.querySelector(".avatar"));
   mensajesDiv.appendChild(filaEscribiendo);
   mensajesDiv.scrollTop = mensajesDiv.scrollHeight;
 }
@@ -105,4 +126,17 @@ socket.on("contacto_emergencia_confirmado", (data) => {
   aviso.className = "apoyo-confirmacion";
   aviso.textContent = data.mensaje;
   apoyoDiv.appendChild(aviso);
+});
+
+socket.on("estado_psicologa", (data) => {
+  const fila = document.createElement("div");
+  fila.classList.add("msg-fila", "sistema");
+  fila.innerHTML = `
+    <div class="avatar">i</div>
+    <div class="msg-contenido">
+      <div class="msg sistema"></div>
+    </div>`;
+  fila.querySelector(".msg").textContent = data.mensaje;
+  mensajesDiv.appendChild(fila);
+  mensajesDiv.scrollTop = mensajesDiv.scrollHeight;
 });

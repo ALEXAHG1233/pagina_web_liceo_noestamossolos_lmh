@@ -93,16 +93,18 @@ function crearBotonMusica(boton, playlistId) {
  * pantallas de chat (estudiante, asistente, psicóloga) en vez de repetirla.
  */
 const FONDOS_DISPONIBLES = {
-  claro: "#f6f3ec",
-  verde: "#e3efe6",
-  azul: "#e1f0fb",
-  dorado: "#fbead2",
-  rosa: "#fbe4ec",
-  morado: "#ece1fb",
-  coral: "#fde3da",
-  menta: "#dff5ec",
-  gris: "#ececec",
-  oscuro: "#2c2c2a",
+  claro: { tipo: "color", valor: "#f6f3ec" },
+  verde: { tipo: "color", valor: "#e3efe6" },
+  azul: { tipo: "color", valor: "#e1f0fb" },
+  dorado: { tipo: "color", valor: "#fbead2" },
+  rosa: { tipo: "color", valor: "#fbe4ec" },
+  morado: { tipo: "color", valor: "#ece1fb" },
+  coral: { tipo: "color", valor: "#fde3da" },
+  menta: { tipo: "color", valor: "#dff5ec" },
+  gris: { tipo: "color", valor: "#ececec" },
+  oscuro: { tipo: "color", valor: "#2c2c2a" },
+  rosa_cuadros: { tipo: "imagen", valor: "/static/images/fondos/fondo_rosa_cuadros.webp", titulo: "Rosa de cuadros" },
+  naranja_hojas: { tipo: "imagen", valor: "/static/images/fondos/fondo_naranja_hojas.webp", titulo: "Naranja de hojas" },
 };
 
 function crearSelectorFondo(contenedorId, mensajesEl, storageKey) {
@@ -110,25 +112,94 @@ function crearSelectorFondo(contenedorId, mensajesEl, storageKey) {
   if (!contenedor || !mensajesEl) return;
 
   function aplicar(nombre) {
-    mensajesEl.style.background = FONDOS_DISPONIBLES[nombre] || FONDOS_DISPONIBLES.claro;
+    const fondo = FONDOS_DISPONIBLES[nombre] || FONDOS_DISPONIBLES.claro;
+    if (fondo.tipo === "imagen") {
+      mensajesEl.style.background = `center / cover no-repeat url("${fondo.valor}")`;
+    } else {
+      mensajesEl.style.background = fondo.valor;
+    }
     localStorage.setItem(storageKey, nombre);
     contenedor.querySelectorAll(".fondo-swatch").forEach((btn) => {
       btn.classList.toggle("activo", btn.dataset.fondo === nombre);
     });
   }
 
-  Object.entries(FONDOS_DISPONIBLES).forEach(([nombre, color]) => {
+  Object.entries(FONDOS_DISPONIBLES).forEach(([nombre, fondo]) => {
     const btn = document.createElement("button");
     btn.type = "button";
     btn.classList.add("fondo-swatch");
-    btn.style.background = color;
+    if (fondo.tipo === "imagen") {
+      btn.style.backgroundImage = `url("${fondo.valor}")`;
+    } else {
+      btn.style.background = fondo.valor;
+    }
     btn.dataset.fondo = nombre;
-    btn.title = nombre.charAt(0).toUpperCase() + nombre.slice(1);
+    btn.title = fondo.titulo || nombre.charAt(0).toUpperCase() + nombre.slice(1);
     btn.addEventListener("click", () => aplicar(nombre));
     contenedor.appendChild(btn);
   });
 
   aplicar(localStorage.getItem(storageKey) || "claro");
+}
+
+/**
+ * Avatares de la psicóloga para el chat del estudiante. Es opcional:
+ * si no se elige ninguno, se sigue viendo la letra "P" de siempre.
+ */
+const AVATARES_PSICOLOGA_DISPONIBLES = {
+  lego: { valor: "/static/images/avatares/avatar_lego.png", titulo: "Avatar Lego" },
+  chica: { valor: "/static/images/avatares/avatar_chica.png", titulo: "Avatar chica" },
+  realista: { valor: "/static/images/avatares/avatar_realista.webp", titulo: "Avatar realista" },
+  sticker: { valor: "/static/images/avatares/avatar_sticker.webp", titulo: "Avatar sticker" },
+};
+
+function obtenerAvatarPsicologaElegido(storageKey) {
+  const nombre = localStorage.getItem(storageKey);
+  const avatar = nombre && AVATARES_PSICOLOGA_DISPONIBLES[nombre];
+  return avatar ? avatar.valor : null;
+}
+
+function crearSelectorAvatar(contenedorId, storageKey, alCambiar) {
+  const contenedor = document.getElementById(contenedorId);
+  if (!contenedor) return;
+
+  function marcarActivo(nombre) {
+    contenedor.querySelectorAll(".fondo-swatch").forEach((btn) => {
+      btn.classList.toggle("activo", btn.dataset.avatar === nombre);
+    });
+  }
+
+  function aplicar(nombre) {
+    if (nombre) {
+      localStorage.setItem(storageKey, nombre);
+    } else {
+      localStorage.removeItem(storageKey);
+    }
+    marcarActivo(nombre);
+    if (typeof alCambiar === "function") alCambiar();
+  }
+
+  const btnNinguno = document.createElement("button");
+  btnNinguno.type = "button";
+  btnNinguno.classList.add("fondo-swatch");
+  btnNinguno.style.background = "var(--verde-liceo)";
+  btnNinguno.dataset.avatar = "";
+  btnNinguno.title = "Usar la letra P (por defecto)";
+  btnNinguno.addEventListener("click", () => aplicar(""));
+  contenedor.appendChild(btnNinguno);
+
+  Object.entries(AVATARES_PSICOLOGA_DISPONIBLES).forEach(([nombre, avatar]) => {
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.classList.add("fondo-swatch");
+    btn.style.backgroundImage = `url("${avatar.valor}")`;
+    btn.dataset.avatar = nombre;
+    btn.title = avatar.titulo;
+    btn.addEventListener("click", () => aplicar(nombre));
+    contenedor.appendChild(btn);
+  });
+
+  marcarActivo(localStorage.getItem(storageKey) || "");
 }
 
 /**

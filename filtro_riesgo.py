@@ -24,6 +24,10 @@ PATRONES = {
             r"\bganas de (morir|no despertar)\b",
             r"\bya no aguanto (más|mas)\b",
             r"\bmejor (si|estarían mejor) sin m[ií]\b",
+            r"\b(tengo|hice) un plan para (suicidarme|matarme|quitarme la vida)\b",
+            r"\bplan para (suicidarme|matarme)\b",
+            r"\bnadie se dar[ií]a cuenta si desaparezco\b",
+            r"\bya no quiero (vivir|existir)\b",
         ],
     },
     "autolesion": {
@@ -32,6 +36,35 @@ PATRONES = {
             r"\bme (quiero|voy a) hacer daño\b",
             r"\blastimarme\b",
             r"\bcortarme\b",
+            r"\b(he pensado|pienso) en hacerme daño\b",
+            r"\bpensamientos (muy )?oscuros\b",
+        ],
+    },
+    "riesgo_tercero": {
+        "peso": 8,
+        "patrones": [
+            r"\b(amig[oa]|compa[ñn]er[oa]|hermano|hermana)[^.]{0,25}(quiere (suicidarse|matarse)|se quiere (suicidar|matar))\b",
+            r"\b(amig[oa]|compa[ñn]er[oa]) se (est[aá] haciendo|hace) da[ñn]o\b",
+            r"\bno puede vivir sin m[ií]\b",
+        ],
+    },
+    "abuso_digital": {
+        "peso": 8,
+        "patrones": [
+            r"\bme est[aá]n (amenazando|chantajeando)\b",
+            r"\bme est[aá]n pidiendo fotos\b",
+            r"\bfotos [ií]ntimas\b",
+            r"\bcompartiendo cosas privadas sobre m[ií]\b",
+            r"\bamenazando por internet\b",
+            r"\benv[ié] una foto y (ahora )?tengo miedo\b",
+        ],
+    },
+    "sintomas_psicoticos": {
+        "peso": 7,
+        "patrones": [
+            r"\bescucho (cosas|voces)\b",
+            r"\balguien me est[aá] observando\b",
+            r"\bme da miedo (estar volvi[eé]ndome|volverme) loc[oa]\b",
         ],
     },
     "abuso_violencia": {
@@ -59,6 +92,8 @@ PATRONES = {
             r"\bestoy solo\b|\bestoy sola\b",
             r"\bnadie me entiende\b",
             r"\bno le importo a nadie\b",
+            r"\bno puedo m[aá]s\b",
+            r"\bquiero desaparecer un rato\b",
         ],
     },
 }

@@ -39,6 +39,8 @@
   box-shadow: var(--sombra-suave);
 }
 .amigo-avatar-sorpresa { background: var(--azul-honduras); }
+.amigo-avatar-img { background: #fff; overflow: hidden; }
+.amigo-avatar-img img { width: 100%; height: 100%; object-fit: cover; }
 .amigo-card h3 { text-align: center; }
 .amigo-card p { text-align: center; }
 .amigo-sorpresa { border-top-color: var(--azul-honduras); }
