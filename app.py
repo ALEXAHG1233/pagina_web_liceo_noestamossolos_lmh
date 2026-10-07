@@ -423,6 +423,11 @@ def fe():
     return render_template("fe.html")
 
 
+@app.route("/terminos")
+def terminos():
+    return render_template("terminos.html")
+
+
 # Listas oficiales de Spotify (editoriales, con licencia de Spotify) — se
 # incrustan con el reproductor oficial, nunca se descarga ni se aloja audio.
 PLAYLISTS_MUSICA = [
@@ -467,9 +472,8 @@ CARPETA_VIDEOS = os.path.join("static", "videos")
 EXTENSIONES_VIDEO_PERMITIDAS = (".mp4", ".webm", ".ogg")
 os.makedirs(CARPETA_VIDEOS, exist_ok=True)
 
-# Video opcional para la sección "10 de septiembre" de la portada — se deja
-# en None hasta que se tenga un ID real de YouTube para poner ahí.
-VIDEO_PREVENCION_SUICIDIO_ID = None
+# Video opcional para la sección "10 de septiembre" de la portada.
+VIDEO_PREVENCION_SUICIDIO_ID = "YSGnQeEWJMs"
 
 # Videos curados, embebidos directo desde YouTube (oficial, con licencia de
 # YouTube — nunca se descarga ni se aloja el video). Organizados por a quién

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Términos y condiciones — No estamos solos LMH</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 64 64%22><path fill=%22%231f4d2c%22 d=%22M32 56s-20-12.6-27-24.4C-.2 21.6 4.6 10 15.4 8.4c6-.9 11.6 2 16.6 7.6 5-5.6 10.6-8.5 16.6-7.6C59.4 10 64.2 21.6 59 31.6 52 43.4 32 56 32 56Z%22/></svg>">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/diario.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/informate.css') }}">
+</head>
+<body class="diario-body">
+
+  <header class="diario-header">
+    <a href="{{ url_for('index') }}" class="volver">← Volver al inicio</a>
+    <h1>Términos y condiciones</h1>
+  </header>
+
+  <section class="pregunta-hoy herramienta-contenido">
+    <p class="herramienta-resumen">Esta página es un proyecto de apoyo psicopedagógico del Liceo Militar de Honduras. Al usarla, aceptas lo siguiente:</p>
+
+    <ol class="herramienta-pasos">
+      <li>Es un espacio anónimo: no se pide tu nombre ni tu correo. Un número de contacto (WhatsApp/Telegram) solo se guarda si tú decides dejarlo voluntariamente durante una alerta de emergencia real.</li>
+      <li>El asistente automático no es una persona real ni un profesional de salud mental — es un sistema de respuestas por reglas, pensado para acompañar y orientar, nunca para diagnosticar.</li>
+      <li>La psicóloga del liceo es la única persona real detrás del chat de "Hablar con la psicóloga". Las conversaciones ahí son confidenciales, salvo que exista un riesgo real para tu seguridad o la de alguien más — en ese caso, se prioriza protegerte.</li>
+      <li>Ninguna prueba de autoevaluación de este sitio es un diagnóstico clínico. Son solo una señal para reflexionar y, si hace falta, hablarlo con la psicóloga.</li>
+      <li>El Muro Interactivo es público para otros estudiantes. No compartas datos personales tuyos ni de nadie más ahí. Las publicaciones que suenan a una crisis real no se publican — se derivan directamente a la psicóloga.</li>
+      <li>Si tú o alguien más está en peligro inmediato, esta página no sustituye una llamada a los servicios de emergencia de tu localidad.</li>
+    </ol>
+
+    <div class="articulo-cta">
+      <a href="{{ url_for('estudiante') }}">¿Tienes dudas sobre esto? Habla con la psicóloga →</a>
+    </div>
+  </section>
+
+  <script src="{{ url_for('static', filename='js/common.js') }}"></script>
+</body>
+</html>

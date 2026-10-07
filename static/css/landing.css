@@ -7,10 +7,10 @@
 .hero {
   padding: 52px 24px 40px;
   text-align: center;
-  background: linear-gradient(160deg, var(--verde-liceo), var(--azul-honduras));
+  background: linear-gradient(160deg, var(--verde-liceo), var(--verde-oscuro));
   background-size: 200% 200%;
   animation: degradadoSuave 14s ease infinite;
-  color: #fff;
+  color: var(--blanco);
   position: relative;
   overflow: hidden;
 }
@@ -42,19 +42,30 @@
 .hero .subtitulo { margin: 0 0 20px; font-size: 14px; opacity: 0.85; position: relative; z-index: 1; }
 .hero .hero-frase { font-size: 15px; opacity: 0.95; max-width: 420px; margin: 0 auto; position: relative; z-index: 1; }
 
-/* Hero con banner propio (imagen ya trae el nombre, el escudo y el lema) */
+/* Hero con banner propio (imagen ya trae el nombre, el escudo y el lema),
+   con efecto parallax: la imagen se mueve más lento que el scroll, dando
+   sensación de profundidad. El contenedor recorta el sobrante de la
+   imagen (que se deja un poco más grande vía JS) para que nunca se vean
+   bordes vacíos mientras se desplaza. */
 .hero-con-banner {
   padding: 0 0 28px;
-  background: var(--verde-liceo);
+  background: var(--verde-oscuro);
   animation: none;
+}
+.hero-banner-wrap {
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 18px;
+  border-bottom: 3px solid var(--dorado);
+  box-shadow: var(--sombra-media);
 }
 .hero-banner-img {
   display: block;
   width: 100%;
   height: auto;
-  margin-bottom: 18px;
+  will-change: transform;
 }
-.hero-con-banner .hero-frase { padding: 0 24px; }
+.hero-con-banner .hero-frase { padding: 0 24px; color: var(--blanco); }
 .hero-con-banner .btn-musica-hero { margin-top: 16px; }
 
 .sr-only {
@@ -76,7 +87,7 @@
 }
 
 .seccion { padding: 36px 24px; }
-.seccion h2 { font-size: 20px; margin-bottom: 18px; text-align: center; color: var(--verde-liceo); }
+.seccion h2 { font-size: 22px; margin-bottom: 18px; text-align: center; color: var(--amarillo); }
 
 .seccion-con-banner { padding-top: 0; padding-left: 0; padding-right: 0; }
 .banner-seccion-img {
@@ -84,7 +95,11 @@
   width: 100%;
   height: auto;
   margin: 0 auto 28px;
+  border-bottom: 3px solid var(--dorado);
+  box-shadow: var(--sombra-media);
+  transition: filter var(--transicion-suave);
 }
+.banner-seccion-img:hover { filter: brightness(1.05); }
 @media (min-width: 700px) {
   .banner-seccion-img { max-width: 900px; border-radius: 0 0 16px 16px; }
 }
@@ -105,16 +120,16 @@
 
 .tarjetas { display: flex; flex-direction: column; gap: 14px; }
 .tarjeta {
-  background: #fff;
-  border-radius: 12px;
+  background: var(--tarjeta-fondo);
+  border-radius: 14px;
   padding: 16px 18px;
   box-shadow: var(--sombra-suave);
-  border-top: 3px solid var(--dorado);
+  border: 1px solid var(--tarjeta-borde);
   transition: transform var(--transicion-suave), box-shadow var(--transicion-suave);
 }
 .tarjeta:hover { transform: translateY(-4px); box-shadow: var(--sombra-media); }
-.tarjeta h3 { margin: 0 0 6px; font-size: 15px; color: var(--verde-liceo); }
-.tarjeta p { margin: 0; font-size: 14px; line-height: 1.5; color: #4a4a46; }
+.tarjeta h3 { margin: 0 0 6px; font-size: 15px; color: var(--amarillo); }
+.tarjeta p { margin: 0; font-size: 14px; line-height: 1.5; color: var(--blanco-suave); }
 
 .tarjeta-link {
   text-decoration: none;
@@ -122,20 +137,19 @@
   display: block;
   cursor: pointer;
 }
-.tarjeta-link:hover { border-top-color: var(--azul-honduras); }
+.tarjeta-link:hover { border-color: var(--amarillo); }
 
 .tarjeta-naranja {
-  background: var(--naranja-suave);
-  border: 2px solid var(--verde-liceo);
-  border-top: 2px solid var(--verde-liceo);
+  background: var(--tarjeta-fondo);
+  border: 1px solid var(--tarjeta-borde);
 }
 
-.historias { background: #f1efe8; }
+.historias { background: transparent; }
 .historia {
-  background: var(--naranja-suave);
-  border: 2px solid var(--verde-liceo);
-  border-left: 4px solid var(--verde-liceo);
-  border-radius: 8px;
+  background: var(--tarjeta-fondo);
+  border: 1px solid var(--tarjeta-borde);
+  border-left: 4px solid var(--dorado);
+  border-radius: 10px;
   padding: 14px 16px;
   margin-bottom: 14px;
   transition: transform var(--transicion-suave), box-shadow var(--transicion-suave);
@@ -144,27 +158,29 @@
 .historia p {
   margin: 0 0 8px;
   font-size: 14px;
-  color: #2c2c2a;
+  color: var(--blanco);
   font-family: "Oswald", Helvetica, Arial, sans-serif;
 }
 .historia-autor {
   font-size: 12px;
-  color: #4a4a46;
+  color: var(--blanco-suave);
   font-family: "Oswald", Helvetica, Arial, sans-serif;
 }
 
 .pasos-caja {
-  background: #fff;
+  background: var(--tarjeta-fondo);
+  border: 1px solid var(--tarjeta-borde);
   border-radius: 14px;
   padding: 20px 20px 20px 40px;
   box-shadow: var(--sombra-suave);
   max-width: 440px;
   margin: 0 auto;
+  color: var(--blanco);
 }
 .pasos { padding-left: 20px; font-size: 14px; line-height: 1.8; margin: 0; }
 .pasos li { transition: transform var(--transicion-suave); }
 .pasos li:hover { transform: translateX(4px); }
-.pasos strong { color: var(--verde-liceo); }
+.pasos strong { color: var(--amarillo); }
 
 .paso-seleccionable {
   display: block;
@@ -180,7 +196,7 @@
   background: var(--verde-suave);
 }
 
-.cta-final { background: #fff; text-align: center; }
+.cta-final { background: transparent; text-align: center; }
 .opciones {
   display: flex;
   flex-direction: column;
@@ -193,23 +209,76 @@
   padding: 18px;
   border-radius: 14px;
   text-align: left;
-  border: 2px solid transparent;
+  border: 1px solid var(--tarjeta-borde);
+  background: var(--tarjeta-fondo);
   transition: transform var(--transicion-suave), box-shadow var(--transicion-suave), border-color var(--transicion-suave);
 }
 .opcion:hover { transform: translateY(-3px); box-shadow: var(--sombra-media); }
 .opcion:active { transform: translateY(-1px) scale(0.99); }
-.opcion h3 { margin: 0 0 4px; font-size: 16px; }
-.opcion p { margin: 0; font-size: 13px; line-height: 1.4; }
+.opcion h3 { margin: 0 0 4px; font-size: 16px; color: var(--amarillo); }
+.opcion p { margin: 0; font-size: 13px; line-height: 1.4; color: var(--blanco-suave); }
 
-.opcion-psicologa { background: var(--dorado-suave); color: #7a5000; }
-.opcion-psicologa h3 { color: #7a5000; }
-.opcion-psicologa:hover { border-color: var(--dorado); }
+.opcion-psicologa:hover { border-color: var(--amarillo); }
 
-.opcion-chatbot { background: var(--verde-suave); color: var(--verde-liceo); }
-.opcion-chatbot h3 { color: var(--verde-liceo); }
-.opcion-chatbot:hover { border-color: var(--verde-liceo); }
+.opcion-chatbot:hover { border-color: var(--amarillo); }
 
-.recordatorio { font-size: 12px; color: #7a7870; }
+/* Sección "¿Con quién deseas hablar hoy?" — rediseñada como el punto
+   central de la portada: título grande, línea dorada decorativa, y dos
+   tarjetas grandes con icono, botón y efecto de brillo dorado al pasar
+   el mouse. */
+.cta-elegir { padding-top: 44px; padding-bottom: 44px; }
+.cta-elegir h2 { font-size: 26px; margin-bottom: 10px; }
+.linea-decorativa {
+  width: 64px;
+  height: 3px;
+  background: var(--dorado);
+  border-radius: 2px;
+  margin: 0 auto 16px;
+}
+.cta-elegir-subtitulo {
+  font-size: 14px;
+  color: var(--blanco-suave);
+  max-width: 380px;
+  margin: 0 auto 24px;
+  text-align: center;
+  line-height: 1.5;
+}
+
+.opcion-grande {
+  text-align: center;
+  padding: 28px 20px;
+  border-width: 1px;
+  border-radius: 16px;
+}
+.opcion-grande:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35), 0 0 0 1px var(--amarillo), 0 0 24px rgba(201, 162, 39, 0.45);
+  border-color: var(--amarillo);
+}
+.opcion-icono {
+  display: block;
+  font-size: 40px;
+  margin-bottom: 10px;
+}
+.opcion-grande h3 { font-size: 18px; margin-bottom: 6px; }
+.opcion-grande p { margin-bottom: 16px; }
+.opcion-boton {
+  display: inline-block;
+  padding: 10px 26px;
+  border-radius: 20px;
+  border: 1px solid var(--dorado);
+  color: var(--amarillo);
+  font-size: 13px;
+  font-weight: 600;
+  transition: background var(--transicion-suave), color var(--transicion-suave);
+}
+.opcion-grande:hover .opcion-boton { background: var(--dorado); color: var(--verde-oscuro); }
+
+@media (min-width: 600px) {
+  .opciones-grandes { align-items: stretch; }
+}
+
+.recordatorio { font-size: 12px; color: var(--blanco-suave); }
 
 /* Secciones individuales de recursos (Herramientas, Infórmate, etc.) */
 .recurso-individual { padding-top: 28px; padding-bottom: 28px; }
@@ -217,42 +286,38 @@
 .recurso-individual > p {
   font-size: 14px;
   line-height: 1.6;
-  color: #4a4a46;
+  color: var(--blanco-suave);
   max-width: 440px;
   margin: 0 auto 16px;
   text-align: center;
 }
 
 .opcion-recurso { max-width: 440px; margin: 0 auto; }
-.opcion-azul { background: var(--azul-suave); color: var(--azul-honduras); }
-.opcion-azul h3 { color: var(--azul-honduras); }
-.opcion-azul:hover { border-color: var(--azul-honduras); }
+.opcion-azul:hover { border-color: var(--amarillo); }
 
-.opcion-naranja { background: var(--naranja-suave); color: var(--verde-liceo); border: 2px solid var(--verde-liceo); }
-.opcion-naranja h3 { color: var(--verde-liceo); }
-.opcion-naranja:hover { border-color: var(--verde-liceo-claro); }
+.opcion-naranja:hover { border-color: var(--amarillo); }
 
-.opcion-dorado { background: var(--dorado-suave); color: #7a5000; }
-.opcion-dorado h3 { color: #7a5000; }
-.opcion-dorado:hover { border-color: var(--dorado); }
+.opcion-dorado:hover { border-color: var(--amarillo); }
 
-.opcion-verde { background: var(--verde-suave); color: var(--verde-liceo); }
-.opcion-verde h3 { color: var(--verde-liceo); }
-.opcion-verde:hover { border-color: var(--verde-liceo); }
+.opcion-verde:hover { border-color: var(--amarillo); }
 
-.opcion-rojo { background: #fcebeb; color: #791f1f; }
-.opcion-rojo h3 { color: #791f1f; }
-.opcion-rojo:hover { border-color: #c94b4b; }
+.opcion-rojo { background: #5c1f1f; border-color: #e87a7a; color: var(--blanco); }
+.opcion-rojo h3 { color: #ffb3b3; }
+.opcion-rojo:hover { border-color: #ffb3b3; }
 
-.prevencion-suicidio { background: #faf7f0; }
+.prevencion-suicidio { background: transparent; }
 .prevencion-banner-img {
   display: block;
   width: 100%;
   max-width: 440px;
   height: auto;
   margin: 0 auto 16px;
+  border: 2px solid var(--dorado);
   border-radius: 12px;
+  box-shadow: var(--sombra-media);
+  transition: transform var(--transicion-suave);
 }
+.prevencion-banner-img:hover { transform: translateY(-2px); }
 .prevencion-video {
   max-width: 440px;
   margin: 0 auto 16px;
@@ -262,18 +327,18 @@
 .prevencion-video iframe { display: block; border: 0; }
 .prevencion-video-placeholder {
   margin: 0;
-  background: var(--naranja-suave);
-  border: 2px dashed var(--verde-liceo);
+  background: var(--tarjeta-fondo);
+  border: 2px dashed var(--dorado);
   border-radius: 12px;
   padding: 24px 16px;
   text-align: center;
   font-size: 13px;
-  color: var(--verde-liceo);
+  color: var(--blanco);
 }
 
 .video-landing-intro {
   font-size: 13px;
-  color: #7a7870;
+  color: var(--blanco-suave);
   text-align: center;
   max-width: 400px;
   margin: -8px auto 16px;
@@ -352,16 +417,16 @@
   gap: 16px 20px;
   margin-top: 20px;
   padding-top: 16px;
-  border-top: 1px solid #eee;
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
 }
 .enlaces-extra a {
   font-size: 13px;
-  color: var(--verde-liceo);
+  color: var(--amarillo);
   text-decoration: none;
   font-weight: 500;
   display: inline-block;
 }
-.enlaces-extra a:hover { transform: translateY(-2px); color: var(--azul-honduras); }
+.enlaces-extra a:hover { transform: translateY(-2px); color: var(--blanco); }
 
 @media (min-width: 600px) {
   .tarjetas, .opciones { flex-direction: row; }
@@ -371,3 +436,116 @@
 @media (prefers-reduced-motion: reduce) {
   .hero, .hero-blob, .hero-icono, .reveal { animation: none !important; transition: none !important; }
 }
+
+/* "Más para ti" — accesos directos (diario, fe, música, reseñas, muro,
+   futuro) como tarjetas visibles en la portada, en vez de enlaces de
+   texto pequeños al final de la página. */
+.tarjetas-extra {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  max-width: 480px;
+  margin: 0 auto;
+}
+.tarjeta-extra {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  text-align: center;
+  text-decoration: none;
+  color: var(--blanco);
+  font-size: 13px;
+  font-weight: 600;
+  background: var(--tarjeta-fondo);
+  border: 1px solid var(--tarjeta-borde);
+  border-radius: 14px;
+  padding: 18px 10px;
+  box-shadow: var(--sombra-suave);
+  transition: transform var(--transicion-suave), box-shadow var(--transicion-suave), border-color var(--transicion-suave);
+}
+.tarjeta-extra:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--sombra-media), 0 0 16px rgba(201, 162, 39, 0.35);
+  border-color: var(--amarillo);
+}
+.tarjeta-extra-icono { font-size: 28px; }
+
+@media (min-width: 600px) {
+  .tarjetas-extra { grid-template-columns: repeat(3, 1fr); max-width: 620px; }
+}
+@media (min-width: 900px) {
+  .tarjetas-extra { grid-template-columns: repeat(6, 1fr); max-width: 980px; }
+}
+
+/* Pie de página institucional */
+.pie-pagina {
+  background: var(--verde-oscuro);
+  border-top: 3px solid var(--dorado);
+  padding: 40px 24px 28px;
+  margin-top: 20px;
+}
+.pie-contenido {
+  max-width: 480px;
+  margin: 0 auto;
+  text-align: center;
+}
+.pie-logo {
+  width: 84px;
+  height: 84px;
+  border-radius: 50%;
+  border: 2px solid var(--dorado);
+  box-shadow: var(--sombra-media);
+  margin: 0 auto 14px;
+  display: block;
+}
+.pie-titulo {
+  font-size: 18px;
+  letter-spacing: 0.08em;
+  margin: 0 0 10px;
+}
+.pie-dato {
+  margin: 0 0 4px;
+  font-size: 13px;
+  color: var(--blanco-suave);
+}
+.pie-dato a { color: var(--blanco-suave); text-decoration: none; }
+.pie-dato a:hover { color: var(--amarillo); }
+
+.pie-redes {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin: 18px 0 20px;
+}
+.pie-red-icono {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: 1px solid var(--dorado);
+  color: var(--amarillo);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform var(--transicion-suave), background var(--transicion-suave), color var(--transicion-suave);
+}
+.pie-red-icono:hover { background: var(--dorado); color: var(--verde-oscuro); transform: translateY(-3px); }
+.pie-red-pendiente { opacity: 0.55; }
+
+.pie-creditos {
+  font-size: 11px;
+  color: var(--blanco-suave);
+  opacity: 0.75;
+  margin: 0 0 14px;
+}
+
+.pie-legal {
+  padding-top: 14px;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+}
+.pie-legal a {
+  font-size: 11px;
+  color: var(--blanco-suave);
+  text-decoration: underline;
+}
+.pie-legal a:hover { color: var(--amarillo); }

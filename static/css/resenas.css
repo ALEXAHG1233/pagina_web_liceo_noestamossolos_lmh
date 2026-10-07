@@ -108,8 +108,12 @@
   width: 100%;
   max-height: 220px;
   object-fit: cover;
+  border: 2px solid var(--dorado);
   border-radius: 10px;
   margin-top: 8px;
+  box-shadow: var(--sombra-suave);
+  transition: transform var(--transicion-suave);
 }
+.resena-foto:hover { transform: scale(1.01); }
 .resena-texto { margin: 6px 0 0; font-size: 14px; color: #2c2c2a; line-height: 1.5; }
 .resena-fecha { display: block; margin-top: 6px; font-size: 11px; color: #9a978c; }

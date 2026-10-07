@@ -4,21 +4,41 @@
   --verde-liceo: #1f4d2c;
   --verde-liceo-claro: #2e6b41;
   --verde-suave: #e3efe6;
+  --verde-oscuro: #122e1b;
   --dorado: #c9a227;
   --dorado-suave: #fbead2;
   --naranja: #e8732a;
   --naranja-suave: #fde3cc;
+  --amarillo: #ffc83d;
   --azul-honduras: #0072ce;
   --azul-suave: #e1f0fb;
   --negro: #1a1a1a;
   --blanco: #ffffff;
-  --fondo: var(--verde-suave);
-  --sombra-suave: 0 2px 10px rgba(26, 26, 26, 0.06);
-  --sombra-media: 0 6px 20px rgba(26, 26, 26, 0.1);
+  --blanco-suave: rgba(255, 255, 255, 0.82);
+  --fondo: var(--verde-liceo);
+  --tarjeta-fondo: var(--verde-liceo-claro);
+  --tarjeta-borde: var(--dorado);
+  --sombra-suave: 0 2px 10px rgba(0, 0, 0, 0.2);
+  --sombra-media: 0 8px 24px rgba(0, 0, 0, 0.3);
   --transicion-suave: 220ms cubic-bezier(0.33, 1, 0.68, 1);
 }
 
 * { box-sizing: border-box; }
+
+/* Cursor personalizado con el escudo del Liceo Militar — solo en
+   dispositivos con mouse de verdad. "(hover: none)" detecta pantallas
+   táctiles (celular/tablet) y ahí se deja el cursor normal del sistema,
+   para no estorbar la navegación táctil. */
+@media (hover: hover) and (pointer: fine) {
+  body {
+    cursor: url("/static/images/cursor_escudo.png") 16 16, auto;
+  }
+  a, button, .opcion, .tarjeta, .tarjeta-extra, .fondo-swatch,
+  input[type="submit"], input[type="button"], .btn-sonido,
+  .paso-seleccionable, [role="button"] {
+    cursor: url("/static/images/cursor_escudo_hover.png") 19 19, pointer;
+  }
+}
 
 html {
   scroll-behavior: smooth;
@@ -32,11 +52,11 @@ body {
      de descargarla ni alojarla nosotros (no se puede, es de pago). Si no la
      tiene, cae en Arial, que es prácticamente idéntica visualmente. */
   font-family: Helvetica, "Helvetica Neue", Arial, "Nunito Sans", -apple-system, "Segoe UI", Roboto, sans-serif;
-  background: linear-gradient(180deg, var(--verde-suave) 0%, #cfe6d6 100%);
+  background: linear-gradient(180deg, var(--verde-liceo) 0%, var(--verde-oscuro) 100%);
   /* "background-attachment: fixed" crea el efecto parallax: el fondo se
      queda quieto mientras el contenido se desliza encima al hacer scroll. */
   background-attachment: fixed;
-  color: var(--negro);
+  color: var(--blanco-suave);
   animation: aparecerPagina 480ms ease both;
 }
 
@@ -85,9 +105,15 @@ body {
 
 h1, h2, h3 {
   font-family: "Oswald", Helvetica, Arial, sans-serif;
-  font-weight: 600;
+  font-weight: 700;
   letter-spacing: 0.01em;
+  color: var(--amarillo);
 }
+
+/* Dentro de tarjetas (ver .tarjeta-militar más abajo), el amarillo ya
+   contrasta con el fondo verde de la tarjeta — se mantiene igual. */
+
+a { color: var(--amarillo); }
 
 a, button { transition: var(--transicion-suave); }
 
@@ -471,9 +497,33 @@ a, button { transition: var(--transicion-suave); }
   box-shadow: 0 4px 14px rgba(0,0,0,0.28);
   z-index: 999;
   text-decoration: none;
-  transition: transform 150ms ease, box-shadow 150ms ease;
+  transition: transform 150ms ease, box-shadow 150ms ease, border-radius 150ms ease;
 }
 .whatsapp-flotante:hover { transform: scale(1.08); box-shadow: 0 6px 18px rgba(0,0,0,0.32); }
+.whatsapp-flotante:focus-visible { outline: 2px solid var(--amarillo); outline-offset: 3px; }
+.whatsapp-flotante-texto { display: none; }
+
+/* En pantallas con espacio de sobra, el botón se expande a una pastilla
+   con el texto completo — en celular se queda como ícono redondo para
+   no estorbar. */
+@media (min-width: 820px) {
+  .whatsapp-flotante {
+    width: auto;
+    height: auto;
+    border-radius: 28px;
+    padding: 13px 22px 13px 16px;
+    gap: 10px;
+  }
+  .whatsapp-flotante:hover { transform: translateY(-2px); }
+  .whatsapp-flotante-texto {
+    display: inline-block;
+    color: #fff;
+    font-family: "Oswald", Helvetica, Arial, sans-serif;
+    font-weight: 600;
+    font-size: 14px;
+    white-space: nowrap;
+  }
+}
 
 /* En las páginas de chat, el botón flotante de WhatsApp se sube para no
    taparle el botón "Enviar" al formulario de mensajes, que vive pegado

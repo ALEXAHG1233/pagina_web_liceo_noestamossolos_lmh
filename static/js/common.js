@@ -17,7 +17,8 @@ function crearBotonWhatsAppFlotante() {
   boton.className = "whatsapp-flotante";
   boton.setAttribute("aria-label", "Contactar por WhatsApp");
   boton.innerHTML =
-    '<svg viewBox="0 0 32 32" width="28" height="28" fill="#fff"><path d="M16 3C9 3 3.2 8.7 3.2 15.8c0 2.6.7 5 2 7.1L3 29l6.3-2.1c2 1.1 4.3 1.7 6.7 1.7 7 0 12.8-5.7 12.8-12.8C28.8 8.7 23 3 16 3zm0 23.3c-2.1 0-4.1-.6-5.8-1.6l-.4-.2-3.8 1.3 1.3-3.7-.3-.4a10.4 10.4 0 0 1-1.7-5.7C5.3 9.9 10.1 5.1 16 5.1S26.7 9.9 26.7 15.8 21.9 26.3 16 26.3zm5.7-7.8c-.3-.2-1.8-.9-2.1-1-.3-.1-.5-.2-.7.2s-.8 1-1 1.2c-.2.2-.4.2-.7.1a8.6 8.6 0 0 1-2.5-1.5 9.3 9.3 0 0 1-1.7-2.1c-.2-.3 0-.5.1-.7l.4-.5c.1-.2.2-.3.3-.5.1-.2 0-.4 0-.5l-1-2.3c-.2-.6-.5-.5-.7-.5h-.6a1.2 1.2 0 0 0-.8.4 3.5 3.5 0 0 0-1.1 2.6c0 1.6 1.1 3.1 1.3 3.3.2.2 2.2 3.4 5.4 4.7.8.3 1.4.5 1.8.6.8.3 1.5.2 2-.1.6-.4 1.8-1.2 2.1-1.9.3-.7.3-1.3.2-1.4-.1-.2-.3-.3-.6-.4z"/></svg>';
+    '<svg viewBox="0 0 32 32" width="26" height="26" fill="#fff"><path d="M16 3C9 3 3.2 8.7 3.2 15.8c0 2.6.7 5 2 7.1L3 29l6.3-2.1c2 1.1 4.3 1.7 6.7 1.7 7 0 12.8-5.7 12.8-12.8C28.8 8.7 23 3 16 3zm0 23.3c-2.1 0-4.1-.6-5.8-1.6l-.4-.2-3.8 1.3 1.3-3.7-.3-.4a10.4 10.4 0 0 1-1.7-5.7C5.3 9.9 10.1 5.1 16 5.1S26.7 9.9 26.7 15.8 21.9 26.3 16 26.3zm5.7-7.8c-.3-.2-1.8-.9-2.1-1-.3-.1-.5-.2-.7.2s-.8 1-1 1.2c-.2.2-.4.2-.7.1a8.6 8.6 0 0 1-2.5-1.5 9.3 9.3 0 0 1-1.7-2.1c-.2-.3 0-.5.1-.7l.4-.5c.1-.2.2-.3.3-.5.1-.2 0-.4 0-.5l-1-2.3c-.2-.6-.5-.5-.7-.5h-.6a1.2 1.2 0 0 0-.8.4 3.5 3.5 0 0 0-1.1 2.6c0 1.6 1.1 3.1 1.3 3.3.2.2 2.2 3.4 5.4 4.7.8.3 1.4.5 1.8.6.8.3 1.5.2 2-.1.6-.4 1.8-1.2 2.1-1.9.3-.7.3-1.3.2-1.4-.1-.2-.3-.3-.6-.4z"/></svg>' +
+    '<span class="whatsapp-flotante-texto">Escribir por WhatsApp</span>';
   document.body.appendChild(boton);
 }
 
@@ -71,6 +72,33 @@ function crearFondoParallax() {
 }
 
 document.addEventListener("DOMContentLoaded", crearFondoParallax);
+
+/**
+ * Parallax del banner del hero: la imagen se desplaza más lento que el
+ * scroll (se ve "más atrás"), mientras el texto y el botón debajo se
+ * mueven normal. Se escala un poco de más para que el contenedor
+ * (overflow: hidden) nunca deje ver un borde vacío al desplazarla.
+ */
+function crearParallaxHero() {
+  const img = document.querySelector(".hero-banner-img");
+  if (!img) return;
+
+  const DESPLAZAMIENTO_MAXIMO = 18; // px — la imagen es un banner corto, no un hero de pantalla completa
+
+  function actualizar() {
+    const rect = img.getBoundingClientRect();
+    const centro = rect.top + rect.height / 2 - window.innerHeight / 2;
+    let desplazamiento = centro * -0.08;
+    desplazamiento = Math.max(-DESPLAZAMIENTO_MAXIMO, Math.min(DESPLAZAMIENTO_MAXIMO, desplazamiento));
+    img.style.transform = `scale(1.08) translateY(${desplazamiento}px)`;
+  }
+
+  window.addEventListener("scroll", actualizar, { passive: true });
+  window.addEventListener("resize", actualizar);
+  actualizar();
+}
+
+document.addEventListener("DOMContentLoaded", crearParallaxHero);
 
 function activarRevelado(selector = ".reveal") {
   const elementos = document.querySelectorAll(selector);
