@@ -25,6 +25,38 @@ function crearBotonWhatsAppFlotante() {
 document.addEventListener("DOMContentLoaded", crearBotonWhatsAppFlotante);
 
 /**
+ * Barra de navegación: abre/cierra el menú hamburguesa en celular, lo
+ * cierra al elegir un enlace, y le agrega sombra cuando ya se hizo
+ * scroll (para que se note que está "flotando" sobre el contenido).
+ */
+function activarNavPrincipal() {
+  const nav = document.getElementById("nav-principal");
+  const boton = document.getElementById("nav-hamburguesa");
+  const enlaces = document.getElementById("nav-enlaces");
+  if (!nav || !boton || !enlaces) return;
+
+  boton.addEventListener("click", () => {
+    const abierto = enlaces.classList.toggle("nav-abierto");
+    boton.setAttribute("aria-expanded", abierto ? "true" : "false");
+  });
+
+  enlaces.querySelectorAll("a").forEach((enlace) => {
+    enlace.addEventListener("click", () => {
+      enlaces.classList.remove("nav-abierto");
+      boton.setAttribute("aria-expanded", "false");
+    });
+  });
+
+  function actualizarSombra() {
+    nav.classList.toggle("nav-con-scroll", window.scrollY > 10);
+  }
+  window.addEventListener("scroll", actualizarSombra, { passive: true });
+  actualizarSombra();
+}
+
+document.addEventListener("DOMContentLoaded", activarNavPrincipal);
+
+/**
  * Fondo parallax con imágenes, visible en todas las páginas que cargan
  * este script. Cada "capa" es una imagen que se mueve a su propia
  * velocidad al hacer scroll (las más lentas se sienten "más atrás").

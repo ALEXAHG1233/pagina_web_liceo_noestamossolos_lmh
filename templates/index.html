@@ -19,6 +19,27 @@
 </head>
 <body class="landing-body">
 
+  <nav class="nav-principal" id="nav-principal">
+    <div class="nav-contenido">
+      <a href="{{ url_for('index') }}" class="nav-marca">
+        <img src="{{ url_for('static', filename='images/escudo_liceo.png') }}" alt="" class="nav-escudo">
+        <span>No estamos solos LMH</span>
+      </a>
+      <button type="button" class="nav-hamburguesa" id="nav-hamburguesa" aria-label="Abrir menú" aria-expanded="false" aria-controls="nav-enlaces">
+        <span></span><span></span><span></span>
+      </button>
+      <div class="nav-enlaces" id="nav-enlaces">
+        <a href="{{ url_for('index') }}">Inicio</a>
+        <a href="#recursos">Recursos</a>
+        <a href="{{ url_for('diario') }}">Mi diario de ánimo</a>
+        <a href="{{ url_for('muro') }}">Muro interactivo</a>
+        <a href="{{ url_for('futuro') }}">Mi futuro</a>
+        <a href="#contacto">Contacto</a>
+        <a href="{{ url_for('estudiante') }}" class="nav-boton-ayuda">Necesito ayuda</a>
+      </div>
+    </div>
+  </nav>
+
   <section class="hero hero-con-banner">
     <h1 class="sr-only">No Estás Solo LMH — Programa de Apoyo Psicopedagógico, Liceo Militar de Honduras</h1>
     <div class="hero-banner-wrap">
@@ -121,7 +142,7 @@
     </div>
   </section>
 
-  <section class="seccion seccion-con-banner recurso-individual reveal">
+  <section id="recursos" class="seccion seccion-con-banner recurso-individual reveal">
     <h2 class="sr-only">Herramientas técnicas</h2>
     <img
       src="{{ url_for('static', filename='images/banner_herramientas.webp') }}"
@@ -269,7 +290,7 @@
     </div>
   </section>
 
-  <footer class="pie-pagina">
+  <footer class="pie-pagina" id="contacto">
     <div class="pie-contenido">
       <img src="{{ url_for('static', filename='images/escudo_liceo.png') }}" alt="Escudo del Liceo Militar de Honduras" class="pie-logo">
       <h2 class="pie-titulo">CONTÁCTENOS</h2>
