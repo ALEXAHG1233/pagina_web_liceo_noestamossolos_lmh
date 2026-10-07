@@ -1,20 +1,20 @@
 .herramientas-categoria { padding: 10px 20px 24px; }
-.categoria-titulo { font-size: 17px; margin: 0 0 4px; text-align: center; }
-.categoria-descripcion { font-size: 12px; color: #7a7870; text-align: center; margin: 0 0 14px; }
+.categoria-titulo { font-size: 17px; margin: 0 0 4px; text-align: center; color: var(--amarillo); }
+.categoria-descripcion { font-size: 12px; color: var(--blanco-suave); text-align: center; margin: 0 0 14px; }
 
 .color-azul { color: var(--azul-honduras); }
-.color-dorado { color: #a3791f; }
-.color-verde { color: var(--verde-liceo); }
+.color-dorado { color: var(--amarillo); }
+.color-verde { color: var(--amarillo); }
 
 .herramientas-categoria .tests-lista { padding: 0; }
 .herramientas-categoria .test-card h3 {
   margin: 0 0 6px;
   font-size: 15px;
-  color: var(--verde-liceo);
+  color: var(--amarillo);
 }
 .herramientas-categoria:nth-of-type(1) .test-card { border-top-color: var(--azul-honduras); }
 .herramientas-categoria:nth-of-type(2) .test-card { border-top-color: var(--dorado); }
-.herramientas-categoria:nth-of-type(3) .test-card { border-top-color: var(--verde-liceo); }
+.herramientas-categoria:nth-of-type(3) .test-card { border-top-color: var(--verde-liceo-claro); }
 
 .herramienta-contenido { padding: 0 20px 30px; max-width: 480px; margin: 0 auto; text-align: left; }
 .categoria-etiqueta {
@@ -24,7 +24,7 @@
   text-transform: uppercase;
   margin-bottom: 10px;
 }
-.herramienta-resumen { font-size: 14px; color: #4a4a46; margin: 0 0 18px; }
+.herramienta-resumen { font-size: 14px; color: var(--blanco-suave); margin: 0 0 18px; }
 
 .herramienta-pasos {
   list-style: none;
@@ -37,12 +37,14 @@
 }
 .herramienta-pasos li {
   counter-increment: paso;
-  background: #fff;
+  background: var(--tarjeta-fondo);
+  border: 1px solid var(--tarjeta-borde);
   border-radius: 12px;
   padding: 12px 14px 12px 44px;
   position: relative;
   font-size: 14px;
   line-height: 1.5;
+  color: var(--blanco);
   box-shadow: var(--sombra-suave);
 }
 .herramienta-pasos li::before {
@@ -53,8 +55,8 @@
   width: 22px;
   height: 22px;
   border-radius: 50%;
-  background: var(--verde-liceo);
-  color: #fff;
+  background: var(--dorado);
+  color: var(--verde-oscuro);
   font-size: 12px;
   font-weight: 700;
   display: flex;
@@ -64,17 +66,19 @@
 
 .herramienta-video {
   margin: 0 0 24px;
+  border: 2px solid var(--dorado);
   border-radius: 12px;
   overflow: hidden;
+  box-shadow: var(--sombra-suave);
 }
 .herramienta-video iframe { display: block; border: 0; }
 .herramienta-video-placeholder {
   margin: 0;
-  background: var(--naranja-suave);
-  border: 2px dashed var(--verde-liceo);
+  background: var(--tarjeta-fondo);
+  border: 2px dashed var(--dorado);
   border-radius: 12px;
   padding: 24px 16px;
   text-align: center;
   font-size: 13px;
-  color: var(--verde-liceo);
+  color: var(--blanco-suave);
 }

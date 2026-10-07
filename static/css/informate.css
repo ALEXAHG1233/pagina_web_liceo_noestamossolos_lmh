@@ -21,7 +21,7 @@
 .articulo-contenido p {
   font-size: 14px;
   line-height: 1.6;
-  color: #2c2c2a;
+  color: var(--blanco);
   margin: 0 0 14px;
 }
 

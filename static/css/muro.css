@@ -12,7 +12,7 @@
 .nuevo-post-muro { text-align: center; }
 .muro-intro {
   font-size: 13px;
-  color: #7a7870;
+  color: var(--blanco-suave);
   max-width: 360px;
   margin: 0 auto 14px;
 }
@@ -28,45 +28,48 @@
   width: 100%;
   max-width: 380px;
   padding: 10px 12px;
-  border: 1px solid #d3d1c7;
+  border: 1px solid var(--tarjeta-borde);
   border-radius: 12px;
   font-family: inherit;
   font-size: 14px;
   resize: vertical;
+  background: var(--blanco);
+  color: var(--negro);
   transition: border-color var(--transicion-suave), box-shadow var(--transicion-suave);
 }
 .form-muro textarea:focus {
-  border-color: var(--azul-honduras);
-  box-shadow: 0 0 0 3px rgba(0, 114, 206, 0.15);
+  border-color: var(--amarillo);
+  box-shadow: 0 0 0 3px rgba(201, 162, 39, 0.25);
   outline: none;
 }
 
 .nota-privacidad {
   font-size: 11px;
-  color: #7a7870;
+  color: var(--blanco-suave);
   max-width: 340px;
   margin: 0;
 }
 
 .form-muro button {
   padding: 10px 24px;
-  border: none;
+  border: 1px solid var(--dorado);
   border-radius: 20px;
-  background: var(--verde-liceo);
-  color: #fff;
+  background: var(--dorado);
+  color: var(--verde-oscuro);
   font-size: 14px;
+  font-weight: 600;
   cursor: pointer;
 }
-.form-muro button:hover { background: var(--verde-liceo-claro); transform: translateY(-1px); box-shadow: var(--sombra-suave); }
+.form-muro button:hover { background: var(--amarillo); transform: translateY(-1px); box-shadow: var(--sombra-suave); }
 
 .lista-muro { display: flex; flex-direction: column; gap: 10px; }
 .muro-card {
-  background: var(--naranja-suave);
-  border: 2px solid var(--verde-liceo);
+  background: var(--tarjeta-fondo);
+  border: 1px solid var(--tarjeta-borde);
   border-radius: 12px;
   padding: 14px 16px;
   box-shadow: var(--sombra-suave);
   animation: entrarMensaje 320ms ease both;
 }
-.muro-texto { margin: 0; font-size: 14px; color: #2c2c2a; line-height: 1.5; }
-.muro-fecha { display: block; margin-top: 6px; font-size: 11px; color: #7a7870; }
+.muro-texto { margin: 0; font-size: 14px; color: var(--blanco); line-height: 1.5; }
+.muro-fecha { display: block; margin-top: 6px; font-size: 11px; color: var(--blanco-suave); }

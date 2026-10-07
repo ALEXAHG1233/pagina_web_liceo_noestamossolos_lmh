@@ -45,11 +45,13 @@
   width: 100%;
   max-width: 380px;
   padding: 10px 12px;
-  border: 1px solid #d3d1c7;
+  border: 1px solid var(--tarjeta-borde);
   border-radius: 12px;
   font-family: inherit;
   font-size: 14px;
   resize: vertical;
+  background: var(--blanco);
+  color: var(--negro);
   transition: border-color var(--transicion-suave), box-shadow var(--transicion-suave);
 }
 .form-resena textarea:focus {
@@ -65,7 +67,7 @@
   flex-direction: column;
   gap: 4px;
   font-size: 12px;
-  color: #7a7870;
+  color: var(--blanco-suave);
 }
 .campo-foto input[type="file"] {
   font-size: 12px;
@@ -77,7 +79,7 @@
 
 .nota-privacidad {
   font-size: 11px;
-  color: #7a7870;
+  color: var(--blanco-suave);
   max-width: 340px;
   margin: 0;
 }
@@ -95,14 +97,15 @@
 
 .lista-resenas { display: flex; flex-direction: column; gap: 10px; }
 .resena-card {
-  background: #fff;
+  background: var(--tarjeta-fondo);
   border-radius: 12px;
   padding: 14px 16px;
   box-shadow: var(--sombra-suave);
+  border: 1px solid var(--tarjeta-borde);
   border-left: 3px solid var(--dorado);
   animation: entrarMensaje 320ms ease both;
 }
-.resena-estrellas { color: var(--dorado); font-size: 16px; letter-spacing: 2px; }
+.resena-estrellas { color: var(--amarillo); font-size: 16px; letter-spacing: 2px; }
 .resena-foto {
   display: block;
   width: 100%;
@@ -115,5 +118,5 @@
   transition: transform var(--transicion-suave);
 }
 .resena-foto:hover { transform: scale(1.01); }
-.resena-texto { margin: 6px 0 0; font-size: 14px; color: #2c2c2a; line-height: 1.5; }
-.resena-fecha { display: block; margin-top: 6px; font-size: 11px; color: #9a978c; }
+.resena-texto { margin: 6px 0 0; font-size: 14px; color: var(--blanco); line-height: 1.5; }
+.resena-fecha { display: block; margin-top: 6px; font-size: 11px; color: var(--blanco-suave); }

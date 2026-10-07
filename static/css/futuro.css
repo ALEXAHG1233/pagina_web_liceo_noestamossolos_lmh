@@ -1,5 +1,5 @@
 .futuro-pregunta, .futuro-resultado { text-align: center; }
-.futuro-ayuda { font-size: 13px; color: #7a7870; margin: -6px 0 16px; }
+.futuro-ayuda { font-size: 13px; color: var(--blanco-suave); margin: -6px 0 16px; }
 
 .form-futuro {
   display: flex;
@@ -60,7 +60,7 @@
 .futuro-otra {
   display: inline-block;
   font-size: 13px;
-  color: var(--verde-liceo);
+  color: var(--amarillo);
   text-decoration: none;
   font-weight: 500;
 }

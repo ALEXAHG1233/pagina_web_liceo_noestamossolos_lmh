@@ -5,7 +5,8 @@
   padding: 20px;
 }
 .stat-card {
-  background: #fff;
+  background: var(--tarjeta-fondo);
+  border: 1px solid var(--tarjeta-borde);
   border-radius: 14px;
   padding: 20px 14px;
   text-align: center;
@@ -17,15 +18,15 @@
   display: block;
   font-size: 34px;
   font-weight: 700;
-  color: var(--verde-liceo);
+  color: var(--amarillo);
   font-family: "Poppins", sans-serif;
 }
-.stat-texto { font-size: 12px; color: #7a7870; }
+.stat-texto { font-size: 12px; color: var(--blanco-suave); }
 
 .stats-nota {
   text-align: center;
   font-size: 11px;
-  color: #9a978c;
+  color: var(--blanco-suave);
   padding: 0 24px;
 }
 
