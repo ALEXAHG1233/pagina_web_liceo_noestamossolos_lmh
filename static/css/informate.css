@@ -37,3 +37,42 @@
   font-weight: 600;
 }
 .articulo-cta a:hover { background: var(--verde-liceo-claro); }
+
+/* Collage de imágenes en artículos (por ejemplo, personajes). Las fotos
+   salen del centro a su lugar al cargar; al pasar el mouse por el
+   collage se abren un poco más, y la foto señalada se endereza al frente. */
+.collage {
+  position: relative;
+  height: 220px;
+  margin: 18px 0 26px;
+}
+.collage-foto {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 118px;
+  height: 118px;
+  object-fit: cover;
+  padding: 6px 6px 22px;
+  background: #ffffff;
+  border-radius: 6px;
+  box-shadow: 0 12px 26px -10px rgba(0, 0, 0, 0.5);
+  translate: calc(-50% + var(--x)) calc(-50% + var(--y));
+  rotate: var(--giro);
+  transition: translate 450ms cubic-bezier(0.16, 1, 0.3, 1), rotate 450ms cubic-bezier(0.16, 1, 0.3, 1), scale 300ms ease;
+  animation: entrarCollage 800ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: calc(var(--i) * 90ms + 150ms);
+  user-select: none;
+}
+@keyframes entrarCollage {
+  from { translate: -50% -50%; rotate: 0deg; opacity: 0; scale: 0.7; }
+}
+.collage:hover .collage-foto { translate: calc(-50% + var(--x) * 1.18) calc(-50% + var(--y) * 1.4); }
+.collage .collage-foto:hover { rotate: 0deg; scale: 1.12; z-index: 2; }
+@media (min-width: 560px) {
+  .collage { height: 260px; }
+  .collage-foto { width: 150px; height: 150px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .collage-foto { animation: none; transition: none; }
+}

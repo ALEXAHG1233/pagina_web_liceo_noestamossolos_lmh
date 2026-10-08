@@ -18,6 +18,14 @@
 
   <article class="pregunta-hoy articulo-contenido">
     <span class="articulo-categoria cat-{{ articulo.categoria|lower }}">{{ articulo.categoria }}</span>
+    {% if articulo.collage %}
+      <div class="collage" role="group" aria-label="Collage de personajes">
+        {% for archivo, descripcion, x, y, giro in articulo.collage %}
+          <img class="collage-foto" src="{{ url_for('static', filename='images/' ~ archivo) }}" alt="{{ descripcion }}"
+               style="--x: {{ x }}%; --y: {{ y }}%; --giro: {{ giro }}deg; --i: {{ loop.index0 }};" loading="lazy" draggable="false">
+        {% endfor %}
+      </div>
+    {% endif %}
     {% for parrafo in articulo.contenido %}
       <p>{{ parrafo }}</p>
     {% endfor %}
