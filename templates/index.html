@@ -132,17 +132,14 @@
 
   <section id="elegir-con-quien" class="seccion cta-final cta-elegir reveal">
     <h2>¿Con quién deseas hablar hoy?</h2>
-    <div class="linea-decorativa" aria-hidden="true"></div>
     <p class="cta-elegir-subtitulo">No tienes que pasar por esto solo. Elige la opción que más necesites.</p>
     <div class="opciones opciones-grandes">
-      <a href="{{ url_for('estudiante') }}" class="opcion opcion-psicologa opcion-grande">
-        <span class="opcion-icono" aria-hidden="true">🧑‍⚕️</span>
+      <a href="{{ url_for('estudiante') }}" class="opcion opcion-psicologa opcion-grande opcion-principal">
         <h3>Hablar con la psicóloga</h3>
         <p>Una persona real, capacitada y dispuesta a escucharte.</p>
         <span class="opcion-boton">Hablar ahora</span>
       </a>
       <a href="{{ url_for('chatbot') }}" class="opcion opcion-chatbot opcion-grande">
-        <span class="opcion-icono" aria-hidden="true">🤖</span>
         <h3>Hablar con el asistente</h3>
         <p>Disponible en cualquier momento para ayudarte a ordenar tus ideas.</p>
         <span class="opcion-boton">Comenzar</span>
@@ -155,7 +152,6 @@
     <p class="seccion-subtitulo">Elige lo que más se parece a lo que estás viviendo.</p>
     <div class="ayuda-grid">
       <a href="{{ url_for('estudiante') }}" class="ayuda-opcion">
-        <span class="ayuda-icono" aria-hidden="true">🌧️</span>
         <span class="ayuda-texto">
           <strong>Estoy pasando por un momento difícil</strong>
           <small>Habla con la psicóloga, de forma anónima</small>
@@ -163,7 +159,6 @@
         <span class="ayuda-flecha" aria-hidden="true">→</span>
       </a>
       <a href="{{ url_for('herramientas') }}" class="ayuda-opcion">
-        <span class="ayuda-icono" aria-hidden="true">🧘</span>
         <span class="ayuda-texto">
           <strong>Quiero controlar mis emociones</strong>
           <small>Técnicas de respiración, TCC y TDC</small>
@@ -171,7 +166,6 @@
         <span class="ayuda-flecha" aria-hidden="true">→</span>
       </a>
       <a href="{{ url_for('chatbot') }}" class="ayuda-opcion">
-        <span class="ayuda-icono" aria-hidden="true">💬</span>
         <span class="ayuda-texto">
           <strong>Necesito hablar con alguien</strong>
           <small>El asistente está disponible a cualquier hora</small>
@@ -179,7 +173,6 @@
         <span class="ayuda-flecha" aria-hidden="true">→</span>
       </a>
       <a href="{{ url_for('informate_articulo', slug='superar-perdida') }}" class="ayuda-opcion">
-        <span class="ayuda-icono" aria-hidden="true">🕊️</span>
         <span class="ayuda-texto">
           <strong>Estoy superando una pérdida</strong>
           <small>Duelo, rupturas y despedidas</small>
@@ -187,7 +180,6 @@
         <span class="ayuda-flecha" aria-hidden="true">→</span>
       </a>
       <a href="{{ url_for('diario') }}" class="ayuda-opcion">
-        <span class="ayuda-icono" aria-hidden="true">📔</span>
         <span class="ayuda-texto">
           <strong>Quiero entender lo que siento</strong>
           <small>Registra tu ánimo día a día en tu diario</small>
@@ -195,7 +187,6 @@
         <span class="ayuda-flecha" aria-hidden="true">→</span>
       </a>
       <a href="{{ url_for('tests') }}" class="ayuda-opcion">
-        <span class="ayuda-icono" aria-hidden="true">🔎</span>
         <span class="ayuda-texto">
           <strong>Quiero aprender más sobre mí</strong>
           <small>Autoevaluaciones para reflexionar</small>
@@ -207,7 +198,6 @@
 
   <section class="seccion reveal" aria-labelledby="titulo-emergencia">
     <div class="emergencia">
-      <span class="emergencia-icono" aria-hidden="true">🛟</span>
       <div class="emergencia-contenido">
         <h2 id="titulo-emergencia">¿Estás en peligro ahora mismo?</h2>
         <p>Si estás pasando por una emergencia o sientes que tú u otra persona puede estar en peligro, busca ayuda de inmediato: llama al <strong>911</strong> o acude a un adulto de confianza.</p>
@@ -228,7 +218,7 @@
       class="banner-seccion-img">
     <a href="{{ url_for('herramientas') }}" class="opcion opcion-recurso opcion-naranja">
       <h3>Técnicas para el momento</h3>
-      <p>TCC, TDC, respiración y meditación — disponibles las 24 horas, a tu ritmo, sin necesidad de que nadie esté conectado.</p>
+      <p>TCC, TDC, respiración y meditación. Disponibles las 24 horas, a tu ritmo, sin que nadie tenga que estar conectado.</p>
     </a>
   </section>
 
@@ -240,7 +230,7 @@
       class="banner-seccion-img">
     <a href="{{ url_for('informate') }}" class="opcion opcion-recurso opcion-naranja">
       <h3>Entiende lo que sientes y lo que te rodea</h3>
-      <p>Artículos sobre salud mental, fobias, maltrato hacia la mujer, y más — explicados con claridad.</p>
+      <p>Artículos sobre salud mental, fobias, maltrato hacia la mujer y más, explicados con claridad.</p>
     </a>
   </section>
 
@@ -250,7 +240,7 @@
     <div class="recursos-grid">
       {% for r in recursos_psicologia %}
         <a href="{{ url_for('informate_articulo', slug=r.slug) }}" class="recurso-card">
-          <span class="recurso-icono" aria-hidden="true">{{ r.icono }}</span>
+          <span class="recurso-numero">{{ "%02d"|format(loop.index) }}</span>
           <span class="recurso-titulo">{{ r.titulo }}</span>
           <span class="recurso-resumen">{{ r.resumen }}</span>
         </a>
@@ -307,7 +297,7 @@
       src="{{ url_for('static', filename='images/banner_prevencion_suicidio.webp') }}"
       alt="10 de septiembre — Día Mundial para la Prevención del Suicidio"
       class="prevencion-banner-img">
-    <p>Esta fecha existe para recordar algo simple pero importante: si alguna vez tienes pensamientos así, no estás solo/a, y sí hay ayuda real. Hablarlo —aquí, con un adulto de confianza, o con la psicóloga— es el primer paso, y ya es un acto de valentía.</p>
+    <p>Esta fecha existe para recordar algo simple pero importante: si alguna vez tienes pensamientos así, no estás solo/a, y sí hay ayuda real. Hablarlo (aquí, con un adulto de confianza o con la psicóloga) es el primer paso, y ya es un acto de valentía.</p>
 
     <div class="prevencion-video">
       {% if video_prevencion_id %}
@@ -333,7 +323,7 @@
 
   <section class="seccion recurso-individual reveal">
     <h2>Síguenos</h2>
-    <p class="video-landing-intro">También estamos en redes — contenido de apoyo, recordatorios, y espacio para la comunidad.</p>
+    <p class="video-landing-intro">También estamos en redes: contenido de apoyo, recordatorios y un espacio para la comunidad.</p>
     <div class="redes-grid">
       <a href="https://www.facebook.com/noestassololmh" target="_blank" rel="noopener noreferrer" class="red-card red-facebook">
         <svg viewBox="0 0 24 24" width="30" height="30" fill="#fff"><path d="M22 12c0-5.5-4.5-10-10-10S2 6.5 2 12c0 5 3.7 9.1 8.4 9.9v-7H7.9V12h2.5V9.8c0-2.5 1.5-3.9 3.8-3.9 1.1 0 2.2.2 2.2.2v2.5h-1.3c-1.2 0-1.6.8-1.6 1.6V12h2.8l-.4 2.9h-2.4v7C18.3 21.1 22 17 22 12Z"/></svg>
@@ -357,27 +347,21 @@
     <h2>Más para ti</h2>
     <div class="tarjetas-extra">
       <a href="{{ url_for('diario') }}" class="tarjeta-extra">
-        <span class="tarjeta-extra-icono" aria-hidden="true">📔</span>
         <span>Mi diario de ánimo</span>
       </a>
       <a href="{{ url_for('fe') }}" class="tarjeta-extra">
-        <span class="tarjeta-extra-icono" aria-hidden="true">🙏</span>
         <span>Fe y esperanza</span>
       </a>
       <a href="{{ url_for('musica') }}" class="tarjeta-extra">
-        <span class="tarjeta-extra-icono" aria-hidden="true">🎵</span>
         <span>Música</span>
       </a>
       <a href="{{ url_for('resenas') }}" class="tarjeta-extra">
-        <span class="tarjeta-extra-icono" aria-hidden="true">⭐</span>
         <span>Reseñas</span>
       </a>
       <a href="{{ url_for('muro') }}" class="tarjeta-extra">
-        <span class="tarjeta-extra-icono" aria-hidden="true">💬</span>
         <span>Muro interactivo</span>
       </a>
       <a href="{{ url_for('futuro') }}" class="tarjeta-extra">
-        <span class="tarjeta-extra-icono" aria-hidden="true">🌱</span>
         <span>Mi futuro</span>
       </a>
     </div>

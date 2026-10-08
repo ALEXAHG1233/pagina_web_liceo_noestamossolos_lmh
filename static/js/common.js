@@ -113,20 +113,6 @@ function crearBarraProgreso() {
 
 document.addEventListener("DOMContentLoaded", crearBarraProgreso);
 
-// Brillo dorado que sigue al mouse dentro de las tarjetas grandes.
-function activarFocoTarjetas() {
-  if (SIN_MOVIMIENTO || !window.matchMedia("(hover: hover) and (pointer: fine)").matches) return;
-  document.querySelectorAll(".opcion-grande, .tarjeta-extra").forEach((tarjeta) => {
-    tarjeta.addEventListener("pointermove", (e) => {
-      const r = tarjeta.getBoundingClientRect();
-      tarjeta.style.setProperty("--mx", `${e.clientX - r.left}px`);
-      tarjeta.style.setProperty("--my", `${e.clientY - r.top}px`);
-    });
-  });
-}
-
-document.addEventListener("DOMContentLoaded", activarFocoTarjetas);
-
 /**
  * Fondo parallax con imágenes, visible en todas las páginas que cargan
  * este script. Cada "capa" es una imagen que se mueve a su propia
@@ -203,7 +189,7 @@ function crearParallaxHero() {
 
 document.addEventListener("DOMContentLoaded", crearParallaxHero);
 
-const GRUPOS_ESCALONADOS = ".tarjetas, .opciones, .tarjetas-extra, .redes-grid, .video-landing-grid, .ayuda-grid, .recursos-grid";
+const GRUPOS_ESCALONADOS = ".tarjetas, .opciones, .redes-grid, .video-landing-grid";
 
 function activarRevelado(selector = ".reveal") {
   const elementos = document.querySelectorAll(selector);

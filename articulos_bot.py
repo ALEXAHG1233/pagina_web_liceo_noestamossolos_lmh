@@ -97,7 +97,7 @@ ARTICULOS = {
     "esquizofrenia": {
         "titulo": "Hablemos sobre la esquizofrenia",
         "categoria": "Infórmate",
-        "resumen": "Un trastorno real y tratable — no es \"estar poseído\" ni \"ser peligroso\", como muchas veces se cree.",
+        "resumen": "Un trastorno real y tratable. No es \"estar poseído\" ni \"ser peligroso\", como muchas veces se cree.",
         "contenido": [
             "La esquizofrenia es un trastorno mental que afecta cómo una persona percibe la realidad: puede incluir alucinaciones (ver u oír cosas que no están ahí) o ideas delirantes (creencias muy fuertes que no coinciden con la realidad).",
             "No significa tener \"doble personalidad\" (eso es un mito común) ni ser violento — la gran mayoría de las personas con esquizofrenia nunca son peligrosas; de hecho, tienen más riesgo de ser víctimas que agresores.",
@@ -129,7 +129,7 @@ ARTICULOS = {
     "crecer-y-ser-fragil": {
         "titulo": "Crecer y volverse frágil",
         "categoria": "Identifica",
-        "resumen": "A veces madurar no te hace más fuerte de inmediato — a veces, primero te vuelve más consciente de lo que duele.",
+        "resumen": "A veces madurar no te hace más fuerte de inmediato. A veces, primero te vuelve más consciente de lo que duele.",
         "contenido": [
             "Hay una idea de que crecer es volverse \"a prueba de todo\". En realidad, muchas veces crecer es volverte más consciente — de tus emociones, de tus heridas, de lo que te afecta — y eso puede sentirse como fragilidad.",
             "No es que te hayas vuelto débil; es que dejaste de ignorar cosas que antes tapabas sin darte cuenta.",
@@ -139,7 +139,7 @@ ARTICULOS = {
     "independiente-pero-anhela-conexion": {
         "titulo": "Ser independiente y aun así anhelar una conexión",
         "categoria": "Identifica",
-        "resumen": "Que te sepas valer por ti mismo/a no significa que no necesites a nadie — y eso no es una contradicción.",
+        "resumen": "Que te sepas valer por ti mismo/a no significa que no necesites a nadie, y eso no es una contradicción.",
         "contenido": [
             "Mucha gente que parece muy independiente (que resuelve todo sola, que no pide ayuda) también carga, por dentro, un deseo fuerte de conexión real.",
             "No es contradictorio: se puede ser capaz de cuidarse a uno mismo y, al mismo tiempo, desear profundamente que alguien más elija quedarse.",
@@ -170,7 +170,7 @@ ARTICULOS = {
     "madurar-temprano": {
         "titulo": "Haber tenido que madurar a temprana edad",
         "categoria": "Identifica",
-        "resumen": "Cuando de niño tuviste que actuar como adulto, eso deja huella — y tiene nombre.",
+        "resumen": "Cuando de niño tuviste que actuar como adulto, eso deja huella. Y tiene nombre.",
         "contenido": [
             "A veces, por la situación en casa (un padre ausente, una enfermedad, responsabilidades grandes), un niño o niña tiene que asumir un rol de \"adulto\" antes de tiempo. A esto se le llama a veces parentalización.",
             "Esto puede dejar a la persona siendo muy responsable, muy capaz de cuidar a otros — pero también con dificultad para pedir ayuda, para relajarse, o para permitirse ser cuidada.",
@@ -211,7 +211,7 @@ ARTICULOS = {
     "dopamina": {
         "titulo": "La dopamina: qué es y qué produce",
         "categoria": "Infórmate",
-        "resumen": "No es solo la \"hormona de la felicidad\" — es la del deseo y la motivación.",
+        "resumen": "No es solo la \"hormona de la felicidad\": también es la del deseo y la motivación.",
         "contenido": [
             "La dopamina es un neurotransmisor relacionado con la motivación, el placer y la recompensa. Se libera cuando anticipas algo bueno, no solo cuando ya lo tienes.",
             "Por eso cosas como el celular, las redes sociales o los videojuegos están diseñados para generar \"pequeños picos\" de dopamina constantemente — buscan mantenerte enganchado.",
@@ -221,7 +221,7 @@ ARTICULOS = {
     "nueva-oportunidad": {
         "titulo": "Una nueva oportunidad en tu vida",
         "categoria": "Cuídate",
-        "resumen": "No importa qué tan mal haya ido algo — siempre hay un próximo capítulo.",
+        "resumen": "No importa qué tan mal haya ido algo, siempre hay un próximo capítulo.",
         "contenido": [
             "Por más que algo haya salido mal, o que sientas que \"arruinaste\" algo, tu historia no termina ahí. Las personas cambian, las circunstancias cambian, y las segundas oportunidades existen de verdad.",
             "Darte una nueva oportunidad no significa fingir que nada pasó — significa aprender de eso y seguir adelante de todas formas.",
@@ -271,7 +271,7 @@ ARTICULOS = {
     "superar-perdida": {
         "titulo": "Superar una pérdida emocional (relación o duelo)",
         "categoria": "Cuídate",
-        "resumen": "No hay un tiempo \"correcto\" para sanar — pero sí hay formas de acompañarte mientras pasa.",
+        "resumen": "No hay un tiempo \"correcto\" para sanar, pero sí hay formas de acompañarte mientras pasa.",
         "contenido": [
             "Ya sea el fin de una relación o la muerte de alguien, perder algo importante duele de verdad, y no hay una fecha límite para \"ya deberías estar bien\".",
             "Permítete sentir lo que sientas, sin apurarte a \"superarlo\" rápido solo porque otros ya siguieron adelante.",
@@ -282,7 +282,7 @@ ARTICULOS = {
     "pensamiento-estrategico": {
         "titulo": "Cómo piensa una persona estratégica",
         "categoria": "Infórmate",
-        "resumen": "No es \"ser frío/a\" — es pensar varios pasos adelante antes de reaccionar.",
+        "resumen": "No es \"ser frío/a\". Es pensar varios pasos adelante antes de reaccionar.",
         "contenido": [
             "Pensar de forma estratégica significa considerar las consecuencias de una decisión antes de tomarla, en vez de reaccionar solo por el impulso del momento.",
             "Una persona estratégica se pregunta: \"¿qué pasa si hago esto?\", \"¿qué otras opciones tengo?\", \"¿esto me acerca o me aleja de lo que quiero a largo plazo?\".",
@@ -312,7 +312,7 @@ ARTICULOS = {
     "despues-de-una-traicion": {
         "titulo": "Traición: qué pasa después de una",
         "categoria": "Identifica",
-        "resumen": "Reconstruir la confianza — en otros, y en ti mismo/a.",
+        "resumen": "Reconstruir la confianza en otros, y en ti mismo/a.",
         "contenido": [
             "Después de una traición (de una pareja, un amigo, incluso familia), es normal sentir una mezcla de rabia, tristeza, y desconfianza que no se va de un día para otro.",
             "Uno de los efectos menos hablados es que, además de desconfiar del otro, a veces empiezas a desconfiar de tu propio juicio (\"¿cómo no lo vi venir?\"). Eso también se puede sanar.",
@@ -413,7 +413,7 @@ ARTICULOS = {
     "psicologia-chisme": {
         "titulo": "La psicología del chisme",
         "categoria": "Infórmate",
-        "resumen": "Por qué hablamos de otros — y qué dice eso de nosotros.",
+        "resumen": "Por qué hablamos de otros, y qué dice eso de nosotros.",
         "contenido": [
             "El chisme (hablar de la vida de otros) cumple, psicológicamente, varias funciones: crea cercanía entre quienes lo comparten, ayuda a aprender normas sociales (\"esto no se hace\"), y a veces sirve para sentirse mejor comparándose con otros.",
             "El problema es cuando se vuelve una forma de hacer daño, de excluir a alguien, o de sentirse bien a costa de hablar mal de otra persona.",
@@ -433,7 +433,7 @@ ARTICULOS = {
     "psicologia-silencio": {
         "titulo": "La psicología del silencio",
         "categoria": "Infórmate",
-        "resumen": "El silencio también comunica — y no siempre significa lo mismo.",
+        "resumen": "El silencio también comunica, y no siempre significa lo mismo.",
         "contenido": [
             "El silencio puede significar cosas muy distintas: calma y comodidad con otra persona, o evasión e incomodidad, o incluso una forma de castigo (la \"ley del hielo\").",
             "Usado como castigo hacia alguien más, el silencio puede ser una forma de maltrato psicológico, aunque no implique gritos ni golpes.",
@@ -453,7 +453,7 @@ ARTICULOS = {
     "depresion-que-es": {
         "titulo": "Depresión: qué es realmente",
         "categoria": "Infórmate",
-        "resumen": "Más que tristeza — y por qué no se \"supera\" solo con \"pensar positivo\".",
+        "resumen": "Más que tristeza, y por qué no se \"supera\" solo con \"pensar positivo\".",
         "contenido": [
             "La depresión es un trastorno real que va más allá de estar triste: incluye pérdida de interés en casi todo, cansancio constante, cambios de sueño y apetito, dificultad para concentrarte, y a veces pensamientos de que nada tiene sentido.",
             "No se \"arregla\" solo con \"ponerle ganas\" — es una condición que afecta la química y el funcionamiento del cerebro, y por eso necesita apoyo real, como terapia y a veces medicación.",
@@ -463,7 +463,7 @@ ARTICULOS = {
     "tdah": {
         "titulo": "TDAH: qué es",
         "categoria": "Infórmate",
-        "resumen": "No es \"flojera\" ni \"falta de disciplina\" — es una forma distinta de funcionar la atención.",
+        "resumen": "No es \"flojera\" ni \"falta de disciplina\". Es una forma distinta de funcionar la atención.",
         "contenido": [
             "El TDAH (trastorno por déficit de atención e hiperactividad) afecta la capacidad de regular la atención, los impulsos, y a veces el nivel de actividad física.",
             "Puede verse como dificultad para concentrarse en tareas que no interesan mucho, perder cosas seguido, interrumpir sin querer, o sentir una inquietud física constante.",
@@ -544,7 +544,7 @@ ARTICULOS = {
     "hablemos-de-suicidio": {
         "titulo": "Hablemos de suicidio (con cuidado)",
         "categoria": "Infórmate",
-        "resumen": "Hablar de esto abiertamente salva vidas — el silencio, no.",
+        "resumen": "Hablar de esto abiertamente salva vidas. El silencio, no.",
         "contenido": [
             "Hablar de suicidio no \"le da la idea\" a nadie — es un mito. Lo que sí ayuda es hablarlo abierta y directamente, sin miedo ni vergüenza.",
             "Si alguna vez has tenido pensamientos de no querer seguir viviendo, eso no te hace una mala persona, ni débil — es una señal de que estás cargando mucho dolor, y mereces ayuda real para soltarlo.",
@@ -555,7 +555,7 @@ ARTICULOS = {
     "personajes-y-psicologia": {
         "titulo": "Personajes conocidos y sus rasgos psicológicos",
         "categoria": "Identifica",
-        "resumen": "A veces es más fácil reconocer un patrón psicológico en un personaje que en uno mismo — aquí algunos ejemplos.",
+        "resumen": "A veces es más fácil reconocer un patrón psicológico en un personaje que en uno mismo. Aquí van algunos ejemplos.",
         "contenido": [
             "Importante antes de empezar: esto no son diagnósticos reales (son personajes ficticios, escritos por guionistas) — son solo ejemplos para entender mejor cómo se ven estos patrones en la vida real.",
             "Jax, de \"The Amazing Digital Circus\", muestra rasgos muy marcados de apego evitativo: usa el humor cortante y la distancia para no dejar que nadie se le acerque de verdad, como forma de protegerse.",
@@ -574,7 +574,7 @@ ARTICULOS = {
     "personajes-y-trastornos": {
         "titulo": "10 personajes con un trastorno psicológico",
         "categoria": "Identifica",
-        "resumen": "Varios personajes conocidos están escritos mostrando un trastorno psicológico real — verlo en ellos ayuda a reconocerlo y a quitarle el estigma.",
+        "resumen": "Varios personajes conocidos están escritos mostrando un trastorno psicológico real. Verlo en ellos ayuda a reconocerlo y a quitarle el estigma.",
         "contenido": [
             "Antes de empezar: estos son personajes ficticios, escritos por guionistas — no son diagnósticos clínicos exactos. Se usan aquí solo como ejemplo para reconocer mejor cómo se siente un trastorno en la vida real, y para recordar que tenerlo no te hace menos.",
             "Katniss Everdeen, de \"Los Juegos del Hambre\", muestra trastorno de estrés postraumático (TEPT) después de la violencia que vivió: pesadillas, sobresaltos, y recuerdos que regresan de golpe (flashbacks).",

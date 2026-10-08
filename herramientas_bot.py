@@ -27,7 +27,7 @@ TECNICAS = {
             },
             "activacion": {
                 "nombre": "Activación conductual",
-                "resumen": "Cuando el ánimo está bajo, hacer algo (aunque no den ganas) ayuda a que el ánimo suba — no al revés.",
+                "resumen": "Cuando el ánimo está bajo, hacer algo (aunque no den ganas) ayuda a que el ánimo suba, y no al revés.",
                 "video_youtube_id": "aP5RHNG9q-s",
                 "pasos": [
                     "Elige una actividad pequeña y concreta (no \"sentirme mejor\", sino algo específico: salir a caminar 10 minutos, bañarte, escribirle a alguien).",
@@ -118,7 +118,7 @@ TECNICAS = {
         "tecnicas": {
             "respiracion_diafragmatica": {
                 "nombre": "Respiración diafragmática (desde el estómago)",
-                "resumen": "La base de casi todas las técnicas de calma — respirar profundo de verdad, no superficial.",
+                "resumen": "La base de casi todas las técnicas de calma: respirar profundo de verdad, no superficial.",
                 "video_youtube_id": "TuPaMCsnxes",
                 "pasos": [
                     "Pon una mano en el pecho y otra en el estómago.",

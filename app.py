@@ -348,25 +348,25 @@ def obtener_resumen_resenas():
 # ---------------------------------------------------------------------------
 # Rutas HTTP
 # ---------------------------------------------------------------------------
-# Temas destacados en la sección "Recursos de psicología" de la portada:
-# (slug del artículo, ícono). El título y la descripción salen del propio
+# Temas destacados en la sección "Recursos de psicología" de la portada
+# (slugs de artículos). El título y la descripción salen del propio
 # artículo, así nunca se desincronizan.
 RECURSOS_PORTADA = [
-    ("controlar-emociones", "🧘"),
-    ("apego-evitativo", "💞"),
-    ("dopamina", "⚡"),
-    ("cortisol", "🌡️"),
-    ("amigdala-emociones", "🧠"),
-    ("neuronas-espejo", "🪞"),
-    ("sesgo-confirmacion", "🔍"),
-    ("efecto-placebo", "💊"),
-    ("autosabotaje", "🚧"),
-    ("superar-perdida", "🕊️"),
-    ("psicologia-deseo", "✨"),
-    ("sueños-neurociencia", "🌙"),
-    ("madurar-temprano", "🌱"),
-    ("pensamiento-estrategico", "♟️"),
-    ("nueva-oportunidad", "🌅"),
+    "controlar-emociones",
+    "apego-evitativo",
+    "dopamina",
+    "cortisol",
+    "amigdala-emociones",
+    "neuronas-espejo",
+    "sesgo-confirmacion",
+    "efecto-placebo",
+    "autosabotaje",
+    "superar-perdida",
+    "psicologia-deseo",
+    "sueños-neurociencia",
+    "madurar-temprano",
+    "pensamiento-estrategico",
+    "nueva-oportunidad",
 ]
 
 
@@ -374,8 +374,8 @@ RECURSOS_PORTADA = [
 def index():
     registrar_visita()
     recursos = [
-        {"slug": slug, "icono": icono, **ARTICULOS[slug]}
-        for slug, icono in RECURSOS_PORTADA
+        {"slug": slug, **ARTICULOS[slug]}
+        for slug in RECURSOS_PORTADA
         if slug in ARTICULOS
     ]
     return render_template(
