@@ -217,49 +217,36 @@
   <section class="seccion reveal">
     <h2>¿Cómo podemos ayudarte?</h2>
     <p class="seccion-subtitulo">Elige lo que más se parece a lo que estás viviendo.</p>
-    <div class="ayuda-grid">
-      <a href="{{ url_for('estudiante') }}" class="ayuda-opcion">
-        <span class="ayuda-texto">
-          <strong>Estoy pasando por un momento difícil</strong>
-          <small>Habla con la psicóloga, de forma anónima</small>
-        </span>
-        <span class="ayuda-flecha" aria-hidden="true">→</span>
-      </a>
-      <a href="{{ url_for('herramientas') }}" class="ayuda-opcion">
-        <span class="ayuda-texto">
-          <strong>Quiero controlar mis emociones</strong>
-          <small>Técnicas de respiración, TCC y TDC</small>
-        </span>
-        <span class="ayuda-flecha" aria-hidden="true">→</span>
-      </a>
-      <a href="{{ url_for('chatbot') }}" class="ayuda-opcion">
-        <span class="ayuda-texto">
-          <strong>Necesito hablar con alguien</strong>
-          <small>El asistente está disponible a cualquier hora</small>
-        </span>
-        <span class="ayuda-flecha" aria-hidden="true">→</span>
-      </a>
-      <a href="{{ url_for('informate_articulo', slug='superar-perdida') }}" class="ayuda-opcion">
-        <span class="ayuda-texto">
-          <strong>Estoy superando una pérdida</strong>
-          <small>Duelo, rupturas y despedidas</small>
-        </span>
-        <span class="ayuda-flecha" aria-hidden="true">→</span>
-      </a>
-      <a href="{{ url_for('diario') }}" class="ayuda-opcion">
-        <span class="ayuda-texto">
-          <strong>Quiero entender lo que siento</strong>
-          <small>Registra tu ánimo día a día en tu diario</small>
-        </span>
-        <span class="ayuda-flecha" aria-hidden="true">→</span>
-      </a>
-      <a href="{{ url_for('tests') }}" class="ayuda-opcion">
-        <span class="ayuda-texto">
-          <strong>Quiero aprender más sobre mí</strong>
-          <small>Autoevaluaciones para reflexionar</small>
-        </span>
-        <span class="ayuda-flecha" aria-hidden="true">→</span>
-      </a>
+    {% set paginas_libro = [
+      ("Estoy pasando por un momento difícil", "Habla con la psicóloga del liceo, de forma anónima. Es una persona real, preparada para escucharte, y no necesitas dar tu nombre.", url_for('estudiante'), "Hablar con la psicóloga"),
+      ("Quiero controlar mis emociones", "Técnicas de respiración, TCC y TDC explicadas paso a paso, con videos. Funcionan a cualquier hora, sin que nadie tenga que estar conectado.", url_for('herramientas'), "Ver las técnicas"),
+      ("Necesito hablar con alguien", "El asistente (Sami, Leo o Nia) está disponible a cualquier hora para ayudarte a ordenar tus ideas. Si nota que estás en riesgo, avisa a la psicóloga.", url_for('chatbot'), "Hablar con el asistente"),
+      ("Estoy superando una pérdida", "Duelo, rupturas y despedidas: un artículo para entender lo que sientes y cómo acompañarte mientras pasa.", url_for('informate_articulo', slug='superar-perdida'), "Leer el artículo"),
+      ("Quiero entender lo que siento", "Registra tu ánimo día a día en tu diario y mira cómo va cambiando con el tiempo.", url_for('diario'), "Abrir mi diario"),
+      ("Quiero aprender más sobre mí", "Autoevaluaciones sobre pareja, estrés y alimentación. No son diagnósticos: son una señal para reflexionar.", url_for('tests'), "Hacer una autoevaluación"),
+    ] %}
+    <div class="libro" data-libro>
+      <div class="libro-paginas" aria-live="polite">
+        <article class="libro-pagina libro-portada">
+          <span class="libro-portada-etiqueta">No estamos solos LMH</span>
+          <h3 class="libro-titulo">Así te podemos acompañar</h3>
+          <p class="libro-texto">Pasa las páginas: en cada una hay una forma distinta en que te podemos acompañar.</p>
+          <span class="libro-pista" aria-hidden="true">Desliza o toca → para empezar</span>
+        </article>
+        {% for titulo, texto, enlace, accion in paginas_libro %}
+          <article class="libro-pagina">
+            <span class="libro-numero">{{ "%02d"|format(loop.index) }}</span>
+            <h3 class="libro-titulo">{{ titulo }}</h3>
+            <p class="libro-texto">{{ texto }}</p>
+            <a class="libro-enlace" href="{{ enlace }}">{{ accion }} →</a>
+          </article>
+        {% endfor %}
+      </div>
+      <div class="libro-controles">
+        <button type="button" class="libro-boton" data-libro-anterior aria-label="Página anterior">←</button>
+        <span class="libro-contador" data-libro-contador>1 / {{ paginas_libro|length + 1 }}</span>
+        <button type="button" class="libro-boton" data-libro-siguiente aria-label="Página siguiente">→</button>
+      </div>
     </div>
   </section>
 

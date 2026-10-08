@@ -658,36 +658,115 @@
   line-height: 1.5;
 }
 
-/* "¿Cómo podemos ayudarte?": lista simple con divisores, como un índice. */
-.ayuda-grid {
+/* "¿Cómo podemos ayudarte?": libro interactivo. Las páginas están
+   apiladas; pasar una la gira sobre su lomo (borde izquierdo) con
+   rotateY y deja ver la siguiente. Ver activarLibro en common.js. */
+.libro { max-width: 520px; margin: 0 auto; }
+.libro-paginas {
+  position: relative;
+  height: 290px;
+  perspective: 1800px;
+  /* Bordes de las hojas de abajo, para que se vea como un libro. */
+  filter: drop-shadow(0 18px 26px rgba(0, 0, 0, 0.35));
+}
+.libro-paginas::before,
+.libro-paginas::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 4px 14px 14px 4px;
+  background: #e9e0c7;
+  translate: 5px 5px;
+}
+.libro-paginas::after { translate: 10px 10px; background: #d9cdaa; z-index: -1; }
+.libro-pagina {
+  position: absolute;
+  inset: 0;
+  z-index: var(--z, 1);
   display: flex;
   flex-direction: column;
-  border-top: 1px solid var(--linea);
+  justify-content: center;
+  gap: 10px;
+  padding: 26px 26px 26px 38px;
+  background: linear-gradient(90deg, #efe6cc 0, #fbf7ea 22px, #fbf7ea 100%);
+  border-left: 8px solid #8a6400;
+  border-radius: 4px 14px 14px 4px;
+  color: #1f3326;
+  transform-origin: left center;
+  backface-visibility: hidden;
+  transition: transform 750ms cubic-bezier(0.645, 0.045, 0.355, 1);
 }
-.ayuda-opcion {
+.libro-pagina.volteada { transform: rotateY(-178deg); }
+.libro-portada {
+  background: linear-gradient(150deg, var(--verde-liceo) 0%, var(--verde-oscuro) 100%);
+  border-left-color: var(--dorado);
+  color: #ffffff;
+}
+.libro-portada-etiqueta {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--dorado);
+}
+.libro-titulo {
+  margin: 0;
+  font-family: "Fraunces", Georgia, serif;
+  font-size: 24px;
+  font-weight: 600;
+  line-height: 1.2;
+  color: inherit;
+}
+.libro-portada .libro-titulo { color: #ffc83d; font-size: 28px; }
+.libro-texto { margin: 0; font-size: 15px; line-height: 1.55; color: inherit; opacity: 0.88; }
+.libro-numero {
+  font-family: "Fraunces", Georgia, serif;
+  font-size: 15px;
+  color: #8a6400;
+}
+.libro-pista { margin-top: 6px; font-size: 12px; color: rgba(255, 255, 255, 0.6); }
+.libro-enlace {
+  align-self: flex-start;
+  margin-top: 6px;
+  padding: 10px 18px;
+  border-radius: 999px;
+  background: var(--verde-oscuro);
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background var(--transicion-suave), translate var(--transicion-suave);
+}
+.libro-enlace:hover { background: var(--verde-liceo); translate: 3px 0; }
+.libro-controles {
   display: flex;
   align-items: center;
-  gap: 16px;
-  padding: 16px 4px;
-  border-bottom: 1px solid var(--linea);
-  text-decoration: none;
-  color: var(--blanco);
-  transition: background var(--transicion-suave), padding var(--transicion-suave);
+  justify-content: center;
+  gap: 18px;
+  margin-top: 22px;
 }
-.ayuda-opcion:hover,
-.ayuda-opcion:focus-visible {
-  background: rgba(255, 200, 61, 0.06);
-  padding-left: 12px;
-}
-.ayuda-texto { display: flex; flex-direction: column; gap: 3px; flex: 1; min-width: 0; }
-.ayuda-texto strong { font-size: 15px; font-weight: 600; color: var(--blanco); }
-.ayuda-texto small { font-size: 13px; color: var(--blanco-suave); }
-.ayuda-flecha {
+.libro-boton {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  border: 1px solid var(--tarjeta-borde);
+  background: none;
   color: var(--amarillo);
   font-size: 18px;
-  transition: translate 250ms var(--ease-salida);
+  cursor: pointer;
+  transition: background var(--transicion-suave), opacity var(--transicion-suave);
 }
-.ayuda-opcion:hover .ayuda-flecha { translate: 4px 0; }
+.libro-boton:hover:not(:disabled) { background: rgba(255, 200, 61, 0.12); }
+.libro-boton:disabled { opacity: 0.3; cursor: default; }
+.libro-contador { min-width: 52px; text-align: center; font-size: 13px; font-weight: 600; color: var(--blanco-suave); }
+@media (max-width: 380px) {
+  .libro-paginas { height: 320px; }
+  .libro-pagina { padding: 22px 20px 22px 30px; }
+  .libro-titulo { font-size: 21px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .libro-pagina { transition: none; }
+}
 
 /* Aviso de emergencia: claro y visible, sin ser alarmista. */
 .emergencia {

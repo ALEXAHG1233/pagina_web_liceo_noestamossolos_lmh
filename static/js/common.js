@@ -926,7 +926,6 @@ document.addEventListener("DOMContentLoaded", activarLineaFondo);
 const STAGGER_SELECTOR = [
   ".tarjeta p", ".opcion p", ".historia p",
   ".seccion h2:not(.sr-only)", ".seccion-subtitulo", ".cta-elegir-subtitulo",
-  ".ayuda-texto strong", ".ayuda-texto small",
   ".recurso-titulo", ".recurso-resumen",
 ].join(", ");
 
@@ -961,3 +960,57 @@ function activarTextoEscalonado() {
 }
 
 document.addEventListener("DOMContentLoaded", activarTextoEscalonado);
+
+// Libro de "¿Cómo podemos ayudarte?": botones ← →, flechas del teclado
+// y deslizar con el dedo. Solo la página abierta se puede enfocar
+// (las demás quedan "inert") para que el teclado no salte a páginas ocultas.
+function activarLibro() {
+  document.querySelectorAll("[data-libro]").forEach((libro) => {
+    const paginas = Array.from(libro.querySelectorAll(".libro-pagina"));
+    const anterior = libro.querySelector("[data-libro-anterior]");
+    const siguiente = libro.querySelector("[data-libro-siguiente]");
+    const contador = libro.querySelector("[data-libro-contador]");
+    let actual = 0;
+
+    function pintar() {
+      paginas.forEach((pagina, i) => {
+        pagina.style.setProperty("--z", String(paginas.length - i));
+        pagina.classList.toggle("volteada", i < actual);
+        pagina.inert = i !== actual;
+      });
+      contador.textContent = `${actual + 1} / ${paginas.length}`;
+      anterior.disabled = actual === 0;
+      siguiente.disabled = actual === paginas.length - 1;
+    }
+
+    function ir(n) {
+      const destino = Math.min(Math.max(n, 0), paginas.length - 1);
+      if (destino === actual) return;
+      actual = destino;
+      pintar();
+    }
+
+    anterior.addEventListener("click", () => ir(actual - 1));
+    siguiente.addEventListener("click", () => ir(actual + 1));
+    libro.addEventListener("keydown", (e) => {
+      if (e.key === "ArrowRight") { e.preventDefault(); ir(actual + 1); }
+      if (e.key === "ArrowLeft") { e.preventDefault(); ir(actual - 1); }
+    });
+
+    // Deslizar con el dedo sobre las páginas.
+    const zona = libro.querySelector(".libro-paginas");
+    let inicioX = null;
+    zona.addEventListener("pointerdown", (e) => { inicioX = e.clientX; });
+    zona.addEventListener("pointerup", (e) => {
+      if (inicioX === null) return;
+      const dx = e.clientX - inicioX;
+      inicioX = null;
+      if (Math.abs(dx) > 40) ir(actual + (dx < 0 ? 1 : -1));
+    });
+    zona.style.touchAction = "pan-y";
+
+    pintar();
+  });
+}
+
+document.addEventListener("DOMContentLoaded", activarLibro);
