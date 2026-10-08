@@ -348,13 +348,41 @@ def obtener_resumen_resenas():
 # ---------------------------------------------------------------------------
 # Rutas HTTP
 # ---------------------------------------------------------------------------
+# Temas destacados en la sección "Recursos de psicología" de la portada:
+# (slug del artículo, ícono). El título y la descripción salen del propio
+# artículo, así nunca se desincronizan.
+RECURSOS_PORTADA = [
+    ("controlar-emociones", "🧘"),
+    ("apego-evitativo", "💞"),
+    ("dopamina", "⚡"),
+    ("cortisol", "🌡️"),
+    ("amigdala-emociones", "🧠"),
+    ("neuronas-espejo", "🪞"),
+    ("sesgo-confirmacion", "🔍"),
+    ("efecto-placebo", "💊"),
+    ("autosabotaje", "🚧"),
+    ("superar-perdida", "🕊️"),
+    ("psicologia-deseo", "✨"),
+    ("sueños-neurociencia", "🌙"),
+    ("madurar-temprano", "🌱"),
+    ("pensamiento-estrategico", "♟️"),
+    ("nueva-oportunidad", "🌅"),
+]
+
+
 @app.route("/")
 def index():
     registrar_visita()
+    recursos = [
+        {"slug": slug, "icono": icono, **ARTICULOS[slug]}
+        for slug, icono in RECURSOS_PORTADA
+        if slug in ARTICULOS
+    ]
     return render_template(
         "index.html",
         categorias_video=VIDEOS_CURADOS,
         video_prevencion_id=VIDEO_PREVENCION_SUICIDIO_ID,
+        recursos_psicologia=recursos,
     )
 
 

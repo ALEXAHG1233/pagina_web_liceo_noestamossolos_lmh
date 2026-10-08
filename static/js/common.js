@@ -175,7 +175,7 @@ function crearParallaxHero() {
 
 document.addEventListener("DOMContentLoaded", crearParallaxHero);
 
-const GRUPOS_ESCALONADOS = ".tarjetas, .opciones, .tarjetas-extra, .redes-grid, .video-landing-grid";
+const GRUPOS_ESCALONADOS = ".tarjetas, .opciones, .tarjetas-extra, .redes-grid, .video-landing-grid, .ayuda-grid, .recursos-grid";
 
 function activarRevelado(selector = ".reveal") {
   const elementos = document.querySelectorAll(selector);

@@ -300,7 +300,7 @@
 .reveal .escalonado { opacity: 0; }
 .reveal.visible .escalonado {
   animation: entrarEscalonado 700ms var(--ease-salida) both;
-  animation-delay: calc(var(--i, 0) * 90ms + 120ms);
+  animation-delay: calc(min(var(--i, 0), 8) * 80ms + 120ms);
 }
 @keyframes entrarEscalonado {
   from { opacity: 0; translate: 0 18px; }
@@ -655,6 +655,155 @@
   .hero-con-banner .btn-musica-hero { animation: none !important; opacity: 1 !important; }
   .reveal > h2::after { transform: scaleX(1) !important; transition: none !important; }
   .nav-boton-ayuda::before, .opcion-boton::before { display: none; }
+}
+
+.seccion-subtitulo {
+  text-align: center;
+  font-size: 14px;
+  color: var(--blanco-suave);
+  max-width: 420px;
+  margin: -6px auto 22px;
+  line-height: 1.5;
+}
+
+/* "¿Cómo podemos ayudarte?" — opciones en forma de botón grande. */
+.ayuda-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+  max-width: 820px;
+  margin: 0 auto;
+}
+.ayuda-opcion {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 16px;
+  background: var(--tarjeta-fondo);
+  border: 1px solid var(--tarjeta-borde);
+  border-radius: 14px;
+  text-decoration: none;
+  color: var(--blanco);
+  box-shadow: var(--sombra-suave);
+  transition: transform var(--transicion-suave), box-shadow var(--transicion-suave), border-color var(--transicion-suave);
+}
+.ayuda-opcion:hover,
+.ayuda-opcion:focus-visible {
+  transform: translateY(-3px);
+  border-color: var(--amarillo);
+  box-shadow: var(--sombra-media), 0 0 16px rgba(201, 162, 39, 0.3);
+}
+.ayuda-icono { font-size: 26px; flex-shrink: 0; }
+.ayuda-texto { display: flex; flex-direction: column; gap: 2px; flex: 1; min-width: 0; }
+.ayuda-texto strong { font-size: 14px; font-weight: 600; color: var(--blanco); }
+.ayuda-texto small { font-size: 12px; color: var(--blanco-suave); }
+.ayuda-flecha {
+  color: var(--amarillo);
+  font-size: 18px;
+  transition: translate 250ms var(--ease-salida);
+}
+.ayuda-opcion:hover .ayuda-flecha { translate: 4px 0; }
+
+@media (min-width: 640px) {
+  .ayuda-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+/* Aviso de emergencia: claro y visible, sin ser alarmista. */
+.emergencia {
+  display: flex;
+  gap: 16px;
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 22px 20px;
+  background: rgba(92, 31, 31, 0.55);
+  border: 1px solid #e87a7a;
+  border-left: 4px solid #e87a7a;
+  border-radius: 14px;
+  box-shadow: var(--sombra-suave);
+}
+.emergencia-icono { font-size: 30px; flex-shrink: 0; line-height: 1; }
+.emergencia-contenido h2 {
+  text-align: left;
+  font-size: 18px;
+  color: #ffd2d2;
+  margin: 0 0 8px;
+}
+.emergencia-contenido p {
+  margin: 0 0 8px;
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--blanco);
+}
+.emergencia-contenido strong { color: #ffd2d2; }
+.emergencia-nota { font-size: 12px !important; color: var(--blanco-suave) !important; }
+.emergencia-acciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 14px;
+}
+.emergencia-boton {
+  display: inline-block;
+  padding: 10px 18px;
+  border-radius: 20px;
+  border: 1px solid #e87a7a;
+  color: #ffd2d2;
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 700;
+  transition: background var(--transicion-suave), color var(--transicion-suave);
+}
+.emergencia-boton:hover { background: rgba(232, 122, 122, 0.18); }
+.emergencia-boton-principal { background: #c94b4b; border-color: #c94b4b; color: var(--blanco); }
+.emergencia-boton-principal:hover { background: #b03a3a; }
+
+@media (max-width: 420px) {
+  .emergencia { flex-direction: column; gap: 8px; }
+}
+
+/* "Recursos de psicología" — cuadrícula de temas. */
+.recursos-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  max-width: 980px;
+  margin: 0 auto;
+}
+.recurso-card {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 16px 14px;
+  background: var(--tarjeta-fondo);
+  border: 1px solid var(--tarjeta-borde);
+  border-radius: 14px;
+  text-decoration: none;
+  color: var(--blanco);
+  box-shadow: var(--sombra-suave);
+  transition: transform var(--transicion-suave), box-shadow var(--transicion-suave), border-color var(--transicion-suave);
+}
+.recurso-card:hover,
+.recurso-card:focus-visible {
+  transform: translateY(-4px);
+  border-color: var(--amarillo);
+  box-shadow: var(--sombra-media), 0 0 16px rgba(201, 162, 39, 0.3);
+}
+.recurso-icono { font-size: 24px; }
+.recurso-titulo { font-size: 14px; font-weight: 700; color: var(--amarillo); line-height: 1.3; }
+.recurso-resumen {
+  display: none;
+  font-size: 12px;
+  line-height: 1.45;
+  color: var(--blanco-suave);
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+@media (min-width: 640px) {
+  .recursos-grid { grid-template-columns: repeat(3, 1fr); }
+  .recurso-resumen { display: -webkit-box; }
 }
 
 /* "Más para ti" — accesos directos (diario, fe, música, reseñas, muro,
