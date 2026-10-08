@@ -919,3 +919,40 @@ function activarLineaFondo() {
 }
 
 document.addEventListener("DOMContentLoaded", activarLineaFondo);
+
+// Textos de los cuadros que entran palabra por palabra al aparecer en
+// pantalla. Solo se aplica a párrafos de texto simple (sin negritas ni
+// enlaces adentro) para no romper su contenido.
+const STAGGER_SELECTOR = ".tarjeta p, .opcion p, .historia p";
+
+function activarTextoEscalonado() {
+  if (SIN_MOVIMIENTO || !("IntersectionObserver" in window)) return;
+  const parrafos = Array.from(document.querySelectorAll(STAGGER_SELECTOR))
+    .filter((p) => p.children.length === 0 && p.textContent.trim());
+  if (!parrafos.length) return;
+
+  parrafos.forEach((p) => {
+    const palabras = p.textContent.trim().split(/\s+/);
+    const piezas = [];
+    palabras.forEach((palabra, i) => {
+      const span = document.createElement("span");
+      span.className = "stagger-palabra";
+      span.style.setProperty("--i", i);
+      span.textContent = palabra;
+      piezas.push(span);
+      if (i < palabras.length - 1) piezas.push(" ");
+    });
+    p.replaceChildren(...piezas);
+  });
+
+  const observador = new IntersectionObserver((entradas) => {
+    entradas.forEach((entrada) => {
+      if (!entrada.isIntersecting) return;
+      entrada.target.classList.add("stagger-visible");
+      observador.unobserve(entrada.target);
+    });
+  }, { threshold: 0.3 });
+  parrafos.forEach((p) => observador.observe(p));
+}
+
+document.addEventListener("DOMContentLoaded", activarTextoEscalonado);

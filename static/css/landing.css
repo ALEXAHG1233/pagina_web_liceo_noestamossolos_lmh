@@ -1330,6 +1330,22 @@ body:has(.dock) .whatsapp-flotante { bottom: 80px; }
   .linea-fondo path { stroke-dashoffset: 0 !important; }
 }
 
+/* ---------- Texto de los cuadros palabra por palabra (StaggerText) ----------
+   common.js parte el texto en palabras; cuando el cuadro entra en
+   pantalla cada palabra sube y se aclara un poco después de la anterior. */
+.stagger-palabra {
+  display: inline-block;
+  opacity: 0;
+  translate: 0 0.45em;
+  filter: blur(3px);
+  transition:
+    opacity 420ms var(--ease-salida),
+    translate 420ms var(--ease-salida),
+    filter 420ms var(--ease-salida);
+  transition-delay: calc(200ms + min(var(--i, 0), 40) * 35ms);
+}
+.stagger-visible .stagger-palabra { opacity: 1; translate: 0 0; filter: blur(0); }
+
 /* ---------- Texto que se transforma (MorphText) en la portada ----------
    Dos capas de texto se cruzan con desenfoque; el filtro SVG
    #filtro-morph sube el contraste del canal alfa para que, a mitad del
