@@ -128,6 +128,26 @@
     </div>
   </section>
 
+  <section class="seccion tigre-3d reveal">
+    <h2>Conoce a Tigrito</h2>
+    {% if modelo_tigre %}
+      <p class="seccion-subtitulo">La mascota del programa. Gíralo con el mouse o con el dedo.</p>
+      <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.5.0/model-viewer.min.js"></script>
+      <model-viewer class="visor-tigre"
+        src="{{ url_for('static', filename='models/tigre.glb') }}"
+        poster="{{ url_for('static', filename='images/tigrito_sin_fondo.png') }}"
+        alt="Tigrito, la mascota del programa, en 3D"
+        camera-controls auto-rotate auto-rotate-delay="0" rotation-per-second="20deg"
+        touch-action="pan-y" interaction-prompt="none"
+        shadow-intensity="1" exposure="1.05" loading="lazy"></model-viewer>
+    {% else %}
+      <p class="seccion-subtitulo">La mascota del programa, siempre lista para escucharte.</p>
+      <div class="visor-tigre visor-tigre-imagen">
+        <img src="{{ url_for('static', filename='images/tigrito_sin_fondo.png') }}" alt="Tigrito, la mascota del programa" loading="lazy">
+      </div>
+    {% endif %}
+  </section>
+
   <section class="seccion seccion-con-banner reveal">
     <h2 class="sr-only">¿Por qué hablar ayuda?</h2>
     <img

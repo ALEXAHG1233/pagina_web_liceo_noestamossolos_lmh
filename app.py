@@ -433,6 +433,8 @@ def index():
         video_prevencion_id=VIDEO_PREVENCION_SUICIDIO_ID,
         recursos_psicologia=recursos,
         indice_busqueda=construir_indice_busqueda(),
+        # El visor 3D de Tigrito solo aparece cuando ya existe el modelo.
+        modelo_tigre=os.path.exists(os.path.join(app.static_folder, "models", "tigre.glb")),
     )
 
 

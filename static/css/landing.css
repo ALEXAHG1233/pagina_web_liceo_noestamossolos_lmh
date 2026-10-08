@@ -1510,6 +1510,35 @@ body:has(.dock) .whatsapp-flotante { bottom: 80px; }
   .cilindro-escena { --cara-ancho: 190px; perspective: 1100px; }
 }
 
+/* ---------- "Conoce a Tigrito" (visor 3D) ----------
+   Con el modelo static/models/tigre.glb se usa <model-viewer>; sin él,
+   la imagen del tigre flota con un resplandor dorado detrás. */
+.visor-tigre {
+  display: block;
+  width: 100%;
+  height: 360px;
+  border-radius: 18px;
+  background: radial-gradient(circle at 50% 60%, rgba(201, 162, 39, 0.28), transparent 62%);
+  --poster-color: transparent;
+}
+.visor-tigre-imagen { display: grid; place-items: center; }
+.visor-tigre-imagen img {
+  width: auto;
+  max-width: 75%;
+  max-height: 330px;
+  filter: drop-shadow(0 22px 24px rgba(0, 0, 0, 0.45));
+  animation: flotarTigre 4.5s ease-in-out infinite;
+}
+@keyframes flotarTigre {
+  0%, 100% { translate: 0 0; rotate: -2deg; }
+  50% { translate: 0 -12px; rotate: 2deg; }
+}
+@media (min-width: 600px) {
+  .visor-tigre { height: 440px; }
+  .visor-tigre-imagen img { max-height: 405px; }
+}
+@media (prefers-reduced-motion: reduce) { .visor-tigre-imagen img { animation: none; } }
+
 /* ---------- Botón "metal líquido" ----------
    Versión en CSS puro del LiquidMetalButton (React + shader WebGL):
    un borde cromado que fluye alrededor del botón. Se logra con dos
