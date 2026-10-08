@@ -91,6 +91,26 @@
 }
 .nav-boton-ayuda:hover { background: var(--amarillo); }
 
+/* Botón ☀️/🌙 + hamburguesa, juntos a la derecha del escudo. */
+.nav-acciones { display: flex; align-items: center; gap: 8px; }
+.nav-tema {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  font-size: 16px;
+  line-height: 1;
+  background: none;
+  border: 1px solid var(--tarjeta-borde);
+  border-radius: 50%;
+  cursor: pointer;
+  transition: border-color var(--transicion-suave), background var(--transicion-suave);
+}
+.nav-tema:hover { border-color: var(--amarillo); background: rgba(255, 200, 61, 0.1); }
+.nav-tema-icono { display: block; transition: rotate 400ms var(--ease-salida); }
+.nav-tema[aria-pressed="true"] .nav-tema-icono { rotate: 360deg; }
+
 @media (min-width: 860px) {
   .nav-hamburguesa { display: none; }
   .nav-enlaces {
@@ -937,3 +957,37 @@
 .btn-sonido:active,
 .tarjeta-extra:active,
 .pie-red-icono:active { scale: 0.96; }
+
+/* ---------- Modo claro (botón ☀️/🌙 del menú) ----------
+   El menú, la portada y el pie se quedan en verde oscuro (identidad del
+   Liceo); solo las secciones de contenido pasan a fondo claro. Se
+   redefinen los mismos tokens que ya usan las tarjetas, así no hay que
+   tocar cada regla: el texto blanco pasa a verde oscuro y el amarillo a
+   un dorado oscuro que se lee bien sobre blanco. */
+:root[data-tema="claro"] body {
+  background: linear-gradient(180deg, #f7f4ea 0%, #ebe5d1 100%);
+  background-attachment: fixed;
+}
+:root[data-tema="claro"] .seccion {
+  --blanco: #183020;
+  --blanco-suave: #3b5143;
+  --amarillo: #8a6400;
+  --verde-liceo-claro: #ffffff;
+  --tarjeta-fondo: #ffffff;
+  --sombra-suave: 0 2px 10px rgba(31, 77, 44, 0.12);
+  --sombra-media: 0 8px 24px rgba(31, 77, 44, 0.16);
+  color: var(--blanco-suave);
+}
+/* Botones y avisos con fondo de color propio conservan texto blanco. */
+:root[data-tema="claro"] .opcion-rojo,
+:root[data-tema="claro"] .emergencia-boton-principal { color: #ffffff; }
+:root[data-tema="claro"] .opcion-rojo h3 { color: #ffd77a; }
+:root[data-tema="claro"] .opcion-rojo p { color: rgba(255, 255, 255, 0.85); }
+/* El aviso de emergencia mantiene su fondo rojo oscuro y texto claro. */
+:root[data-tema="claro"] .emergencia {
+  --blanco: #ffffff;
+  --blanco-suave: rgba(255, 255, 255, 0.85);
+  --amarillo: #ffc83d;
+  background: #6b2323;
+  color: var(--blanco-suave);
+}

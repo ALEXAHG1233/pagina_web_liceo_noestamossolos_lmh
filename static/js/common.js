@@ -56,6 +56,34 @@ function activarNavPrincipal() {
 
 document.addEventListener("DOMContentLoaded", activarNavPrincipal);
 
+// Botón ☀️/🌙 del menú: alterna entre el modo oscuro (verde, el de siempre)
+// y el modo claro. La preferencia se guarda en este navegador; el <head>
+// de la portada la aplica antes de pintar para que no "parpadee".
+function activarCambioTema() {
+  const boton = document.getElementById("nav-tema");
+  if (!boton) return;
+  const raiz = document.documentElement;
+  const icono = boton.querySelector(".nav-tema-icono");
+
+  function pintarBoton() {
+    const claro = raiz.dataset.tema === "claro";
+    icono.textContent = claro ? "🌙" : "☀️";
+    boton.setAttribute("aria-label", claro ? "Cambiar a modo oscuro" : "Cambiar a modo claro");
+    boton.setAttribute("aria-pressed", claro ? "true" : "false");
+  }
+
+  boton.addEventListener("click", () => {
+    const claro = raiz.dataset.tema !== "claro";
+    if (claro) raiz.dataset.tema = "claro";
+    else delete raiz.dataset.tema;
+    try { localStorage.setItem("tema", claro ? "claro" : "oscuro"); } catch (e) {}
+    pintarBoton();
+  });
+  pintarBoton();
+}
+
+document.addEventListener("DOMContentLoaded", activarCambioTema);
+
 const SIN_MOVIMIENTO = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 // Barra dorada fina arriba que muestra cuánto has bajado en la página.

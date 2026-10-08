@@ -11,6 +11,9 @@
   <meta property="og:site_name" content="No estamos solos LMH">
   <meta property="og:image" content="{{ url_for('static', filename='images/banner_no_estas_solo.webp', _external=True) }}">
   <meta name="twitter:card" content="summary_large_image">
+  <script>
+    try { if (localStorage.getItem("tema") === "claro") document.documentElement.dataset.tema = "claro"; } catch (e) {}
+  </script>
   <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/favicon_escudo.png') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/landing.css') }}">
@@ -25,9 +28,14 @@
         <img src="{{ url_for('static', filename='images/escudo_liceo.png') }}" alt="" class="nav-escudo">
         <span>No estamos solos LMH</span>
       </a>
-      <button type="button" class="nav-hamburguesa" id="nav-hamburguesa" aria-label="Abrir menú" aria-expanded="false" aria-controls="nav-enlaces">
-        <span></span><span></span><span></span>
-      </button>
+      <div class="nav-acciones">
+        <button type="button" class="nav-tema" id="nav-tema" aria-label="Cambiar a modo claro" aria-pressed="false">
+          <span class="nav-tema-icono" aria-hidden="true">☀️</span>
+        </button>
+        <button type="button" class="nav-hamburguesa" id="nav-hamburguesa" aria-label="Abrir menú" aria-expanded="false" aria-controls="nav-enlaces">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
       <div class="nav-enlaces" id="nav-enlaces">
         <a href="{{ url_for('index') }}">Inicio</a>
         <a href="#recursos">Recursos</a>
