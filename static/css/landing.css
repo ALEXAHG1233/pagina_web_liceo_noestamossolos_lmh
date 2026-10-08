@@ -123,6 +123,10 @@
   .nav-tema, .nav-hamburguesa { width: 32px; height: 32px; }
   .nav-buscar { height: 32px; padding: 0 8px; }
 }
+/* Pantallas angostísimas: solo el escudo (el nombre se lee igual al pasar al inicio). */
+@media (max-width: 300px) {
+  .nav-marca span { display: none; }
+}
 .nav-tema:hover { border-color: var(--amarillo); background: rgba(255, 200, 61, 0.1); }
 .nav-tema-icono { display: block; transition: rotate 400ms var(--ease-salida); }
 .nav-tema[aria-pressed="true"] .nav-tema-icono { rotate: 360deg; }

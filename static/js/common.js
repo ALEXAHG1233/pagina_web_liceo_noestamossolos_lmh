@@ -923,7 +923,12 @@ document.addEventListener("DOMContentLoaded", activarLineaFondo);
 // Textos de los cuadros que entran palabra por palabra al aparecer en
 // pantalla. Solo se aplica a párrafos de texto simple (sin negritas ni
 // enlaces adentro) para no romper su contenido.
-const STAGGER_SELECTOR = ".tarjeta p, .opcion p, .historia p";
+const STAGGER_SELECTOR = [
+  ".tarjeta p", ".opcion p", ".historia p",
+  ".seccion h2:not(.sr-only)", ".seccion-subtitulo", ".cta-elegir-subtitulo",
+  ".ayuda-texto strong", ".ayuda-texto small",
+  ".recurso-titulo", ".recurso-resumen",
+].join(", ");
 
 function activarTextoEscalonado() {
   if (SIN_MOVIMIENTO || !("IntersectionObserver" in window)) return;
