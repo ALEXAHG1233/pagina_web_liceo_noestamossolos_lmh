@@ -108,6 +108,79 @@
 
 #recursos, #contacto, #elegir-con-quien { scroll-margin-top: 70px; }
 
+/* Subrayado dorado animado en los enlaces del menú (solo escritorio). */
+@media (min-width: 860px) {
+  .nav-enlaces a:not(.nav-boton-ayuda) { position: relative; }
+  .nav-enlaces a:not(.nav-boton-ayuda)::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 2px;
+    background: var(--amarillo);
+    border-radius: 2px;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 300ms var(--ease-salida);
+  }
+  .nav-enlaces a:not(.nav-boton-ayuda):hover::after,
+  .nav-enlaces a:not(.nav-boton-ayuda):focus-visible::after { transform: scaleX(1); }
+}
+
+/* Destello que cruza el botón dorado al pasar el mouse. */
+.nav-boton-ayuda,
+.opcion-boton {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+.nav-boton-ayuda::before,
+.opcion-boton::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -75%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(100deg, transparent, rgba(255, 255, 255, 0.45), transparent);
+  transform: skewX(-20deg);
+  z-index: -1;
+  pointer-events: none;
+}
+.nav-boton-ayuda:hover::before,
+.opcion-grande:hover .opcion-boton::before {
+  animation: destello 750ms var(--ease-salida);
+}
+@keyframes destello {
+  to { left: 130%; }
+}
+
+/* Brillo dorado que sigue al mouse dentro de las tarjetas grandes
+   (posición calculada en common.js -> activarFocoTarjetas). */
+.opcion-grande:hover,
+.tarjeta-extra:hover {
+  background-image: radial-gradient(
+    260px circle at var(--mx, 50%) var(--my, 50%),
+    rgba(255, 200, 61, 0.14),
+    transparent 65%
+  );
+}
+
+/* Barra de progreso de lectura, arriba del todo. */
+.barra-progreso {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: linear-gradient(90deg, var(--dorado), var(--amarillo));
+  transform-origin: left;
+  transform: scaleX(0);
+  z-index: 600;
+  pointer-events: none;
+}
+
 .hero {
   padding: 52px 24px 40px;
   text-align: center;
@@ -217,10 +290,47 @@
 /* Revelado progresivo al hacer scroll */
 .reveal {
   opacity: 0;
-  transform: translateY(18px);
-  transition: opacity 620ms ease, transform 620ms ease;
+  transform: translateY(24px);
+  transition: opacity 800ms var(--ease-salida), transform 800ms var(--ease-salida);
 }
 .reveal.visible { opacity: 1; transform: translateY(0); }
+
+/* Las tarjetas de un grupo entran una tras otra. Se anima "translate" (no
+   "transform") para no pelear con el levantamiento al pasar el mouse. */
+.reveal .escalonado { opacity: 0; }
+.reveal.visible .escalonado {
+  animation: entrarEscalonado 700ms var(--ease-salida) both;
+  animation-delay: calc(var(--i, 0) * 90ms + 120ms);
+}
+@keyframes entrarEscalonado {
+  from { opacity: 0; translate: 0 18px; }
+  to { opacity: 1; translate: 0 0; }
+}
+
+/* Línea dorada bajo los títulos de sección que "crece" al aparecer. */
+.reveal:not(.cta-elegir) > h2:not(.sr-only)::after {
+  content: "";
+  display: block;
+  width: 48px;
+  height: 2px;
+  margin: 10px auto 0;
+  background: var(--dorado);
+  border-radius: 2px;
+  transform: scaleX(0);
+  transition: transform 700ms var(--ease-salida) 250ms;
+}
+.reveal.visible:not(.cta-elegir) > h2:not(.sr-only)::after { transform: scaleX(1); }
+
+/* Entrada suave del texto y botón del hero al cargar. */
+.hero-con-banner .hero-frase,
+.hero-con-banner .btn-musica-hero {
+  animation: subirSuave 800ms var(--ease-salida) both;
+}
+.hero-con-banner .btn-musica-hero { animation-delay: 150ms; }
+@keyframes subirSuave {
+  from { opacity: 0; translate: 0 12px; }
+  to { opacity: 1; translate: 0 0; }
+}
 
 .tarjetas { display: flex; flex-direction: column; gap: 14px; }
 .tarjeta {
@@ -539,6 +649,12 @@
 
 @media (prefers-reduced-motion: reduce) {
   .hero, .hero-blob, .hero-icono, .reveal { animation: none !important; transition: none !important; }
+  .reveal { opacity: 1 !important; transform: none !important; }
+  .reveal .escalonado,
+  .hero-con-banner .hero-frase,
+  .hero-con-banner .btn-musica-hero { animation: none !important; opacity: 1 !important; }
+  .reveal > h2::after { transform: scaleX(1) !important; transition: none !important; }
+  .nav-boton-ayuda::before, .opcion-boton::before { display: none; }
 }
 
 /* "Más para ti" — accesos directos (diario, fe, música, reseñas, muro,
@@ -653,3 +769,22 @@
   text-decoration: underline;
 }
 .pie-legal a:hover { color: var(--amarillo); }
+
+/* Respuesta táctil al presionar (al final para no ser pisada por las
+   reglas de transición de cada tarjeta). */
+.nav-boton-ayuda,
+.btn-sonido,
+.tarjeta-extra,
+.pie-red-icono {
+  transition:
+    scale 120ms ease,
+    transform var(--transicion-suave),
+    background var(--transicion-suave),
+    color var(--transicion-suave),
+    box-shadow var(--transicion-suave),
+    border-color var(--transicion-suave);
+}
+.nav-boton-ayuda:active,
+.btn-sonido:active,
+.tarjeta-extra:active,
+.pie-red-icono:active { scale: 0.96; }

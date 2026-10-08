@@ -56,6 +56,49 @@ function activarNavPrincipal() {
 
 document.addEventListener("DOMContentLoaded", activarNavPrincipal);
 
+const SIN_MOVIMIENTO = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+// Barra dorada fina arriba que muestra cuánto has bajado en la página.
+function crearBarraProgreso() {
+  if (!document.querySelector(".landing-body") || document.getElementById("barra-progreso")) return;
+  const barra = document.createElement("div");
+  barra.id = "barra-progreso";
+  barra.className = "barra-progreso";
+  barra.setAttribute("aria-hidden", "true");
+  document.body.appendChild(barra);
+
+  let pendiente = false;
+  function actualizar() {
+    pendiente = false;
+    const max = document.documentElement.scrollHeight - window.innerHeight;
+    const progreso = max > 0 ? window.scrollY / max : 0;
+    barra.style.transform = `scaleX(${progreso})`;
+  }
+  window.addEventListener("scroll", () => {
+    if (!pendiente) {
+      pendiente = true;
+      requestAnimationFrame(actualizar);
+    }
+  }, { passive: true });
+  actualizar();
+}
+
+document.addEventListener("DOMContentLoaded", crearBarraProgreso);
+
+// Brillo dorado que sigue al mouse dentro de las tarjetas grandes.
+function activarFocoTarjetas() {
+  if (SIN_MOVIMIENTO || !window.matchMedia("(hover: hover) and (pointer: fine)").matches) return;
+  document.querySelectorAll(".opcion-grande, .tarjeta-extra").forEach((tarjeta) => {
+    tarjeta.addEventListener("pointermove", (e) => {
+      const r = tarjeta.getBoundingClientRect();
+      tarjeta.style.setProperty("--mx", `${e.clientX - r.left}px`);
+      tarjeta.style.setProperty("--my", `${e.clientY - r.top}px`);
+    });
+  });
+}
+
+document.addEventListener("DOMContentLoaded", activarFocoTarjetas);
+
 /**
  * Fondo parallax con imágenes, visible en todas las páginas que cargan
  * este script. Cada "capa" es una imagen que se mueve a su propia
@@ -132,9 +175,19 @@ function crearParallaxHero() {
 
 document.addEventListener("DOMContentLoaded", crearParallaxHero);
 
+const GRUPOS_ESCALONADOS = ".tarjetas, .opciones, .tarjetas-extra, .redes-grid, .video-landing-grid";
+
 function activarRevelado(selector = ".reveal") {
   const elementos = document.querySelectorAll(selector);
   if (!elementos.length) return;
+
+  // Las tarjetas dentro de una sección aparecen una tras otra, no todas a la vez.
+  document.querySelectorAll(GRUPOS_ESCALONADOS).forEach((grupo) => {
+    Array.from(grupo.children).forEach((hijo, i) => {
+      hijo.classList.add("escalonado");
+      hijo.style.setProperty("--i", i);
+    });
+  });
 
   if (!("IntersectionObserver" in window)) {
     elementos.forEach((el) => el.classList.add("visible"));

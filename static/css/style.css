@@ -21,6 +21,7 @@
   --sombra-suave: 0 2px 10px rgba(0, 0, 0, 0.2);
   --sombra-media: 0 8px 24px rgba(0, 0, 0, 0.3);
   --transicion-suave: 220ms cubic-bezier(0.33, 1, 0.68, 1);
+  --ease-salida: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 * { box-sizing: border-box; }
