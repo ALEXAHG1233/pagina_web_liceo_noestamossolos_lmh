@@ -4,7 +4,7 @@ import sqlite3
 import uuid
 from datetime import datetime
 
-from flask import Flask, render_template, session, redirect, url_for, request, flash
+from flask import Flask, render_template, session, redirect, url_for, request, flash, jsonify
 from flask_socketio import SocketIO, join_room, emit
 from werkzeug.utils import secure_filename
 
@@ -434,6 +434,13 @@ def index():
         recursos_psicologia=recursos,
         indice_busqueda=construir_indice_busqueda(),
     )
+
+
+@app.route("/api/estado-psicologa")
+def estado_psicologa():
+    """Solo dice si la psicóloga tiene el panel abierto (para el puntito
+    verde de la barra inferior). No expone nada más."""
+    return jsonify({"conectada": psicologa_esta_conectada()})
 
 
 @app.route("/estudiante")

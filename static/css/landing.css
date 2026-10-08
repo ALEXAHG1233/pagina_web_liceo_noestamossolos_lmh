@@ -1020,6 +1020,115 @@
 .buscador-pie kbd { margin-right: 3px; }
 @media (hover: none) { .buscador-pie, .buscador-entrada kbd { display: none; } }
 
+/* ---------- Barra de íconos flotante (abajo, al centro) ----------
+   Un solo globito (tooltip) que se desliza de un ícono a otro. */
+.dock {
+  position: fixed;
+  left: 50%;
+  bottom: 14px;
+  z-index: 450;
+  translate: -50% 0;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px;
+  background: rgba(18, 46, 27, 0.88);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(201, 162, 39, 0.45);
+  border-radius: 16px;
+  box-shadow: 0 16px 40px -14px rgba(0, 0, 0, 0.7);
+  animation: entrarDock 600ms var(--ease-salida) 400ms both;
+}
+@keyframes entrarDock {
+  from { opacity: 0; translate: -50% 24px; }
+}
+.dock-item {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  padding: 0;
+  border: none;
+  border-radius: 11px;
+  background: none;
+  color: var(--blanco-suave);
+  cursor: pointer;
+  transition: background 160ms ease, color 160ms ease, scale 120ms ease;
+}
+.dock-item svg { width: 20px; height: 20px; }
+.dock-item:hover,
+.dock-item:focus-visible { background: rgba(255, 200, 61, 0.14); color: var(--amarillo); }
+.dock-item:focus-visible { outline: 2px solid var(--amarillo); outline-offset: 1px; }
+.dock-item:active { scale: 0.92; }
+.dock-separador { width: 1px; height: 24px; margin: 0 4px; background: rgba(255, 255, 255, 0.16); }
+.dock-insignia {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: #3ddc84;
+  box-shadow: 0 0 0 2px var(--verde-oscuro);
+}
+.dock-insignia::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: inherit;
+  animation: latidoInsignia 1.8s ease-out infinite;
+}
+@keyframes latidoInsignia {
+  to { scale: 2.6; opacity: 0; }
+}
+.dock-tooltip {
+  position: absolute;
+  bottom: calc(100% + 10px);
+  left: 0;
+  translate: -50% 4px;
+  scale: 0.92;
+  opacity: 0;
+  pointer-events: none;
+  white-space: nowrap;
+  transition: opacity 150ms ease, translate 200ms var(--ease-salida), scale 200ms var(--ease-salida);
+}
+.dock-tooltip.visible { opacity: 1; translate: -50% 0; scale: 1; }
+.dock-tooltip.deslizando { transition: left 220ms var(--ease-salida), opacity 150ms ease, translate 200ms var(--ease-salida), scale 200ms var(--ease-salida); }
+.dock-tooltip-texto {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+  background: #0b1d11;
+  border: 1px solid rgba(201, 162, 39, 0.5);
+  border-radius: 8px;
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 600;
+}
+.dock-tooltip kbd {
+  font: 600 10px "Montserrat", Helvetica, Arial, sans-serif;
+  padding: 1px 5px;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 4px;
+  color: var(--blanco-suave);
+}
+.dock-tooltip .dock-en-linea { color: #3ddc84; font-weight: 600; }
+/* Espacio para que la barra no tape el final de la página ni el botón de WhatsApp. */
+body:has(.dock) { padding-bottom: 76px; }
+body:has(.dock) .whatsapp-flotante { bottom: 80px; }
+@media (max-width: 420px) {
+  body:has(.dock) .whatsapp-flotante { bottom: 76px; }
+  .dock-item { width: 40px; height: 40px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .dock { animation: none; }
+  .dock-insignia::after { animation: none; }
+}
+
 /* ---------- Texto que se transforma (MorphText) en la portada ----------
    Dos capas de texto se cruzan con desenfoque; el filtro SVG
    #filtro-morph sube el contraste del canal alfa para que, a mitad del

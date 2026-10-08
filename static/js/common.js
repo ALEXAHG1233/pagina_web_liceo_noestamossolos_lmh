@@ -721,3 +721,72 @@ function activarBuscador() {
 }
 
 document.addEventListener("DOMContentLoaded", activarBuscador);
+
+// Barra de íconos de abajo: un globito que se desliza entre íconos al
+// pasar el mouse (o al moverse con Tab), y un puntito verde en la
+// psicóloga cuando tiene su panel abierto.
+function activarDock() {
+  const dock = document.getElementById("dock");
+  if (!dock) return;
+  const tooltip = dock.querySelector(".dock-tooltip");
+  const texto = tooltip.querySelector(".dock-tooltip-texto");
+  const insignia = dock.querySelector(".dock-insignia");
+  let psicologaConectada = false;
+
+  function mostrar(item) {
+    texto.replaceChildren(item.dataset.etiqueta);
+    if (item.dataset.insignia === "psicologa" && psicologaConectada) {
+      const enLinea = document.createElement("span");
+      enLinea.className = "dock-en-linea";
+      enLinea.textContent = "En línea";
+      texto.append(enLinea);
+    }
+    if (item.dataset.atajo) {
+      item.dataset.atajo.split("|").forEach((tecla) => {
+        const kbd = document.createElement("kbd");
+        kbd.textContent = /Mac|iPhone|iPad/.test(navigator.platform) && tecla === "Ctrl" ? "⌘" : tecla;
+        texto.append(kbd);
+      });
+    }
+    // Si el globito ya estaba visible, se desliza; si no, aparece en su lugar.
+    tooltip.classList.toggle("deslizando", tooltip.classList.contains("visible"));
+    const caja = dock.getBoundingClientRect();
+    const r = item.getBoundingClientRect();
+    tooltip.style.left = `${r.left - caja.left + r.width / 2}px`;
+    tooltip.classList.add("visible");
+  }
+
+  function ocultar() {
+    tooltip.classList.remove("visible", "deslizando");
+  }
+
+  dock.querySelectorAll(".dock-item").forEach((item) => {
+    item.addEventListener("pointerenter", (e) => { if (e.pointerType === "mouse") mostrar(item); });
+    item.addEventListener("focus", () => { if (item.matches(":focus-visible")) mostrar(item); });
+    item.addEventListener("blur", ocultar);
+  });
+  dock.addEventListener("pointerleave", ocultar);
+
+  const buscar = document.getElementById("dock-buscar");
+  const botonBuscarMenu = document.getElementById("nav-buscar");
+  if (buscar && botonBuscarMenu && !botonBuscarMenu.hidden) {
+    buscar.addEventListener("click", () => botonBuscarMenu.click());
+  } else if (buscar) {
+    buscar.hidden = true;
+  }
+
+  async function revisarPsicologa() {
+    try {
+      const r = await fetch("/api/estado-psicologa", { cache: "no-store" });
+      if (!r.ok) return;
+      psicologaConectada = Boolean((await r.json()).conectada);
+      if (insignia) insignia.hidden = !psicologaConectada;
+    } catch (e) {
+      // Sin conexión: simplemente no se muestra el puntito.
+    }
+  }
+  revisarPsicologa();
+  setInterval(revisarPsicologa, 60000);
+}
+
+document.addEventListener("DOMContentLoaded", activarDock);
