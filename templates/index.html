@@ -43,7 +43,7 @@
         <a href="{{ url_for('muro') }}">Muro interactivo</a>
         <a href="{{ url_for('futuro') }}">Mi futuro</a>
         <a href="#contacto">Contacto</a>
-        <a href="{{ url_for('estudiante') }}" class="nav-boton-ayuda">Necesito ayuda</a>
+        <a href="{{ url_for('estudiante') }}" class="nav-boton-ayuda boton-metal">Necesito ayuda</a>
       </div>
     </div>
   </nav>
@@ -56,9 +56,44 @@
         alt="No Estás Solo — Programa Psicopedagógico, Liceo Militar de Honduras"
         class="hero-banner-img">
     </div>
+    <div class="morph" data-palabras="ESCUCHA|APOYO|ESPERANZA" data-intervalo="2500">
+      <p class="sr-only">Escucha, apoyo y esperanza. No estamos solos LMH.</p>
+      <div class="morph-palabras" aria-hidden="true">
+        <span class="morph-texto">ESCUCHA</span>
+        <span class="morph-texto"></span>
+      </div>
+      <p class="morph-subtexto" aria-hidden="true">No estamos solos LMH</p>
+      <svg class="morph-filtro" aria-hidden="true" focusable="false">
+        <filter id="filtro-morph">
+          <feColorMatrix in="SourceGraphic" type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 255 -140" />
+        </filter>
+      </svg>
+    </div>
     <p class="hero-frase">Lo que escribas aquí es completamente anónimo. Nadie sabrá que fuiste tú.</p>
     <button id="btn-musica" class="btn-sonido btn-musica-hero" type="button">Música relajante</button>
     <div id="panel-musica" class="panel-musica-embebida"></div>
+  </section>
+
+  {% set carrusel = [
+    ("banner_muro_interactivo.webp", "Muro interactivo", url_for('muro')),
+    ("banner_pasos_charlar.webp", "Pasos para charlar anónimamente", "#elegir-con-quien"),
+    ("banner_herramientas.webp", "Herramientas técnicas", url_for('herramientas')),
+    ("banner_informate.webp", "Infórmate", url_for('informate')),
+    ("banner_videos.webp", "Videos informativos", url_for('video')),
+    ("banner_prevencion_suicidio.webp", "Día Mundial para la Prevención del Suicidio", url_for('estudiante')),
+    ("banner_psicopedagogia_canva.png", "Programa psicopedagógico", "#recursos"),
+    ("banner_por_que_hablar.webp", "¿Por qué hablar ayuda?", url_for('chatbot')),
+  ] %}
+  <section class="carrusel-cilindro" aria-label="Recorre las secciones de la página">
+    <div class="cilindro-escena">
+      <div class="cilindro-anillo">
+        {% for imagen, texto, enlace in carrusel %}
+          <a class="cilindro-cara" href="{{ enlace }}">
+            <img src="{{ url_for('static', filename='images/' ~ imagen) }}" alt="{{ texto }}" loading="lazy" draggable="false">
+          </a>
+        {% endfor %}
+      </div>
+    </div>
   </section>
 
   <section class="seccion seccion-con-banner reveal">
@@ -137,12 +172,12 @@
       <a href="{{ url_for('estudiante') }}" class="opcion opcion-psicologa opcion-grande opcion-principal">
         <h3>Hablar con la psicóloga</h3>
         <p>Una persona real, capacitada y dispuesta a escucharte.</p>
-        <span class="opcion-boton">Hablar ahora</span>
+        <span class="opcion-boton boton-metal">Hablar ahora</span>
       </a>
       <a href="{{ url_for('chatbot') }}" class="opcion opcion-chatbot opcion-grande">
         <h3>Hablar con el asistente</h3>
         <p>Disponible en cualquier momento para ayudarte a ordenar tus ideas.</p>
-        <span class="opcion-boton">Comenzar</span>
+        <span class="opcion-boton boton-metal">Comenzar</span>
       </a>
     </div>
   </section>
@@ -203,7 +238,7 @@
         <p>Si estás pasando por una emergencia o sientes que tú u otra persona puede estar en peligro, busca ayuda de inmediato: llama al <strong>911</strong> o acude a un adulto de confianza.</p>
         <p class="emergencia-nota">Este espacio es de apoyo y orientación; no reemplaza la atención profesional de emergencia.</p>
         <div class="emergencia-acciones">
-          <a href="tel:911" class="emergencia-boton emergencia-boton-principal">Llamar al 911</a>
+          <a href="tel:911" class="emergencia-boton emergencia-boton-principal boton-metal">Llamar al 911</a>
           <a href="{{ url_for('estudiante') }}" class="emergencia-boton">Hablar con la psicóloga</a>
         </div>
       </div>

@@ -424,3 +424,154 @@ function mostrarApoyoEmergencia(apoyoDiv, socket, token, mensaje) {
     form.remove();
   });
 }
+
+// Texto que se transforma de una palabra a otra (portada). Lee las
+// palabras de data-palabras ("A|B|C") y cada cuánto cambian de
+// data-intervalo (ms). El cruce dura MORPH_DURACION; el resto del
+// intervalo la palabra se queda quieta.
+const MORPH_DURACION = 1000;
+
+function activarMorphTexto() {
+  document.querySelectorAll(".morph").forEach((caja) => {
+    const palabras = (caja.dataset.palabras || "").split("|").filter(Boolean);
+    const [texto1, texto2] = caja.querySelectorAll(".morph-texto");
+    if (palabras.length < 2 || !texto1 || !texto2) return;
+    const intervalo = Math.max(Number(caja.dataset.intervalo) || 2500, MORPH_DURACION + 300);
+    let indice = 0;
+
+    if (SIN_MOVIMIENTO) {
+      // Sin animaciones: solo cambia la palabra, sin desenfoque.
+      texto2.style.opacity = "0";
+      setInterval(() => {
+        indice = (indice + 1) % palabras.length;
+        texto1.textContent = palabras[indice];
+      }, intervalo);
+      return;
+    }
+
+    function pintar(fraccion) {
+      // texto2 = palabra que entra, texto1 = palabra que sale.
+      texto2.style.filter = `blur(${Math.min(8 / fraccion - 8, 100)}px)`;
+      texto2.style.opacity = `${Math.pow(fraccion, 0.4) * 100}%`;
+      const inversa = 1 - fraccion;
+      texto1.style.filter = `blur(${Math.min(8 / inversa - 8, 100)}px)`;
+      texto1.style.opacity = `${Math.pow(inversa, 0.4) * 100}%`;
+    }
+
+    function quieta() {
+      texto2.style.filter = "none";
+      texto2.style.opacity = "100%";
+      texto1.style.filter = "none";
+      texto1.style.opacity = "0%";
+    }
+
+    texto1.textContent = palabras[0];
+    texto2.textContent = palabras[0];
+    quieta();
+    let inicioCiclo = performance.now();
+    let cruzando = false;
+
+    function cuadro(ahora) {
+      const transcurrido = ahora - inicioCiclo;
+      const pausa = intervalo - MORPH_DURACION;
+      if (transcurrido >= intervalo) {
+        indice = (indice + 1) % palabras.length;
+        inicioCiclo = ahora;
+        cruzando = false;
+        quieta();
+      } else if (transcurrido >= pausa) {
+        if (!cruzando) {
+          cruzando = true;
+          texto1.textContent = palabras[indice];
+          texto2.textContent = palabras[(indice + 1) % palabras.length];
+        }
+        pintar(Math.max((transcurrido - pausa) / MORPH_DURACION, 0.0001));
+      }
+      requestAnimationFrame(cuadro);
+    }
+    requestAnimationFrame(cuadro);
+  });
+}
+
+document.addEventListener("DOMContentLoaded", activarMorphTexto);
+
+// Carrusel en cilindro 3D. Coloca cada imagen alrededor de un cilindro,
+// lo hace girar despacio y deja arrastrarlo. Se detiene al pasar el
+// mouse o enfocar una imagen con el teclado, para poder hacer clic.
+const CILINDRO_VELOCIDAD = 9; // grados por segundo
+
+function activarCarruselCilindro() {
+  document.querySelectorAll(".cilindro-escena").forEach((escena) => {
+    const anillo = escena.querySelector(".cilindro-anillo");
+    const caras = Array.from(anillo.children);
+    const n = caras.length;
+    if (n < 3) return;
+    const paso = 360 / n;
+    let radio = 0;
+    let angulo = 0;
+    let pausado = false;
+    let arrastre = null;
+
+    function colocar() {
+      const ancho = caras[0].offsetWidth;
+      radio = Math.round(ancho / 2 / Math.tan(Math.PI / n)) + 14;
+      caras.forEach((cara, i) => {
+        cara.style.transform = `rotateY(${i * paso}deg) translateZ(${radio}px)`;
+      });
+      pintar();
+    }
+
+    function pintar() {
+      anillo.style.transform = `translateZ(${-radio}px) rotateY(${angulo}deg)`;
+    }
+
+    let anterior = performance.now();
+    function cuadro(ahora) {
+      const dt = Math.min((ahora - anterior) / 1000, 0.1);
+      anterior = ahora;
+      if (!pausado && !arrastre && !SIN_MOVIMIENTO) {
+        angulo -= CILINDRO_VELOCIDAD * dt;
+        pintar();
+      }
+      requestAnimationFrame(cuadro);
+    }
+
+    escena.addEventListener("pointerenter", (e) => { if (e.pointerType === "mouse") pausado = true; });
+    escena.addEventListener("pointerleave", () => { pausado = false; });
+    escena.addEventListener("focusin", () => { pausado = true; });
+    escena.addEventListener("focusout", () => { pausado = false; });
+
+    escena.addEventListener("pointerdown", (e) => {
+      arrastre = { x: e.clientX, angulo, movido: false };
+    });
+    window.addEventListener("pointermove", (e) => {
+      if (!arrastre) return;
+      const dx = e.clientX - arrastre.x;
+      if (Math.abs(dx) > 5 && !arrastre.movido) {
+        arrastre.movido = true;
+        escena.classList.add("arrastrando");
+      }
+      if (arrastre.movido) {
+        angulo = arrastre.angulo + dx * 0.35;
+        pintar();
+      }
+    });
+    window.addEventListener("pointerup", () => {
+      if (!arrastre) return;
+      // Si fue un arrastre, el clic que viene después no debe abrir la imagen.
+      if (arrastre.movido) {
+        const bloquear = (e) => e.preventDefault();
+        escena.addEventListener("click", bloquear, { capture: true, once: true });
+        setTimeout(() => escena.removeEventListener("click", bloquear, { capture: true }), 0);
+      }
+      arrastre = null;
+      escena.classList.remove("arrastrando");
+    });
+
+    colocar();
+    window.addEventListener("resize", colocar);
+    requestAnimationFrame(cuadro);
+  });
+}
+
+document.addEventListener("DOMContentLoaded", activarCarruselCilindro);

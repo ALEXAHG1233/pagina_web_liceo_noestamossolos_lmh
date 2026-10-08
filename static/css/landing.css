@@ -447,7 +447,8 @@
   font-weight: 600;
   transition: background var(--transicion-suave), color var(--transicion-suave);
 }
-.opcion-grande:hover .opcion-boton { background: var(--dorado); color: var(--verde-oscuro); }
+.opcion-grande:hover .opcion-boton { color: var(--verde-oscuro); }
+.opcion-grande:hover .opcion-boton:not(.boton-metal) { background: var(--dorado); }
 .opcion-principal {
   background: var(--dorado);
   border-color: var(--dorado);
@@ -455,10 +456,11 @@
 .opcion-principal h3 { color: var(--verde-oscuro); font-weight: 700; }
 .opcion-principal p { color: rgba(18, 46, 27, 0.82); }
 .opcion-principal .opcion-boton,
-.opcion-principal:hover .opcion-boton {
+.opcion-principal:hover .opcion-boton { color: #ffffff; }
+.opcion-principal .opcion-boton:not(.boton-metal),
+.opcion-principal:hover .opcion-boton:not(.boton-metal) {
   background: var(--verde-oscuro);
   border-color: var(--verde-oscuro);
-  color: #ffffff;
 }
 .opcion-principal:hover { border-color: var(--amarillo); background: #d4ad33; }
 
@@ -712,9 +714,9 @@
   font-weight: 700;
   transition: background var(--transicion-suave), color var(--transicion-suave);
 }
-.emergencia-boton:hover { background: rgba(232, 122, 122, 0.18); }
+.emergencia-boton:not(.boton-metal):hover { background: rgba(232, 122, 122, 0.18); }
 .emergencia-boton-principal { background: #c94b4b; border-color: #c94b4b; color: var(--blanco); }
-.emergencia-boton-principal:hover { background: #b03a3a; }
+.emergencia-boton-principal:not(.boton-metal):hover { background: #b03a3a; }
 
 @media (max-width: 420px) {
   .emergencia { flex-direction: column; gap: 8px; }
@@ -880,6 +882,131 @@
 .btn-sonido:active,
 .tarjeta-extra:active,
 .pie-red-icono:active { scale: 0.96; }
+
+/* ---------- Texto que se transforma (MorphText) en la portada ----------
+   Dos capas de texto se cruzan con desenfoque; el filtro SVG
+   #filtro-morph sube el contraste del canal alfa para que, a mitad del
+   cruce, las letras parezcan fundirse una en otra. */
+.morph { padding: 6px 24px 4px; text-align: center; }
+.morph-palabras {
+  position: relative;
+  height: clamp(2.6rem, 11vw, 4.2rem);
+  filter: url(#filtro-morph) blur(0.6px);
+}
+.morph-texto {
+  position: absolute;
+  inset: 0;
+  display: block;
+  font-family: "Montserrat", Helvetica, Arial, sans-serif;
+  font-weight: 800;
+  font-size: clamp(2.2rem, 10vw, 3.6rem);
+  line-height: 1.15;
+  letter-spacing: 0.04em;
+  color: var(--amarillo);
+  user-select: none;
+}
+.morph-subtexto {
+  margin: 4px 0 14px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--blanco-suave);
+}
+.morph-filtro { position: absolute; width: 0; height: 0; }
+
+/* ---------- Carrusel en cilindro 3D (debajo de la portada) ----------
+   Las imágenes se colocan alrededor de un cilindro (rotateY + translateZ,
+   radio calculado en common.js) y el anillo gira solo; se puede
+   arrastrar con el dedo o el mouse. */
+.carrusel-cilindro {
+  padding: 28px 0 8px;
+  overflow: hidden;
+}
+.cilindro-escena {
+  --cara-ancho: 150px;
+  position: relative;
+  height: calc(var(--cara-ancho) * 0.5625 + 40px);
+  perspective: 900px;
+  touch-action: pan-y;
+  cursor: grab;
+}
+.cilindro-escena.arrastrando { cursor: grabbing; }
+.cilindro-anillo {
+  position: absolute;
+  top: 20px;
+  left: 50%;
+  width: var(--cara-ancho);
+  height: calc(var(--cara-ancho) * 0.5625);
+  margin-left: calc(var(--cara-ancho) / -2);
+  transform-style: preserve-3d;
+}
+.cilindro-cara {
+  position: absolute;
+  inset: 0;
+  display: block;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 2px solid var(--dorado);
+  box-shadow: 0 10px 24px -10px rgba(0, 0, 0, 0.6);
+  backface-visibility: hidden;
+}
+.cilindro-cara img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+.cilindro-cara:focus-visible { outline: 3px solid var(--amarillo); outline-offset: 2px; }
+@media (min-width: 600px) {
+  .cilindro-escena { --cara-ancho: 190px; perspective: 1100px; }
+}
+
+/* ---------- Botón "metal líquido" ----------
+   Versión en CSS puro del LiquidMetalButton (React + shader WebGL):
+   un borde cromado que fluye alrededor del botón. Se logra con dos
+   fondos en el mismo elemento: el relleno (padding-box) y, debajo, un
+   degradado cónico plateado (border-box) que gira gracias a la propiedad
+   animable --angulo-metal. Navegadores sin @property ven el cromo quieto. */
+@property --angulo-metal {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+.boton-metal {
+  --metal-relleno: var(--verde-oscuro);
+  border: 3px solid transparent !important;
+  border-radius: 999px;
+  background:
+    linear-gradient(var(--metal-relleno), var(--metal-relleno)) padding-box,
+    conic-gradient(
+      from var(--angulo-metal),
+      #8c8c8e, #ffffff 8%, #6f6f72 17%, #dcdcdf 26%, #ffe9e9 31%,
+      #8a8a8c 40%, #ffffff 52%, #727275 61%, #e6efff 69%,
+      #9a9a9c 78%, #ffffff 88%, #8c8c8e
+    ) border-box;
+  box-shadow: 0 14px 34px -12px rgba(0, 0, 0, 0.45);
+  animation: girarMetal 5s linear infinite;
+  transition: scale 120ms ease, box-shadow var(--transicion-suave);
+}
+.boton-metal:hover { animation-duration: 2.2s; box-shadow: 0 16px 38px -10px rgba(0, 0, 0, 0.5); }
+.boton-metal:active { scale: 0.98; }
+@keyframes girarMetal { to { --angulo-metal: 360deg; } }
+
+/* Relleno de cada botón que lleva el borde metálico. */
+.nav-enlaces a.boton-metal { --metal-relleno: var(--dorado); }
+.nav-enlaces a.boton-metal:hover { --metal-relleno: var(--amarillo); }
+.opcion-principal .opcion-boton.boton-metal { --metal-relleno: var(--verde-oscuro); }
+.opcion-grande:not(.opcion-principal) .opcion-boton.boton-metal { --metal-relleno: var(--tarjeta-fondo); }
+.opcion-grande:not(.opcion-principal):hover .opcion-boton.boton-metal { --metal-relleno: var(--dorado); }
+.emergencia-boton-principal.boton-metal { --metal-relleno: #c94b4b; }
+.emergencia-boton-principal.boton-metal:hover { --metal-relleno: #b03a3a; }
+
+@media (prefers-reduced-motion: reduce) {
+  .boton-metal { animation: none; }
+}
 
 /* ---------- Modo claro (botón ☀️/🌙 del menú) ----------
    El menú, la portada y el pie se quedan en verde oscuro (identidad del
