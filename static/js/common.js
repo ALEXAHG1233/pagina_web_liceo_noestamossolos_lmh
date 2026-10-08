@@ -575,3 +575,149 @@ function activarCarruselCilindro() {
 }
 
 document.addEventListener("DOMContentLoaded", activarCarruselCilindro);
+
+// Buscador de la portada: botón de lupa en el menú o Ctrl+K / ⌘K.
+// Busca en el índice que manda el servidor (secciones, artículos,
+// técnicas y autoevaluaciones) sin importar mayúsculas ni tildes.
+function normalizarBusqueda(texto) {
+  return (texto || "").normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
+}
+
+function activarBuscador() {
+  const dialogo = document.getElementById("buscador");
+  const datos = document.getElementById("indice-busqueda");
+  const boton = document.getElementById("nav-buscar");
+  if (!dialogo || !datos || typeof dialogo.showModal !== "function") {
+    if (boton) boton.hidden = true;
+    return;
+  }
+  const entrada = document.getElementById("buscador-input");
+  const lista = document.getElementById("buscador-resultados");
+  const indice = JSON.parse(datos.textContent).map((item) => ({
+    ...item,
+    nombreNorm: normalizarBusqueda(item.nombre),
+    todoNorm: normalizarBusqueda(`${item.nombre} ${item.meta} ${item.tipo} ${item.palabras}`),
+  }));
+  let opciones = [];
+  let seleccion = 0;
+
+  function buscar(consulta) {
+    const terminos = normalizarBusqueda(consulta).split(/\s+/).filter(Boolean);
+    if (!terminos.length) return indice.filter((i) => i.tipo === "Sección").slice(0, 8);
+    return indice
+      .filter((i) => terminos.every((t) => i.todoNorm.includes(t)))
+      .map((i) => {
+        let puntos = 0;
+        terminos.forEach((t) => {
+          if (i.nombreNorm.startsWith(t)) puntos += 3;
+          else if (i.nombreNorm.includes(t)) puntos += 2;
+          else puntos += 1;
+        });
+        if (i.tipo === "Sección") puntos += 0.5;
+        return { i, puntos };
+      })
+      .sort((a, b) => b.puntos - a.puntos)
+      .slice(0, 12)
+      .map((r) => r.i);
+  }
+
+  // Pinta el nombre resaltando el primer término encontrado, sin innerHTML.
+  function nombreResaltado(nombre, consulta) {
+    const span = document.createElement("span");
+    span.className = "buscador-nombre";
+    const termino = normalizarBusqueda(consulta).trim().split(/\s+/)[0];
+    const pos = termino ? normalizarBusqueda(nombre).indexOf(termino) : -1;
+    if (pos < 0) {
+      span.textContent = nombre;
+      return span;
+    }
+    const marca = document.createElement("mark");
+    marca.textContent = nombre.slice(pos, pos + termino.length);
+    span.append(nombre.slice(0, pos), marca, nombre.slice(pos + termino.length));
+    return span;
+  }
+
+  function pintar() {
+    const consulta = entrada.value;
+    const resultados = buscar(consulta);
+    lista.replaceChildren();
+    opciones = [];
+    seleccion = 0;
+    if (!resultados.length) {
+      const vacio = document.createElement("li");
+      vacio.className = "buscador-vacio";
+      vacio.textContent = "No encontramos nada con esa palabra. Prueba con otra, o habla con la psicóloga.";
+      lista.append(vacio);
+      entrada.removeAttribute("aria-activedescendant");
+      return;
+    }
+    const titulo = document.createElement("li");
+    titulo.className = "buscador-grupo";
+    titulo.setAttribute("role", "presentation");
+    titulo.textContent = consulta.trim() ? "Resultados" : "Sugerencias";
+    lista.append(titulo);
+    resultados.forEach((item, n) => {
+      const li = document.createElement("li");
+      li.className = "buscador-opcion";
+      li.id = `buscador-op-${n}`;
+      li.setAttribute("role", "option");
+      const enlace = document.createElement("a");
+      enlace.href = item.url;
+      enlace.tabIndex = -1;
+      const texto = document.createElement("span");
+      texto.className = "buscador-texto";
+      const meta = document.createElement("span");
+      meta.className = "buscador-meta";
+      meta.textContent = item.meta;
+      texto.append(nombreResaltado(item.nombre, consulta), meta);
+      const tipo = document.createElement("span");
+      tipo.className = "buscador-tipo";
+      tipo.textContent = item.tipo;
+      enlace.append(texto, tipo);
+      enlace.addEventListener("click", () => dialogo.close());
+      li.addEventListener("pointermove", () => marcar(n));
+      li.append(enlace);
+      lista.append(li);
+      opciones.push(li);
+    });
+    marcar(0);
+  }
+
+  function marcar(n) {
+    if (!opciones.length) return;
+    seleccion = (n + opciones.length) % opciones.length;
+    opciones.forEach((li, i) => li.setAttribute("aria-selected", i === seleccion ? "true" : "false"));
+    entrada.setAttribute("aria-activedescendant", opciones[seleccion].id);
+    opciones[seleccion].scrollIntoView({ block: "nearest" });
+  }
+
+  function abrir() {
+    if (dialogo.open) return;
+    entrada.value = "";
+    pintar();
+    dialogo.showModal();
+    entrada.focus();
+  }
+
+  entrada.addEventListener("input", pintar);
+  entrada.addEventListener("keydown", (e) => {
+    if (e.key === "ArrowDown") { e.preventDefault(); marcar(seleccion + 1); }
+    else if (e.key === "ArrowUp") { e.preventDefault(); marcar(seleccion - 1); }
+    else if (e.key === "Enter" && opciones.length) {
+      e.preventDefault();
+      opciones[seleccion].querySelector("a").click();
+    }
+  });
+  // Clic fuera de la caja (en el fondo oscuro) cierra la ventana.
+  dialogo.addEventListener("click", (e) => { if (e.target === dialogo) dialogo.close(); });
+  if (boton) boton.addEventListener("click", abrir);
+  document.addEventListener("keydown", (e) => {
+    if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "k") {
+      e.preventDefault();
+      if (dialogo.open) dialogo.close();
+      else abrir();
+    }
+  });
+}
+
+document.addEventListener("DOMContentLoaded", activarBuscador);

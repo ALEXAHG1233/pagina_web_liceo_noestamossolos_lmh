@@ -370,6 +370,55 @@ RECURSOS_PORTADA = [
 ]
 
 
+# Secciones fijas que aparecen en el buscador de la portada (Ctrl+K).
+# "palabras" son términos extra con los que alguien podría buscarlas.
+PAGINAS_BUSCADOR = [
+    ("estudiante", None, "Hablar con la psicóloga", "Chat anónimo con una persona real", "ayuda triste ansiedad miedo hablar chat"),
+    ("chatbot", None, "Hablar con el asistente", "Disponible a cualquier hora", "bot sami leo nia conversar"),
+    ("diario", None, "Mi diario de ánimo", "Registra cómo te sientes cada día", "emociones registro animo"),
+    ("herramientas", None, "Herramientas técnicas", "TCC, TDC, respiración y meditación", "calma tecnicas relajacion"),
+    ("informate", None, "Infórmate", "Artículos sobre salud mental", "leer articulos temas"),
+    ("tests", None, "Autoevaluaciones", "Preguntas para reflexionar sobre ti", "test cuestionario"),
+    ("video", None, "Videos", "Videos sobre salud mental", "youtube ver"),
+    ("musica", None, "Música", "Música relajante para calmarte", "canciones spotify relajar"),
+    ("fe", None, "Fe y esperanza", "Mensajes de fe y esperanza", "dios oracion biblia"),
+    ("muro", None, "Muro interactivo", "Comparte tu experiencia de forma anónima", "historias escribir"),
+    ("futuro", None, "Mi futuro", "Metas y planes para lo que viene", "metas suenos carrera"),
+    ("resenas", None, "Reseñas", "Opiniones sobre la página", "opinion comentarios"),
+    ("terminos", None, "Términos y condiciones", "Cómo funciona y cómo cuidamos tu privacidad", "privacidad reglas"),
+    ("index", "titulo-emergencia", "¿Estás en peligro ahora mismo?", "Emergencias: llama al 911", "emergencia urgente peligro suicidio 911"),
+    ("index", "contacto", "Contáctenos", "Correo, teléfono y redes sociales", "contacto correo telefono whatsapp"),
+]
+
+
+def construir_indice_busqueda():
+    """Todo lo que se puede encontrar desde el buscador de la portada."""
+    indice = [
+        {"nombre": nombre, "meta": meta, "tipo": "Sección", "palabras": palabras,
+         "url": url_for(ruta, _anchor=ancla) if ancla else url_for(ruta)}
+        for ruta, ancla, nombre, meta, palabras in PAGINAS_BUSCADOR
+    ]
+    for cat_id, cat in TECNICAS.items():
+        for tec_id, tec in cat["tecnicas"].items():
+            indice.append({
+                "nombre": tec["nombre"], "meta": tec["resumen"], "tipo": "Técnica",
+                "palabras": cat["titulo"],
+                "url": url_for("herramientas_detalle", categoria=cat_id, tecnica=tec_id),
+            })
+    for test_id, test in TESTS.items():
+        indice.append({
+            "nombre": test["titulo"], "meta": test["descripcion"], "tipo": "Autoevaluación",
+            "palabras": "test", "url": url_for("test_detalle", test_id=test_id),
+        })
+    for slug, art in ARTICULOS.items():
+        indice.append({
+            "nombre": art["titulo"], "meta": art["resumen"], "tipo": "Artículo",
+            "palabras": art.get("categoria", ""),
+            "url": url_for("informate_articulo", slug=slug),
+        })
+    return indice
+
+
 @app.route("/")
 def index():
     registrar_visita()
@@ -383,6 +432,7 @@ def index():
         categorias_video=VIDEOS_CURADOS,
         video_prevencion_id=VIDEO_PREVENCION_SUICIDIO_ID,
         recursos_psicologia=recursos,
+        indice_busqueda=construir_indice_busqueda(),
     )
 
 

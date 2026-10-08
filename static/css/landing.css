@@ -108,6 +108,21 @@
   cursor: pointer;
   transition: border-color var(--transicion-suave), background var(--transicion-suave);
 }
+/* Celulares angostos: todo en una sola fila (escudo + nombre + 3 botones). */
+@media (max-width: 420px) {
+  .nav-contenido { padding: 10px 12px; }
+  .nav-marca { gap: 8px; font-size: 14px; }
+  .nav-escudo { width: 30px; height: 30px; }
+  .nav-acciones { gap: 6px; }
+  .nav-tema, .nav-hamburguesa { width: 34px; height: 34px; }
+  .nav-buscar { height: 34px; padding: 0 9px; }
+}
+@media (max-width: 340px) {
+  .nav-marca span { font-size: 12px; }
+  .nav-acciones { gap: 4px; }
+  .nav-tema, .nav-hamburguesa { width: 32px; height: 32px; }
+  .nav-buscar { height: 32px; padding: 0 8px; }
+}
 .nav-tema:hover { border-color: var(--amarillo); background: rgba(255, 200, 61, 0.1); }
 .nav-tema-icono { display: block; transition: rotate 400ms var(--ease-salida); }
 .nav-tema[aria-pressed="true"] .nav-tema-icono { rotate: 360deg; }
@@ -882,6 +897,128 @@
 .btn-sonido:active,
 .tarjeta-extra:active,
 .pie-red-icono:active { scale: 0.96; }
+
+/* ---------- Buscador (botón del menú + ventana con Ctrl+K) ---------- */
+.nav-buscar {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 36px;
+  padding: 0 10px;
+  background: none;
+  border: 1px solid var(--tarjeta-borde);
+  border-radius: 999px;
+  color: var(--blanco);
+  font: 500 13px "Montserrat", Helvetica, Arial, sans-serif;
+  cursor: pointer;
+  transition: border-color var(--transicion-suave), background var(--transicion-suave);
+}
+.nav-buscar:hover { border-color: var(--amarillo); background: rgba(255, 200, 61, 0.1); }
+.nav-buscar-texto, .nav-buscar-atajo { display: none; }
+.nav-buscar-atajo,
+.buscador kbd {
+  font: 600 10px "Montserrat", Helvetica, Arial, sans-serif;
+  padding: 2px 6px;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 5px;
+  color: var(--blanco-suave);
+}
+@media (min-width: 600px) {
+  .nav-buscar { padding: 0 8px 0 12px; }
+  .nav-buscar-texto, .nav-buscar-atajo { display: inline; }
+}
+
+.buscador {
+  width: min(560px, calc(100% - 24px));
+  max-height: min(70vh, 560px);
+  margin: 10vh auto auto;
+  padding: 0;
+  border: 1px solid var(--dorado);
+  border-radius: 14px;
+  background: var(--verde-oscuro);
+  color: var(--blanco);
+  box-shadow: 0 30px 80px -20px rgba(0, 0, 0, 0.7);
+  overflow: hidden;
+}
+.buscador[open] { animation: abrirBuscador 220ms var(--ease-salida); }
+@keyframes abrirBuscador {
+  from { opacity: 0; translate: 0 -8px; scale: 0.98; }
+}
+.buscador::backdrop { background: rgba(6, 18, 10, 0.6); backdrop-filter: blur(3px); }
+.buscador-caja { display: flex; flex-direction: column; max-height: inherit; }
+.buscador-entrada {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  color: var(--amarillo);
+}
+.buscador-entrada input {
+  flex: 1;
+  min-width: 0;
+  background: none;
+  border: none;
+  outline: none;
+  color: var(--blanco);
+  font: 500 16px "Montserrat", Helvetica, Arial, sans-serif;
+}
+.buscador-entrada input::placeholder { color: rgba(255, 255, 255, 0.5); }
+.buscador-entrada input::-webkit-search-cancel-button { display: none; }
+.buscador-resultados {
+  list-style: none;
+  margin: 0;
+  padding: 6px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+.buscador-grupo {
+  padding: 10px 10px 4px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--dorado);
+}
+.buscador-opcion a {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px;
+  border-radius: 8px;
+  text-decoration: none;
+  color: inherit;
+}
+.buscador-opcion[aria-selected="true"] a { background: rgba(255, 200, 61, 0.12); }
+.buscador-texto { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.buscador-nombre { font-size: 14px; font-weight: 600; }
+.buscador-nombre mark { background: none; color: var(--amarillo); }
+.buscador-meta {
+  font-size: 12px;
+  color: var(--blanco-suave);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.buscador-tipo {
+  flex-shrink: 0;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 3px 8px;
+  border: 1px solid rgba(201, 162, 39, 0.5);
+  border-radius: 999px;
+  color: var(--amarillo);
+}
+.buscador-vacio { padding: 22px 12px; text-align: center; font-size: 14px; color: var(--blanco-suave); }
+.buscador-pie {
+  margin: 0;
+  padding: 10px 16px;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  font-size: 11px;
+  color: var(--blanco-suave);
+}
+.buscador-pie kbd { margin-right: 3px; }
+@media (hover: none) { .buscador-pie, .buscador-entrada kbd { display: none; } }
 
 /* ---------- Texto que se transforma (MorphText) en la portada ----------
    Dos capas de texto se cruzan con desenfoque; el filtro SVG

@@ -29,6 +29,11 @@
         <span>No estamos solos LMH</span>
       </a>
       <div class="nav-acciones">
+        <button type="button" class="nav-buscar" id="nav-buscar" aria-label="Buscar en la página (Ctrl+K)" aria-haspopup="dialog">
+          <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+          <span class="nav-buscar-texto">Buscar</span>
+          <kbd class="nav-buscar-atajo">Ctrl K</kbd>
+        </button>
         <button type="button" class="nav-tema" id="nav-tema" aria-label="Cambiar a modo claro" aria-pressed="false">
           <span class="nav-tema-icono" aria-hidden="true">☀️</span>
         </button>
@@ -432,6 +437,21 @@
       </div>
     </div>
   </footer>
+
+  <dialog class="buscador" id="buscador" aria-label="Buscar en la página">
+    <div class="buscador-caja">
+      <div class="buscador-entrada">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+        <input type="search" id="buscador-input" placeholder="Busca un tema, una técnica o una sección…"
+               autocomplete="off" spellcheck="false" role="combobox" aria-expanded="true"
+               aria-controls="buscador-resultados" aria-autocomplete="list">
+        <kbd>Esc</kbd>
+      </div>
+      <ul class="buscador-resultados" id="buscador-resultados" role="listbox" aria-label="Resultados"></ul>
+      <p class="buscador-pie"><kbd>↑</kbd><kbd>↓</kbd> moverse · <kbd>Enter</kbd> abrir · <kbd>Esc</kbd> cerrar</p>
+    </div>
+  </dialog>
+  <script type="application/json" id="indice-busqueda">{{ indice_busqueda|tojson }}</script>
 
   <noscript><style>.reveal { opacity: 1 !important; transform: none !important; }</style></noscript>
   <script src="{{ url_for('static', filename='js/sonidos.js') }}"></script>
