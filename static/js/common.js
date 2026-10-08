@@ -833,3 +833,63 @@ function activarIslaMusica(playlistId) {
     }
   });
 }
+
+// Texto con letras que ruedan (lema del Liceo). Parte el texto en letras
+// con dos copias cada una; el CSS hace el movimiento al pasar el mouse.
+// En pantallas táctiles rueda una vez sola al aparecer en pantalla.
+const ROLL_RETRASO = 28; // ms entre una letra y la siguiente
+
+function activarTextoRodante() {
+  document.querySelectorAll("[data-roll]").forEach((el) => {
+    const textoCompleto = el.textContent.trim();
+    const letras = Array.from(textoCompleto);
+    const desdeCentro = el.hasAttribute("data-roll-centro");
+    const centro = (letras.length - 1) / 2;
+    el.setAttribute("aria-label", textoCompleto);
+    // Las letras se agrupan por palabra para que el texto solo se parta
+    // entre palabras completas, nunca a mitad de una.
+    const piezas = [];
+    let palabra = null;
+    letras.forEach((letra, i) => {
+      if (letra === " ") {
+        palabra = null;
+        const espacio = document.createElement("span");
+        espacio.className = "roll-espacio";
+        espacio.setAttribute("aria-hidden", "true");
+        piezas.push(espacio);
+        return;
+      }
+      if (!palabra) {
+        palabra = document.createElement("span");
+        palabra.className = "roll-palabra";
+        palabra.setAttribute("aria-hidden", "true");
+        piezas.push(palabra);
+      }
+      const caja = document.createElement("span");
+      caja.className = "roll-letra";
+      const orden = desdeCentro ? Math.abs(i - centro) : i;
+      caja.style.setProperty("--retraso", `${Math.round(orden * ROLL_RETRASO)}ms`);
+      const arriba = document.createElement("span");
+      const abajo = document.createElement("span");
+      arriba.textContent = letra;
+      abajo.textContent = letra;
+      caja.append(arriba, abajo);
+      palabra.append(caja);
+    });
+    el.replaceChildren(...piezas);
+  });
+
+  const tactil = window.matchMedia("(hover: none)").matches;
+  if (!tactil || SIN_MOVIMIENTO || !("IntersectionObserver" in window)) return;
+  const observador = new IntersectionObserver((entradas) => {
+    entradas.forEach((entrada) => {
+      if (!entrada.isIntersecting) return;
+      const el = entrada.target;
+      observador.unobserve(el);
+      setTimeout(() => el.classList.add("rodando"), 300);
+    });
+  }, { threshold: 0.6 });
+  document.querySelectorAll("[data-roll]").forEach((el) => observador.observe(el));
+}
+
+document.addEventListener("DOMContentLoaded", activarTextoRodante);

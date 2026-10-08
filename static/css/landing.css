@@ -1251,6 +1251,61 @@ body:has(.dock) .whatsapp-flotante { bottom: 80px; }
   .isla-ondas i { animation: none; scale: 1 0.6; }
 }
 
+/* ---------- Lema con letras que ruedan (TextRoll) ----------
+   Cada letra tiene dos copias apiladas; al pasar el mouse la de arriba
+   sube y la de abajo ocupa su lugar, una letra tras otra (o desde el
+   centro hacia afuera con data-roll-centro). Ver activarTextoRodante. */
+.lema {
+  padding: 44px 24px 40px;
+  text-align: center;
+  border-top: 1px solid var(--linea);
+}
+.roll {
+  display: inline-flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin: 0;
+  cursor: default;
+}
+.roll-lema {
+  font-size: clamp(14px, 3.6vw, 18px);
+  font-weight: 700;
+  letter-spacing: 0.3em;
+  color: var(--dorado);
+}
+.roll-liceo {
+  display: flex;
+  margin-top: 6px;
+  font-size: clamp(1.9rem, 9vw, 4.4rem);
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: 0.02em;
+  color: var(--amarillo);
+}
+.roll-letra {
+  position: relative;
+  display: inline-block;
+  overflow: hidden;
+  line-height: 1.15;
+}
+.roll-letra > span {
+  display: block;
+  transition: translate 520ms var(--ease-salida);
+  transition-delay: var(--retraso, 0ms);
+}
+.roll-letra > span + span { position: absolute; inset: 0; translate: 0 100%; }
+.roll-palabra { display: inline-flex; white-space: nowrap; }
+.roll-espacio { width: 0.3em; }
+.roll:hover .roll-letra > span:first-child,
+.roll.rodando .roll-letra > span:first-child { translate: 0 -100%; }
+.roll:hover .roll-letra > span + span,
+.roll.rodando .roll-letra > span + span { translate: 0 0; }
+.roll-liceo .roll-letra > span + span { color: #ffffff; }
+.roll-lema .roll-letra > span + span { color: var(--amarillo); }
+@media (prefers-reduced-motion: reduce) {
+  .roll-letra > span { transition: none; }
+}
+
 /* ---------- Texto que se transforma (MorphText) en la portada ----------
    Dos capas de texto se cruzan con desenfoque; el filtro SVG
    #filtro-morph sube el contraste del canal alfa para que, a mitad del
@@ -1410,3 +1465,10 @@ body:has(.dock) .whatsapp-flotante { bottom: 80px; }
   background: #6b2323;
   color: var(--blanco-suave);
 }
+/* El lema (antes del pie) también se adapta al modo claro. */
+:root[data-tema="claro"] .lema {
+  --amarillo: #8a6400;
+  --dorado: #6f5200;
+  --linea: rgba(24, 48, 32, 0.15);
+}
+:root[data-tema="claro"] .roll-liceo .roll-letra > span + span { color: var(--verde-liceo); }
