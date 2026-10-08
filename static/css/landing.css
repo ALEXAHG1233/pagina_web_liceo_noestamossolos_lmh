@@ -1554,6 +1554,55 @@ body:has(.dock) .whatsapp-flotante { bottom: 80px; }
   .boton-metal { animation: none; }
 }
 
+/* ---------- Cuadros en 3D (tarjetas, opciones y videos) ----------
+   Marco a rayas doradas y verdes (la franja de arriba es más ancha),
+   relleno sólido adentro y, al pasar el mouse, el cuadro gira en 3D,
+   las rayas se deslizan y los textos se separan hacia adelante.
+   El relleno se cambia por cuadro con --relleno. */
+.seccion :is(.tarjeta, .opcion, .playlist-card) {
+  --relleno: var(--tarjeta-fondo);
+  --raya-a: var(--dorado);
+  --raya-b: var(--verde-oscuro);
+  border: 3px solid transparent;
+  border-top-width: 22px;
+  border-radius: 6px;
+  background:
+    linear-gradient(var(--relleno), var(--relleno)) padding-box,
+    linear-gradient(135deg, #0000 18.75%, var(--raya-a) 0 31.25%, #0000 0) border-box,
+    repeating-linear-gradient(45deg, var(--raya-a) -6.25% 6.25%, var(--raya-b) 0 18.75%) border-box;
+  background-size: auto, 40px 40px, 40px 40px;
+  background-position: 0 0, 0 0, 0 0;
+  outline: 2px solid #0b1d11;
+  box-shadow: 0 24px 30px -12px rgba(0, 0, 0, 0.45);
+  transform-style: preserve-3d;
+  transition:
+    transform 500ms ease-in-out,
+    background-position 500ms ease-in-out,
+    box-shadow 500ms ease-in-out;
+}
+.seccion :is(.tarjeta, .opcion, .playlist-card):hover {
+  border-color: transparent;
+  background-position: 0 0, -60px 60px, -60px 60px;
+  transform: perspective(1000px) rotate3d(0.5, 1, 0, 14deg);
+  box-shadow: 0 30px 34px -14px rgba(0, 0, 0, 0.55);
+}
+.seccion :is(.tarjeta, .opcion, .playlist-card) :is(h3, .video-landing-etiqueta, p, .opcion-boton, .video-enlace-externo) {
+  transition: transform 500ms ease-in-out;
+}
+.seccion :is(.tarjeta, .opcion, .playlist-card) :is(h3, .video-landing-etiqueta) { transform: translateZ(40px); }
+.seccion :is(.tarjeta, .opcion, .playlist-card) p { transform: translateZ(25px); }
+.seccion :is(.opcion-boton, .video-enlace-externo) { transform: translateZ(20px); }
+.seccion :is(.tarjeta, .opcion, .playlist-card):hover :is(h3, .video-landing-etiqueta) { transform: translateZ(55px); }
+.seccion :is(.tarjeta, .opcion, .playlist-card):hover p { transform: translateZ(40px); }
+.seccion :is(.tarjeta, .opcion, .playlist-card):hover :is(.opcion-boton, .video-enlace-externo) { transform: translateZ(35px); }
+/* Rellenos propios. */
+.seccion .opcion-principal { --relleno: var(--dorado); --raya-a: #ffe08a; }
+.seccion .opcion-principal:hover { --relleno: #d4ad33; }
+.seccion .opcion-rojo { --relleno: #5c1f1f; --raya-a: #e87a7a; --raya-b: #2a0d0d; }
+@media (prefers-reduced-motion: reduce) {
+  .seccion :is(.tarjeta, .opcion, .playlist-card):hover { transform: none; }
+}
+
 /* ---------- Modo claro (botón ☀️/🌙 del menú) ----------
    El menú, la portada y el pie se quedan en verde oscuro (identidad del
    Liceo); solo las secciones de contenido pasan a fondo claro. Se
