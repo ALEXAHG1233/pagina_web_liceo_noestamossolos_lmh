@@ -1014,3 +1014,43 @@ function activarLibro() {
 }
 
 document.addEventListener("DOMContentLoaded", activarLibro);
+
+// Cuadros "cyber" de la portada: les agrega los adornos (esquinas,
+// brillo, línea de escaneo, partículas) y, con mouse, los inclina hacia
+// donde apunta el cursor (hasta 10° arriba/abajo y 8° a los lados).
+const CYBER_SELECTOR = ".seccion :is(.tarjeta, .opcion, .playlist-card)";
+
+function activarCuadrosCyber() {
+  const cuadros = document.querySelectorAll(CYBER_SELECTOR);
+  cuadros.forEach((cuadro) => {
+    if (cuadro.querySelector(":scope > .cyber-deco")) return;
+    const deco = document.createElement("span");
+    deco.className = "cyber-deco";
+    deco.setAttribute("aria-hidden", "true");
+    deco.innerHTML =
+      '<span class="cyber-brillo"></span>' +
+      '<span class="cyber-esquinas"><i></i><i></i><i></i><i></i></span>' +
+      '<span class="cyber-scan"></span>' +
+      '<span class="cyber-particulas"><i></i><i></i><i></i><i></i><i></i><i></i></span>';
+    cuadro.prepend(deco);
+  });
+
+  const conMouse = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+  if (!conMouse || SIN_MOVIMIENTO) return;
+  cuadros.forEach((cuadro) => {
+    cuadro.addEventListener("pointermove", (e) => {
+      const r = cuadro.getBoundingClientRect();
+      const fx = (e.clientX - r.left) / r.width;
+      const fy = (e.clientY - r.top) / r.height;
+      cuadro.classList.add("cyber-activo");
+      cuadro.style.transform =
+        `perspective(800px) rotateX(${((0.5 - fy) * 20).toFixed(2)}deg) rotateY(${((fx - 0.5) * 16).toFixed(2)}deg)`;
+    });
+    cuadro.addEventListener("pointerleave", () => {
+      cuadro.classList.remove("cyber-activo");
+      cuadro.style.transform = "";
+    });
+  });
+}
+
+document.addEventListener("DOMContentLoaded", activarCuadrosCyber);

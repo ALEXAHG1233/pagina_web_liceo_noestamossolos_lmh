@@ -1554,53 +1554,115 @@ body:has(.dock) .whatsapp-flotante { bottom: 80px; }
   .boton-metal { animation: none; }
 }
 
-/* ---------- Cuadros en 3D (tarjetas, opciones y videos) ----------
-   Marco a rayas doradas y verdes (la franja de arriba es más ancha),
-   relleno sólido adentro y, al pasar el mouse, el cuadro gira en 3D,
-   las rayas se deslizan y los textos se separan hacia adelante.
-   El relleno se cambia por cuadro con --relleno. */
+/* ---------- Cuadros "cyber" en 3D (tarjetas, opciones y videos) ----------
+   Fondo verde oscuro con esquinas doradas, brillo diagonal y una línea
+   de escaneo. common.js (activarCuadrosCyber) agrega los adornos y hace
+   que el cuadro se incline hacia donde apunta el mouse. El texto
+   siempre es claro, también en modo claro. */
 .seccion :is(.tarjeta, .opcion, .playlist-card) {
-  --relleno: var(--tarjeta-fondo);
-  --raya-a: var(--dorado);
-  --raya-b: var(--verde-oscuro);
-  border: 3px solid transparent;
-  border-top-width: 22px;
-  border-radius: 6px;
-  background:
-    linear-gradient(var(--relleno), var(--relleno)) padding-box,
-    linear-gradient(135deg, #0000 18.75%, var(--raya-a) 0 31.25%, #0000 0) border-box,
-    repeating-linear-gradient(45deg, var(--raya-a) -6.25% 6.25%, var(--raya-b) 0 18.75%) border-box;
-  background-size: auto, 40px 40px, 40px 40px;
-  background-position: 0 0, 0 0, 0 0;
-  outline: 2px solid #0b1d11;
-  box-shadow: 0 24px 30px -12px rgba(0, 0, 0, 0.45);
-  transform-style: preserve-3d;
-  transition:
-    transform 500ms ease-in-out,
-    background-position 500ms ease-in-out,
-    box-shadow 500ms ease-in-out;
+  --blanco: #ffffff;
+  --blanco-suave: rgba(255, 255, 255, 0.78);
+  --amarillo: #ffc83d;
+  --cyber-acento: 201, 162, 39;
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  border: 1px solid rgba(var(--cyber-acento), 0.28);
+  border-radius: 18px;
+  background: linear-gradient(45deg, #0d2214, #183c24);
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.3), inset 0 0 20px rgba(0, 0, 0, 0.2);
+  transition: transform 700ms ease, box-shadow 300ms ease, border-color 300ms ease, filter 300ms ease;
 }
 .seccion :is(.tarjeta, .opcion, .playlist-card):hover {
-  border-color: transparent;
-  background-position: 0 0, -60px 60px, -60px 60px;
-  transform: perspective(1000px) rotate3d(0.5, 1, 0, 14deg);
-  box-shadow: 0 30px 34px -14px rgba(0, 0, 0, 0.55);
+  transform: none;
+  border-color: rgba(var(--cyber-acento), 0.6);
+  filter: brightness(1.08);
+  box-shadow: 0 18px 34px -12px rgba(0, 0, 0, 0.6), 0 0 22px rgba(var(--cyber-acento), 0.18);
 }
-.seccion :is(.tarjeta, .opcion, .playlist-card) :is(h3, .video-landing-etiqueta, p, .opcion-boton, .video-enlace-externo) {
-  transition: transform 500ms ease-in-out;
+.seccion :is(.tarjeta, .opcion, .playlist-card).cyber-activo { transition: transform 125ms ease-out, box-shadow 300ms ease, border-color 300ms ease, filter 300ms ease; }
+.seccion :is(.tarjeta, .opcion, .playlist-card) > :not(.cyber-deco) { position: relative; z-index: 1; }
+
+.cyber-deco { position: absolute; inset: 0; z-index: 0; pointer-events: none; }
+/* Resplandor de fondo al pasar el mouse. */
+.cyber-deco::before {
+  content: "";
+  position: absolute;
+  inset: -25%;
+  background: radial-gradient(circle at center, rgba(var(--cyber-acento), 0.16) 0%, rgba(var(--cyber-acento), 0.05) 50%, transparent 70%);
+  filter: blur(20px);
+  opacity: 0;
+  transition: opacity 300ms ease;
 }
-.seccion :is(.tarjeta, .opcion, .playlist-card) :is(h3, .video-landing-etiqueta) { transform: translateZ(40px); }
-.seccion :is(.tarjeta, .opcion, .playlist-card) p { transform: translateZ(25px); }
-.seccion :is(.opcion-boton, .video-enlace-externo) { transform: translateZ(20px); }
-.seccion :is(.tarjeta, .opcion, .playlist-card):hover :is(h3, .video-landing-etiqueta) { transform: translateZ(55px); }
-.seccion :is(.tarjeta, .opcion, .playlist-card):hover p { transform: translateZ(40px); }
-.seccion :is(.tarjeta, .opcion, .playlist-card):hover :is(.opcion-boton, .video-enlace-externo) { transform: translateZ(35px); }
-/* Rellenos propios. */
-.seccion .opcion-principal { --relleno: var(--dorado); --raya-a: #ffe08a; }
-.seccion .opcion-principal:hover { --relleno: #d4ad33; }
-.seccion .opcion-rojo { --relleno: #5c1f1f; --raya-a: #e87a7a; --raya-b: #2a0d0d; }
+.cyber-brillo {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(125deg, transparent 0%, rgba(255, 255, 255, 0.05) 45%, rgba(255, 255, 255, 0.1) 50%, rgba(255, 255, 255, 0.05) 55%, transparent 100%);
+  opacity: 0;
+  transition: opacity 300ms ease;
+}
+.cyber-esquinas i {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  border: 2px solid rgba(var(--cyber-acento), 0.4);
+  transition: border-color 300ms ease, box-shadow 300ms ease;
+}
+.cyber-esquinas i:nth-child(1) { top: 9px; left: 9px; border-right: 0; border-bottom: 0; }
+.cyber-esquinas i:nth-child(2) { top: 9px; right: 9px; border-left: 0; border-bottom: 0; }
+.cyber-esquinas i:nth-child(3) { bottom: 9px; left: 9px; border-right: 0; border-top: 0; }
+.cyber-esquinas i:nth-child(4) { bottom: 9px; right: 9px; border-left: 0; border-top: 0; }
+.cyber-scan {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, transparent, rgba(var(--cyber-acento), 0.1), transparent);
+  translate: 0 -100%;
+  opacity: 0;
+}
+.cyber-particulas i {
+  position: absolute;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: #ffc83d;
+  opacity: 0;
+}
+.cyber-particulas i:nth-child(1) { --dx: 1; --dy: -1; top: 40%; left: 20%; }
+.cyber-particulas i:nth-child(2) { --dx: -1; --dy: -1; top: 60%; right: 20%; }
+.cyber-particulas i:nth-child(3) { --dx: 0.5; --dy: 1; top: 20%; left: 40%; }
+.cyber-particulas i:nth-child(4) { --dx: -0.5; --dy: 1; top: 80%; right: 40%; }
+.cyber-particulas i:nth-child(5) { --dx: 1; --dy: 0.5; top: 30%; left: 60%; }
+.cyber-particulas i:nth-child(6) { --dx: -1; --dy: 0.5; top: 70%; right: 60%; }
+
+.seccion :is(.tarjeta, .opcion, .playlist-card):hover .cyber-deco::before,
+.seccion :is(.tarjeta, .opcion, .playlist-card):hover .cyber-brillo { opacity: 1; }
+.seccion :is(.tarjeta, .opcion, .playlist-card):hover .cyber-esquinas i {
+  border-color: rgba(255, 200, 61, 0.9);
+  box-shadow: 0 0 10px rgba(255, 200, 61, 0.45);
+}
+.seccion :is(.tarjeta, .opcion, .playlist-card):hover .cyber-scan { opacity: 1; animation: escaneoCyber 2s linear infinite; }
+.seccion :is(.tarjeta, .opcion, .playlist-card):hover .cyber-particulas i { animation: particulaCyber 2s infinite; }
+@keyframes escaneoCyber {
+  from { translate: 0 -100%; }
+  to { translate: 0 100%; }
+}
+@keyframes particulaCyber {
+  0% { translate: 0 0; opacity: 0; }
+  50% { opacity: 1; }
+  100% { translate: calc(var(--dx) * 30px) calc(var(--dy) * 30px); opacity: 0; }
+}
+
+/* Variantes con color propio. */
+.seccion .opcion-principal {
+  --cyber-acento: 18, 46, 27;
+  background: linear-gradient(45deg, #b8901f, #dcb540);
+}
+.seccion .opcion-principal .cyber-particulas i { background: #122e1b; }
+.seccion .opcion-rojo {
+  --cyber-acento: 232, 122, 122;
+  background: linear-gradient(45deg, #2e0f0f, #5c1f1f);
+}
 @media (prefers-reduced-motion: reduce) {
-  .seccion :is(.tarjeta, .opcion, .playlist-card):hover { transform: none; }
+  .seccion :is(.tarjeta, .opcion, .playlist-card):hover :is(.cyber-scan, .cyber-particulas i) { animation: none; }
 }
 
 /* ---------- Modo claro (botón ☀️/🌙 del menú) ----------
