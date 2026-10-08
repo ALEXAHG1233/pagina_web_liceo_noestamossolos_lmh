@@ -1054,3 +1054,18 @@ function activarCuadrosCyber() {
 }
 
 document.addEventListener("DOMContentLoaded", activarCuadrosCyber);
+
+// Estela de tinta líquida detrás del cursor (splash_cursor.js). Solo en
+// computadoras con mouse y si no se pidió reducir el movimiento: en
+// celular gastaría batería y se activaría al hacer scroll con el dedo.
+function cargarEstelaCursor() {
+  const conMouse = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+  if (!conMouse || SIN_MOVIMIENTO || document.getElementById("script-estela")) return;
+  const script = document.createElement("script");
+  script.id = "script-estela";
+  script.src = "/static/js/splash_cursor.js";
+  script.defer = true;
+  document.head.appendChild(script);
+}
+
+document.addEventListener("DOMContentLoaded", cargarEstelaCursor);
