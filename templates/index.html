@@ -75,8 +75,29 @@
       </svg>
     </div>
     <p class="hero-frase">Lo que escribas aquí es completamente anónimo. Nadie sabrá que fuiste tú.</p>
-    <button id="btn-musica" class="btn-sonido btn-musica-hero" type="button">Música relajante</button>
-    <div id="panel-musica" class="panel-musica-embebida"></div>
+    <div class="isla" id="isla-musica" data-vista="idle">
+      <button type="button" class="isla-barra" id="isla-boton" aria-expanded="false" aria-controls="isla-panel">
+        <svg class="isla-icono" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+        <span class="isla-texto isla-texto-idle">Música relajante</span>
+        <span class="isla-texto isla-texto-mini">Reproductor abierto</span>
+        <span class="isla-ondas" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+      </button>
+      <button type="button" class="isla-cerrar isla-cerrar-mini" aria-label="Cerrar el reproductor de música">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg>
+      </button>
+      <div class="isla-panel" id="isla-panel" role="region" aria-label="Reproductor de música">
+        <div class="isla-cabecera">
+          <span class="isla-titulo">Música para calmarte</span>
+          <button type="button" class="isla-accion isla-minimizar" aria-label="Minimizar (la música sigue sonando)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M5 12h14"/></svg>
+          </button>
+          <button type="button" class="isla-accion isla-cerrar" aria-label="Cerrar el reproductor de música">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg>
+          </button>
+        </div>
+        <div class="isla-reproductor"></div>
+      </div>
+    </div>
   </section>
 
   {% set carrusel = [
@@ -483,7 +504,7 @@
     } else {
       document.querySelectorAll(".reveal").forEach((el) => el.classList.add("visible"));
     }
-    crearBotonMusica(document.getElementById("btn-musica"));
+    activarIslaMusica();
   </script>
 </body>
 </html>

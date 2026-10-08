@@ -790,3 +790,46 @@ function activarDock() {
 }
 
 document.addEventListener("DOMContentLoaded", activarDock);
+
+// "Dynamic Island" de música en la portada: idle → expandida (carga el
+// reproductor de Spotify) → mini (sigue sonando, recortado) → cerrar
+// (quita el reproductor y vuelve a idle).
+function activarIslaMusica(playlistId) {
+  const isla = document.getElementById("isla-musica");
+  if (!isla) return;
+  const barra = document.getElementById("isla-boton");
+  const reproductor = isla.querySelector(".isla-reproductor");
+  const lista = playlistId || (typeof SPOTIFY_PLAYLIST_LOFI !== "undefined" ? SPOTIFY_PLAYLIST_LOFI : "37i9dQZF1DWWQRwui0ExPn");
+
+  function cambiarVista(vista) {
+    isla.dataset.vista = vista;
+    barra.setAttribute("aria-expanded", vista === "expandida" ? "true" : "false");
+    if (vista === "expandida" && !reproductor.firstChild) {
+      const iframe = document.createElement("iframe");
+      iframe.src = `https://open.spotify.com/embed/playlist/${lista}?utm_source=generator&theme=0`;
+      iframe.title = "Reproductor de Spotify: música relajante";
+      iframe.allow = "autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture";
+      iframe.loading = "lazy";
+      reproductor.append(iframe);
+    }
+    if (vista === "idle") reproductor.replaceChildren();
+  }
+
+  barra.addEventListener("click", () => cambiarVista("expandida"));
+  isla.querySelector(".isla-minimizar").addEventListener("click", () => {
+    cambiarVista("mini");
+    barra.focus();
+  });
+  isla.querySelectorAll(".isla-cerrar").forEach((boton) => {
+    boton.addEventListener("click", () => {
+      cambiarVista("idle");
+      barra.focus();
+    });
+  });
+  isla.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && isla.dataset.vista === "expandida") {
+      cambiarVista("mini");
+      barra.focus();
+    }
+  });
+}
