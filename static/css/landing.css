@@ -1306,6 +1306,30 @@ body:has(.dock) .whatsapp-flotante { bottom: 80px; }
   .roll-letra > span { transition: none; }
 }
 
+/* ---------- Línea de fondo que se dibuja con el scroll ----------
+   Fija detrás de todo el contenido; common.js ajusta stroke-dashoffset
+   según cuánto se ha bajado (empieza mostrando la mitad del trazo). */
+.linea-fondo {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+.linea-fondo path {
+  stroke: var(--dorado);
+  stroke-width: 20;
+  stroke-linecap: round;
+  stroke-dasharray: 1 1;
+  stroke-dashoffset: 0.5;
+  opacity: 0.32;
+}
+:root[data-tema="claro"] .linea-fondo path { stroke: var(--verde-liceo-claro); opacity: 0.16; }
+@media (prefers-reduced-motion: reduce) {
+  .linea-fondo path { stroke-dashoffset: 0 !important; }
+}
+
 /* ---------- Texto que se transforma (MorphText) en la portada ----------
    Dos capas de texto se cruzan con desenfoque; el filtro SVG
    #filtro-morph sube el contraste del canal alfa para que, a mitad del

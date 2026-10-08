@@ -893,3 +893,29 @@ function activarTextoRodante() {
 }
 
 document.addEventListener("DOMContentLoaded", activarTextoRodante);
+
+// Línea de fondo de la portada: muestra del 50 % al 100 % del trazo
+// según cuánto se ha bajado por la página.
+function activarLineaFondo() {
+  const trazo = document.getElementById("linea-fondo-trazo");
+  if (!trazo || SIN_MOVIMIENTO) return;
+  let pendiente = false;
+
+  function actualizar() {
+    pendiente = false;
+    const recorrido = document.documentElement.scrollHeight - window.innerHeight;
+    const progreso = recorrido > 0 ? Math.min(Math.max(window.scrollY / recorrido, 0), 1) : 1;
+    const visible = 0.5 + progreso * 0.5;
+    trazo.style.strokeDashoffset = String(1 - visible);
+  }
+
+  window.addEventListener("scroll", () => {
+    if (pendiente) return;
+    pendiente = true;
+    requestAnimationFrame(actualizar);
+  }, { passive: true });
+  window.addEventListener("resize", actualizar);
+  actualizar();
+}
+
+document.addEventListener("DOMContentLoaded", activarLineaFondo);
