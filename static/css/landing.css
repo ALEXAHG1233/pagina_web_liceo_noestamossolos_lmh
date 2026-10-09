@@ -1389,6 +1389,47 @@ body:has(.dock) .whatsapp-flotante { bottom: 80px; }
   .roll-letra > span { transition: none; }
 }
 
+/* ---------- Rayos de luz animados en el fondo ----------
+   Dos capas de rayos (degradado cónico desde arriba al centro) que se
+   balancean a distinto ritmo; una máscara los desvanece hacia abajo. */
+.rayos-fondo {
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  overflow: hidden;
+  pointer-events: none;
+}
+.rayos-fondo::before,
+.rayos-fondo::after {
+  content: "";
+  position: absolute;
+  left: -50%;
+  /* El punto de donde salen los rayos queda muy por encima de la
+     pantalla, para que lleguen ya anchos y se vean como haces de luz. */
+  top: -70%;
+  width: 200%;
+  height: 200%;
+  background: repeating-conic-gradient(from 0deg at 50% 0%, rgba(255, 200, 61, 0.16) 0deg 2.5deg, transparent 2.5deg 7deg);
+  -webkit-mask-image: radial-gradient(ellipse 55% 100% at 50% 0%, #000 30%, transparent 85%);
+  mask-image: radial-gradient(ellipse 55% 100% at 50% 0%, #000 30%, transparent 85%);
+  filter: blur(3px);
+  transform-origin: 50% 0;
+  animation: rayosVaiven 16s ease-in-out infinite alternate;
+}
+.rayos-fondo::after {
+  background: repeating-conic-gradient(from 1.5deg at 50% 0%, rgba(255, 232, 150, 0.11) 0deg 1.5deg, transparent 1.5deg 9deg);
+  animation-duration: 23s;
+  animation-direction: alternate-reverse;
+}
+@keyframes rayosVaiven {
+  from { rotate: -2deg; opacity: 0.6; }
+  to { rotate: 2deg; opacity: 1; }
+}
+:root[data-tema="claro"] .rayos-fondo { opacity: 0.6; }
+@media (prefers-reduced-motion: reduce) {
+  .rayos-fondo::before, .rayos-fondo::after { animation: none; }
+}
+
 /* ---------- Línea de fondo que se dibuja con el scroll ----------
    Fija detrás de todo el contenido; common.js ajusta stroke-dashoffset
    según cuánto se ha bajado (empieza mostrando la mitad del trazo). */
