@@ -270,6 +270,8 @@ function crearBotonMusica(boton, playlistId) {
  */
 const FONDOS_DISPONIBLES = {
   claro: { tipo: "color", valor: "#f6f3ec" },
+  // Fondo tipo WhatsApp: beige con un patrón de puntitos verdes.
+  whatsapp: { tipo: "color", valor: "radial-gradient(rgba(18, 46, 27, 0.09) 1.3px, transparent 1.5px) 0 0 / 18px 18px, #efeae2", titulo: "WhatsApp" },
   verde: { tipo: "color", valor: "#e3efe6" },
   azul: { tipo: "color", valor: "#e1f0fb" },
   dorado: { tipo: "color", valor: "#fbead2" },
@@ -283,7 +285,7 @@ const FONDOS_DISPONIBLES = {
   naranja_hojas: { tipo: "imagen", valor: "/static/images/fondos/fondo_naranja_hojas.webp", titulo: "Naranja de hojas" },
 };
 
-function crearSelectorFondo(contenedorId, mensajesEl, storageKey) {
+function crearSelectorFondo(contenedorId, mensajesEl, storageKey, porDefecto = "claro") {
   const contenedor = document.getElementById(contenedorId);
   if (!contenedor || !mensajesEl) return;
 
@@ -315,7 +317,7 @@ function crearSelectorFondo(contenedorId, mensajesEl, storageKey) {
     contenedor.appendChild(btn);
   });
 
-  aplicar(localStorage.getItem(storageKey) || "claro");
+  aplicar(localStorage.getItem(storageKey) || porDefecto);
 }
 
 /**

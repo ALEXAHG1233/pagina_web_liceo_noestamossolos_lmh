@@ -10,7 +10,23 @@ const btnMusica = document.getElementById("btn-musica");
 socket.emit("unirse", { token: TOKEN });
 crearToggleSonido(btnSonido);
 crearBotonMusica(btnMusica);
-crearSelectorFondo("selector-fondo", mensajesDiv, "fondo_chat_asistente_" + (PERSONA || "general"));
+crearSelectorFondo("selector-fondo", mensajesDiv, "fondo_chat_asistente_" + (PERSONA || "general"), "whatsapp");
+
+// Botón "Fondo" de la cabecera: muestra u oculta la fila de fondos.
+const btnFondos = document.getElementById("wa-fondos");
+const selectorFondo = document.getElementById("selector-fondo");
+if (btnFondos && selectorFondo) {
+  btnFondos.addEventListener("click", () => {
+    selectorFondo.hidden = !selectorFondo.hidden;
+    btnFondos.setAttribute("aria-expanded", selectorFondo.hidden ? "false" : "true");
+  });
+}
+
+// Debajo del nombre, como en WhatsApp: "en línea" o "escribiendo…".
+const estadoHeader = document.getElementById("wa-estado");
+function ponerEstado(texto) {
+  if (estadoHeader) estadoHeader.textContent = texto;
+}
 
 const AVATARES = { estudiante: "E", psicologa: "P", asistente: AVATAR_ASISTENTE || "A" };
 let filaEscribiendo = null;
@@ -28,14 +44,32 @@ function agregarMensaje(emisor, contenido) {
 
   const burbuja = document.createElement("div");
   burbuja.classList.add("msg", emisor);
-  burbuja.textContent = contenido;
+  const texto = document.createElement("span");
+  texto.classList.add("msg-texto");
+  texto.textContent = contenido;
+  burbuja.appendChild(texto);
 
+  // La hora (y las palomitas en los mensajes propios) van dentro de la
+  // burbuja, abajo a la derecha, como en WhatsApp.
   const hora = document.createElement("span");
   hora.classList.add("msg-hora");
   hora.textContent = new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+  if (emisor === "estudiante") {
+    const palomitas = document.createElement("span");
+    palomitas.classList.add("wa-palomitas");
+    palomitas.setAttribute("aria-label", "Enviado");
+    palomitas.innerHTML = '<svg viewBox="0 0 18 12" width="16" height="11" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 6.5 4.5 10 11 2"/><path d="M7 10 7.6 10.4 14 2.5"/></svg>';
+    hora.appendChild(palomitas);
+  }
+  burbuja.appendChild(hora);
+
+  // Si el mensaje anterior es del mismo emisor, esta burbuja no lleva "colita".
+  const anterior = mensajesDiv.lastElementChild;
+  if (anterior && anterior.classList.contains("msg-fila") && anterior.classList.contains(emisor)) {
+    fila.classList.add("seguido");
+  }
 
   contenedor.appendChild(burbuja);
-  contenedor.appendChild(hora);
   fila.appendChild(avatar);
   fila.appendChild(contenedor);
   mensajesDiv.appendChild(fila);
@@ -46,6 +80,7 @@ function mostrarEscribiendo() {
   if (filaEscribiendo) return;
   filaEscribiendo = document.createElement("div");
   filaEscribiendo.classList.add("msg-fila", "asistente", "escribiendo");
+  ponerEstado("escribiendo…");
   filaEscribiendo.innerHTML = `
     <div class="avatar">${AVATAR_ASISTENTE || "A"}</div>
     <div class="msg-contenido">
@@ -60,6 +95,7 @@ function ocultarEscribiendo() {
     filaEscribiendo.remove();
     filaEscribiendo = null;
   }
+  ponerEstado("en línea");
 }
 
 form.addEventListener("submit", (e) => {
@@ -84,6 +120,11 @@ socket.on("nuevo_mensaje", (data) => {
   const espera = 500 + Math.random() * 600;
   setTimeout(() => {
     ocultarEscribiendo();
+    // Al contestar, los mensajes enviados quedan "leídos" (palomitas azules).
+    mensajesDiv.querySelectorAll(".wa-palomitas:not(.leido)").forEach((p) => {
+      p.classList.add("leido");
+      p.setAttribute("aria-label", "Leído");
+    });
     agregarMensaje(data.emisor, data.contenido);
     Sonidos.recibido();
   }, espera);

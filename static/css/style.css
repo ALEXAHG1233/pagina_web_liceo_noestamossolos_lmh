@@ -555,3 +555,188 @@ body:has(.chat-container) .whatsapp-flotante {
   .msg-fila { max-width: 92%; }
   .msg { font-size: 14px; }
 }
+
+/* ===== Chat del asistente con aspecto de WhatsApp =====
+   Solo aplica dentro de .chat-wa (asistente.html); el chat con la
+   psicóloga y su panel conservan su diseño. Mensajes propios a la
+   derecha en verde, respuestas a la izquierda en blanco, hora y
+   palomitas dentro de la burbuja, "escribiendo…" en la cabecera. */
+.chat-wa-body {
+  margin: 0;
+  background: radial-gradient(circle at 50% 0%, var(--verde-liceo) 0%, var(--verde-oscuro) 70%);
+  background-attachment: fixed;
+}
+.chat-wa {
+  max-width: 520px;
+  height: 100vh;
+  height: 100dvh;
+  background: #efeae2;
+  box-shadow: 0 20px 60px -20px rgba(0, 0, 0, 0.7);
+}
+@media (min-width: 560px) {
+  .chat-wa {
+    height: calc(100vh - 32px);
+    height: calc(100dvh - 32px);
+    margin: 16px auto;
+    border-radius: 18px;
+    overflow: hidden;
+    border: 1px solid rgba(201, 162, 39, 0.35);
+  }
+}
+
+/* Cabecera */
+.chat-wa .wa-header { padding: 8px 10px; background: var(--verde-oscuro); }
+.chat-wa .wa-header::after { display: none; }
+.wa-barra { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 10px; }
+.wa-volver {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 40px;
+  color: #ffffff;
+  border-radius: 50%;
+}
+.wa-volver:hover { background: rgba(255, 255, 255, 0.1); }
+.wa-foto {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  background: #ffffff;
+  border: 2px solid var(--dorado);
+  flex-shrink: 0;
+}
+.wa-foto-letra { display: grid; place-items: center; background: var(--dorado); color: var(--verde-oscuro); font-weight: 700; }
+.wa-titulo { flex: 1; min-width: 0; }
+.chat-wa .wa-titulo h1 {
+  font-size: 16px;
+  font-weight: 600;
+  color: #ffffff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.chat-wa .wa-estado { display: block; font-size: 12px; color: rgba(255, 255, 255, 0.72); opacity: 1; }
+.wa-acciones { gap: 4px; margin-left: auto; }
+.chat-wa .wa-icono { margin-top: 0; padding: 6px 10px; font-size: 11px; border-radius: 999px; }
+.chat-wa .wa-fondos { margin: 8px 4px 2px; }
+.chat-wa .wa-fondos[hidden] { display: none; }
+
+/* Zona de mensajes */
+.chat-wa .wa-mensajes { padding: 10px 4% 14px; gap: 0; }
+.wa-fecha { align-self: center; margin: 4px 0 8px; }
+.wa-fecha span {
+  display: inline-block;
+  padding: 5px 12px;
+  background: #ffffff;
+  color: #54656f;
+  font-size: 12px;
+  font-weight: 600;
+  border-radius: 8px;
+  box-shadow: 0 1px 0.5px rgba(11, 20, 26, 0.13);
+}
+.wa-aviso {
+  align-self: center;
+  max-width: 92%;
+  margin-bottom: 10px;
+  padding: 6px 10px;
+  background: #ffeecd;
+  color: #54656f;
+  font-size: 12px;
+  line-height: 1.4;
+  text-align: center;
+  border-radius: 8px;
+  box-shadow: 0 1px 0.5px rgba(11, 20, 26, 0.13);
+}
+.wa-aviso svg { vertical-align: -1px; margin-right: 3px; }
+
+/* Burbujas */
+.chat-wa .avatar { display: none; }
+.chat-wa .msg-fila {
+  max-width: 85%;
+  margin-top: 8px;
+  animation: waEntrar 260ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  transform-origin: bottom left;
+}
+.chat-wa .msg-fila.estudiante { transform-origin: bottom right; }
+.chat-wa .msg-fila.seguido { margin-top: 2px; }
+@keyframes waEntrar {
+  from { opacity: 0; transform: translateY(6px) scale(0.96); }
+}
+.chat-wa .msg {
+  position: relative;
+  max-width: 100%;
+  padding: 6px 8px 8px 9px;
+  border-radius: 8px;
+  font-size: 14.5px;
+  line-height: 1.35;
+  color: #111b21;
+  box-shadow: 0 1px 0.5px rgba(11, 20, 26, 0.13);
+}
+.chat-wa .msg.estudiante { background: #d9fdd3; color: #111b21; }
+.chat-wa .msg.asistente { background: #ffffff; color: #111b21; }
+/* "Colita" de la primera burbuja de cada grupo. */
+.chat-wa .msg-fila:not(.seguido) .msg.estudiante { border-top-right-radius: 0; }
+.chat-wa .msg-fila:not(.seguido) .msg.asistente { border-top-left-radius: 0; }
+.chat-wa .msg-fila:not(.seguido) .msg::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  width: 8px;
+  height: 13px;
+  background: inherit;
+}
+.chat-wa .msg-fila:not(.seguido) .msg.estudiante::before { right: -8px; clip-path: polygon(0 0, 100% 0, 0 100%); }
+.chat-wa .msg-fila:not(.seguido) .msg.asistente::before { left: -8px; clip-path: polygon(0 0, 100% 0, 100% 100%); }
+.chat-wa .msg-texto { white-space: pre-wrap; overflow-wrap: anywhere; }
+.chat-wa .msg-hora {
+  float: right;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  position: relative;
+  top: 5px;
+  margin: 2px 0 0 10px;
+  padding: 0;
+  font-size: 11px;
+  color: #667781;
+}
+.wa-palomitas { display: inline-flex; color: #8696a0; transition: color 300ms ease; }
+.wa-palomitas.leido { color: #53bdeb; }
+.chat-wa .escribiendo .msg { padding: 10px 14px; }
+.chat-wa .typing-dots { color: #8696a0; }
+
+/* Barra para escribir */
+.chat-wa .wa-form {
+  align-items: center;
+  gap: 6px;
+  padding: 6px 8px;
+  padding-bottom: max(6px, env(safe-area-inset-bottom));
+  background: #f0f2f5;
+  border-top: none;
+}
+.chat-wa .wa-form input {
+  padding: 11px 16px;
+  border: none;
+  border-radius: 22px;
+  background: #ffffff;
+  font-size: 16px;
+}
+.chat-wa .wa-form input:focus { box-shadow: 0 0 0 2px rgba(201, 162, 39, 0.55); }
+.chat-wa .wa-enviar {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border-radius: 50%;
+  background: var(--verde-liceo-claro);
+  color: #ffffff;
+  transition: background 150ms ease, scale 120ms ease;
+}
+.chat-wa .wa-enviar:hover { background: var(--verde-liceo); transform: none; }
+.chat-wa .wa-enviar:active { scale: 0.92; }
+@media (prefers-reduced-motion: reduce) {
+  .chat-wa .msg-fila { animation: none; }
+}

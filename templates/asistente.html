@@ -7,33 +7,49 @@
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 64 64%22><path fill=%22%231f4d2c%22 d=%22M32 56s-20-12.6-27-24.4C-.2 21.6 4.6 10 15.4 8.4c6-.9 11.6 2 16.6 7.6 5-5.6 10.6-8.5 16.6-7.6C59.4 10 64.2 21.6 59 31.6 52 43.4 32 56 32 56Z%22/></svg>">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
-<body>
-  <div class="chat-container">
-    <header class="chat-header">
-      <div class="chat-header-top">
-        <div>
+<body class="chat-wa-body">
+  <div class="chat-container chat-wa">
+    <header class="chat-header wa-header">
+      <div class="wa-barra">
+        <a href="{{ url_for('chatbot') }}" class="wa-volver" aria-label="Volver a elegir con quién hablar">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>
+        </a>
+        {% if persona and persona.imagen %}
+          <img class="wa-foto" src="{{ url_for('static', filename=persona.imagen) }}" alt="">
+        {% else %}
+          <span class="wa-foto wa-foto-letra" aria-hidden="true">{{ persona.avatar if persona else "A" }}</span>
+        {% endif %}
+        <div class="wa-titulo">
           <h1>{{ persona.nombre if persona else "Asistente" }}</h1>
-          <p>Tu conversación es anónima.</p>
-          <span class="estado-en-vivo"><span class="punto-en-vivo"></span> Disponible siempre</span>
+          <span class="estado-en-vivo wa-estado" id="wa-estado" aria-live="polite">en línea</span>
         </div>
-        <div class="acciones-header">
-          <button id="btn-musica" class="btn-sonido" type="button">Música</button>
-          <button id="btn-sonido" class="btn-sonido" type="button">Sonido</button>
+        <div class="acciones-header wa-acciones">
+          <button id="btn-musica" class="btn-sonido wa-icono" type="button" aria-label="Música">Música</button>
+          <button id="btn-sonido" class="btn-sonido wa-icono" type="button" aria-label="Sonido">Sonido</button>
+          <button id="wa-fondos" class="btn-sonido wa-icono" type="button" aria-expanded="false" aria-controls="selector-fondo">Fondo</button>
         </div>
       </div>
       <div id="panel-musica" class="panel-musica-embebida"></div>
-      <div id="selector-fondo" class="selector-fondo">
+      <div id="selector-fondo" class="selector-fondo wa-fondos" hidden>
         <span>Fondo:</span>
       </div>
     </header>
 
-    <div id="mensajes" class="mensajes"></div>
+    <div id="mensajes" class="mensajes wa-mensajes">
+      <div class="wa-fecha"><span>Hoy</span></div>
+      <div class="wa-aviso">
+        <svg viewBox="0 0 24 24" width="12" height="12" fill="currentColor" aria-hidden="true"><path d="M12 2a5 5 0 0 0-5 5v3H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8a2 2 0 0 0-2-2h-1V7a5 5 0 0 0-5-5Zm-3 8V7a3 3 0 1 1 6 0v3H9Z"/></svg>
+        Tu conversación es anónima: nadie sabe quién eres. Si algo es urgente, la psicóloga recibe un aviso.
+      </div>
+    </div>
 
     <div id="apoyo-emergencia" class="apoyo-emergencia" hidden></div>
 
-    <form id="form-mensaje" class="form-mensaje">
-      <input type="text" id="input-mensaje" placeholder="Escribe aquí, con confianza..." autocomplete="off" required>
-      <button type="submit">Enviar</button>
+    <form id="form-mensaje" class="form-mensaje wa-form">
+      <input type="text" id="input-mensaje" placeholder="Escribe un mensaje" autocomplete="off" required aria-label="Escribe un mensaje">
+      <button type="submit" class="wa-enviar" aria-label="Enviar">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true"><path d="M3.4 20.4 21 12 3.4 3.6 3.4 10l12.6 2-12.6 2z"/></svg>
+      </button>
     </form>
   </div>
 
