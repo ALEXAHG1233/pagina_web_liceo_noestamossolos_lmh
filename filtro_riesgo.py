@@ -28,6 +28,17 @@ PATRONES = {
             r"\bplan para (suicidarme|matarme)\b",
             r"\bnadie se dar[ií]a cuenta si desaparezco\b",
             r"\bya no quiero (vivir|existir)\b",
+            # Variantes en primera persona que antes se escapaban
+            # ("quiero morirme", "me quiero matar", "quisiera morirme"...).
+            r"\bquiero (morirme|matarme|suicidarme|quitarme la vida)\b",
+            r"\bme quiero (morir|matar|suicidar)\b",
+            r"\bquisiera (morir|morirme|no existir|desaparecer)\b",
+            r"\bme gustar[ií]a (morir|morirme|no existir|desaparecer)\b",
+            r"\bme voy a (matar|suicidar|quitar la vida)\b",
+            r"\b(pienso|he pensado|estoy pensando) en (suicidarme|matarme|quitarme la vida|morirme)\b",
+            r"\bquitarme la vida\b",
+            r"\bmejor (estar[ií]a )?muert[oa]\b",
+            r"\bno vale la pena (vivir|seguir viviendo)\b",
         ],
     },
     "autolesion": {

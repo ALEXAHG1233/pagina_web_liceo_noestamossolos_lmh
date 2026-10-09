@@ -158,7 +158,10 @@ REGLAS = [
         ],
     },
     {
-        "patrones": [r"\bfamilia\b", r"\bpap[aá]\b", r"\bmam[aá]\b", r"\bcasa\b", r"\bpadres\b"],
+        "patrones": [
+            r"\bfamilia\b", r"\bpap[aá]s?\b", r"\bmam[aá]s?\b", r"\bcasa\b", r"\bpadres\b",
+            r"\b(me pele[eé]|discut[ií]|me enoj[eé]) con mis? (pap[aá]s?|mam[aá]s?|padres|herman[oa]s?|familia)\b",
+        ],
         "respuestas": [
             "Los temas de familia a veces son los más difíciles de hablar. Estoy aquí para escuchar, sin juzgar. ¿Qué está pasando?",
             "A veces en casa es donde más cuesta que nos entiendan. Cuéntame qué pasó.",
@@ -541,6 +544,10 @@ RESPUESTA_DERIVACION = (
 ).format(psicologa=NOMBRE_PSICOLOGA, numero=NUMERO_PSICOLOGA)
 
 
+# Reglas de cortesía que ceden el paso a cualquier tema del mensaje.
+REGLAS_SOCIALES = {"saludo", "gracias"}
+
+
 def generar_respuesta(mensaje, token, personaje=None):
     """Devuelve una respuesta según reglas. Se usa SOLO cuando el riesgo es bajo.
 
@@ -552,19 +559,24 @@ def generar_respuesta(mensaje, token, personaje=None):
     texto = mensaje.lower().strip()
     datos_personaje = PERSONAJES.get(personaje)
 
+    # Se busca la primera regla que coincide, pero el saludo y el "gracias"
+    # solo se usan si el mensaje no trae otro tema: en "hola, estoy
+    # estresado por los exámenes" importa el estrés, no el "hola".
+    coincidentes = [
+        regla for regla in REGLAS
+        if any(re.search(patron, texto) for patron in regla["patrones"])
+    ]
+    con_tema = [r for r in coincidentes if r.get("id") not in REGLAS_SOCIALES]
+    regla = (con_tema or coincidentes or [None])[0]
+
     respuesta_base = None
-    for regla in REGLAS:
-        for patron in regla["patrones"]:
-            if re.search(patron, texto):
-                if datos_personaje and regla.get("id") == "saludo":
-                    respuesta_base = _elegir_sin_repetir(token, datos_personaje["saludos"])
-                elif datos_personaje and regla.get("id") == "gracias":
-                    respuesta_base = _elegir_sin_repetir(token, datos_personaje["despedidas"])
-                else:
-                    respuesta_base = _elegir_sin_repetir(token, regla["respuestas"])
-                break
-        if respuesta_base:
-            break
+    if regla is not None:
+        if datos_personaje and regla.get("id") == "saludo":
+            respuesta_base = _elegir_sin_repetir(token, datos_personaje["saludos"])
+        elif datos_personaje and regla.get("id") == "gracias":
+            respuesta_base = _elegir_sin_repetir(token, datos_personaje["despedidas"])
+        else:
+            respuesta_base = _elegir_sin_repetir(token, regla["respuestas"])
 
     if respuesta_base is None:
         respuesta_base = _elegir_sin_repetir(token, RESPUESTAS_GENERICAS)
