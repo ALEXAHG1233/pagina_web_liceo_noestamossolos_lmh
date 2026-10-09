@@ -1069,3 +1069,40 @@ function cargarEstelaCursor() {
 }
 
 document.addEventListener("DOMContentLoaded", cargarEstelaCursor);
+
+// Imágenes de la portada que "se voltean" al pasar el mouse: se envuelven
+// en un contenedor que hereda el margen, el ancho máximo y las esquinas
+// de la imagen, y se les agrega un letrero con su texto alternativo.
+const VOLTEO_SELECTOR = ".banner-seccion-img, .prevencion-banner-img, .hero-banner-img";
+
+function activarImagenesVolteo() {
+  document.querySelectorAll(VOLTEO_SELECTOR).forEach((img) => {
+    if (img.parentElement.classList.contains("img-volteo")) return;
+    const estilo = getComputedStyle(img);
+    const caja = document.createElement("span");
+    caja.className = "img-volteo";
+    // Centrada como la imagen original (los lados quedan en auto).
+    caja.style.margin = `${estilo.marginTop} auto ${estilo.marginBottom}`;
+    caja.style.maxWidth = estilo.maxWidth;
+    caja.style.borderRadius = estilo.borderRadius;
+    img.style.margin = "0";
+    img.parentNode.insertBefore(caja, img);
+    caja.appendChild(img);
+
+    const texto = document.createElement("span");
+    texto.className = "img-volteo-texto";
+    texto.setAttribute("aria-hidden", "true");
+    // "Muro interactivo — Describe tu experiencia": la primera parte va
+    // grande y lo que sigue al guion, más pequeño debajo.
+    const [titulo, ...resto] = img.alt.split(" — ");
+    texto.append(titulo);
+    if (resto.length) {
+      const detalle = document.createElement("small");
+      detalle.textContent = resto.join(" · ");
+      texto.append(detalle);
+    }
+    caja.appendChild(texto);
+  });
+}
+
+document.addEventListener("DOMContentLoaded", activarImagenesVolteo);

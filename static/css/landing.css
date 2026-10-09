@@ -1735,6 +1735,63 @@ body:has(.dock) .whatsapp-flotante { bottom: 80px; }
   .seccion :is(.tarjeta, .opcion, .playlist-card):hover :is(.cyber-scan, .cyber-particulas i) { animation: none; }
 }
 
+/* ---------- Imágenes que se voltean al pasar el mouse ----------
+   common.js (activarImagenesVolteo) envuelve cada imagen en .img-volteo
+   y le agrega un letrero con su texto alternativo. Al pasar el mouse la
+   imagen crece un poco y se oscurece, y el letrero entra girando. */
+.img-volteo {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  transition: transform 0.4s ease, border-radius 0.4s ease, box-shadow 0.4s ease;
+}
+.img-volteo > img { display: block; transition: opacity 0.4s ease, filter 0.4s ease; }
+.img-volteo-texto {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px 24px;
+  text-align: center;
+  font-family: "Fraunces", Georgia, serif;
+  font-weight: 600;
+  font-size: 0;
+  line-height: 1.2;
+  color: #ffc83d;
+  background: rgba(13, 34, 20, 0.62);
+  opacity: 0;
+  transform: rotate(90deg) scale(-1);
+  pointer-events: none;
+  transition: opacity 0.4s ease, transform 0.4s ease, font-size 0.4s ease;
+}
+.img-volteo-texto { flex-direction: column; gap: 6px; }
+.img-volteo-texto small {
+  font-family: "Montserrat", Helvetica, Arial, sans-serif;
+  font-size: 0.5em;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: rgba(255, 255, 255, 0.85);
+}
+@media (hover: hover) and (pointer: fine) {
+  .img-volteo:hover {
+    transform: scale(1.03);
+    border-radius: 15px;
+    box-shadow: 0 0 18px 6px rgba(0, 0, 0, 0.55);
+    z-index: 3;
+  }
+  .img-volteo:hover > img { opacity: 0.55; filter: blur(1px); }
+  .img-volteo:hover .img-volteo-texto {
+    opacity: 1;
+    font-size: clamp(1.2rem, 4vw, 1.8rem);
+    transform: rotate(0deg);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .img-volteo, .img-volteo > img, .img-volteo-texto { transition: none; }
+}
+
 /* ---------- Modo claro (botón ☀️/🌙 del menú) ----------
    El menú, la portada y el pie se quedan en verde oscuro (identidad del
    Liceo); solo las secciones de contenido pasan a fondo claro. Se
