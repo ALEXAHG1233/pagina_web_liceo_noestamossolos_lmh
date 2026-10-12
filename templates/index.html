@@ -322,6 +322,30 @@
       <h3>Entiende lo que sientes y lo que te rodea</h3>
       <p>Artículos sobre salud mental, fobias, maltrato hacia la mujer y más, explicados con claridad.</p>
     </a>
+    <div class="temas-informate">
+      {% for tema in temas_informate %}
+        <div class="tema-informate">
+          <a class="tema-informate-titulo" href="{{ url_for('informate') }}#cat-{{ tema.nombre|lower }}">{{ tema.nombre }} <span>{{ tema.total }} artículos</span></a>
+          <p>{{ tema.descripcion }}</p>
+          <ul>
+            {% for slug, titulo in tema.ejemplos %}
+              <li><a href="{{ url_for('informate_articulo', slug=slug) }}">{{ titulo }}</a></li>
+            {% endfor %}
+          </ul>
+        </div>
+      {% endfor %}
+    </div>
+    {% if videos_informate %}
+      <p class="temas-informate-videos-titulo">Artículos con video</p>
+      <div class="temas-informate-videos">
+        {% for slug, titulo, video in videos_informate %}
+          <a class="tema-video" href="{{ url_for('informate_articulo', slug=slug) }}">
+            <img src="https://i.ytimg.com/vi/{{ video }}/mqdefault.jpg" alt="" loading="lazy" width="320" height="180">
+            <span>▶ {{ titulo }}</span>
+          </a>
+        {% endfor %}
+      </div>
+    {% endif %}
   </section>
 
   <section class="seccion reveal">

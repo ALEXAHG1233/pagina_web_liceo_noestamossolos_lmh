@@ -21,15 +21,22 @@
     <p>Contenido para entender mejor lo que sientes, lo que te rodea, o lo que alguien cercano puede estar viviendo.</p>
   </section>
 
-  <section class="historial-semana tests-lista">
-    {% for slug, a in articulos.items() %}
-      <a href="{{ url_for('informate_articulo', slug=slug) }}" class="test-card articulo-card">
-        <span class="articulo-categoria cat-{{ a.categoria|lower }}">{{ a.categoria }}</span>
-        <h2>{{ a.titulo }}</h2>
-        <p>{{ a.resumen }}</p>
-      </a>
-    {% endfor %}
-  </section>
+  {% for nombre, descripcion in categorias %}
+    <section class="informate-categoria" id="cat-{{ nombre|lower }}">
+      <h2 class="informate-categoria-titulo">{{ nombre }}</h2>
+      <p class="informate-categoria-desc">{{ descripcion }}</p>
+      <div class="historial-semana tests-lista">
+        {% for slug, a in articulos.items() if a.categoria == nombre %}
+          <a href="{{ url_for('informate_articulo', slug=slug) }}" class="test-card articulo-card">
+            <span class="articulo-categoria cat-{{ a.categoria|lower }}">{{ a.categoria }}</span>
+            {% if a.video_youtube_id %}<span class="articulo-con-video">▶ Con video</span>{% endif %}
+            <h2>{{ a.titulo }}</h2>
+            <p>{{ a.resumen }}</p>
+          </a>
+        {% endfor %}
+      </div>
+    </section>
+  {% endfor %}
 
   <script src="{{ url_for('static', filename='js/common.js') }}"></script>
 </body>

@@ -142,3 +142,7 @@ def calcular_resultado(test_id, respuestas):
         if proporcion >= umbral:
             return mensaje, NIVELES[i]
     return test["resultados"][-1][1], NIVELES[-1]
+
+
+# Video que acompaña algunas autoevaluaciones (ID verificado en YouTube).
+TESTS["estres"]["video_youtube_id"] = "Nvtr6Ms4bmo"  # Respiración en 4 tiempos (PrepaTec)

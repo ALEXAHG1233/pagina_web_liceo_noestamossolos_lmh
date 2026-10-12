@@ -14,7 +14,7 @@ import ia_asistente
 from respuestas_bot import generar_respuesta, RESPUESTA_DERIVACION, PERSONAJES
 from futuro_bot import generar_mensaje_futuro
 from tests_bot import TESTS, obtener_test, calcular_resultado
-from articulos_bot import ARTICULOS
+from articulos_bot import ARTICULOS, CATEGORIAS_INFORMATE
 from herramientas_bot import TECNICAS
 
 app = Flask(__name__)
@@ -454,6 +454,21 @@ def index():
         video_prevencion_id=VIDEO_PREVENCION_SUICIDIO_ID,
         recursos_psicologia=recursos,
         indice_busqueda=construir_indice_busqueda(),
+        temas_informate=[
+            {
+                "nombre": nombre,
+                "descripcion": descripcion,
+                "total": sum(1 for a in ARTICULOS.values() if a["categoria"] == nombre),
+                "ejemplos": [
+                    (slug, a["titulo"]) for slug, a in ARTICULOS.items() if a["categoria"] == nombre
+                ][:3],
+            }
+            for nombre, descripcion in CATEGORIAS_INFORMATE
+        ],
+        videos_informate=[
+            (slug, a["titulo"], a["video_youtube_id"])
+            for slug, a in ARTICULOS.items() if a.get("video_youtube_id")
+        ],
         # El visor 3D de Tigrito solo aparece cuando ya existe el modelo.
         modelo_tigre=os.path.exists(os.path.join(app.static_folder, "models", "tigre.glb")),
     )
@@ -667,7 +682,7 @@ def test_detalle(test_id):
 
 @app.route("/informate")
 def informate():
-    return render_template("informate.html", articulos=ARTICULOS)
+    return render_template("informate.html", articulos=ARTICULOS, categorias=CATEGORIAS_INFORMATE)
 
 
 @app.route("/informate/<slug>")

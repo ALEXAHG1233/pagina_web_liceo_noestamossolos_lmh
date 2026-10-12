@@ -76,3 +76,20 @@
 @media (prefers-reduced-motion: reduce) {
   .collage-foto { animation: none; transition: none; }
 }
+
+/* Infórmate agrupado por categoría, y videos en artículos y tests. */
+.informate-categoria { margin: 26px 0 8px; }
+.informate-categoria-titulo { margin: 0 16px 2px; font-size: 22px; }
+.informate-categoria-desc { margin: 0 16px 10px; font-size: 14px; opacity: 0.85; }
+.articulo-con-video {
+  display: inline-block;
+  margin-left: 6px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: rgba(255, 200, 61, 0.15);
+  color: #ffc83d;
+  font-size: 11px;
+  font-weight: 700;
+}
+.contenido-video { margin: 14px 0 18px; border-radius: 12px; overflow: hidden; }
+.contenido-video iframe { display: block; border: 0; }

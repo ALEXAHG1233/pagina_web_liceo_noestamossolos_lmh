@@ -19,6 +19,14 @@
   {% if not resultado %}
     <section class="pregunta-hoy">
       <p class="tests-intro-texto">{{ test.descripcion }}</p>
+      {% if test.video_youtube_id %}
+        <div class="contenido-video">
+          <iframe src="https://www.youtube.com/embed/{{ test.video_youtube_id }}" width="100%" height="220" frameborder="0"
+            title="Video para acompañar este test"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen loading="lazy"></iframe>
+        </div>
+      {% endif %}
       <form method="POST" action="{{ url_for('test_detalle', test_id=test_id) }}" class="form-test">
         {% for pregunta in test.preguntas %}
           {% set indice_pregunta = loop.index0 %}

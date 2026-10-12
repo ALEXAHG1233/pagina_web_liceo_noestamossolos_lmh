@@ -87,3 +87,6 @@
   text-decoration: none;
 }
 .test-hablar:hover { background: #005ba8; }
+
+.contenido-video { margin: 14px 0 18px; border-radius: 12px; overflow: hidden; }
+.contenido-video iframe { display: block; border: 0; }

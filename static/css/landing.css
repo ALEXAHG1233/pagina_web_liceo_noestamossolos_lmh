@@ -1794,6 +1794,50 @@ body:has(.dock) .whatsapp-flotante { bottom: 80px; }
   .img-volteo, .img-volteo > img, .img-volteo-texto { transition: none; }
 }
 
+/* ---------- Temas de Infórmate en la portada ---------- */
+.temas-informate {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 14px;
+  margin: 18px 24px 0;
+}
+@media (min-width: 640px) { .temas-informate { grid-template-columns: repeat(3, 1fr); } }
+.tema-informate { padding-top: 12px; border-top: 2px solid var(--dorado); }
+.tema-informate-titulo {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+  font-family: "Fraunces", Georgia, serif;
+  font-size: 19px;
+  font-weight: 600;
+  color: var(--amarillo);
+  text-decoration: none;
+}
+.tema-informate-titulo span { font-family: "Montserrat", sans-serif; font-size: 11px; color: var(--blanco-suave); }
+.tema-informate p { margin: 4px 0 8px; font-size: 13px; color: var(--blanco-suave); }
+.tema-informate ul { margin: 0; padding-left: 16px; font-size: 13px; line-height: 1.6; }
+.tema-informate a:not(.tema-informate-titulo) { color: var(--blanco); text-decoration: none; }
+.tema-informate a:not(.tema-informate-titulo):hover { color: var(--amarillo); text-decoration: underline; }
+.temas-informate-videos-titulo { margin: 22px 24px 8px; font-size: 13px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--dorado); }
+.temas-informate-videos {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  padding: 0 24px 8px;
+  scroll-snap-type: x mandatory;
+}
+.tema-video {
+  flex: 0 0 200px;
+  scroll-snap-align: start;
+  text-decoration: none;
+  color: var(--blanco);
+  font-size: 13px;
+  font-weight: 600;
+}
+.tema-video img { display: block; width: 100%; height: auto; border-radius: 10px; border: 1px solid rgba(201, 162, 39, 0.4); margin-bottom: 6px; }
+.tema-video:hover span { color: var(--amarillo); }
+
 /* ---------- Modo claro (botón ☀️/🌙 del menú) ----------
    El menú, la portada y el pie se quedan en verde oscuro (identidad del
    Liceo); solo las secciones de contenido pasan a fondo claro. Se

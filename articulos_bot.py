@@ -590,3 +590,25 @@ ARTICULOS = {
         ],
     },
 }
+
+
+# Videos de YouTube (en español) que acompañan algunos artículos. Cada ID se
+# verificó con YouTube antes de agregarlo. Para agregar otro: "slug": "ID".
+VIDEOS_ARTICULOS = {
+    "depresion-que-es": "aP5RHNG9q-s",       # Activación conductual para la depresión (Top Doctors)
+    "catastrofismo": "hVpw2JrlQMs",          # ¿Qué es la reestructuración cognitiva? (Aprendamos Psicología)
+    "rumiacion": "hVpw2JrlQMs",
+    "controlar-emociones": "y379TF6XOJc",    # Claves para ayudar emocionalmente en una crisis (TEDx)
+    "fortalecer-mente": "_lOpSbsm9y4",       # 5 minutos para calmar el sistema nervioso (meditación)
+    "hablemos-de-suicidio": "YSGnQeEWJMs",   # Día Mundial para la Prevención del Suicidio
+}
+for _slug, _video in VIDEOS_ARTICULOS.items():
+    if _slug in ARTICULOS:
+        ARTICULOS[_slug]["video_youtube_id"] = _video
+
+# Cómo se presentan las categorías en Infórmate y en la portada.
+CATEGORIAS_INFORMATE = [
+    ("Cuídate", "Ideas para cuidarte y sentirte mejor."),
+    ("Identifica", "Para reconocer patrones en ti o en otras personas."),
+    ("Infórmate", "Cómo funciona la mente, explicado fácil."),
+]
