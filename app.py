@@ -376,7 +376,7 @@ PAGINAS_BUSCADOR = [
     ("estudiante", None, "Hablar con la psicóloga", "Chat anónimo con una persona real", "ayuda triste ansiedad miedo hablar chat"),
     ("chatbot", None, "Hablar con el asistente", "Disponible a cualquier hora", "bot sami leo nia conversar"),
     ("diario", None, "Mi diario de ánimo", "Registra cómo te sientes cada día", "emociones registro animo"),
-    ("herramientas", None, "Herramientas técnicas", "TCC, TDC, respiración y meditación", "calma tecnicas relajacion"),
+    ("herramientas", None, "Herramientas para sentirme mejor", "Ansiedad, enojo, tristeza, dormir y estudiar", "calma tecnicas relajacion respiracion ira depresion estres"),
     ("informate", None, "Infórmate", "Artículos sobre salud mental", "leer articulos temas"),
     ("tests", None, "Autoevaluaciones", "Preguntas para reflexionar sobre ti", "test cuestionario"),
     ("video", None, "Videos", "Videos sobre salud mental", "youtube ver"),
@@ -386,7 +386,7 @@ PAGINAS_BUSCADOR = [
     ("futuro", None, "Mi futuro", "Metas y planes para lo que viene", "metas suenos carrera"),
     ("resenas", None, "Reseñas", "Opiniones sobre la página", "opinion comentarios"),
     ("terminos", None, "Términos y condiciones", "Cómo funciona y cómo cuidamos tu privacidad", "privacidad reglas"),
-    ("index", "titulo-emergencia", "¿Estás en peligro ahora mismo?", "Emergencias: llama al 911", "emergencia urgente peligro suicidio 911"),
+    ("index", "titulo-emergencia", "¿Estás en peligro ahora mismo?", "Emergencias: 911 y Teléfono de la Esperanza 150", "emergencia urgente peligro suicidio 911 150 esperanza linea crisis"),
     ("index", "contacto", "Contáctenos", "Correo, teléfono y redes sociales", "contacto correo telefono whatsapp"),
 ]
 

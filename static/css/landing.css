@@ -738,6 +738,8 @@
   transition: background var(--transicion-suave), translate var(--transicion-suave);
 }
 .libro-enlace:hover { background: var(--verde-liceo); translate: 3px 0; }
+.libro-enlaces { display: flex; flex-wrap: wrap; gap: 8px; }
+.libro-enlace-chico { margin-top: 0; padding: 8px 14px; font-size: 13px; }
 .libro-controles {
   display: flex;
   align-items: center;

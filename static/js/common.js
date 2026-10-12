@@ -395,6 +395,25 @@ function mostrarApoyoEmergencia(apoyoDiv, socket, token, mensaje) {
   texto.textContent = mensaje;
   apoyoDiv.appendChild(texto);
 
+  // Líneas de ayuda que se pueden llamar con un toque desde el celular.
+  const lineas = document.createElement("div");
+  lineas.className = "apoyo-lineas";
+  [
+    ["tel:150", "Llamar al 150", "Teléfono de la Esperanza, gratis y anónimo"],
+    ["tel:911", "Llamar al 911", "Emergencias"],
+  ].forEach(([href, titulo, detalle]) => {
+    const enlace = document.createElement("a");
+    enlace.href = href;
+    enlace.className = "apoyo-linea";
+    const fuerte = document.createElement("strong");
+    fuerte.textContent = titulo;
+    const chico = document.createElement("small");
+    chico.textContent = detalle;
+    enlace.append(fuerte, chico);
+    lineas.appendChild(enlace);
+  });
+  apoyoDiv.appendChild(lineas);
+
   // Si ya se dejó un contacto en esta sesión, no se vuelve a pedir.
   if (sessionStorage.getItem("contacto_emergencia_enviado_" + token)) return;
 

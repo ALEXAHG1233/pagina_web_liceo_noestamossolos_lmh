@@ -5,6 +5,19 @@
 .color-azul { color: var(--azul-honduras); }
 .color-dorado { color: var(--amarillo); }
 .color-verde { color: var(--amarillo); }
+.color-rojo { color: #ff9b9b; }
+.color-morado { color: #d7b8ff; }
+
+/* "¿Cómo sé que me pasa esto?": señales de cada categoría. */
+.categoria-sintomas {
+  margin: 6px 0 14px;
+  padding: 12px 16px;
+  border-left: 3px solid var(--dorado);
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 0 10px 10px 0;
+}
+.categoria-sintomas strong { display: block; margin-bottom: 6px; font-size: 13px; color: var(--amarillo); }
+.categoria-sintomas ul { margin: 0; padding-left: 18px; font-size: 14px; line-height: 1.6; }
 
 .herramientas-categoria .tests-lista { padding: 0; }
 .herramientas-categoria .test-card h3 {

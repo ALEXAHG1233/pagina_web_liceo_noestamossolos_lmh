@@ -373,6 +373,20 @@ button, .opcion-boton, .btn-sonido, input[type="submit"] { font-weight: 700; }
   border-left: 3px solid #c94b4b;
 }
 .apoyo-texto { margin: 0 0 10px; }
+.apoyo-lineas { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 10px; }
+.apoyo-linea {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 140px;
+  padding: 8px 12px;
+  border-radius: 10px;
+  background: #c94b4b;
+  color: #ffffff;
+  text-decoration: none;
+}
+.apoyo-linea:hover { background: #a83a3a; }
+.apoyo-linea strong { font-size: 14px; }
+.apoyo-linea small { font-size: 11px; opacity: 0.9; }
 .apoyo-confirmacion {
   margin: 10px 0 0;
   padding-top: 10px;

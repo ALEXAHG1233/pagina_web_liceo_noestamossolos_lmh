@@ -122,7 +122,7 @@ ARTICULOS = {
         "contenido": [
             "A veces amar de verdad a alguien significa no rescatarlo de cada error — dejar que viva lo que le toca vivir, aunque duela verlo.",
             "Esto no es dejar de apoyar a esa persona; es diferenciar entre apoyar y hacerse responsable por decisiones que no son tuyas.",
-            "Cuando cargas constantemente las consecuencias de los actos de otro (familiar, pareja, amigo), terminas agotado/a, y esa persona nunca aprende a sostenerse sola.",
+            "Cuando cargas constantemente las consecuencias de los actos de otro (un familiar o un amigo), terminas agotado/a, y esa persona nunca aprende a sostenerse sola.",
             "Poner ese límite, con cariño, no te hace una mala persona — te hace alguien que también se está cuidando a sí mismo/a.",
         ],
     },
@@ -145,16 +145,6 @@ ARTICULOS = {
             "No es contradictorio: se puede ser capaz de cuidarse a uno mismo y, al mismo tiempo, desear profundamente que alguien más elija quedarse.",
             "A veces la independencia se construyó como protección (para no depender de alguien que podía fallar), no porque de verdad no se necesite a nadie.",
             "Reconocer ese anhelo no te hace menos fuerte — te hace honesto/a contigo mismo/a.",
-        ],
-    },
-    "quien-eres-sin-amar": {
-        "titulo": "¿Quién eres cuando no estás amando a alguien?",
-        "categoria": "Identifica",
-        "resumen": "Tu identidad no debería depender de estar en una relación.",
-        "contenido": [
-            "Cuando llevamos mucho tiempo enfocados en una relación (de pareja, de amistad, incluso familiar), a veces perdemos de vista quiénes somos fuera de eso.",
-            "Pregúntate: ¿qué te gusta a ti, solo a ti? ¿Qué harías con tu tiempo si no estuvieras pensando en esa persona?",
-            "Tener una identidad propia, separada de a quién amas, no te aleja de esa persona — te hace alguien más completo/a para esa relación y para ti mismo/a.",
         ],
     },
     "sueños-neurociencia": {
@@ -269,7 +259,7 @@ ARTICULOS = {
         ],
     },
     "superar-perdida": {
-        "titulo": "Superar una pérdida emocional (relación o duelo)",
+        "titulo": "Superar una pérdida",
         "categoria": "Cuídate",
         "resumen": "No hay un tiempo \"correcto\" para sanar, pero sí hay formas de acompañarte mientras pasa.",
         "contenido": [
@@ -314,7 +304,7 @@ ARTICULOS = {
         "categoria": "Identifica",
         "resumen": "Reconstruir la confianza en otros, y en ti mismo/a.",
         "contenido": [
-            "Después de una traición (de una pareja, un amigo, incluso familia), es normal sentir una mezcla de rabia, tristeza, y desconfianza que no se va de un día para otro.",
+            "Después de una traición (de un amigo, o incluso de la familia), es normal sentir una mezcla de rabia, tristeza, y desconfianza que no se va de un día para otro.",
             "Uno de los efectos menos hablados es que, además de desconfiar del otro, a veces empiezas a desconfiar de tu propio juicio (\"¿cómo no lo vi venir?\"). Eso también se puede sanar.",
             "Reconstruir la confianza no significa volver a ser exactamente como antes — significa aprender a confiar de nuevo, con los ojos un poco más abiertos, a tu propio ritmo.",
         ],

@@ -10,39 +10,39 @@ nunca se decide nada por la persona, solo se le ayuda a ver un patrón.
 """
 
 TESTS = {
-    "pareja": {
-        "titulo": "Mi relación de pareja",
-        "descripcion": "Para reflexionar sobre cómo te sientes en tu relación. No mide quién tiene la razón, solo te ayuda a ver patrones.",
+    "habitos_estudio": {
+        "titulo": "Mis hábitos de estudio",
+        "descripcion": "Para ver qué te ayuda y qué te cuesta al estudiar. No mide qué tan inteligente eres, solo cómo estudias.",
         "preguntas": [
             {
-                "texto": "¿Sientes que puedes decir lo que piensas sin miedo a cómo reaccione tu pareja?",
+                "texto": "¿Tienes un lugar tranquilo y ordenado para estudiar?",
                 "opciones": ["Siempre", "La mayoría de las veces", "Pocas veces", "Casi nunca"],
             },
             {
-                "texto": "¿Tu pareja respeta cuando necesitas espacio o tiempo a solas?",
-                "opciones": ["Siempre", "La mayoría de las veces", "Pocas veces", "Casi nunca"],
+                "texto": "¿Estudias con tiempo, o dejas todo para el último día?",
+                "opciones": ["Con tiempo", "Casi siempre con tiempo", "Muchas veces al último", "Siempre al último"],
             },
             {
-                "texto": "Después de una discusión, ¿sienten que logran resolverla hablando?",
-                "opciones": ["Siempre", "La mayoría de las veces", "Pocas veces", "Casi nunca"],
+                "texto": "Mientras estudias, ¿el celular te distrae?",
+                "opciones": ["Casi nunca", "A veces", "Seguido", "Todo el tiempo"],
             },
             {
-                "texto": "¿Te sientes cómodo/a contándole a tus amigos o familia sobre tu relación?",
-                "opciones": ["Siempre", "La mayoría de las veces", "Pocas veces", "Casi nunca"],
+                "texto": "¿Tomas pequeños descansos cuando estudias mucho tiempo?",
+                "opciones": ["Siempre", "La mayoría de las veces", "Pocas veces", "Nunca"],
             },
             {
-                "texto": "¿Sientes que confían el uno en el otro sin necesidad de revisar celulares o controlar al otro?",
-                "opciones": ["Siempre", "La mayoría de las veces", "Pocas veces", "Casi nunca"],
+                "texto": "Después de estudiar, ¿puedes explicar el tema con tus palabras?",
+                "opciones": ["Sí, casi siempre", "La mayoría de las veces", "Pocas veces", "Casi nunca"],
             },
             {
-                "texto": "¿Te sientes tranquilo/a y seguro/a cuando estás con esa persona?",
+                "texto": "¿Duermes bien la noche antes de un examen?",
                 "opciones": ["Siempre", "La mayoría de las veces", "Pocas veces", "Casi nunca"],
             },
         ],
         "resultados": [
-            (0.75, "Lo que describes suena a una relación con bases sanas: respeto, confianza y espacio para ser tú mismo/a. Eso vale la pena cuidarlo."),
-            (0.45, "Hay cosas buenas, pero también algunas señales que vale la pena conversar — con tu pareja, o con alguien de confianza. Ninguna relación es perfecta, pero sí debe sentirse segura."),
-            (0.0, "Varias de tus respuestas describen patrones que suelen pesar mucho con el tiempo: falta de espacio, de confianza o de seguridad. Esto no significa que algo esté mal contigo. Hablar con la psicóloga puede ayudarte a ver esto con más claridad y decidir qué hacer."),
+            (0.75, "Tienes buenos hábitos de estudio: organizas tu tiempo y cuidas tu descanso. Sigue así, y prueba la técnica del tomate si quieres rendir todavía más."),
+            (0.45, "Tienes algunas cosas a tu favor y otras que puedes mejorar. Mira las herramientas \"Para estudiar mejor\": organizar tu semana y estudiar en ratos cortos puede cambiar mucho."),
+            (0.0, "Estudiar se te está haciendo pesado, y eso le pasa a mucha gente: no significa que no seas capaz. Empieza por una sola herramienta de \"Para estudiar mejor\". Si el estrés por las notas te está afectando, habla con la psicóloga."),
         ],
     },
     "estres": {

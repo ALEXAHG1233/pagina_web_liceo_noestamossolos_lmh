@@ -240,13 +240,20 @@
   <section class="seccion reveal">
     <h2>¿Cómo podemos ayudarte?</h2>
     <p class="seccion-subtitulo">Elige lo que más se parece a lo que estás viviendo.</p>
+    {% set h = url_for('herramientas') %}
     {% set paginas_libro = [
-      ("Estoy pasando por un momento difícil", "Habla con la psicóloga del liceo, de forma anónima. Es una persona real, preparada para escucharte, y no necesitas dar tu nombre.", url_for('estudiante'), "Hablar con la psicóloga"),
-      ("Quiero controlar mis emociones", "Técnicas de respiración, TCC y TDC explicadas paso a paso, con videos. Funcionan a cualquier hora, sin que nadie tenga que estar conectado.", url_for('herramientas'), "Ver las técnicas"),
-      ("Necesito hablar con alguien", "El asistente (Sami, Leo o Nia) está disponible a cualquier hora para ayudarte a ordenar tus ideas. Si nota que estás en riesgo, avisa a la psicóloga.", url_for('chatbot'), "Hablar con el asistente"),
-      ("Estoy superando una pérdida", "Duelo, rupturas y despedidas: un artículo para entender lo que sientes y cómo acompañarte mientras pasa.", url_for('informate_articulo', slug='superar-perdida'), "Leer el artículo"),
-      ("Quiero entender lo que siento", "Registra tu ánimo día a día en tu diario y mira cómo va cambiando con el tiempo.", url_for('diario'), "Abrir mi diario"),
-      ("Quiero aprender más sobre mí", "Autoevaluaciones sobre pareja, estrés y alimentación. No son diagnósticos: son una señal para reflexionar.", url_for('tests'), "Hacer una autoevaluación"),
+      ("Estoy pasando por un momento difícil", "Habla con la psicóloga del liceo, de forma anónima. Es una persona real, preparada para escucharte, y no necesitas dar tu nombre.",
+        [("Hablar con la psicóloga", url_for('estudiante'))]),
+      ("Siento ansiedad, enojo o tristeza", "Ponerle nombre a lo que sientes es el primer paso. Elige el que más se parece y encontrarás ejercicios sencillos para ese momento.",
+        [("Ansiedad o nervios", h ~ "#ansiedad"), ("Enojo (ira)", h ~ "#enojo"), ("Tristeza (depresión)", h ~ "#tristeza")]),
+      ("Necesito hablar con alguien", "El asistente (Sami, Leo o Nia) es una inteligencia artificial: está disponible a cualquier hora, te hace preguntas para entenderte mejor y, si nota que estás en riesgo, avisa a la psicóloga.",
+        [("Hablar con el asistente", url_for('chatbot'))]),
+      ("Lo que necesito ahora", "A veces lo que hace falta es algo concreto: estudiar sin estrés, dormir bien o saber cómo decir lo que sientes.",
+        [("Estudiar mejor", h ~ "#estudiar"), ("Dormir mejor", h ~ "#dormir"), ("Decir lo que siento", h ~ "#decir"), ("Calmar mi mente", h ~ "#calma")]),
+      ("Quiero entender lo que siento", "Registra tu ánimo día a día en tu diario y mira cómo va cambiando con el tiempo.",
+        [("Abrir mi diario", url_for('diario'))]),
+      ("Quiero conocerme mejor", "Autoevaluaciones sobre estrés, alimentación y hábitos de estudio. No son diagnósticos: son una señal para reflexionar.",
+        [("Hacer una autoevaluación", url_for('tests'))]),
     ] %}
     <div class="libro" data-libro>
       <div class="libro-paginas" aria-live="polite">
@@ -256,12 +263,16 @@
           <p class="libro-texto">Pasa las páginas: en cada una hay una forma distinta en que te podemos acompañar.</p>
           <span class="libro-pista" aria-hidden="true">Desliza o toca → para empezar</span>
         </article>
-        {% for titulo, texto, enlace, accion in paginas_libro %}
+        {% for titulo, texto, enlaces in paginas_libro %}
           <article class="libro-pagina">
             <span class="libro-numero">{{ "%02d"|format(loop.index) }}</span>
             <h3 class="libro-titulo">{{ titulo }}</h3>
             <p class="libro-texto">{{ texto }}</p>
-            <a class="libro-enlace" href="{{ enlace }}">{{ accion }} →</a>
+            <div class="libro-enlaces">
+              {% for accion, enlace in enlaces %}
+                <a class="libro-enlace{% if enlaces|length > 1 %} libro-enlace-chico{% endif %}" href="{{ enlace }}">{{ accion }}{% if enlaces|length == 1 %} →{% endif %}</a>
+              {% endfor %}
+            </div>
           </article>
         {% endfor %}
       </div>
@@ -278,9 +289,11 @@
       <div class="emergencia-contenido">
         <h2 id="titulo-emergencia">¿Estás en peligro ahora mismo?</h2>
         <p>Si estás pasando por una emergencia o sientes que tú u otra persona puede estar en peligro, busca ayuda de inmediato: llama al <strong>911</strong> o acude a un adulto de confianza.</p>
+        <p>Si necesitas hablar con alguien ahora mismo, llama gratis al <strong>150</strong>, la línea de la Asociación Hondureña del Teléfono de la Esperanza: te escucha una persona capacitada, de forma anónima y confidencial.</p>
         <p class="emergencia-nota">Este espacio es de apoyo y orientación; no reemplaza la atención profesional de emergencia.</p>
         <div class="emergencia-acciones">
           <a href="tel:911" class="emergencia-boton emergencia-boton-principal boton-metal">Llamar al 911</a>
+          <a href="tel:150" class="emergencia-boton">Llamar al 150 (Teléfono de la Esperanza)</a>
           <a href="{{ url_for('estudiante') }}" class="emergencia-boton">Hablar con la psicóloga</a>
         </div>
       </div>
@@ -291,11 +304,11 @@
     <h2 class="sr-only">Herramientas técnicas</h2>
     <img
       src="{{ url_for('static', filename='images/banner_herramientas.webp') }}"
-      alt="Herramientas técnicas — TCC, TDC, respiración y meditación"
+      alt="Herramientas para sentirme mejor — Ansiedad, enojo, tristeza y más"
       class="banner-seccion-img">
     <a href="{{ url_for('herramientas') }}" class="opcion opcion-recurso opcion-naranja">
       <h3>Técnicas para el momento</h3>
-      <p>TCC, TDC, respiración y meditación. Disponibles las 24 horas, a tu ritmo, sin que nadie tenga que estar conectado.</p>
+      <p>Ejercicios sencillos para la ansiedad, el enojo, la tristeza, el sueño y el estudio. Disponibles las 24 horas, a tu ritmo.</p>
     </a>
   </section>
 
@@ -330,7 +343,7 @@
     <h2>Autoevaluaciones</h2>
     <a href="{{ url_for('tests') }}" class="opcion opcion-recurso opcion-verde">
       <h3>Mira tus patrones con más claridad</h3>
-      <p>Preguntas sobre tu pareja, tu estrés, o tu relación con la comida. No son diagnósticos, solo una señal para reflexionar.</p>
+      <p>Preguntas sobre tu estrés, tu relación con la comida y tus hábitos de estudio. No son diagnósticos, solo una señal para reflexionar.</p>
     </a>
   </section>
 

@@ -273,17 +273,6 @@ REGLAS = [
         ],
     },
     {
-        "id": "pareja",
-        "patrones": [r"\bnovi[oa]\b", r"\brevisa (el|mi) tel[eé]fono\b", r"\bcelos[oa]\b", r"\bterminamos\b", r"\bextra[ñn]o a alguien\b"],
-        "respuestas": [
-            "Las relaciones pueden traer emociones muy intensas, sobre todo cuando estamos aprendiendo a comunicarnos y poner límites. Cuéntame qué ocurrió, sin que te juzgue.",
-            "Una relación sana necesita confianza y respeto por tu privacidad. Que alguien sea tu pareja no le da derecho automático a revisar tus conversaciones o contraseñas.",
-            "Los celos pueden aparecer, pero controlar con quién hablas o dónde estás no es una forma sana de manejarlos. Mereces una relación basada en confianza.",
-            "Una ruptura puede sentirse como una pérdida real. No tienes que superarlo de inmediato — date permiso de sentir y busca compañía de alguien que te haga sentir seguro/a.",
-            "Puedes extrañar a alguien y al mismo tiempo reconocer que esa relación te hizo daño. Las emociones no siempre siguen la lógica — extrañarlo no significa que tengas que volver.",
-        ],
-    },
-    {
         "id": "imagen_corporal",
         "patrones": [r"\bodio mi cuerpo\b", r"\bme siento fe[oa]\b", r"\bmirarme al espejo\b", r"\bcomentario sobre mi cuerpo\b", r"\btodos son m[aá]s bonitos\b", r"\bninguna foto de m[ií]\b", r"\bsubir fotos porque van a criticarme\b"],
         "respuestas": [
