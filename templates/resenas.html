@@ -63,7 +63,7 @@
       {% for estrellas, comentario, fecha, foto in resenas %}
         <div class="resena-card">
           <div class="resena-estrellas">{{ "★" * estrellas }}{{ "☆" * (5 - estrellas) }}</div>
-          {% if foto %}<img src="{{ url_for('static', filename=foto) }}" class="resena-foto" alt="Foto compartida en la reseña" loading="lazy">{% endif %}
+          {% if foto %}<img src="{{ url_for('foto_resena', nombre=foto.rsplit('/', 1)[-1]) }}" class="resena-foto" alt="Foto compartida en la reseña" loading="lazy">{% endif %}
           {% if comentario %}<p class="resena-texto">{{ comentario }}</p>{% endif %}
           <span class="resena-fecha">{{ fecha[:10] }}</span>
         </div>

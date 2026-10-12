@@ -4,7 +4,7 @@ import sqlite3
 import uuid
 from datetime import datetime
 
-from flask import Flask, render_template, session, redirect, url_for, request, flash, jsonify
+from flask import Flask, render_template, session, redirect, url_for, request, flash, jsonify, send_from_directory
 from flask_socketio import SocketIO, join_room, emit
 from werkzeug.utils import secure_filename
 
@@ -31,7 +31,11 @@ def datos_globales():
     # Las páginas solo dicen que el asistente es IA cuando de verdad lo es.
     return {"ia_activa": ia_asistente.ia_disponible()}
 
-DB_PATH = "apoyo_emocional.db"
+# DATA_DIR: carpeta para los datos que deben sobrevivir a cada actualización
+# (en Render, el disco persistente montado en /var/data). Sin ella, todo se
+# guarda junto al código, como en la computadora de desarrollo.
+DATA_DIR = os.environ.get("DATA_DIR")
+DB_PATH = os.path.join(DATA_DIR, "apoyo_emocional.db") if DATA_DIR else "apoyo_emocional.db"
 
 PSICOLOGA_USUARIO = os.environ.get("PSICOLOGA_USUARIO", "psicologa")
 PSICOLOGA_CLAVE = os.environ.get("PSICOLOGA_CLAVE", "cambia-esta-clave")
@@ -45,7 +49,10 @@ PSICOLOGA_SIDS = set()
 def psicologa_esta_conectada():
     return len(PSICOLOGA_SIDS) > 0
 
-CARPETA_FOTOS_RESENAS = os.path.join("static", "uploads", "resenas")
+CARPETA_FOTOS_RESENAS = (
+    os.path.join(DATA_DIR, "uploads", "resenas") if DATA_DIR
+    else os.path.join("static", "uploads", "resenas")
+)
 EXTENSIONES_FOTO_PERMITIDAS = {"png", "jpg", "jpeg", "gif", "webp"}
 os.makedirs(CARPETA_FOTOS_RESENAS, exist_ok=True)
 
@@ -479,6 +486,12 @@ def estado_psicologa():
     """Solo dice si la psicóloga tiene el panel abierto (para el puntito
     verde de la barra inferior). No expone nada más."""
     return jsonify({"conectada": psicologa_esta_conectada()})
+
+
+@app.route("/fotos-resenas/<nombre>")
+def foto_resena(nombre):
+    """Sirve las fotos de las reseñas desde donde estén guardadas (static/ o el disco)."""
+    return send_from_directory(CARPETA_FOTOS_RESENAS, secure_filename(nombre))
 
 
 @app.route("/estudiante")

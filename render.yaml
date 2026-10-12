@@ -1,0 +1,31 @@
+# Configuración para publicar la página en Render (render.com).
+# Render lee este archivo al crear un "Blueprint" desde el repositorio de GitHub.
+# Las claves secretas NO van aquí: Render las pide en su página al crear el
+# servicio (las marcadas con "sync: false"), y SECRET_KEY la genera sola.
+services:
+  - type: web
+    name: no-estamos-solos-lmh
+    runtime: python
+    plan: starter            # US$7/mes: siempre encendido y con WebSockets para el chat
+    region: oregon
+    buildCommand: pip install -r requirements.txt
+    # Un solo trabajador con eventlet: necesario para que Socket.IO (el chat
+    # en tiempo real) funcione bien.
+    startCommand: gunicorn --worker-class eventlet -w 1 --bind 0.0.0.0:$PORT app:app
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.9
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DATA_DIR
+        value: /var/data      # la base de datos y las fotos se guardan en el disco
+      - key: PSICOLOGA_USUARIO
+        sync: false
+      - key: PSICOLOGA_CLAVE
+        sync: false
+      - key: ANTHROPIC_API_KEY
+        sync: false           # opcional: sin ella el asistente usa respuestas por reglas
+    disk:
+      name: datos
+      mountPath: /var/data
+      sizeGB: 1
