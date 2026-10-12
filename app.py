@@ -10,6 +10,7 @@ from werkzeug.utils import secure_filename
 
 from filtro_riesgo import analizar_riesgo
 from filtro_ofensivo import contiene_lenguaje_ofensivo
+import ia_asistente
 from respuestas_bot import generar_respuesta, RESPUESTA_DERIVACION, PERSONAJES
 from futuro_bot import generar_mensaje_futuro
 from tests_bot import TESTS, obtener_test, calcular_resultado
@@ -23,6 +24,12 @@ app = Flask(__name__)
 app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY", "cambia-esto-por-una-clave-secreta-real")
 app.config["MAX_CONTENT_LENGTH"] = 5 * 1024 * 1024  # 5 MB, para que no se abuse de las fotos de reseñas
 socketio = SocketIO(app, cors_allowed_origins="*")
+
+
+@app.context_processor
+def datos_globales():
+    # Las páginas solo dicen que el asistente es IA cuando de verdad lo es.
+    return {"ia_activa": ia_asistente.ia_disponible()}
 
 DB_PATH = "apoyo_emocional.db"
 
@@ -188,6 +195,20 @@ def obtener_estadisticas():
         "teleconsultas": teleconsultas,
         "tests_realizados": tests_realizados,
     }
+
+
+def obtener_historial(token, limite=20):
+    """Últimos mensajes de una conversación, del más viejo al más nuevo,
+    como lista de (emisor, contenido). Se usa para que la IA recuerde el chat."""
+    conn = sqlite3.connect(DB_PATH)
+    cur = conn.cursor()
+    cur.execute(
+        "SELECT emisor, contenido FROM mensajes WHERE token = ? ORDER BY id DESC LIMIT ?",
+        (token, limite),
+    )
+    filas = cur.fetchall()
+    conn.close()
+    return list(reversed(filas))
 
 
 def guardar_mensaje(token, emisor, contenido, analisis):
@@ -852,7 +873,7 @@ def on_unirse(data):
             mensaje = (
                 "En este momento la psicóloga no está conectada. Tu mensaje queda "
                 "guardado y te va a responder en cuanto pueda. Si es una emergencia, "
-                "usa el botón de WhatsApp."
+                "llama gratis al 150 (Teléfono de la Esperanza) o usa el botón de WhatsApp."
             )
         emit("estado_psicologa", {"conectada": conectada, "mensaje": mensaje})
 
@@ -1018,7 +1039,13 @@ def on_mensaje_chatbot(data):
                 room=token,
             )
     else:
-        respuesta = generar_respuesta(contenido, token, personaje=persona)
+        # Riesgo bajo: responde la IA si está configurada; si no está o falla,
+        # responden las reglas de respuestas_bot.py.
+        historial = obtener_historial(token)[:-1]  # sin el mensaje que acaba de llegar
+        nombre = PERSONAJES.get(persona, {}).get("nombre", "el asistente")
+        respuesta = ia_asistente.responder(historial, contenido, persona=persona, nombre=nombre)
+        if not respuesta:
+            respuesta = generar_respuesta(contenido, token, personaje=persona)
 
     guardar_mensaje(token, "asistente", respuesta, {"nivel": "bajo", "categorias": []})
     emit("nuevo_mensaje", {"emisor": "asistente", "contenido": respuesta}, room=token)

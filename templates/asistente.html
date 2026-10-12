@@ -20,7 +20,7 @@
           <span class="wa-foto wa-foto-letra" aria-hidden="true">{{ persona.avatar if persona else "A" }}</span>
         {% endif %}
         <div class="wa-titulo">
-          <h1>{{ persona.nombre if persona else "Asistente" }}</h1>
+          <h1>{{ persona.nombre if persona else "Asistente" }} <span class="wa-etiqueta-ia">{{ "IA" if ia_activa else "Automático" }}</span></h1>
           <span class="estado-en-vivo wa-estado" id="wa-estado" aria-live="polite">en línea</span>
         </div>
         <div class="acciones-header wa-acciones">
@@ -39,7 +39,7 @@
       <div class="wa-fecha"><span>Hoy</span></div>
       <div class="wa-aviso">
         <svg viewBox="0 0 24 24" width="12" height="12" fill="currentColor" aria-hidden="true"><path d="M12 2a5 5 0 0 0-5 5v3H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8a2 2 0 0 0-2-2h-1V7a5 5 0 0 0-5-5Zm-3 8V7a3 3 0 1 1 6 0v3H9Z"/></svg>
-        Tu conversación es anónima: nadie sabe quién eres. Si algo es urgente, la psicóloga recibe un aviso.
+        {% if ia_activa %}{{ persona.nombre if persona else "Este asistente" }} es una inteligencia artificial, no una persona.{% else %}{{ persona.nombre if persona else "Este asistente" }} es un asistente automático, no una persona.{% endif %} Tu conversación es anónima: nadie sabe quién eres. Si algo es urgente, la psicóloga recibe un aviso.
       </div>
     </div>
 

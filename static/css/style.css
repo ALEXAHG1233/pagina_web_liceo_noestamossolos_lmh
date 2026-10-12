@@ -754,3 +754,17 @@ body:has(.chat-container) .whatsapp-flotante {
 @media (prefers-reduced-motion: reduce) {
   .chat-wa .msg-fila { animation: none; }
 }
+
+.wa-etiqueta-ia {
+  display: inline-block;
+  margin-left: 4px;
+  padding: 1px 7px;
+  border-radius: 999px;
+  background: rgba(201, 162, 39, 0.25);
+  border: 1px solid rgba(201, 162, 39, 0.6);
+  color: #ffc83d;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  vertical-align: 2px;
+}

@@ -4,3 +4,4 @@ python-socketio==5.11.2
 python-engineio==4.9.0
 gunicorn==22.0.0
 eventlet==0.36.1
+anthropic==1.13.0

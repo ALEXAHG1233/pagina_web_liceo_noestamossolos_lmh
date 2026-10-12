@@ -246,7 +246,7 @@
         [("Hablar con la psicóloga", url_for('estudiante'))]),
       ("Siento ansiedad, enojo o tristeza", "Ponerle nombre a lo que sientes es el primer paso. Elige el que más se parece y encontrarás ejercicios sencillos para ese momento.",
         [("Ansiedad o nervios", h ~ "#ansiedad"), ("Enojo (ira)", h ~ "#enojo"), ("Tristeza (depresión)", h ~ "#tristeza")]),
-      ("Necesito hablar con alguien", "El asistente (Sami, Leo o Nia) es una inteligencia artificial: está disponible a cualquier hora, te hace preguntas para entenderte mejor y, si nota que estás en riesgo, avisa a la psicóloga.",
+      ("Necesito hablar con alguien", ("El asistente (Sami, Leo o Nia) es una inteligencia artificial: está disponible a cualquier hora, te hace preguntas para entenderte mejor y, si nota que estás en riesgo, avisa a la psicóloga." if ia_activa else "El asistente (Sami, Leo o Nia) es automático, no una persona: está disponible a cualquier hora y, si nota que estás en riesgo, avisa a la psicóloga."),
         [("Hablar con el asistente", url_for('chatbot'))]),
       ("Lo que necesito ahora", "A veces lo que hace falta es algo concreto: estudiar sin estrés, dormir bien o saber cómo decir lo que sientes.",
         [("Estudiar mejor", h ~ "#estudiar"), ("Dormir mejor", h ~ "#dormir"), ("Decir lo que siento", h ~ "#decir"), ("Calmar mi mente", h ~ "#calma")]),
