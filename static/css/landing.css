@@ -1879,3 +1879,56 @@ body:has(.dock) .whatsapp-flotante { bottom: 80px; }
   --linea: rgba(24, 48, 32, 0.15);
 }
 :root[data-tema="claro"] .roll-liceo .roll-letra > span + span { color: var(--verde-liceo); }
+
+/* ===== Computadora (960 px o más) =====
+   En celular y tableta la portada sigue siendo una columna. En pantallas
+   grandes usa el ancho: contenido de hasta 1180 px y tarjetas lado a lado. */
+@media (min-width: 960px) {
+  .landing-body { max-width: none; }
+  .landing-body > section,
+  .landing-body > .lema { max-width: 1180px; margin-left: auto; margin-right: auto; }
+  .nav-contenido { max-width: 1180px; padding: 12px 32px; }
+
+  .seccion { padding: 64px 48px; }
+  .seccion-con-banner { padding-left: 0; padding-right: 0; }
+  .seccion-con-banner .tarjetas,
+  .seccion-con-banner .opciones,
+  .seccion-con-banner .opcion-recurso,
+  .seccion-con-banner .video-landing-grid,
+  .seccion-con-banner .video-landing-intro,
+  .seccion-con-banner .video-ver-mas,
+  .seccion-con-banner .temas-informate { padding-left: 48px; padding-right: 48px; }
+  .seccion h2 { font-size: 40px; }
+  .banner-seccion-img { max-width: 1084px; }
+
+  .hero-banner-wrap { border-radius: 0 0 20px 20px; }
+  .hero .hero-frase { max-width: 640px; font-size: 19px; }
+
+  /* Tarjetas y opciones en fila */
+  .tarjetas { flex-direction: row; }
+  .tarjetas > * { flex: 1; }
+  .opciones-grandes { flex-direction: row; align-items: stretch; }
+  .opciones-grandes > * { flex: 1; }
+
+  /* Historias en dos columnas */
+  .historias { display: grid; grid-template-columns: 1fr 1fr; column-gap: 48px; }
+  .historias > h2 { grid-column: 1 / -1; }
+
+  /* Videos y redes a lo ancho */
+  .video-landing-grid { flex-direction: row; flex-wrap: wrap; max-width: none; }
+  .video-landing-grid > * { flex: 1 1 300px; }
+  .video-landing-intro { max-width: none; }
+  .redes-grid { max-width: none; }
+  .prevencion-banner-img,
+  .prevencion-video { max-width: 760px; }
+
+  .recursos-grid { grid-template-columns: repeat(3, 1fr); }
+  .libro { max-width: 680px; }
+  .libro-paginas { height: 320px; }
+  .libro-titulo { font-size: 30px; }
+  .libro-portada .libro-titulo { font-size: 34px; }
+  .emergencia { max-width: 920px; }
+  .cilindro-escena { --cara-ancho: 230px; perspective: 1300px; }
+  .visor-tigre { height: 500px; }
+  .pie-contenido { max-width: 720px; }
+}

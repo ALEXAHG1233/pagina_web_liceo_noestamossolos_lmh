@@ -768,3 +768,9 @@ body:has(.chat-container) .whatsapp-flotante {
   letter-spacing: 0.06em;
   vertical-align: 2px;
 }
+
+/* ===== Computadora: chats más anchos ===== */
+@media (min-width: 900px) {
+  .chat-container { max-width: 760px; }
+  .chat-wa { max-width: 860px; }
+}

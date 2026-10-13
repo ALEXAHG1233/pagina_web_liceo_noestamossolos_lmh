@@ -158,3 +158,20 @@
   z-index: 41;
 }
 .mensaje-celebracion.visible { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+/* ===== Computadora (900 px o más) =====
+   Las páginas interiores (herramientas, infórmate, tests, diario...) dejan
+   de verse como una columna de celular: más ancho, tarjetas en columnas y
+   artículos con un ancho cómodo para leer. */
+@media (min-width: 900px) {
+  .diario-body { max-width: 1040px; }
+  .diario-header { padding: 24px 32px; border-radius: 0 0 18px 18px; }
+  .diario-header h1 { font-size: 30px; }
+  .diario-body .tests-lista { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+  .articulo-contenido,
+  .herramienta-contenido { max-width: 760px; }
+  .articulo-contenido p { font-size: 17px; line-height: 1.7; }
+}
+@media (min-width: 1200px) {
+  .diario-body .tests-lista { grid-template-columns: repeat(3, 1fr); }
+}
