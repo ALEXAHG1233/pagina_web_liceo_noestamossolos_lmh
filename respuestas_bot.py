@@ -14,6 +14,8 @@ Cambios respecto a la primera versión:
 import random
 import re
 
+import conversacion_bot
+
 # --- Reemplaza esto con el número real de la psicóloga del liceo ---
 NUMERO_PSICOLOGA = "XXXX-XXXX"
 NOMBRE_PSICOLOGA = "la psicóloga del liceo"
@@ -119,7 +121,7 @@ REGLAS = [
     },
     {
         "patrones": [
-            r"\bestr[eé]s\b", r"\bexamen(es)?\b", r"\bnervios\b", r"\bpresi[oó]n\b",
+            r"\bestr[eé]s\b", r"\bestresad[oa]\b", r"\bex[aá]men(es)?\b", r"\bnervios[oa]?\b", r"\bpresi[oó]n\b",
             r"\bme quedo en blanco\b", r"\bhablar frente a (la )?clase\b",
             r"\bcoraz[oó]n.*r[aá]pido\b", r"\bnudo en la garganta\b",
         ],
@@ -498,6 +500,7 @@ REGLAS = [
         ],
     },
 ]
+conversacion_bot.asignar_ids(REGLAS)
 
 RESPUESTAS_GENERICAS = [
     "Te escucho. Cuéntame un poco más de eso.",
@@ -558,22 +561,33 @@ def generar_respuesta(mensaje, token, personaje=None):
     con_tema = [r for r in coincidentes if r.get("id") not in REGLAS_SOCIALES]
     regla = (con_tema or coincidentes or [None])[0]
 
-    respuesta_base = None
-    if regla is not None:
-        if datos_personaje and regla.get("id") == "saludo":
-            respuesta_base = _elegir_sin_repetir(token, datos_personaje["saludos"])
-        elif datos_personaje and regla.get("id") == "gracias":
-            respuesta_base = _elegir_sin_repetir(token, datos_personaje["despedidas"])
-        else:
-            respuesta_base = _elegir_sin_repetir(token, regla["respuestas"])
+    id_regla = regla.get("id") if regla else None
 
-    if respuesta_base is None:
-        respuesta_base = _elegir_sin_repetir(token, RESPUESTAS_GENERICAS)
+    # Saludo y despedida: no abren ni continúan un tema.
+    if id_regla == "saludo":
+        opciones = datos_personaje["saludos"] if datos_personaje else regla["respuestas"]
+        return _elegir_sin_repetir(token, opciones)
+    if id_regla == "gracias":
+        conversacion_bot.olvidar(token)
+        opciones = datos_personaje["despedidas"] if datos_personaje else regla["respuestas"]
+        return _elegir_sin_repetir(token, opciones)
 
-    # 1 de cada 4 mensajes, agrega una frase extra (ánimo, familia o autocuidado — nunca varias a la vez)
-    if random.random() < 0.25:
+    # Sin tema nuevo: si se venía hablando de algo, se sigue con ese tema
+    # ("desde la semana pasada" después de "estoy estresado por los exámenes").
+    if regla is None:
+        tema = conversacion_bot.tema_activo(token)
+        if tema:
+            return conversacion_bot.responder(token, tema, None, texto, continuacion=True)
+        return _elegir_sin_repetir(token, RESPUESTAS_GENERICAS)
+
+    respuesta_base = _elegir_sin_repetir(token, regla["respuestas"])
+
+    # 1 de cada 4 veces, al empezar un tema, agrega una frase extra (ánimo,
+    # familia o autocuidado, nunca varias a la vez).
+    tema_nuevo = conversacion_bot.tema_activo(token) != id_regla
+    if tema_nuevo and "?" not in respuesta_base and random.random() < 0.25:
         extra_pool = random.choice([FRASES_ANIMO, RECORDATORIOS_FAMILIA, FRASES_AUTOCUIDADO])
         extra = _elegir_sin_repetir(token + "_extra", extra_pool)
         respuesta_base = f"{respuesta_base} {extra}"
 
-    return respuesta_base
+    return conversacion_bot.responder(token, id_regla, respuesta_base, texto)

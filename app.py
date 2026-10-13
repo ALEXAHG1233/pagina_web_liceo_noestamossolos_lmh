@@ -31,6 +31,7 @@ from filtro_riesgo import analizar_riesgo
 from filtro_ofensivo import contiene_lenguaje_ofensivo
 import ia_asistente
 from respuestas_bot import generar_respuesta, RESPUESTA_DERIVACION, PERSONAJES
+import conversacion_bot
 from futuro_bot import generar_mensaje_futuro
 from tests_bot import TESTS, obtener_test, calcular_resultado
 from articulos_bot import ARTICULOS, CATEGORIAS_INFORMATE
@@ -1069,6 +1070,7 @@ def on_mensaje_chatbot(data):
     if analisis["nivel"] in ("medio", "alto", "critico"):
         # El bot NO improvisa: siempre deriva a un humano si hay riesgo
         respuesta = RESPUESTA_DERIVACION
+        conversacion_bot.olvidar(token)  # después no sigue con el tema anterior como si nada
         emit(
             "alerta_riesgo",
             {"token": token, "nivel": analisis["nivel"], "categorias": analisis["categorias"]},
