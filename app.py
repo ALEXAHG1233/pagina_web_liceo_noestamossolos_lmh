@@ -4,6 +4,25 @@ import sqlite3
 import uuid
 from datetime import datetime
 
+
+def cargar_archivo_env(ruta=".env"):
+    """Lee claves del archivo .env (una por línea: NOMBRE=valor) si existe.
+    Sirve en la computadora de desarrollo; en Render las claves se ponen en
+    su panel. Nunca reemplaza una variable que ya esté definida, y el
+    archivo .env no se sube a GitHub (está en .gitignore)."""
+    if not os.path.exists(ruta):
+        return
+    with open(ruta, encoding="utf-8-sig") as archivo:
+        for linea in archivo:
+            linea = linea.strip()
+            if not linea or linea.startswith("#") or "=" not in linea:
+                continue
+            nombre, valor = linea.split("=", 1)
+            os.environ.setdefault(nombre.strip(), valor.strip().strip('"').strip("'"))
+
+
+cargar_archivo_env()
+
 from flask import Flask, render_template, session, redirect, url_for, request, flash, jsonify, send_from_directory
 from flask_socketio import SocketIO, join_room, emit
 from werkzeug.utils import secure_filename
