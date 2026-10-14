@@ -2,11 +2,23 @@
 # Render lee este archivo al crear un "Blueprint" desde el repositorio de GitHub.
 # Las claves secretas NO van aquí: Render las pide en su página al crear el
 # servicio (las marcadas con "sync: false"), y SECRET_KEY la genera sola.
+#
+# Plan GRATIS (para mostrar la página): no pide tarjeta, pero se "duerme"
+# si nadie entra en 15 minutos y los datos (mensajes, diario, reseñas) se
+# borran cada vez que el servicio se reinicia.
+#
+# Para uso real con estudiantes, cambia "plan: free" por "plan: starter"
+# (unos US$7 al mes) y agrega al final del servicio:
+#     disk:
+#       name: datos
+#       mountPath: /var/data
+#       sizeGB: 1
+# y la variable DATA_DIR con el valor /var/data, para que los datos se guarden.
 services:
   - type: web
     name: no-estamos-solos-lmh
     runtime: python
-    plan: starter            # US$7/mes: siempre encendido y con WebSockets para el chat
+    plan: free
     region: oregon
     buildCommand: pip install -r requirements.txt
     # Un solo trabajador con eventlet: necesario para que Socket.IO (el chat
@@ -17,15 +29,9 @@ services:
         value: 3.11.9
       - key: SECRET_KEY
         generateValue: true
-      - key: DATA_DIR
-        value: /var/data      # la base de datos y las fotos se guardan en el disco
       - key: PSICOLOGA_USUARIO
         sync: false
       - key: PSICOLOGA_CLAVE
         sync: false
       - key: ANTHROPIC_API_KEY
         sync: false           # opcional: sin ella el asistente usa respuestas por reglas
-    disk:
-      name: datos
-      mountPath: /var/data
-      sizeGB: 1
