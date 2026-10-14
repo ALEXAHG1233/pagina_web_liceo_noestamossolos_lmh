@@ -1957,3 +1957,52 @@ function activarTextoOndulado() {
 }
 
 document.addEventListener("DOMContentLoaded", activarTextoOndulado);
+
+// Imágenes que se enderezan al bajar (como "container scroll"): cada
+// banner grande va dentro de un marco que entra inclinado hacia atrás
+// (20°) y un poco más grande, y queda derecho cuando llega al centro de
+// la pantalla. Usa las imágenes ya envueltas por activarImagenesVolteo.
+function activarImagenesScroll() {
+  const cajas = Array.from(document.querySelectorAll(".img-volteo"));
+  if (!cajas.length || SIN_MOVIMIENTO) return;
+  const marcos = cajas.map((caja) => {
+    const marco = document.createElement("div");
+    marco.className = "marco-scroll";
+    // El marco toma el lugar (margen y ancho) que tenía la imagen.
+    marco.style.margin = caja.style.margin;
+    marco.style.maxWidth = caja.style.maxWidth;
+    caja.style.margin = "0";
+    caja.parentNode.insertBefore(marco, caja);
+    marco.appendChild(caja);
+    return marco;
+  });
+  const visibles = new Set();
+  const observador = new IntersectionObserver((entradas) => {
+    entradas.forEach((e) => (e.isIntersecting ? visibles.add(e.target) : visibles.delete(e.target)));
+    pintar();
+  });
+  marcos.forEach((m) => observador.observe(m));
+
+  function pintar() {
+    const alto = window.innerHeight;
+    const celular = window.innerWidth < 768;
+    visibles.forEach((m) => {
+      const r = m.getBoundingClientRect();
+      // 0 cuando el marco asoma por abajo, 1 cuando su centro llega al centro.
+      const p = Math.min(Math.max((alto - r.top) / (alto / 2 + r.height / 2), 0), 1);
+      const giro = 20 * (1 - p);
+      const escala = (celular ? 0.9 : 1.05) + (1 - (celular ? 0.9 : 1.05)) * p;
+      m.style.transform = `perspective(1000px) rotateX(${giro.toFixed(2)}deg) scale(${escala.toFixed(3)})`;
+    });
+  }
+
+  let pendiente = false;
+  window.addEventListener("scroll", () => {
+    if (pendiente) return;
+    pendiente = true;
+    requestAnimationFrame(() => { pendiente = false; pintar(); });
+  }, { passive: true });
+  window.addEventListener("resize", pintar);
+}
+
+document.addEventListener("DOMContentLoaded", activarImagenesScroll);

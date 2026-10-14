@@ -2626,3 +2626,15 @@ body:has(.dock) .whatsapp-flotante { bottom: 80px; }
 @media (max-width: 420px) { .macbook-escala { scale: 0.5; } }
 @media (min-width: 640px) { .macbook-escala { scale: 0.85; } }
 @media (min-width: 960px) { .macbook-escala { scale: 1; padding-top: 200px; } }
+
+/* Marco de las imágenes que se enderezan al bajar. */
+.marco-scroll {
+  padding: 6px;
+  border-radius: 24px;
+  border: 3px solid #6c6c6c;
+  background: #222222;
+  box-shadow: 0 0 #0000004d, 0 9px 20px #0000004a, 0 37px 37px #00000042, 0 84px 50px #00000026, 0 149px 60px #0000000a;
+  transform-origin: center top;
+  will-change: transform;
+}
+.marco-scroll > .img-volteo { border-radius: 16px; }
