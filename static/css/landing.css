@@ -1506,53 +1506,88 @@ body:has(.dock) .whatsapp-flotante { bottom: 80px; }
 }
 .morph-filtro { position: absolute; width: 0; height: 0; }
 
-/* ---------- Carrusel en cilindro 3D (debajo de la portada) ----------
-   Las imágenes se colocan alrededor de un cilindro (rotateY + translateZ,
-   radio calculado en common.js) y el anillo gira solo; se puede
-   arrastrar con el dedo o el mouse. */
-.carrusel-cilindro {
-  padding: 28px 0 8px;
-  overflow: hidden;
-}
-.cilindro-escena {
-  --cara-ancho: 150px;
+/* ---------- Carrusel en perspectiva (debajo de la portada) ----------
+   La imagen activa queda al centro, de frente; las de los lados se
+   inclinan hacia atrás en 3D y se achican. Las posiciones las pone
+   common.js; aquí solo el tamaño, la perspectiva y la transición. */
+.carrusel-perspectiva { padding: 28px 0 10px; overflow: hidden; }
+.perspectiva-escena {
+  --slide-ancho: 230px;
   position: relative;
-  height: calc(var(--cara-ancho) * 0.5625 + 40px);
-  perspective: 900px;
+  height: calc(var(--slide-ancho) * 0.5625 + 54px);
+  perspective: 1000px;
   touch-action: pan-y;
-  cursor: grab;
+  user-select: none;
 }
-.cilindro-escena.arrastrando { cursor: grabbing; }
-.cilindro-anillo {
+.perspectiva-slide {
   position: absolute;
-  top: 20px;
+  top: 0;
   left: 50%;
-  width: var(--cara-ancho);
-  height: calc(var(--cara-ancho) * 0.5625);
-  margin-left: calc(var(--cara-ancho) / -2);
-  transform-style: preserve-3d;
+  width: var(--slide-ancho);
+  margin-left: calc(var(--slide-ancho) / -2);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  text-decoration: none;
+  color: var(--blanco);
+  transition: transform 650ms var(--ease-salida), opacity 450ms ease, filter 450ms ease;
+  will-change: transform;
 }
-.cilindro-cara {
-  position: absolute;
-  inset: 0;
+.perspectiva-foto {
   display: block;
-  border-radius: 10px;
+  aspect-ratio: 16 / 9;
+  border-radius: 14px;
   overflow: hidden;
   border: 2px solid var(--dorado);
-  box-shadow: 0 10px 24px -10px rgba(0, 0, 0, 0.6);
-  backface-visibility: hidden;
+  box-shadow: 0 18px 34px -14px rgba(0, 0, 0, 0.7);
 }
-.cilindro-cara img {
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  user-select: none;
-  -webkit-user-drag: none;
+.perspectiva-foto img { display: block; width: 100%; height: 100%; object-fit: cover; -webkit-user-drag: none; }
+.perspectiva-titulo {
+  font-size: 16px;
+  font-weight: 700;
+  text-align: center;
+  line-height: 1.25;
+  opacity: 0;
+  transition: opacity 300ms ease;
 }
-.cilindro-cara:focus-visible { outline: 3px solid var(--amarillo); outline-offset: 2px; }
+.perspectiva-slide.activo .perspectiva-titulo { opacity: 1; }
+.perspectiva-slide.activo .perspectiva-foto { border-color: var(--amarillo); }
+.perspectiva-slide:focus-visible { outline: none; }
+.perspectiva-slide:focus-visible .perspectiva-foto { outline: 3px solid var(--amarillo); outline-offset: 3px; }
+
+.perspectiva-controles { display: flex; align-items: center; justify-content: center; gap: 14px; margin-top: 6px; }
+.perspectiva-flecha {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  border: 1px solid var(--dorado);
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--blanco);
+  font-size: 26px;
+  line-height: 1;
+  cursor: pointer;
+}
+.perspectiva-flecha:hover { background: var(--dorado); color: var(--verde-oscuro); }
+.perspectiva-puntos { display: flex; gap: 6px; }
+.perspectiva-punto {
+  width: 9px;
+  height: 9px;
+  padding: 0;
+  border: none;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.35);
+  cursor: pointer;
+  transition: width 300ms var(--ease-salida), background-color 200ms ease;
+}
+.perspectiva-punto.activo { width: 24px; background: var(--amarillo); }
 @media (min-width: 600px) {
-  .cilindro-escena { --cara-ancho: 190px; perspective: 1100px; }
+  .perspectiva-escena { --slide-ancho: 300px; perspective: 1200px; }
+}
+@media (min-width: 960px) {
+  .perspectiva-escena { --slide-ancho: 380px; perspective: 1500px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .perspectiva-slide { transition: none; }
 }
 
 /* ---------- "Conoce a Tigrito" (visor 3D) ----------
@@ -1930,7 +1965,168 @@ body:has(.dock) .whatsapp-flotante { bottom: 80px; }
   .libro-titulo { font-size: 30px; }
   .libro-portada .libro-titulo { font-size: 34px; }
   .emergencia { max-width: 920px; }
-  .cilindro-escena { --cara-ancho: 230px; perspective: 1300px; }
   .visor-tigre { height: 500px; }
   .pie-contenido { max-width: 720px; }
+}
+
+/* Contadores animados de la portada (cuentan desde 0 al aparecer). */
+.contadores-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+.contador {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 18px 12px;
+  border-radius: 18px;
+  background: var(--tarjeta-fondo);
+  border: 1px solid rgba(201, 162, 39, 0.55);
+  box-shadow: var(--sombra-suave);
+  text-align: center;
+}
+.contador-numero {
+  font-family: "Fraunces", Georgia, serif;
+  font-size: clamp(34px, 9vw, 52px);
+  font-weight: 700;
+  line-height: 1;
+  color: var(--amarillo);
+  font-variant-numeric: tabular-nums;
+}
+.contador-texto { font-size: 15px; line-height: 1.35; color: var(--blanco-suave); }
+@media (min-width: 760px) {
+  .contadores-grid { grid-template-columns: repeat(4, 1fr); }
+}
+
+/* ---------- Bienvenida que se disuelve al bajar ----------
+   La sección mide más que la pantalla; su contenido se queda fijo
+   (sticky) mientras bajas, y la portada de bienvenida (un canvas) se
+   deshace como arena dorada hasta dejar ver el banner de abajo. */
+.bienvenida { position: relative; height: 210vh; background: var(--verde-oscuro); }
+.bienvenida-pegajoso {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  height: 100svh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  padding: 70px 14px 20px;
+  box-sizing: border-box;
+}
+.bienvenida-marco {
+  position: relative;
+  width: min(100%, calc((100svh - 140px) * 16 / 9));
+  aspect-ratio: 16 / 9;
+  border-radius: 18px;
+  overflow: hidden;
+  border: 2px solid var(--dorado);
+  box-shadow: 0 24px 60px -20px rgba(0, 0, 0, 0.8);
+  background: var(--verde-oscuro);
+}
+.bienvenida-fondo,
+.bienvenida-frente { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.bienvenida-fondo { object-fit: cover; }
+.bienvenida-pista {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--blanco-suave);
+  transition: opacity 300ms ease;
+}
+.bienvenida-pista span { display: inline-block; animation: pistaBajar 1.4s ease-in-out infinite; }
+@keyframes pistaBajar { 50% { translate: 0 5px; } }
+.bienvenida.revelada .bienvenida-pista { opacity: 0; }
+/* Sin animaciones (o sin JavaScript): se ve el banner directamente. */
+.bienvenida:not(.lista) { height: auto; }
+.bienvenida:not(.lista) .bienvenida-pegajoso { position: static; height: auto; padding-top: 14px; }
+.bienvenida:not(.lista) .bienvenida-frente,
+.bienvenida:not(.lista) .bienvenida-pista { display: none; }
+
+/* ---------- Teclado que escribe solo ("¿Cómo funciona?") ----------
+   Las teclas se hunden mientras el texto aparece en la pantalla de
+   arriba, como si alguien escribiera en el chat anónimo. */
+.teclado-demo {
+  --escala: 0.75;
+  margin: 18px auto 0;
+  max-width: 560px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.teclado-pantalla {
+  border-radius: 14px;
+  background: #0b1a10;
+  border: 2px solid var(--dorado);
+  box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.6), var(--sombra-media);
+  overflow: hidden;
+}
+.pantalla-barra {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  background: rgba(255, 255, 255, 0.06);
+  font-size: 13px;
+  color: var(--blanco-suave);
+}
+.pantalla-barra i { width: 10px; height: 10px; border-radius: 50%; background: #e66a6a; }
+.pantalla-barra i:nth-child(2) { background: #ffc83d; }
+.pantalla-barra i:nth-child(3) { background: #5cc47c; }
+.pantalla-barra span { margin-left: 6px; font-weight: 600; }
+.pantalla-texto {
+  margin: 0;
+  min-height: 3.2em;
+  padding: 14px 16px 16px;
+  font-family: "Courier New", ui-monospace, monospace;
+  font-size: 18px;
+  line-height: 1.5;
+  color: #9be3b0;
+}
+.pantalla-cursor {
+  display: inline-block;
+  width: 0.55em;
+  height: 1.1em;
+  margin-left: 2px;
+  vertical-align: -0.15em;
+  background: var(--amarillo);
+  animation: cursorParpadeo 1s steps(1) infinite;
+}
+@keyframes cursorParpadeo { 50% { opacity: 0; } }
+
+.teclado {
+  display: flex;
+  flex-direction: column;
+  gap: calc(6px * var(--escala));
+  padding: calc(14px * var(--escala));
+  border-radius: 16px;
+  background: linear-gradient(180deg, #2b2f2c, #1b1e1c);
+  box-shadow: 0 16px 30px -12px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+.teclado-fila { display: flex; gap: calc(6px * var(--escala)); justify-content: center; }
+.tecla {
+  flex: 1 1 0;
+  min-width: 0;
+  height: calc(46px * var(--escala));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: calc(8px * var(--escala));
+  background: linear-gradient(180deg, #f4f1e8, #ddd8ca);
+  color: #1f2a22;
+  font-size: calc(17px * var(--escala));
+  font-weight: 700;
+  text-transform: uppercase;
+  box-shadow: 0 calc(4px * var(--escala)) 0 #a39d8c, 0 calc(5px * var(--escala)) 6px rgba(0, 0, 0, 0.4);
+  transition: translate 70ms ease, box-shadow 70ms ease, background 120ms ease;
+}
+.tecla-ancha { flex-grow: 1.6; font-size: calc(13px * var(--escala)); }
+.tecla-espacio { flex-grow: 6; }
+.tecla.presionada {
+  translate: 0 calc(4px * var(--escala));
+  background: linear-gradient(180deg, #ffd66b, #ffc83d);
+  box-shadow: 0 0 0 #a39d8c, 0 0 14px rgba(255, 200, 61, 0.7);
+}
+@media (min-width: 600px) {
+  .teclado-demo { --escala: 1; }
 }

@@ -224,6 +224,26 @@ def obtener_estadisticas():
     }
 
 
+def obtener_contadores_portada():
+    """Números reales para los contadores animados de la portada. Solo se
+    cuentan registros anónimos: nunca se muestra quién hizo qué."""
+    conn = sqlite3.connect(DB_PATH)
+    cur = conn.cursor()
+    def contar(sql):
+        cur.execute(sql)
+        return cur.fetchone()[0] or 0
+    datos = {
+        "visitas": contar("SELECT COUNT(*) FROM visitas"),
+        "conversaciones": contar("SELECT COUNT(DISTINCT token) FROM mensajes WHERE emisor = 'estudiante'"),
+        "autoevaluaciones": contar("SELECT COUNT(*) FROM resultados_test"),
+        "participaciones": contar("SELECT COUNT(*) FROM animos")
+        + contar("SELECT COUNT(*) FROM muro_posts")
+        + contar("SELECT COUNT(*) FROM resenas"),
+    }
+    conn.close()
+    return datos
+
+
 def obtener_historial(token, limite=20):
     """Últimos mensajes de una conversación, del más viejo al más nuevo,
     como lista de (emisor, contenido). Se usa para que la IA recuerde el chat."""
@@ -481,6 +501,7 @@ def index():
         video_prevencion_id=VIDEO_PREVENCION_SUICIDIO_ID,
         recursos_psicologia=recursos,
         tests=TESTS,
+        contadores=obtener_contadores_portada(),
         indice_busqueda=construir_indice_busqueda(),
         temas_informate=[
             {

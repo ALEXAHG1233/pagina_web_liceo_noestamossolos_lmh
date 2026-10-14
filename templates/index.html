@@ -20,6 +20,7 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='css/musica.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/video.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/tests.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/pop.css') }}">
 </head>
 {% from "_tests_tarjetas.html" import tarjetas_tests %}
 <body class="landing-body">
@@ -64,14 +65,21 @@
     </div>
   </nav>
 
+  <section class="bienvenida" data-disolver aria-label="Bienvenida">
+    <div class="bienvenida-pegajoso">
+      <div class="bienvenida-marco">
+        <img class="bienvenida-fondo"
+          src="{{ url_for('static', filename='images/banner_no_estas_solo.webp') }}"
+          alt="No Estás Solo — Programa Psicopedagógico, Liceo Militar de Honduras">
+        <canvas class="bienvenida-frente" aria-hidden="true"
+          data-escudo="{{ url_for('static', filename='images/escudo_liceo.png') }}"></canvas>
+      </div>
+      <p class="bienvenida-pista" aria-hidden="true">Baja para entrar <span>↓</span></p>
+    </div>
+  </section>
+
   <section class="hero hero-con-banner">
     <h1 class="sr-only">No Estás Solo LMH — Programa de Apoyo Psicopedagógico, Liceo Militar de Honduras</h1>
-    <div class="hero-banner-wrap">
-      <img
-        src="{{ url_for('static', filename='images/banner_no_estas_solo.webp') }}"
-        alt="No Estás Solo — Programa Psicopedagógico, Liceo Militar de Honduras"
-        class="hero-banner-img">
-    </div>
     <div class="morph" data-palabras="ESCUCHA|APOYO|ESPERANZA" data-intervalo="2500">
       <p class="sr-only">Escucha, apoyo y esperanza. No estamos solos LMH.</p>
       <div class="morph-palabras" aria-hidden="true">
@@ -121,15 +129,39 @@
     ("banner_psicopedagogia_canva.png", "Programa psicopedagógico", "#recursos"),
     ("banner_por_que_hablar.webp", "¿Por qué hablar ayuda?", url_for('chatbot')),
   ] %}
-  <section class="carrusel-cilindro" aria-label="Recorre las secciones de la página">
-    <div class="cilindro-escena">
-      <div class="cilindro-anillo">
-        {% for imagen, texto, enlace in carrusel %}
-          <a class="cilindro-cara" href="{{ enlace }}">
-            <img src="{{ url_for('static', filename='images/' ~ imagen) }}" alt="{{ texto }}" loading="lazy" draggable="false">
-          </a>
-        {% endfor %}
-      </div>
+  <section class="carrusel-perspectiva" aria-roledescription="carrusel" aria-label="Recorre las secciones de la página">
+    <div class="perspectiva-escena" data-perspectiva data-activo="2">
+      {% for imagen, texto, enlace in carrusel %}
+        <a class="perspectiva-slide" href="{{ enlace }}" aria-label="{{ texto }} ({{ loop.index }} de {{ carrusel|length }})">
+          <span class="perspectiva-foto">
+            <img src="{{ url_for('static', filename='images/' ~ imagen) }}" alt="" loading="lazy" draggable="false">
+          </span>
+          <span class="perspectiva-titulo">{{ texto }}</span>
+        </a>
+      {% endfor %}
+    </div>
+    <div class="perspectiva-controles">
+      <button type="button" class="perspectiva-flecha" data-perspectiva-anterior aria-label="Anterior">‹</button>
+      <div class="perspectiva-puntos" data-perspectiva-puntos></div>
+      <button type="button" class="perspectiva-flecha" data-perspectiva-siguiente aria-label="Siguiente">›</button>
+    </div>
+  </section>
+
+  <section class="seccion contadores reveal" aria-labelledby="titulo-contadores">
+    <h2 id="titulo-contadores">Juntos en esta comunidad</h2>
+    <p class="seccion-subtitulo">Números reales de la página, contados de forma anónima.</p>
+    <div class="contadores-grid">
+      {% for valor, texto in [
+        (contadores.visitas, "visitas a la página"),
+        (contadores.conversaciones, "conversaciones de apoyo"),
+        (contadores.autoevaluaciones, "autoevaluaciones hechas"),
+        (contadores.participaciones, "registros de ánimo, mensajes del muro y reseñas"),
+      ] %}
+        <div class="contador">
+          <span class="contador-numero" data-contar="{{ valor }}" data-duracion="2">{{ "{:,}".format(valor) }}</span>
+          <span class="contador-texto">{{ texto }}</span>
+        </div>
+      {% endfor %}
     </div>
   </section>
 
@@ -219,6 +251,15 @@
         <li><strong>Elige con quién hablar.</strong> Un asistente disponible siempre, o la psicóloga del liceo.</li>
         <li><strong>Habla con confianza.</strong> Es un espacio privado, a tu ritmo.</li>
       </ol>
+    </div>
+    <div class="teclado-demo" data-teclado data-velocidad="50,130"
+      data-frases="No necesitas registrarte ni dar tu nombre.|Escribe lo que sientes, sin miedo: nadie sabe quién eres.|Elige con quién hablar: Sami, Leo, Nia o la psicóloga.|Aquí no estás solo/a.">
+      <div class="teclado-pantalla">
+        <div class="pantalla-barra" aria-hidden="true"><i></i><i></i><i></i><span>Chat anónimo</span></div>
+        <p class="pantalla-texto"><span data-teclado-texto></span><span class="pantalla-cursor" aria-hidden="true"></span></p>
+        <p class="sr-only">No necesitas registrarte ni dar tu nombre. Escribe lo que sientes: nadie sabe quién eres. Elige con quién hablar.</p>
+      </div>
+      <div class="teclado" data-teclado-teclas aria-hidden="true"></div>
     </div>
   </section>
 

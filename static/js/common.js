@@ -516,86 +516,98 @@ function activarMorphTexto() {
 
 document.addEventListener("DOMContentLoaded", activarMorphTexto);
 
-// Carrusel en cilindro 3D. Coloca cada imagen alrededor de un cilindro,
-// lo hace girar despacio y deja arrastrarlo. Se detiene al pasar el
-// mouse o enfocar una imagen con el teclado, para poder hacer clic.
-const CILINDRO_VELOCIDAD = 9; // grados por segundo
+// Carrusel en perspectiva. La imagen activa va al centro y de frente; las
+// demás se inclinan hacia atrás a los lados. Se cambia con las flechas, los
+// puntos, el teclado, deslizando el dedo o tocando una imagen de los lados.
+// Tocar la imagen del centro abre su sección.
+function activarCarruselPerspectiva() {
+  document.querySelectorAll("[data-perspectiva]").forEach((escena) => {
+    const seccion = escena.closest(".carrusel-perspectiva") || escena.parentElement;
+    const slides = Array.from(escena.querySelectorAll(".perspectiva-slide"));
+    const n = slides.length;
+    if (!n) return;
+    const puntosCaja = seccion.querySelector("[data-perspectiva-puntos]");
+    let activo = Math.min(Number(escena.dataset.activo) || 0, n - 1);
 
-function activarCarruselCilindro() {
-  document.querySelectorAll(".cilindro-escena").forEach((escena) => {
-    const anillo = escena.querySelector(".cilindro-anillo");
-    const caras = Array.from(anillo.children);
-    const n = caras.length;
-    if (n < 3) return;
-    const paso = 360 / n;
-    let radio = 0;
-    let angulo = 0;
-    let pausado = false;
-    let arrastre = null;
+    const puntos = slides.map((slide, i) => {
+      const punto = document.createElement("button");
+      punto.type = "button";
+      punto.className = "perspectiva-punto";
+      punto.setAttribute("aria-label", `Ir a ${slide.querySelector(".perspectiva-titulo").textContent}`);
+      punto.addEventListener("click", () => ir(i));
+      if (puntosCaja) puntosCaja.appendChild(punto);
+      return punto;
+    });
 
-    function colocar() {
-      const ancho = caras[0].offsetWidth;
-      radio = Math.round(ancho / 2 / Math.tan(Math.PI / n)) + 14;
-      caras.forEach((cara, i) => {
-        cara.style.transform = `rotateY(${i * paso}deg) translateZ(${radio}px)`;
+    function pintar() {
+      const ancho = slides[0].offsetWidth;
+      slides.forEach((slide, i) => {
+        // Distancia más corta, dando la vuelta (el carrusel es circular).
+        let d = i - activo;
+        if (d > n / 2) d -= n;
+        if (d < -n / 2) d += n;
+        const lado = Math.sign(d);
+        const lejos = Math.abs(d);
+        const x = lejos ? lado * (ancho * 0.62 + (lejos - 1) * ancho * 0.32) : 0;
+        const giro = -lado * Math.min(lejos, 1) * 42;
+        const escala = lejos ? Math.max(0.82 - (lejos - 1) * 0.1, 0.5) : 1;
+        slide.style.transform = `translateX(${x}px) translateZ(${-lejos * 120}px) rotateY(${giro}deg) scale(${escala})`;
+        slide.style.zIndex = String(n - lejos);
+        slide.style.opacity = lejos > 2 ? "0" : String(1 - lejos * 0.18);
+        slide.style.filter = lejos ? `brightness(${1 - lejos * 0.18})` : "none";
+        slide.style.pointerEvents = lejos > 2 ? "none" : "auto";
+        slide.classList.toggle("activo", lejos === 0);
+        slide.tabIndex = lejos === 0 ? 0 : -1;
+        puntos[i].classList.toggle("activo", lejos === 0);
+        puntos[i].setAttribute("aria-current", lejos === 0 ? "true" : "false");
       });
+    }
+
+    function ir(i) {
+      activo = (i + n) % n;
       pintar();
     }
 
-    function pintar() {
-      anillo.style.transform = `translateZ(${-radio}px) rotateY(${angulo}deg)`;
-    }
-
-    let anterior = performance.now();
-    function cuadro(ahora) {
-      const dt = Math.min((ahora - anterior) / 1000, 0.1);
-      anterior = ahora;
-      if (!pausado && !arrastre && !SIN_MOVIMIENTO) {
-        angulo -= CILINDRO_VELOCIDAD * dt;
-        pintar();
-      }
-      requestAnimationFrame(cuadro);
-    }
-
-    escena.addEventListener("pointerenter", (e) => { if (e.pointerType === "mouse") pausado = true; });
-    escena.addEventListener("pointerleave", () => { pausado = false; });
-    escena.addEventListener("focusin", () => { pausado = true; });
-    escena.addEventListener("focusout", () => { pausado = false; });
-
-    escena.addEventListener("pointerdown", (e) => {
-      arrastre = { x: e.clientX, angulo, movido: false };
-    });
-    window.addEventListener("pointermove", (e) => {
-      if (!arrastre) return;
-      const dx = e.clientX - arrastre.x;
-      if (Math.abs(dx) > 5 && !arrastre.movido) {
-        arrastre.movido = true;
-        escena.classList.add("arrastrando");
-      }
-      if (arrastre.movido) {
-        angulo = arrastre.angulo + dx * 0.35;
-        pintar();
-      }
-    });
-    window.addEventListener("pointerup", () => {
-      if (!arrastre) return;
-      // Si fue un arrastre, el clic que viene después no debe abrir la imagen.
-      if (arrastre.movido) {
-        const bloquear = (e) => e.preventDefault();
-        escena.addEventListener("click", bloquear, { capture: true, once: true });
-        setTimeout(() => escena.removeEventListener("click", bloquear, { capture: true }), 0);
-      }
-      arrastre = null;
-      escena.classList.remove("arrastrando");
+    seccion.querySelector("[data-perspectiva-anterior]")?.addEventListener("click", () => ir(activo - 1));
+    seccion.querySelector("[data-perspectiva-siguiente]")?.addEventListener("click", () => ir(activo + 1));
+    seccion.addEventListener("keydown", (e) => {
+      if (e.key === "ArrowLeft") { e.preventDefault(); ir(activo - 1); }
+      if (e.key === "ArrowRight") { e.preventDefault(); ir(activo + 1); }
     });
 
-    colocar();
-    window.addEventListener("resize", colocar);
-    requestAnimationFrame(cuadro);
+    // Tocar una imagen de los lados la trae al centro (no abre el enlace).
+    slides.forEach((slide, i) => {
+      slide.addEventListener("click", (e) => {
+        if (i !== activo) { e.preventDefault(); ir(i); }
+      });
+    });
+
+    // Deslizar con el dedo o arrastrar con el mouse.
+    let inicioX = null;
+    let movido = false;
+    escena.addEventListener("pointerdown", (e) => { inicioX = e.clientX; movido = false; });
+    escena.addEventListener("pointermove", (e) => {
+      if (inicioX === null) return;
+      if (Math.abs(e.clientX - inicioX) > 40) {
+        ir(activo + (e.clientX < inicioX ? 1 : -1));
+        inicioX = e.clientX;
+        movido = true;
+      }
+    });
+    const soltar = () => { inicioX = null; };
+    escena.addEventListener("pointerup", soltar);
+    escena.addEventListener("pointercancel", soltar);
+    escena.addEventListener("pointerleave", soltar);
+    escena.addEventListener("click", (e) => {
+      if (movido) { e.preventDefault(); e.stopPropagation(); movido = false; }
+    }, { capture: true });
+
+    pintar();
+    window.addEventListener("resize", pintar);
   });
 }
 
-document.addEventListener("DOMContentLoaded", activarCarruselCilindro);
+document.addEventListener("DOMContentLoaded", activarCarruselPerspectiva);
 
 // Buscador de la portada: botón de lupa en el menú o Ctrl+K / ⌘K.
 // Busca en el índice que manda el servidor (secciones, artículos,
@@ -1202,3 +1214,264 @@ window.addEventListener("load", () => {
   try { destino = document.getElementById(decodeURIComponent(location.hash.slice(1))); } catch (e) {}
   if (destino) destino.scrollIntoView({ block: "start" });
 });
+
+// Contadores de la portada: cuentan desde 0 hasta el número real cuando
+// aparecen en pantalla (data-contar = número final, data-duracion = segundos).
+function activarContadores() {
+  const numeros = document.querySelectorAll("[data-contar]");
+  if (!numeros.length) return;
+  const formato = new Intl.NumberFormat("es-HN");
+  const animar = (el) => {
+    const final = Number(el.dataset.contar) || 0;
+    const duracion = (Number(el.dataset.duracion) || 2) * 1000;
+    const inicio = performance.now();
+    const paso = (ahora) => {
+      const avance = Math.min((ahora - inicio) / duracion, 1);
+      const suave = 1 - Math.pow(1 - avance, 3);
+      el.textContent = formato.format(Math.round(final * suave));
+      if (avance < 1) requestAnimationFrame(paso);
+    };
+    requestAnimationFrame(paso);
+  };
+  if (SIN_MOVIMIENTO || !("IntersectionObserver" in window)) {
+    numeros.forEach((el) => { el.textContent = formato.format(Number(el.dataset.contar) || 0); });
+    return;
+  }
+  const observador = new IntersectionObserver((entradas) => {
+    entradas.forEach((entrada) => {
+      if (!entrada.isIntersecting) return;
+      animar(entrada.target);
+      observador.unobserve(entrada.target);
+    });
+  }, { threshold: 0.4 });
+  numeros.forEach((el) => { el.textContent = "0"; observador.observe(el); });
+}
+
+document.addEventListener("DOMContentLoaded", activarContadores);
+
+
+// Bienvenida de la portada: una portada con el escudo y "Bienvenido/a"
+// dibujada en un canvas, que se disuelve con ruido (como arena, con borde
+// dorado) según cuánto bajes, dejando ver el banner que está debajo.
+function activarBienvenidaDisuelta() {
+  const seccion = document.querySelector("[data-disolver]");
+  if (!seccion || SIN_MOVIMIENTO) return;
+  const lienzo = seccion.querySelector(".bienvenida-frente");
+  const marco = seccion.querySelector(".bienvenida-marco");
+  const ctx = lienzo.getContext("2d");
+  if (!ctx) return;
+
+  // Ruido suave (value noise de 3 capas) en baja resolución.
+  const RW = 192, RH = 108;
+  let semilla = 7;
+  const azar = () => ((semilla = (semilla * 16807) % 2147483647) / 2147483647);
+  const ruido = new Float32Array(RW * RH);
+  [[12, 0.55], [24, 0.3], [48, 0.15]].forEach(([celda, peso]) => {
+    const gw = Math.ceil(RW / celda) + 2, gh = Math.ceil(RH / celda) + 2;
+    const rejilla = Array.from({ length: gw * gh }, azar);
+    for (let y = 0; y < RH; y++) {
+      for (let x = 0; x < RW; x++) {
+        const fx = x / celda, fy = y / celda;
+        const x0 = Math.floor(fx), y0 = Math.floor(fy);
+        const tx = fx - x0, ty = fy - y0;
+        const sx = tx * tx * (3 - 2 * tx), sy = ty * ty * (3 - 2 * ty);
+        const v = (i, j) => rejilla[(y0 + j) * gw + (x0 + i)];
+        const a = v(0, 0) + (v(1, 0) - v(0, 0)) * sx;
+        const b = v(0, 1) + (v(1, 1) - v(0, 1)) * sx;
+        ruido[y * RW + x] += (a + (b - a) * sy) * peso;
+      }
+    }
+  });
+
+  const mascara = document.createElement("canvas");
+  mascara.width = RW; mascara.height = RH;
+  const mctx = mascara.getContext("2d");
+  const datosMascara = mctx.createImageData(RW, RH);
+  const brillo = document.createElement("canvas");
+  brillo.width = RW; brillo.height = RH;
+  const bctx = brillo.getContext("2d");
+  const datosBrillo = bctx.createImageData(RW, RH);
+
+  // La portada de bienvenida se dibuja una vez en otro canvas.
+  const frente = document.createElement("canvas");
+  const escudo = new Image();
+  escudo.src = lienzo.dataset.escudo;
+
+  function dibujarFrente() {
+    const w = lienzo.width, h = lienzo.height;
+    frente.width = w; frente.height = h;
+    const f = frente.getContext("2d");
+    const fondo = f.createRadialGradient(w / 2, h * 0.4, 0, w / 2, h * 0.4, w * 0.75);
+    fondo.addColorStop(0, "#2e6b41");
+    fondo.addColorStop(1, "#0d2415");
+    f.fillStyle = fondo;
+    f.fillRect(0, 0, w, h);
+    const lado = h * 0.38;
+    if (escudo.complete && escudo.naturalWidth) {
+      // El escudo viene en un cuadro blanco: se recorta en círculo con borde dorado.
+      const cx = w / 2, cy = h * 0.1 + lado / 2, r = lado / 2;
+      f.save();
+      f.beginPath();
+      f.arc(cx, cy, r, 0, Math.PI * 2);
+      f.clip();
+      const escala = Math.max(lado / escudo.naturalWidth, lado / escudo.naturalHeight) * 1.08;
+      const ancho = escudo.naturalWidth * escala, alto = escudo.naturalHeight * escala;
+      f.drawImage(escudo, cx - ancho / 2, cy - alto / 2, ancho, alto);
+      f.restore();
+      f.strokeStyle = "#c9a227";
+      f.lineWidth = Math.max(2, h * 0.008);
+      f.beginPath();
+      f.arc(cx, cy, r, 0, Math.PI * 2);
+      f.stroke();
+    }
+    f.textAlign = "center";
+    f.fillStyle = "#ffc83d";
+    f.font = `700 ${Math.round(h * 0.13)}px Fraunces, Georgia, serif`;
+    f.fillText("Bienvenido/a", w / 2, h * 0.66);
+    f.fillStyle = "#ffffff";
+    f.font = `600 ${Math.round(h * 0.06)}px Montserrat, Arial, sans-serif`;
+    f.fillText("a No estamos solos LMH", w / 2, h * 0.79);
+    f.fillStyle = "rgba(255, 255, 255, 0.75)";
+    f.font = `500 ${Math.round(h * 0.042)}px Montserrat, Arial, sans-serif`;
+    f.fillText("Un espacio seguro y anónimo del Liceo Militar de Honduras", w / 2, h * 0.88);
+  }
+
+  function medir() {
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    lienzo.width = Math.min(Math.round(marco.clientWidth * dpr), 2000);
+    lienzo.height = Math.round(lienzo.width * 9 / 16);
+    dibujarFrente();
+    pintar();
+  }
+
+  function pintar() {
+    const caja = seccion.getBoundingClientRect();
+    const recorrido = caja.height - window.innerHeight;
+    const avance = recorrido > 0 ? Math.min(Math.max(-caja.top / recorrido, 0), 1) : 0;
+    const umbral = avance * 1.25 - 0.1;   // de -0.1 (entero) a 1.15 (desaparecido)
+    const md = datosMascara.data, bd = datosBrillo.data;
+    for (let i = 0; i < RW * RH; i++) {
+      const d = ruido[i] - umbral;
+      md[i * 4 + 3] = d <= 0 ? 0 : d >= 0.03 ? 255 : (d / 0.03) * 255;
+      const g = d > -0.015 && d < 0.05 ? 1 - Math.abs(d - 0.015) / 0.035 : 0;
+      bd[i * 4] = 255; bd[i * 4 + 1] = 200; bd[i * 4 + 2] = 61;
+      bd[i * 4 + 3] = Math.max(g, 0) * 255;
+    }
+    mctx.putImageData(datosMascara, 0, 0);
+    bctx.putImageData(datosBrillo, 0, 0);
+
+    const w = lienzo.width, h = lienzo.height;
+    ctx.globalCompositeOperation = "source-over";
+    ctx.clearRect(0, 0, w, h);
+    if (umbral < 1.1) {
+      ctx.drawImage(frente, 0, 0);
+      ctx.globalCompositeOperation = "destination-in";
+      ctx.imageSmoothingEnabled = true;
+      ctx.drawImage(mascara, 0, 0, w, h);
+      ctx.globalCompositeOperation = "lighter";
+      ctx.drawImage(brillo, 0, 0, w, h);
+      ctx.globalCompositeOperation = "source-over";
+    }
+    seccion.classList.toggle("revelada", avance > 0.85);
+  }
+
+  let pendiente = false;
+  window.addEventListener("scroll", () => {
+    if (pendiente) return;
+    pendiente = true;
+    requestAnimationFrame(() => { pendiente = false; pintar(); });
+  }, { passive: true });
+  window.addEventListener("resize", medir);
+  escudo.addEventListener("load", medir);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(medir);
+  seccion.classList.add("lista");
+  medir();
+}
+
+document.addEventListener("DOMContentLoaded", activarBienvenidaDisuelta);
+
+
+// Teclado que escribe solo: arma las teclas, escribe cada frase letra por
+// letra (con una velocidad al azar entre los dos números de
+// data-velocidad, en milisegundos) y hunde la tecla de cada letra.
+const FILAS_TECLADO = [
+  ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"],
+  ["q", "w", "e", "r", "t", "y", "u", "i", "o", "p"],
+  ["a", "s", "d", "f", "g", "h", "j", "k", "l", "ñ"],
+  ["shift", "z", "x", "c", "v", "b", "n", "m", ",", "."],
+  ["?", "espacio", ":", "/"],
+];
+
+function activarTecladoEscritor() {
+  document.querySelectorAll("[data-teclado]").forEach((demo) => {
+    const caja = demo.querySelector("[data-teclado-teclas]");
+    const salida = demo.querySelector("[data-teclado-texto]");
+    const frases = (demo.dataset.frases || "").split("|").filter(Boolean);
+    const [lento, rapido] = (demo.dataset.velocidad || "50,130").split(",").map(Number);
+    const teclas = {};
+
+    FILAS_TECLADO.forEach((fila) => {
+      const div = document.createElement("div");
+      div.className = "teclado-fila";
+      fila.forEach((clave) => {
+        const tecla = document.createElement("span");
+        tecla.className = "tecla";
+        if (clave === "shift") { tecla.classList.add("tecla-ancha"); tecla.textContent = "⇧"; }
+        else if (clave === "espacio") { tecla.classList.add("tecla-espacio"); tecla.textContent = ""; }
+        else tecla.textContent = clave;
+        teclas[clave] = tecla;
+        div.appendChild(tecla);
+      });
+      caja.appendChild(div);
+    });
+
+    if (!frases.length) return;
+    if (SIN_MOVIMIENTO) { salida.textContent = frases[0]; return; }
+
+    // á → a, ¿ → ?, mayúscula → shift + letra.
+    const teclaDe = (letra) => {
+      if (letra === " ") return ["espacio"];
+      if (letra === "¿") return ["?"];
+      const base = letra === "ñ" || letra === "Ñ" ? letra : letra.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+      const minus = base.toLowerCase();
+      if (!teclas[minus]) return [];
+      return base !== minus ? ["shift", minus] : [minus];
+    };
+    const presionar = (claves) => {
+      claves.forEach((c) => {
+        const t = teclas[c];
+        if (!t) return;
+        t.classList.add("presionada");
+        setTimeout(() => t.classList.remove("presionada"), 110);
+      });
+    };
+    const esperar = (ms) => new Promise((r) => setTimeout(r, ms));
+    const azar = () => lento + Math.random() * (rapido - lento);
+
+    let visible = false;
+    const observador = new IntersectionObserver((e) => { visible = e[0].isIntersecting; }, { threshold: 0.2 });
+    observador.observe(demo);
+
+    (async function bucle() {
+      let i = 0;
+      for (;;) {
+        while (!visible || document.hidden) await esperar(400);
+        const frase = frases[i % frases.length];
+        for (const letra of frase) {
+          presionar(teclaDe(letra));
+          salida.textContent += letra;
+          await esperar(azar());
+        }
+        await esperar(1800);
+        while (salida.textContent.length) {
+          salida.textContent = salida.textContent.slice(0, -1);
+          await esperar(22);
+        }
+        await esperar(350);
+        i += 1;
+      }
+    })();
+  });
+}
+
+document.addEventListener("DOMContentLoaded", activarTecladoEscritor);

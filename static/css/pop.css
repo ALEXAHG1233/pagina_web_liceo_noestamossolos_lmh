@@ -1,0 +1,78 @@
+/* Botón "pop": en todos los botones de la página. Al pasar el mouse crecen
+   un poco con un rebote suave, y al tocarlos se hunden y rebotan de vuelta.
+   Usa la propiedad "scale" (no "transform") para no chocar con otros efectos.
+   Este archivo se carga al final para que su transición no se pierda. */
+button:not(.video-ligero):not(.isla-barra):not(.dock-item):not([disabled]),
+.boton-metal,
+.emergencia-boton,
+.opcion-boton,
+.test-hablar,
+.test-otra,
+.articulo-cta a,
+.video-ver-mas,
+.salto,
+.libro-boton,
+.animo-btn,
+.btn-siguiente,
+.whatsapp-flotante,
+.volver,
+input[type="submit"] {
+  transition:
+    scale 360ms cubic-bezier(0.34, 1.56, 0.64, 1),
+    background-color 200ms ease,
+    color 200ms ease,
+    border-color 200ms ease,
+    box-shadow 200ms ease,
+    opacity 200ms ease,
+    transform 220ms ease,
+    translate 220ms ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+@media (hover: hover) {
+  button:not(.video-ligero):not(.isla-barra):not(.dock-item):not([disabled]):hover,
+  .boton-metal:hover,
+  .emergencia-boton:hover,
+  .opcion-boton:hover,
+  .test-hablar:hover,
+  .test-otra:hover,
+  .articulo-cta a:hover,
+  .video-ver-mas:hover,
+  .salto:hover,
+  .libro-boton:hover,
+  .animo-btn:hover,
+  .btn-siguiente:hover,
+  .whatsapp-flotante:hover,
+  .volver:hover,
+  input[type="submit"]:hover { scale: 1.06; }
+}
+
+button:not(.video-ligero):not(.isla-barra):not(.dock-item):not([disabled]):active,
+.boton-metal:active,
+.emergencia-boton:active,
+.opcion-boton:active,
+.test-hablar:active,
+.test-otra:active,
+.articulo-cta a:active,
+.video-ver-mas:active,
+.salto:active,
+.libro-boton:active,
+.animo-btn:active,
+.btn-siguiente:active,
+.whatsapp-flotante:active,
+.volver:active,
+input[type="submit"]:active {
+  scale: 0.92;
+  transition-duration: 90ms;
+}
+
+/* Las tarjetas de autoevaluación también "saltan" su botón Empezar. */
+.test-empezar { display: inline-block; transition: scale 360ms cubic-bezier(0.34, 1.56, 0.64, 1); }
+.test-grande:hover .test-empezar { scale: 1.08; }
+.test-grande:active .test-empezar { scale: 0.92; transition-duration: 90ms; }
+
+@media (prefers-reduced-motion: reduce) {
+  button, .boton-metal, .emergencia-boton, .opcion-boton, .test-hablar, .test-otra,
+  .articulo-cta a, .video-ver-mas, .salto, .libro-boton, .animo-btn, .btn-siguiente,
+  .whatsapp-flotante, .volver, input[type="submit"], .test-empezar { scale: none !important; }
+}
