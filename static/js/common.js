@@ -2599,3 +2599,116 @@ function activarAcordeon() {
 }
 
 document.addEventListener("DOMContentLoaded", activarAcordeon);
+
+
+// Dock estilo Mac: lupa (los íconos crecen de 46 a 66 px cuando el mouse
+// está a menos de 200 px), rebote al tocar, puntito de "activo" y menú
+// con clic derecho / tecla de menú / dejar presionado en el celular.
+function activarDockMac() {
+  const dock = document.getElementById("dock");
+  if (!dock) return;
+  const items = Array.from(dock.querySelectorAll(".dock-item"));
+  const BASE = 46, GRANDE = 66, DISTANCIA = 200;
+  const conMouse = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+
+  // Puntito: el asistente siempre (disponible a toda hora); la psicóloga
+  // cuando está conectada (se copia del puntito verde que ya existía).
+  items.forEach((it) => { if (it.hasAttribute("data-siempre-activo")) it.classList.add("dock-activo"); });
+  const insignia = dock.querySelector(".dock-insignia");
+  if (insignia) {
+    const psico = insignia.closest(".dock-item");
+    new MutationObserver(() => psico.classList.toggle("dock-activo", !insignia.hidden))
+      .observe(insignia, { attributes: true, attributeFilter: ["hidden"] });
+  }
+
+  // Lupa.
+  if (conMouse && !SIN_MOVIMIENTO) {
+    let pendiente = null;
+    const aplicar = (x) => {
+      items.forEach((it) => {
+        if (x === null) { it.style.removeProperty("--tam"); return; }
+        const r = it.getBoundingClientRect();
+        const d = Math.abs(x - (r.left + r.width / 2));
+        const f = d >= DISTANCIA ? 0 : Math.cos((d / DISTANCIA) * (Math.PI / 2));
+        it.style.setProperty("--tam", (BASE + (GRANDE - BASE) * f).toFixed(1) + "px");
+      });
+    };
+    window.addEventListener("pointermove", (e) => {
+      const caja = dock.getBoundingClientRect();
+      const cerca = e.clientY > caja.top - 90 && e.clientY < caja.bottom + 10 &&
+        e.clientX > caja.left - 60 && e.clientX < caja.right + 60;
+      if (pendiente) cancelAnimationFrame(pendiente);
+      pendiente = requestAnimationFrame(() => aplicar(cerca ? e.clientX : null));
+    }, { passive: true });
+  }
+
+  // Rebote al tocar.
+  items.forEach((it) => {
+    it.addEventListener("click", () => {
+      it.classList.remove("rebote");
+      void it.offsetWidth;
+      it.classList.add("rebote");
+    });
+    it.addEventListener("animationend", () => it.classList.remove("rebote"));
+  });
+
+  // Menú contextual.
+  let menu = null;
+  const cerrar = () => { if (menu) { menu.remove(); menu = null; } };
+  function abrirMenu(it) {
+    cerrar();
+    let opciones = [];
+    try { opciones = JSON.parse(it.dataset.menu || "[]"); } catch (e) {}
+    if (!opciones.length) return;
+    menu = document.createElement("div");
+    menu.className = "dock-menu";
+    menu.setAttribute("role", "menu");
+    menu.setAttribute("aria-label", it.dataset.etiqueta || "Menú");
+    opciones.forEach((o) => {
+      if (o.s) { menu.appendChild(document.createElement("hr")); return; }
+      const a = document.createElement("a");
+      a.href = o.u;
+      a.textContent = o.t;
+      a.setAttribute("role", "menuitem");
+      menu.appendChild(a);
+    });
+    document.body.appendChild(menu);
+    const r = it.getBoundingClientRect();
+    const ancho = menu.offsetWidth;
+    const x = Math.min(Math.max(r.left + r.width / 2, ancho / 2 + 8), window.innerWidth - ancho / 2 - 8);
+    menu.style.left = x + "px";
+    menu.style.top = (r.top - 12) + "px";
+    menu.querySelector("a")?.focus();
+    menu.addEventListener("keydown", (e) => {
+      const enlaces = Array.from(menu.querySelectorAll("a"));
+      const i = enlaces.indexOf(document.activeElement);
+      if (e.key === "Escape") { cerrar(); it.focus(); }
+      if (e.key === "ArrowDown") { e.preventDefault(); enlaces[(i + 1) % enlaces.length].focus(); }
+      if (e.key === "ArrowUp") { e.preventDefault(); enlaces[(i - 1 + enlaces.length) % enlaces.length].focus(); }
+    });
+  }
+  items.forEach((it) => {
+    if (!it.dataset.menu) return;
+    it.setAttribute("aria-haspopup", "menu");
+    it.addEventListener("contextmenu", (e) => { e.preventDefault(); abrirMenu(it); });
+    it.addEventListener("keydown", (e) => {
+      if (e.key === "ContextMenu" || (e.shiftKey && e.key === "F10")) { e.preventDefault(); abrirMenu(it); }
+    });
+    // Dejar presionado (celular).
+    let temporizador = null;
+    it.addEventListener("touchstart", () => {
+      temporizador = setTimeout(() => { abrirMenu(it); temporizador = "abierto"; }, 500);
+    }, { passive: true });
+    const soltar = (e) => {
+      if (temporizador === "abierto") { e.preventDefault(); }
+      else clearTimeout(temporizador);
+      temporizador = null;
+    };
+    it.addEventListener("touchend", soltar);
+    it.addEventListener("touchmove", () => { clearTimeout(temporizador); temporizador = null; }, { passive: true });
+  });
+  document.addEventListener("pointerdown", (e) => { if (menu && !menu.contains(e.target)) cerrar(); });
+  window.addEventListener("scroll", cerrar, { passive: true });
+}
+
+document.addEventListener("DOMContentLoaded", activarDockMac);

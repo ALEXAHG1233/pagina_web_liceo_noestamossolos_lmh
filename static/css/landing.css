@@ -2650,3 +2650,76 @@ body:has(.dock) .whatsapp-flotante { bottom: 80px; }
   border: 1px solid rgba(201, 162, 39, 0.45);
   margin-bottom: 4px;
 }
+
+/* ---------- Dock estilo Mac ----------
+   Íconos en cuadritos que crecen al acercar el mouse (lupa), rebotan al
+   tocarlos, un puntito dorado debajo de los que están activos y un menú
+   con clic derecho (o dejando presionado en el celular). */
+.dock { align-items: flex-end; gap: 8px; padding: 8px 10px; border-radius: 22px; }
+.dock .dock-item {
+  --tam: 46px;
+  width: var(--tam);
+  height: var(--tam);
+  border-radius: calc(var(--tam) * 0.28);
+  background: linear-gradient(160deg, #2e6b41, #122e1b);
+  border: 1px solid rgba(201, 162, 39, 0.5);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12), 0 6px 14px -6px rgba(0, 0, 0, 0.6);
+  color: var(--amarillo);
+  transition: width 140ms ease-out, height 140ms ease-out, border-radius 140ms ease-out, background 160ms ease;
+}
+.dock .dock-item svg { width: 45%; height: 45%; }
+.dock .dock-item:hover { background: linear-gradient(160deg, #3a8552, #1f4d2c); }
+.dock-item.rebote { animation: reboteDock 600ms cubic-bezier(0.28, 0.84, 0.42, 1); }
+@keyframes reboteDock {
+  0%, 100% { translate: 0 0; }
+  30% { translate: 0 -18px; }
+  55% { translate: 0 0; }
+  72% { translate: 0 -7px; }
+}
+.dock-item::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: -7px;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  translate: -50% 0;
+  background: var(--amarillo);
+  box-shadow: 0 0 6px var(--amarillo);
+  opacity: 0;
+  transition: opacity 200ms ease;
+}
+.dock-item.dock-activo::after { opacity: 1; }
+.dock-separador { align-self: center; height: 34px; }
+
+.dock-menu {
+  position: fixed;
+  z-index: 600;
+  min-width: 210px;
+  padding: 6px;
+  border-radius: 12px;
+  background: rgba(13, 34, 20, 0.96);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(201, 162, 39, 0.5);
+  box-shadow: 0 18px 40px -12px rgba(0, 0, 0, 0.8);
+  translate: -50% -100%;
+  animation: entrarMenuDock 160ms ease-out;
+}
+@keyframes entrarMenuDock { from { opacity: 0; scale: 0.96; } }
+.dock-menu a {
+  display: block;
+  padding: 9px 12px;
+  border-radius: 8px;
+  color: #ffffff;
+  font-size: 15px;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.dock-menu a:hover, .dock-menu a:focus-visible { background: var(--amarillo); color: var(--verde-oscuro); outline: none; }
+.dock-menu hr { margin: 5px 6px; border: 0; border-top: 1px solid rgba(255, 255, 255, 0.15); }
+@media (prefers-reduced-motion: reduce) {
+  .dock-item.rebote { animation: none; }
+  .dock .dock-item { transition: none; }
+}

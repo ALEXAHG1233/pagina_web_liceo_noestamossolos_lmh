@@ -741,17 +741,17 @@
 
   <nav class="dock" id="dock" aria-label="Accesos rápidos">
     <span class="dock-tooltip" aria-hidden="true"><span class="dock-tooltip-texto"></span></span>
-    <a class="dock-item" href="{{ url_for('estudiante') }}" aria-label="Hablar con la psicóloga" data-etiqueta="Hablar con la psicóloga" data-insignia="psicologa">
+    <a class="dock-item" href="{{ url_for('estudiante') }}" aria-label="Hablar con la psicóloga" data-etiqueta="Hablar con la psicóloga" data-insignia="psicologa" data-menu='[{"t":"Abrir el chat","u":"{{ url_for('estudiante') }}"},{"s":1},{"t":"Llamar al 150 (Teléfono de la Esperanza)","u":"tel:150"},{"t":"Emergencia: 911","u":"tel:911"}]'>
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></svg>
       <span class="dock-insignia" hidden></span>
     </a>
-    <a class="dock-item" href="{{ url_for('chatbot') }}" aria-label="Hablar con el asistente" data-etiqueta="Hablar con el asistente">
+    <a class="dock-item" href="{{ url_for('chatbot') }}" aria-label="Hablar con el asistente" data-etiqueta="Hablar con el asistente" data-siempre-activo data-menu='[{"t":"Hablar con Sami","u":"{{ url_for('chatbot_persona', persona='sami') }}"},{"t":"Hablar con Leo","u":"{{ url_for('chatbot_persona', persona='leo') }}"},{"t":"Hablar con Nia","u":"{{ url_for('chatbot_persona', persona='nia') }}"},{"s":1},{"t":"Elegir con quién","u":"{{ url_for('chatbot') }}"}]'>
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 8V4H8"/><rect width="16" height="12" x="4" y="8" rx="2"/><path d="M2 14h2M20 14h2M15 13v2M9 13v2"/></svg>
     </a>
-    <a class="dock-item" href="{{ url_for('diario') }}" aria-label="Mi diario de ánimo" data-etiqueta="Mi diario de ánimo">
+    <a class="dock-item" href="{{ url_for('diario') }}" aria-label="Mi diario de ánimo" data-etiqueta="Mi diario de ánimo" data-menu='[{"t":"Abrir mi diario","u":"{{ url_for('diario') }}"},{"t":"Autoevaluaciones","u":"{{ url_for('tests') }}"}]'>
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 7v14"/><path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"/></svg>
     </a>
-    <a class="dock-item" href="{{ url_for('herramientas') }}" aria-label="Técnicas para calmarte" data-etiqueta="Técnicas para calmarte">
+    <a class="dock-item" href="{{ url_for('herramientas') }}" aria-label="Técnicas para calmarte" data-etiqueta="Técnicas para calmarte" data-menu='[{"t":"Ansiedad","u":"{{ url_for('herramientas') }}#ansiedad"},{"t":"Enojo","u":"{{ url_for('herramientas') }}#enojo"},{"t":"Tristeza","u":"{{ url_for('herramientas') }}#tristeza"},{"t":"No puedo dormir","u":"{{ url_for('herramientas') }}#dormir"},{"s":1},{"t":"Ver todas","u":"{{ url_for('herramientas') }}"}]'>
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12.8 19.6A2 2 0 1 0 14 16H2"/><path d="M17.5 8a2.5 2.5 0 1 1 2 4H2"/><path d="M9.8 4.4A2 2 0 1 1 11 8H2"/></svg>
     </a>
     <span class="dock-separador" aria-hidden="true"></span>
