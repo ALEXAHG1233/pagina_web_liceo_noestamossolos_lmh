@@ -668,50 +668,6 @@
     </div>
   </section>
 
-  {% set filas_teclas = [
-    ["esc", "F1", "F2", "F3", "F4", "F5", "F6", "F7", "F8", "F9", "F10", "F11", "F12", "●"],
-    ["`", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "-", "=", "borrar"],
-    ["tab", "Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P", "[", "]", "\\"],
-    ["mayús", "A", "S", "D", "F", "G", "H", "J", "K", "L", "Ñ", "´", "enter"],
-    ["shift", "Z", "X", "C", "V", "B", "N", "M", ",", ".", "-", "shift"],
-    ["fn", "ctrl", "alt", "cmd", "", "cmd", "alt", "◀", "▲▼", "▶"],
-  ] %}
-  <section class="macbook" data-macbook aria-labelledby="titulo-macbook">
-    <div class="macbook-escala">
-      <h2 class="macbook-titulo" id="titulo-macbook" data-macbook-titulo>
-        Tu espacio seguro,<br>también en la computadora.
-      </h2>
-      <div class="macbook-tapa">
-        <div class="macbook-tapa-atras" aria-hidden="true">
-          <img src="{{ url_for('static', filename='images/escudo_liceo.png') }}" alt="">
-        </div>
-        <div class="macbook-pantalla" data-macbook-pantalla>
-          <img src="{{ url_for('static', filename='images/banner_muro_interactivo.webp') }}"
-            alt="Vista de la página No estamos solos LMH en una computadora" loading="lazy">
-        </div>
-      </div>
-      <div class="macbook-base" aria-hidden="true">
-        <div class="macbook-bisagra"><span></span></div>
-        <div class="macbook-centro">
-          <div class="macbook-parlante"></div>
-          <div class="macbook-teclado">
-            {% for fila in filas_teclas %}
-              <div class="macbook-fila">
-                {% for t in fila %}
-                  <span class="macbook-tecla{% if t|length > 2 %} macbook-tecla-ancha{% endif %}{% if t == '' %} macbook-espacio{% endif %}">{{ t }}</span>
-                {% endfor %}
-              </div>
-            {% endfor %}
-          </div>
-          <div class="macbook-parlante"></div>
-        </div>
-        <div class="macbook-trackpad"></div>
-        <div class="macbook-muesca"></div>
-        <img class="macbook-sello" src="{{ url_for('static', filename='images/escudo_liceo.png') }}" alt="">
-      </div>
-    </div>
-  </section>
-
   {% set tarjetas_pila = [
     ("banner_muro_interactivo.webp", "Muro interactivo", url_for('muro')),
     ("banner_herramientas.webp", "Herramientas para sentirme mejor", url_for('herramientas')),
