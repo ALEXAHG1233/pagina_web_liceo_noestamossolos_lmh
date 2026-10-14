@@ -1192,3 +1192,13 @@ function activarFiltroArticulos() {
 }
 
 document.addEventListener("DOMContentLoaded", activarFiltroArticulos);
+
+// Al llegar con un enlace a una parte de la página (#efecto-halo), el
+// navegador baja ahí antes de que todo termine de acomodarse y puede quedar
+// en otro lugar. Cuando la página ya cargó, se vuelve a bajar al lugar correcto.
+window.addEventListener("load", () => {
+  if (!location.hash) return;
+  let destino = null;
+  try { destino = document.getElementById(decodeURIComponent(location.hash.slice(1))); } catch (e) {}
+  if (destino) destino.scrollIntoView({ block: "start" });
+});
