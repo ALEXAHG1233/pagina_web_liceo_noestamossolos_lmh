@@ -2594,3 +2594,47 @@ body:has(.dock) .whatsapp-flotante { bottom: 80px; }
   .acordeon-panel, .acordeon-foto, .acordeon-detalle { transition: none; }
 }
 
+
+/* Historias en cuadros: comillas grandes, el año en un círculo y el autor. */
+.historias .historia {
+  position: relative;
+  margin: 0 0 16px;
+  padding: 26px 22px 20px;
+  border-radius: 20px;
+  background: linear-gradient(160deg, #183c24, #0d2214);
+  border: 1px solid rgba(201, 162, 39, 0.55);
+  box-shadow: 0 18px 34px -16px rgba(0, 0, 0, 0.6);
+}
+.historias .historia::before {
+  content: "“";
+  position: absolute;
+  top: 4px;
+  left: 30px;
+  font-family: "Fraunces", Georgia, serif;
+  font-size: 72px;
+  line-height: 1;
+  color: var(--amarillo);
+  opacity: 0.85;
+}
+.historias .historia > p {
+  margin: 14px 0 16px;
+  font-size: 17px;
+  line-height: 1.6;
+  font-style: italic;
+  color: #ffffff;
+}
+.historia-pie { display: flex; align-items: center; gap: 12px; }
+.historia-avatar {
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: var(--amarillo);
+  color: var(--verde-oscuro);
+  font-family: "Fraunces", Georgia, serif;
+  font-size: 18px;
+  font-weight: 800;
+  flex: none;
+}
+.historias .historia-autor { font-size: 16px; font-weight: 800; color: var(--amarillo); font-style: normal; }

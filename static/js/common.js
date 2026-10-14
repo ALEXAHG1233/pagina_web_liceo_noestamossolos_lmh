@@ -1060,7 +1060,7 @@ const ADORNOS_SELECTOR = [
   ".test-grande", ".test-pregunta", ".test-resultado",
   ".herramienta-completa", ".categoria-sintomas", ".articulo-completo", ".glosario-item",
   ".racha-card", ".stat-card", ".login-card", ".muro-card", ".resena-card",
-  ".playlist-card", ".amigo-card", ".futuro-panel",
+  ".playlist-card", ".amigo-card", ".futuro-panel", ".historias .historia",
 ].join(", ");
 
 function agregarAdornos(cuadro) {
