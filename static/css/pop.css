@@ -84,12 +84,8 @@ input[type="submit"]:active {
 /* ---------- Adornos "cyber" en todos los cuadros de todas las páginas ----------
    Las 4 cosas: esquinas doradas, brillo, línea de escaneo y partículas.
    common.js agrega el adorno (.cyber-deco) y la clase .con-adornos. */
-.con-adornos {
-  --cyber-acento: 201, 162, 39;
-  position: relative;
-  isolation: isolate;
-  overflow: hidden;
-}
+.con-adornos { --cyber-acento: 201, 162, 39; }
+:where(.con-adornos) { position: relative; isolation: isolate; overflow: hidden; }
 /* :where() no suma especificidad: si un hijo ya tiene su propia posición, se respeta. */
 .con-adornos > :where(:not(.cyber-deco)) { position: relative; z-index: 1; }
 
@@ -207,7 +203,7 @@ input[type="submit"]:active {
 .girar-texto { margin: 0; font-size: 16px; line-height: 1.5; }
 
 /* Brillo (glare) que sigue al mouse. */
-.con-brillo { position: relative; }
+:where(.con-brillo) { position: relative; }
 .girar-brillo {
   position: absolute !important;
   inset: 0;
@@ -265,7 +261,7 @@ input[type="submit"]:active {
    common.js dibuja en un canvas unos rayos dorados que recorren el borde
    del cuadro. Si el cuadro recorta lo que sobresale, se envuelve en
    .borde-electrico para que el resplandor se vea afuera. */
-.borde-electrico-host { position: relative; }
+:where(.borde-electrico-host) { position: relative; }
 .borde-electrico { position: relative; display: block; }
 .borde-electrico-lienzo {
   position: absolute;
@@ -285,7 +281,9 @@ body { overflow-x: clip; }
    Al pasar el mouse, una franja de luz blanca (opacidad 0.5, 30 % de ancho,
    inclinada -45°) cruza el cuadro o la imagen en 650 ms, y el borde brilla
    un momento (rim glint). common.js agrega la capa .barrido. */
-.con-barrido { position: relative; }
+/* :where() = sin especificidad: si el cuadro ya tiene su propia posición
+   (por ejemplo, las tarjetas que se apilan), se respeta. */
+:where(.con-barrido) { position: relative; }
 .barrido {
   position: absolute !important;
   inset: 0;
