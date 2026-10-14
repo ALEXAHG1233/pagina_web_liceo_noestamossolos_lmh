@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 100" role="img" aria-hidden="true">
+  <defs>
+    <linearGradient id="f" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#2e6b41"/>
+      <stop offset="1" stop-color="#0d2214"/>
+    </linearGradient>
+    <radialGradient id="l" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#ffc83d" stop-opacity="0.28"/>
+      <stop offset="1" stop-color="#ffc83d" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="160" height="100" fill="url(#f)"/>
+  <circle cx="80" cy="50" r="46" fill="url(#l)"/>
+  <circle cx="22" cy="18" r="1.6" fill="#ffc83d" opacity="0.5"/>
+  <circle cx="140" cy="82" r="1.6" fill="#ffc83d" opacity="0.5"/>
+  <circle cx="134" cy="16" r="1" fill="#fff" opacity="0.5"/>
+  <circle cx="28" cy="84" r="1" fill="#fff" opacity="0.5"/>
+  <g fill="none" stroke="#ffc83d" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M80 26c-14-4-28 4-26 18-8 4-6 18 4 20 2 10 16 12 22 6 6 6 20 4 22-6 10-2 12-16 4-20 2-14-12-22-26-18z"/><path d="M80 26v44"/><ellipse cx="90" cy="56" rx="6" ry="4" fill="#ffc83d"/>
+  </g>
+</svg>

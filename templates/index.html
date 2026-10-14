@@ -413,6 +413,7 @@
     <div class="recursos-grid">
       {% for r in recursos_psicologia %}
         <a href="{{ url_for('informate', _anchor=r.slug) }}" class="recurso-card">
+          <img class="recurso-imagen" src="{{ url_for('static', filename='images/recursos/' ~ r.slug ~ '.svg') }}" alt="" loading="lazy" width="160" height="100">
           <span class="recurso-numero">{{ "%02d"|format(loop.index) }}</span>
           <span class="recurso-titulo">{{ r.titulo }}</span>
           <span class="recurso-resumen">{{ r.resumen }}</span>

@@ -2638,3 +2638,15 @@ body:has(.dock) .whatsapp-flotante { bottom: 80px; }
   flex: none;
 }
 .historias .historia-autor { font-size: 16px; font-weight: 800; color: var(--amarillo); font-style: normal; }
+
+/* Ilustración de cada recurso de psicología (static/images/recursos). */
+.recurso-imagen {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 10;
+  object-fit: cover;
+  border-radius: 12px;
+  border: 1px solid rgba(201, 162, 39, 0.45);
+  margin-bottom: 4px;
+}

@@ -1858,7 +1858,7 @@ document.addEventListener("DOMContentLoaded", activarImagenesScroll);
 // segundo abre la página. Además, todas las tarjetas tienen un brillo que
 // sigue al mouse y se inclinan un poco (máximo 12°).
 const GIRAR_SELECTOR = ".tarjetas > .tarjeta, .contador, .recurso-card, .glosario-item, .test-grande";
-const GIRAR_FRENTE = "h2, h3, .recurso-numero, .recurso-titulo, .glosario-termino, .contador-numero, .contador-texto, .test-icono, .test-titulo, .cyber-deco";
+const GIRAR_FRENTE = "h2, h3, .recurso-imagen, .recurso-numero, .recurso-titulo, .glosario-termino, .contador-numero, .contador-texto, .test-icono, .test-titulo, .cyber-deco";
 const SOLO_BRILLO = ".articulo-completo, .herramienta-completa, .test-pregunta, .emergencia, .bento-cuadro, .categoria-sintomas, .login-card, .playlist-card, .pasos-caja, .test-resultado";
 const PISTA_GIRAR = "↻ Toca para voltear";
 
