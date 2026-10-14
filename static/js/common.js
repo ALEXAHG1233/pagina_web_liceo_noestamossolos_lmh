@@ -2712,3 +2712,99 @@ function activarDockMac() {
 }
 
 document.addEventListener("DOMContentLoaded", activarDockMac);
+
+
+// Menú con efecto gelatina: la píldora va detrás de la opción activa (la
+// página actual) y se mueve al pasar el mouse; al hacer clic, burbujitas
+// (15, abiertas 56°) salen y vuelven a fundirse. En las opciones que
+// abren otra página se espera un momento para que se vea el efecto.
+function activarMenuGooey() {
+  const nav = document.querySelector("[data-gooey]");
+  if (!nav) return;
+  const enlaces = Array.from(nav.querySelectorAll("a:not(.nav-boton-ayuda)"));
+  if (!enlaces.length) return;
+  const PARTICULAS = 15, APERTURA = 56, TIEMPO = 600, VARIACION = 300;
+
+  // Filtro "gooey": desenfoca y vuelve a endurecer el borde, así las
+  // formas que se tocan se ven como una sola gota.
+  if (!document.getElementById("filtro-gooey")) {
+    const ns = "http://www.w3.org/2000/svg";
+    const svg = document.createElementNS(ns, "svg");
+    svg.setAttribute("aria-hidden", "true");
+    svg.style.cssText = "position:absolute;width:0;height:0";
+    svg.innerHTML = '<filter id="filtro-gooey"><feGaussianBlur in="SourceGraphic" stdDeviation="5" result="b"/>' +
+      '<feColorMatrix in="b" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 20 -9"/></filter>';
+    document.body.appendChild(svg);
+  }
+  const capa = document.createElement("div");
+  capa.className = "gooey-capa";
+  capa.setAttribute("aria-hidden", "true");
+  const pildora = document.createElement("div");
+  pildora.className = "gooey-pildora";
+  capa.appendChild(pildora);
+  nav.prepend(capa);
+
+  const ruta = location.pathname;
+  let activo = enlaces.findIndex((a) => a.getAttribute("href") === ruta);
+  if (activo < 0) activo = 0;
+
+  function colocar(i) {
+    if (nav.offsetParent === null || !enlaces[i]) { pildora.style.opacity = "0"; return; }
+    const caja = capa.getBoundingClientRect();
+    const r = enlaces[i].getBoundingClientRect();
+    pildora.style.opacity = "1";
+    pildora.style.left = (r.left - caja.left) + "px";
+    pildora.style.top = (r.top - caja.top) + "px";
+    pildora.style.width = r.width + "px";
+    pildora.style.height = r.height + "px";
+    enlaces.forEach((a, k) => a.classList.toggle("gooey-activo", k === i));
+    pildora.classList.remove("tiembla");
+    void pildora.offsetWidth;
+    if (!SIN_MOVIMIENTO) pildora.classList.add("tiembla");
+  }
+
+  function burbujas(i) {
+    if (SIN_MOVIMIENTO) return;
+    const caja = capa.getBoundingClientRect();
+    const r = enlaces[i].getBoundingClientRect();
+    const cx = r.left - caja.left + r.width / 2, cy = r.top - caja.top + r.height / 2;
+    for (let k = 0; k < PARTICULAS; k++) {
+      const p = document.createElement("span");
+      p.className = "gooey-particula";
+      const ang = (-90 + (Math.random() - 0.5) * APERTURA * 2 + (Math.random() < 0.5 ? 180 : 0)) * Math.PI / 180;
+      const dist = 18 + Math.random() * 26;
+      p.style.left = cx + "px";
+      p.style.top = cy + "px";
+      p.style.setProperty("--dx", (Math.cos(ang) * dist).toFixed(1) + "px");
+      p.style.setProperty("--dy", (Math.sin(ang) * dist * 0.6).toFixed(1) + "px");
+      p.style.setProperty("--tam", (8 + Math.random() * 10).toFixed(0) + "px");
+      p.style.setProperty("--dur", (TIEMPO + (Math.random() - 0.5) * VARIACION * 2).toFixed(0) + "ms");
+      capa.appendChild(p);
+      p.addEventListener("animationend", () => p.remove());
+    }
+  }
+
+  enlaces.forEach((a, i) => {
+    a.addEventListener("pointerenter", (e) => { if (e.pointerType === "mouse") colocar(i); });
+    a.addEventListener("focus", () => colocar(i));
+    a.addEventListener("click", (e) => {
+      activo = i;
+      colocar(i);
+      burbujas(i);
+      const href = a.getAttribute("href") || "";
+      const otraPagina = !href.startsWith("#") && href !== ruta;
+      if (otraPagina && !SIN_MOVIMIENTO && !(e.ctrlKey || e.metaKey || e.shiftKey || e.button)) {
+        e.preventDefault();
+        setTimeout(() => { window.location.href = a.href; }, 320);
+      }
+    });
+  });
+  nav.addEventListener("pointerleave", () => colocar(activo));
+  window.addEventListener("resize", () => colocar(activo));
+  // En celular el menú está escondido hasta abrir la hamburguesa.
+  document.getElementById("nav-hamburguesa")?.addEventListener("click", () => setTimeout(() => colocar(activo), 30));
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => colocar(activo));
+  colocar(activo);
+}
+
+document.addEventListener("DOMContentLoaded", activarMenuGooey);

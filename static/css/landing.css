@@ -2723,3 +2723,58 @@ body:has(.dock) .whatsapp-flotante { bottom: 80px; }
   .dock-item.rebote { animation: none; }
   .dock .dock-item { transition: none; }
 }
+
+/* ---------- Menú de arriba con efecto gelatina (GooeyNav) ----------
+   Una píldora dorada se desliza hasta la opción señalada; al hacer clic
+   salen burbujitas que se funden con ella (filtro SVG "gooey"). */
+.nav-enlaces[data-gooey] { position: relative; isolation: isolate; }
+.gooey-capa {
+  position: absolute;
+  inset: -12px;
+  z-index: -1;
+  pointer-events: none;
+  filter: url(#filtro-gooey);
+}
+.gooey-pildora {
+  position: absolute;
+  border-radius: 999px;
+  background: var(--amarillo);
+  transition: left 500ms cubic-bezier(0.34, 1.4, 0.64, 1), top 500ms cubic-bezier(0.34, 1.4, 0.64, 1),
+    width 500ms cubic-bezier(0.34, 1.4, 0.64, 1), height 500ms cubic-bezier(0.34, 1.4, 0.64, 1), opacity 200ms ease;
+}
+.gooey-pildora.tiembla { animation: tiemblaGooey 600ms ease; }
+@keyframes tiemblaGooey {
+  30% { scale: 1.12 0.88; }
+  60% { scale: 0.94 1.06; }
+  100% { scale: 1 1; }
+}
+.gooey-particula {
+  position: absolute;
+  width: var(--tam, 14px);
+  height: var(--tam, 14px);
+  border-radius: 50%;
+  background: var(--amarillo);
+  translate: -50% -50%;
+  animation: particulaGooey var(--dur, 600ms) ease-out forwards;
+}
+@keyframes particulaGooey {
+  0% { transform: translate(0, 0) scale(1); }
+  45% { transform: translate(var(--dx), var(--dy)) scale(1); }
+  100% { transform: translate(0, 0) scale(0); }
+}
+.nav-enlaces[data-gooey] a:not(.nav-boton-ayuda) { position: relative; transition: color 300ms ease; border-radius: 999px; }
+.nav-enlaces[data-gooey] a.gooey-activo { color: var(--verde-oscuro) !important; }
+@media (min-width: 960px) {
+  /* Marco alrededor de las opciones (frame). */
+  .nav-enlaces[data-gooey] {
+    padding: 4px 6px;
+    border: 1px solid rgba(201, 162, 39, 0.4);
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.04);
+  }
+  .nav-enlaces[data-gooey] a:not(.nav-boton-ayuda) { padding: 8px 14px; border-bottom: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .gooey-pildora { transition: none; }
+  .gooey-particula { display: none; }
+}
