@@ -34,7 +34,7 @@ from respuestas_bot import generar_respuesta, RESPUESTA_DERIVACION, PERSONAJES
 import conversacion_bot
 from futuro_bot import generar_mensaje_futuro
 from tests_bot import TESTS, obtener_test, calcular_resultado
-from articulos_bot import ARTICULOS, CATEGORIAS_INFORMATE
+from articulos_bot import ARTICULOS, CATEGORIAS_INFORMATE, GLOSARIO
 from herramientas_bot import TECNICAS
 
 app = Flask(__name__)
@@ -451,7 +451,7 @@ def construir_indice_busqueda():
             indice.append({
                 "nombre": tec["nombre"], "meta": tec["resumen"], "tipo": "Técnica",
                 "palabras": cat["titulo"],
-                "url": url_for("herramientas_detalle", categoria=cat_id, tecnica=tec_id),
+                "url": url_for("herramientas", _anchor=f"{cat_id}-{tec_id}"),
             })
     for test_id, test in TESTS.items():
         indice.append({
@@ -462,7 +462,7 @@ def construir_indice_busqueda():
         indice.append({
             "nombre": art["titulo"], "meta": art["resumen"], "tipo": "Artículo",
             "palabras": art.get("categoria", ""),
-            "url": url_for("informate_articulo", slug=slug),
+            "url": url_for("informate", _anchor=slug),
         })
     return indice
 
@@ -480,6 +480,7 @@ def index():
         categorias_video=VIDEOS_CURADOS,
         video_prevencion_id=VIDEO_PREVENCION_SUICIDIO_ID,
         recursos_psicologia=recursos,
+        tests=TESTS,
         indice_busqueda=construir_indice_busqueda(),
         temas_informate=[
             {
@@ -715,15 +716,18 @@ def test_detalle(test_id):
 
 @app.route("/informate")
 def informate():
-    return render_template("informate.html", articulos=ARTICULOS, categorias=CATEGORIAS_INFORMATE)
+    return render_template(
+        "informate.html", articulos=ARTICULOS, categorias=CATEGORIAS_INFORMATE, glosario=GLOSARIO
+    )
 
 
 @app.route("/informate/<slug>")
 def informate_articulo(slug):
-    articulo = ARTICULOS.get(slug)
-    if not articulo:
+    # Los artículos ya se leen completos en Infórmate: los enlaces viejos
+    # llevan a ese artículo dentro de la página.
+    if slug not in ARTICULOS:
         return redirect(url_for("informate"))
-    return render_template("articulo.html", articulo=articulo)
+    return redirect(url_for("informate", _anchor=slug))
 
 
 @app.route("/herramientas")
@@ -733,13 +737,12 @@ def herramientas():
 
 @app.route("/herramientas/<categoria>/<tecnica>")
 def herramientas_detalle(categoria, tecnica):
+    # Cada herramienta ya se ve completa en Herramientas: los enlaces viejos
+    # llevan a esa herramienta dentro de la página.
     cat = TECNICAS.get(categoria)
-    item = cat["tecnicas"].get(tecnica) if cat else None
-    if not cat or not item:
+    if not cat or tecnica not in cat["tecnicas"]:
         return redirect(url_for("herramientas"))
-    return render_template(
-        "herramienta_detalle.html", categoria=cat, categoria_id=categoria, tecnica=item
-    )
+    return redirect(url_for("herramientas", _anchor=f"{categoria}-{tecnica}"))
 
 
 @app.route("/futuro", methods=["GET", "POST"])

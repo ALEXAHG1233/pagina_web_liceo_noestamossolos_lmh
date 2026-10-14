@@ -9,6 +9,7 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='css/diario.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/tests.css') }}">
 </head>
+{% from "_tests_tarjetas.html" import tarjetas_tests %}
 <body class="diario-body">
 
   <header class="diario-header">
@@ -20,13 +21,8 @@
     <p>Esto NO son pruebas clínicas ni diagnósticos — son preguntas para ayudarte a ver con más claridad cómo estás. El resultado es solo una señal; si algo te preocupa, hablarlo con la psicóloga siempre es la mejor opción.</p>
   </section>
 
-  <section class="historial-semana tests-lista">
-    {% for id, t in tests.items() %}
-      <a href="{{ url_for('test_detalle', test_id=id) }}" class="test-card">
-        <h2>{{ t.titulo }}</h2>
-        <p>{{ t.descripcion }}</p>
-      </a>
-    {% endfor %}
+  <section class="tests-seccion">
+    {{ tarjetas_tests(tests) }}
   </section>
 
   <script src="{{ url_for('static', filename='js/common.js') }}"></script>

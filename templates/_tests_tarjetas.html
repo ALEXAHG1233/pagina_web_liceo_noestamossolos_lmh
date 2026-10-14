@@ -1,0 +1,24 @@
+{# Tarjetas grandes de las autoevaluaciones (se usan en la portada y en /tests). #}
+{% set ESTILO_TESTS = {
+  "habitos_estudio": ("azul", '<path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v15H6.5A2.5 2.5 0 0 0 4 20.5z"/><path d="M4 20.5A2.5 2.5 0 0 0 6.5 23H20v-5"/><path d="M9 8h7M9 12h5"/>'),
+  "estres": ("rojo", '<path d="M3 13h4l2.5-6 4 12 2.5-6H21"/>'),
+  "alimentacion": ("verde", '<path d="M12 8c-3-3-8-1.5-8 4 0 5 4 9 6 9 1 0 1.3-.5 2-.5s1 .5 2 .5c2 0 6-4 6-9 0-5.5-5-7-8-4z"/><path d="M12 8c0-2 1-4 3-5"/>'),
+} %}
+{% macro tarjetas_tests(tests) %}
+  <div class="tests-grid">
+    {% for id, t in tests.items() %}
+      {% set color, icono = ESTILO_TESTS.get(id, ("dorado", '<circle cx="12" cy="12" r="8"/>')) %}
+      <a href="{{ url_for('test_detalle', test_id=id) }}" class="test-grande test-{{ color }}">
+        <span class="test-icono" aria-hidden="true">
+          <svg viewBox="0 0 24 26" width="34" height="34" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">{{ icono | safe }}</svg>
+        </span>
+        <span class="test-titulo">{{ t.titulo }}</span>
+        <span class="test-desc">{{ t.descripcion }}</span>
+        <span class="test-pie">
+          <span class="test-cuantas">{{ t.preguntas | length }} preguntas</span>
+          <span class="test-empezar">Empezar →</span>
+        </span>
+      </a>
+    {% endfor %}
+  </div>
+{% endmacro %}

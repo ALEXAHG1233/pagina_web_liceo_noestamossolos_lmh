@@ -8,6 +8,7 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/diario.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/tests.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/herramientas.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/informate.css') }}">
 </head>
 <body class="diario-body">
@@ -18,25 +19,70 @@
   </header>
 
   <section class="pregunta-hoy tests-intro">
-    <p>Contenido para entender mejor lo que sientes, lo que te rodea, o lo que alguien cercano puede estar viviendo.</p>
+    <p>Contenido para entender mejor lo que sientes, lo que te rodea, o lo que alguien cercano puede estar viviendo. Todo se lee aquí mismo.</p>
   </section>
+
+  <section class="glosario" aria-labelledby="titulo-glosario">
+    <h2 id="titulo-glosario" class="informate-categoria-titulo">Palabras de psicología</h2>
+    <p class="informate-categoria-desc">Toca una palabra para ir a su explicación completa.</p>
+    <div class="glosario-grid">
+      {% for termino, definicion, slug in glosario if slug in articulos %}
+        <a href="#{{ slug }}" class="glosario-item">
+          <span class="glosario-termino">{{ termino }}</span>
+          <span class="glosario-def">{{ definicion }}</span>
+        </a>
+      {% endfor %}
+    </div>
+  </section>
+
+  <nav class="saltos" aria-label="Ir a una categoría">
+    {% for nombre, descripcion in categorias %}
+      <a href="#cat-{{ nombre|lower }}" class="salto">{{ nombre }}</a>
+    {% endfor %}
+    <label class="filtro-articulos">
+      <span class="sr-only">Buscar un tema</span>
+      <input type="search" placeholder="Buscar un tema…" data-filtro-articulos autocomplete="off">
+    </label>
+  </nav>
+  <p class="filtro-vacio" data-filtro-vacio hidden>No encontramos ese tema. Prueba con otra palabra.</p>
 
   {% for nombre, descripcion in categorias %}
     <section class="informate-categoria" id="cat-{{ nombre|lower }}">
       <h2 class="informate-categoria-titulo">{{ nombre }}</h2>
       <p class="informate-categoria-desc">{{ descripcion }}</p>
-      <div class="historial-semana tests-lista">
+      <div class="articulos-columnas">
         {% for slug, a in articulos.items() if a.categoria == nombre %}
-          <a href="{{ url_for('informate_articulo', slug=slug) }}" class="test-card articulo-card">
+          <article class="articulo-completo" id="{{ slug }}">
             <span class="articulo-categoria cat-{{ a.categoria|lower }}">{{ a.categoria }}</span>
-            {% if a.video_youtube_id %}<span class="articulo-con-video">▶ Con video</span>{% endif %}
-            <h2>{{ a.titulo }}</h2>
-            <p>{{ a.resumen }}</p>
-          </a>
+            <h3>{{ a.titulo }}</h3>
+            <p class="articulo-resumen">{{ a.resumen }}</p>
+            {% if a.collage %}
+              <div class="collage" role="group" aria-label="Collage de personajes">
+                {% for archivo, desc, x, y, giro in a.collage %}
+                  <img class="collage-foto" src="{{ url_for('static', filename='images/' ~ archivo) }}" alt="{{ desc }}"
+                       style="--x: {{ x }}%; --y: {{ y }}%; --giro: {{ giro }}deg; --i: {{ loop.index0 }};" loading="lazy" draggable="false">
+                {% endfor %}
+              </div>
+            {% endif %}
+            {% if a.video_youtube_id %}
+              <button type="button" class="video-ligero" data-video="{{ a.video_youtube_id }}" aria-label="Ver el video sobre {{ a.titulo }}">
+                <img src="https://i.ytimg.com/vi/{{ a.video_youtube_id }}/hqdefault.jpg" alt="" loading="lazy" width="480" height="360">
+                <span class="video-ligero-play" aria-hidden="true">▶</span>
+                <span class="video-ligero-texto">Ver video</span>
+              </button>
+            {% endif %}
+            {% for parrafo in a.contenido %}
+              <p>{{ parrafo }}</p>
+            {% endfor %}
+          </article>
         {% endfor %}
       </div>
     </section>
   {% endfor %}
+
+  <div class="articulo-cta herramientas-cta">
+    <a href="{{ url_for('estudiante') }}">¿Algo de esto te hizo ruido? Habla con la psicóloga →</a>
+  </div>
 
   <script src="{{ url_for('static', filename='js/common.js') }}"></script>
 </body>

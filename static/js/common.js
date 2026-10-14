@@ -1127,3 +1127,68 @@ function activarImagenesVolteo() {
 }
 
 document.addEventListener("DOMContentLoaded", activarImagenesVolteo);
+
+// "← Volver": si llegaste desde otra página de este sitio, regresa a ella
+// como el botón Atrás del navegador, que te deja en la misma parte donde
+// estabas (en vez de mandarte al principio de la portada).
+function activarVolverSinPerderLugar() {
+  let vieneDeAqui = false;
+  try { vieneDeAqui = new URL(document.referrer).origin === location.origin; } catch (e) {}
+  if (!vieneDeAqui || history.length < 2) return;
+  document.querySelectorAll("a.volver").forEach((enlace) => {
+    enlace.addEventListener("click", (evento) => {
+      evento.preventDefault();
+      history.back();
+    });
+  });
+}
+
+document.addEventListener("DOMContentLoaded", activarVolverSinPerderLugar);
+
+// Videos que se cargan solo al tocarlos: así una página con muchos videos
+// (Herramientas, Infórmate) carga rápido, y el video se ve ahí mismo.
+function activarVideosLigeros() {
+  document.querySelectorAll(".video-ligero[data-video]").forEach((boton) => {
+    boton.addEventListener("click", () => {
+      const caja = document.createElement("div");
+      caja.className = "video-reproduciendo";
+      const iframe = document.createElement("iframe");
+      iframe.src = `https://www.youtube-nocookie.com/embed/${encodeURIComponent(boton.dataset.video)}?autoplay=1&rel=0`;
+      iframe.title = boton.getAttribute("aria-label") || "Video";
+      iframe.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture";
+      iframe.allowFullscreen = true;
+      caja.appendChild(iframe);
+      boton.replaceWith(caja);
+    });
+  });
+}
+
+document.addEventListener("DOMContentLoaded", activarVideosLigeros);
+
+// Buscador de Infórmate: muestra solo los artículos que tienen la palabra
+// escrita (en el título o en el texto), sin cambiar de página.
+function activarFiltroArticulos() {
+  const campo = document.querySelector("[data-filtro-articulos]");
+  if (!campo) return;
+  const aviso = document.querySelector("[data-filtro-vacio]");
+  const normalizar = (texto) => texto.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "");
+  const articulos = Array.from(document.querySelectorAll(".articulo-completo"))
+    .map((el) => ({ el, texto: normalizar(el.textContent) }));
+  const secciones = document.querySelectorAll(".informate-categoria");
+
+  campo.addEventListener("input", () => {
+    const buscado = normalizar(campo.value.trim());
+    let visibles = 0;
+    articulos.forEach(({ el, texto }) => {
+      const coincide = !buscado || texto.includes(buscado);
+      el.hidden = !coincide;
+      if (coincide) visibles += 1;
+    });
+    secciones.forEach((seccion) => {
+      seccion.hidden = !seccion.querySelector(".articulo-completo:not([hidden])");
+    });
+    if (aviso) aviso.hidden = visibles > 0;
+  });
+}
+
+document.addEventListener("DOMContentLoaded", activarFiltroArticulos);

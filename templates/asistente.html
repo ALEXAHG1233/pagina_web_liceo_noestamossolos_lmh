@@ -20,7 +20,7 @@
           <span class="wa-foto wa-foto-letra" aria-hidden="true">{{ persona.avatar if persona else "A" }}</span>
         {% endif %}
         <div class="wa-titulo">
-          <h1>{{ persona.nombre if persona else "Asistente" }} <span class="wa-etiqueta-ia">{{ "IA" if ia_activa else "Automático" }}</span></h1>
+          <h1>{{ persona.nombre if persona else "Asistente" }} <span class="wa-etiqueta-ia">{{ "IA" if ia_activa else "Asistente virtual" }}</span></h1>
           <span class="estado-en-vivo wa-estado" id="wa-estado" aria-live="polite">en línea</span>
         </div>
         <div class="acciones-header wa-acciones">
@@ -34,6 +34,14 @@
         <span>Fondo:</span>
       </div>
     </header>
+
+    <div class="wa-banner-asistente" role="note">
+      <svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="8" width="16" height="12" rx="3"/><path d="M12 4v4M9 13h.01M15 13h.01M9.5 17h5"/><circle cx="12" cy="3" r="1"/></svg>
+      <div>
+        <strong>{% if ia_activa %}Estás hablando con una inteligencia artificial{% else %}Estás hablando con un asistente virtual{% endif %}, no con una persona.</strong>
+        <span>{% if ia_activa %}Responde con IA y te hace preguntas para entenderte.{% else %}Responde de forma automática con mensajes preparados por el equipo del programa.{% endif %} Si es algo serio, avisa a la psicóloga real.</span>
+      </div>
+    </div>
 
     <div id="mensajes" class="mensajes wa-mensajes">
       <div class="wa-fecha"><span>Hoy</span></div>

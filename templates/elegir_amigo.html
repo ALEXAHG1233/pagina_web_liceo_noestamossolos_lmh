@@ -14,6 +14,10 @@
   <section class="hero hero-amigos">
     <a href="{{ url_for('index') }}" class="volver volver-hero">← Volver</a>
     <h1>¿Con cuál quieres hablar?</h1>
+    <p class="aviso-asistente-virtual">
+      <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="8" width="16" height="12" rx="3"/><path d="M12 4v4M9 13h.01M15 13h.01M9.5 17h5"/><circle cx="12" cy="3" r="1"/></svg>
+      {% if ia_activa %}Asistentes con inteligencia artificial · no son personas{% else %}Asistentes virtuales · no son personas{% endif %}
+    </p>
     <p class="hero-frase">{% if ia_activa %}Son asistentes con inteligencia artificial (IA), no personas: conversan contigo, te hacen preguntas para entenderte y te sugieren herramientas.{% else %}Son asistentes automáticos, no personas: responden con mensajes preparados por el equipo del programa.{% endif %} Están disponibles siempre, y si algo pesa de verdad, te ponen en contacto con la psicóloga real del liceo.</p>
   </section>
 

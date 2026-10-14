@@ -1,97 +1,168 @@
-.herramientas-categoria { padding: 10px 20px 24px; }
-.categoria-titulo { font-size: 17px; margin: 0 0 4px; text-align: center; color: var(--amarillo); }
-.categoria-descripcion { font-size: 12px; color: var(--blanco-suave); text-align: center; margin: 0 0 14px; }
+.herramientas-categoria { padding: 10px 20px 28px; scroll-margin-top: 72px; }
+.categoria-titulo { font-size: 24px; line-height: 1.25; margin: 0 0 6px; text-align: center; color: var(--amarillo); }
+.categoria-descripcion { font-size: 16px; color: var(--blanco-suave); text-align: center; margin: 0 0 16px; }
 
-.color-azul { color: var(--azul-honduras); }
+.color-azul { color: #7cc4ff; }
 .color-dorado { color: var(--amarillo); }
-.color-verde { color: var(--amarillo); }
+.color-verde { color: #9be3b0; }
 .color-rojo { color: #ff9b9b; }
 .color-morado { color: #d7b8ff; }
 
 /* "¿Cómo sé que me pasa esto?": señales de cada categoría. */
 .categoria-sintomas {
-  margin: 6px 0 14px;
-  padding: 12px 16px;
-  border-left: 3px solid var(--dorado);
-  background: rgba(255, 255, 255, 0.05);
-  border-radius: 0 10px 10px 0;
+  margin: 6px 0 18px;
+  padding: 14px 18px;
+  border-left: 4px solid var(--dorado);
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 0 12px 12px 0;
 }
-.categoria-sintomas strong { display: block; margin-bottom: 6px; font-size: 13px; color: var(--amarillo); }
-.categoria-sintomas ul { margin: 0; padding-left: 18px; font-size: 14px; line-height: 1.6; }
+.categoria-sintomas strong { display: block; margin-bottom: 8px; font-size: 17px; color: var(--amarillo); }
+.categoria-sintomas ul { margin: 0; padding-left: 20px; font-size: 16px; line-height: 1.6; }
 
-.herramientas-categoria .tests-lista { padding: 0; }
-.herramientas-categoria .test-card h3 {
+/* Botones de arriba para saltar a una categoría (sin salir de la página).
+   Se quedan pegados arriba al bajar. */
+.saltos {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding: 10px 16px;
   margin: 0 0 6px;
+  background: color-mix(in srgb, var(--verde-oscuro) 92%, transparent);
+  backdrop-filter: blur(8px);
+  scrollbar-width: none;
+}
+.saltos::-webkit-scrollbar { display: none; }
+.salto {
+  flex: none;
+  padding: 9px 16px;
+  border-radius: 999px;
+  border: 1px solid var(--dorado);
+  color: var(--blanco);
+  background: rgba(255, 255, 255, 0.06);
   font-size: 15px;
-  color: var(--amarillo);
+  font-weight: 600;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background var(--transicion-suave), color var(--transicion-suave);
 }
-.herramientas-categoria:nth-of-type(1) .test-card { border-top-color: var(--azul-honduras); }
-.herramientas-categoria:nth-of-type(2) .test-card { border-top-color: var(--dorado); }
-.herramientas-categoria:nth-of-type(3) .test-card { border-top-color: var(--verde-liceo-claro); }
+.salto:hover, .salto:focus-visible { background: var(--dorado); color: var(--verde-oscuro); }
 
-.herramienta-contenido { padding: 0 20px 30px; max-width: 480px; margin: 0 auto; text-align: left; }
-.categoria-etiqueta {
-  display: inline-block;
-  font-size: 11px;
-  font-weight: 700;
-  text-transform: uppercase;
-  margin-bottom: 10px;
+/* Cada herramienta completa: nombre, para qué sirve, pasos y video. */
+.herramientas-grid { display: grid; grid-template-columns: 1fr; gap: 16px; }
+.herramienta-completa {
+  background: var(--tarjeta-fondo);
+  border: 1px solid rgba(201, 162, 39, 0.45);
+  border-top: 5px solid var(--dorado);
+  border-radius: 16px;
+  padding: 18px 18px 20px;
+  box-shadow: var(--sombra-suave);
+  scroll-margin-top: 72px;
 }
-.herramienta-resumen { font-size: 14px; color: var(--blanco-suave); margin: 0 0 18px; }
+.herramienta-completa.borde-azul { border-top-color: #4aa8f0; }
+.herramienta-completa.borde-rojo { border-top-color: #e66a6a; }
+.herramienta-completa.borde-morado { border-top-color: #b48cf0; }
+.herramienta-completa.borde-verde { border-top-color: #5cc47c; }
+.herramienta-completa h3 { margin: 0 0 6px; font-size: 21px; line-height: 1.25; color: var(--amarillo); }
+.herramienta-resumen { font-size: 16px; line-height: 1.5; color: var(--blanco-suave); margin: 0 0 16px; }
+
+/* Al llegar desde un enlace (por ejemplo, el buscador), se resalta un momento. */
+.herramienta-completa:target,
+.articulo-completo:target { animation: resaltarObjetivo 2.2s ease-out; }
+@keyframes resaltarObjetivo {
+  0%, 35% { box-shadow: 0 0 0 4px var(--amarillo), var(--sombra-media); }
+  100% { box-shadow: var(--sombra-suave); }
+}
 
 .herramienta-pasos {
   list-style: none;
   counter-reset: paso;
   padding: 0;
-  margin: 0 0 24px;
+  margin: 0 0 16px;
   display: flex;
   flex-direction: column;
   gap: 10px;
 }
 .herramienta-pasos li {
   counter-increment: paso;
-  background: var(--tarjeta-fondo);
-  border: 1px solid var(--tarjeta-borde);
+  background: rgba(0, 0, 0, 0.16);
   border-radius: 12px;
-  padding: 12px 14px 12px 44px;
+  padding: 12px 14px 12px 52px;
   position: relative;
-  font-size: 14px;
+  font-size: 16px;
   line-height: 1.5;
   color: var(--blanco);
-  box-shadow: var(--sombra-suave);
 }
 .herramienta-pasos li::before {
   content: counter(paso);
   position: absolute;
   left: 12px;
-  top: 12px;
-  width: 22px;
-  height: 22px;
+  top: 11px;
+  width: 28px;
+  height: 28px;
   border-radius: 50%;
   background: var(--dorado);
   color: var(--verde-oscuro);
-  font-size: 12px;
-  font-weight: 700;
+  font-size: 15px;
+  font-weight: 800;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-.herramienta-video {
-  margin: 0 0 24px;
+/* Video que se carga solo al tocarlo (la página no se vuelve pesada con
+   tantos videos, y se reproduce ahí mismo). */
+.video-ligero {
+  position: relative;
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  padding: 0;
   border: 2px solid var(--dorado);
   border-radius: 12px;
   overflow: hidden;
-  box-shadow: var(--sombra-suave);
+  background: #000;
+  cursor: pointer;
 }
-.herramienta-video iframe { display: block; border: 0; }
-.herramienta-video-placeholder {
-  margin: 0;
-  background: var(--tarjeta-fondo);
-  border: 2px dashed var(--dorado);
-  border-radius: 12px;
-  padding: 24px 16px;
-  text-align: center;
-  font-size: 13px;
-  color: var(--blanco-suave);
+.video-ligero img { width: 100%; height: 100%; object-fit: cover; display: block; opacity: 0.85; transition: opacity var(--transicion-suave); }
+.video-ligero:hover img, .video-ligero:focus-visible img { opacity: 1; }
+.video-ligero-play {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  translate: -50% -50%;
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: var(--amarillo);
+  color: var(--verde-oscuro);
+  font-size: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-left: 4px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.45);
+}
+.video-ligero-texto {
+  position: absolute;
+  left: 12px;
+  bottom: 10px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.65);
+  color: #fff;
+  font-size: 15px;
+  font-weight: 600;
+}
+.video-reproduciendo { aspect-ratio: 16 / 9; border-radius: 12px; overflow: hidden; border: 2px solid var(--dorado); }
+.video-reproduciendo iframe { width: 100%; height: 100%; border: 0; display: block; }
+
+.herramientas-cta { padding: 0 20px 36px; }
+.herramientas-cta a { font-size: 16px; padding: 13px 22px; }
+
+@media (min-width: 760px) {
+  .herramientas-grid { grid-template-columns: repeat(2, 1fr); align-items: start; }
+  .categoria-sintomas { max-width: 720px; margin-left: auto; margin-right: auto; }
 }

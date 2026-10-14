@@ -18,8 +18,14 @@
   </header>
 
   <section class="pregunta-hoy tests-intro">
-    <p>Ejercicios cortos para sentirte mejor. Elige lo que estás sintiendo y prueba uno. Funcionan a cualquier hora, aunque nadie esté conectado.</p>
+    <p>Ejercicios cortos para sentirte mejor. Elige lo que estás sintiendo y sigue los pasos aquí mismo. Funcionan a cualquier hora, aunque nadie esté conectado.</p>
   </section>
+
+  <nav class="saltos" aria-label="Ir a una categoría">
+    {% for cat_id, cat in categorias.items() %}
+      <a href="#{{ cat_id }}" class="salto salto-{{ cat.color }}">{{ cat.corto }}</a>
+    {% endfor %}
+  </nav>
 
   {% for cat_id, cat in categorias.items() %}
     <section class="herramientas-categoria" id="{{ cat_id }}">
@@ -33,16 +39,30 @@
           </ul>
         </div>
       {% endif %}
-      <div class="historial-semana tests-lista">
+      <div class="herramientas-grid">
         {% for item_id, item in cat.tecnicas.items() %}
-          <a href="{{ url_for('herramientas_detalle', categoria=cat_id, tecnica=item_id) }}" class="test-card">
+          <article class="herramienta-completa borde-{{ cat.color }}" id="{{ cat_id }}-{{ item_id }}">
             <h3>{{ item.nombre }}</h3>
-            <p>{{ item.resumen }}</p>
-          </a>
+            <p class="herramienta-resumen">{{ item.resumen }}</p>
+            <ol class="herramienta-pasos">
+              {% for paso in item.pasos %}<li>{{ paso }}</li>{% endfor %}
+            </ol>
+            {% if item.video_youtube_id %}
+              <button type="button" class="video-ligero" data-video="{{ item.video_youtube_id }}" aria-label="Ver el video de {{ item.nombre }}">
+                <img src="https://i.ytimg.com/vi/{{ item.video_youtube_id }}/hqdefault.jpg" alt="" loading="lazy" width="480" height="360">
+                <span class="video-ligero-play" aria-hidden="true">▶</span>
+                <span class="video-ligero-texto">Ver video</span>
+              </button>
+            {% endif %}
+          </article>
         {% endfor %}
       </div>
     </section>
   {% endfor %}
+
+  <div class="articulo-cta herramientas-cta">
+    <a href="{{ url_for('estudiante') }}">¿Necesitas hablarlo con alguien? Habla con la psicóloga →</a>
+  </div>
 
   <script src="{{ url_for('static', filename='js/common.js') }}"></script>
 </body>

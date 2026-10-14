@@ -126,7 +126,7 @@ REGLAS = [
             r"\bcoraz[oó]n.*r[aá]pido\b", r"\bnudo en la garganta\b",
         ],
         "respuestas": [
-            "Los exámenes pueden pesar mucho. Algo que ayuda a bajar la ansiedad es respirar lento 4 segundos, sostener 4, soltar 4. ¿Quieres contarme qué es lo que más te preocupa de esto?",
+            "Los exámenes pueden pesar mucho. Algo que ayuda a bajar la ansiedad es la respiración 4-4-4-4: tomar aire 4 segundos, sostener 4, soltar 4 y esperar 4. ¿Quieres contarme qué es lo que más te preocupa de esto?",
             "Es normal sentir presión antes de algo importante. ¿Qué parte se te hace más difícil ahora mismo?",
             "Un examen no define lo que vales. Vamos paso a paso: ¿qué es lo primero que te agobia?",
             "Quedarte en blanco no significa que no hayas estudiado — los nervios pueden interferir un momento con la memoria. Si pasa, detente unos segundos, respira, y empieza por lo que sí recuerdes.",

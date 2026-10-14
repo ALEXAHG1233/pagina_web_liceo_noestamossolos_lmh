@@ -822,53 +822,55 @@
   .emergencia { flex-direction: column; gap: 8px; }
 }
 
-/* "Recursos de psicología": índice numerado, sin cajas. */
+/* "Recursos de psicología": cuadrícula de tarjetas numeradas. */
 .recursos-grid {
   display: grid;
-  grid-template-columns: 1fr;
-  column-gap: 28px;
-  border-top: 1px solid var(--linea);
-  margin-bottom: 8px;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  margin-bottom: 14px;
 }
 .recurso-card {
-  display: grid;
-  grid-template-columns: 34px 1fr;
-  column-gap: 8px;
-  row-gap: 4px;
-  padding: 14px 0;
-  border-bottom: 1px solid var(--linea);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 16px 14px;
+  border-radius: 16px;
+  background: var(--tarjeta-fondo);
+  border: 1px solid rgba(201, 162, 39, 0.55);
+  box-shadow: var(--sombra-suave);
   text-decoration: none;
   color: var(--blanco);
+  transition: transform var(--transicion-suave), border-color var(--transicion-suave);
 }
+.recurso-card:hover,
+.recurso-card:focus-visible { transform: translateY(-3px); border-color: var(--amarillo); }
 .recurso-numero {
-  grid-row: span 2;
   font-family: "Fraunces", Georgia, serif;
-  font-size: 15px;
+  font-size: 26px;
+  font-weight: 700;
+  line-height: 1;
   color: var(--dorado);
-  padding-top: 1px;
 }
 .recurso-titulo {
-  font-size: 15px;
-  font-weight: 600;
+  font-size: 18px;
+  font-weight: 700;
   color: var(--blanco);
-  line-height: 1.3;
+  line-height: 1.25;
   transition: color var(--transicion-suave);
 }
 .recurso-card:hover .recurso-titulo,
 .recurso-card:focus-visible .recurso-titulo { color: var(--amarillo); }
 .recurso-resumen {
-  font-size: 13px;
+  font-size: 15px;
   line-height: 1.45;
   color: var(--blanco-suave);
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
 }
 
+@media (max-width: 360px) {
+  .recursos-grid { grid-template-columns: 1fr; }
+}
 @media (min-width: 640px) {
-  .recursos-grid { grid-template-columns: repeat(2, 1fr); }
+  .recursos-grid { grid-template-columns: repeat(3, 1fr); }
 }
 
 /* "Más para ti": accesos directos como etiquetas de texto. */

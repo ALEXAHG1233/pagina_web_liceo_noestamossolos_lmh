@@ -10,6 +10,7 @@ están disponibles las 24 horas porque son contenido fijo, y cada una
 recuerda que la psicóloga sigue siendo la opción real cuando algo pesa mucho.
 
 Cada categoría tiene:
+  - "corto": nombre breve para los botones de arriba de la página.
   - "sintomas": señales para reconocer lo que estás sintiendo.
   - "tecnicas": cada una con nombre, resumen, pasos y (si existe) un video.
 """
@@ -17,6 +18,7 @@ Cada categoría tiene:
 TECNICAS = {
     "ansiedad": {
         "titulo": "Cuando siento ansiedad o nervios",
+        "corto": "Ansiedad",
         "descripcion": "Para cuando el miedo o la preocupación no te dejan en paz.",
         "color": "azul",
         "sintomas": [
@@ -27,14 +29,15 @@ TECNICAS = {
         ],
         "tecnicas": {
             "respiracion": {
-                "nombre": "Respiración 4-4-4",
-                "resumen": "Para bajar los nervios en el momento, en menos de un minuto.",
+                "nombre": "Respiración 4-4-4-4",
+                "resumen": "Respirar dibujando un cuadrado: 4 lados de 4 segundos. Baja los nervios en un minuto.",
                 "video_youtube_id": "Nvtr6Ms4bmo",
                 "pasos": [
-                    "Toma aire por la nariz contando despacio hasta 4.",
-                    "Aguanta el aire contando hasta 4.",
-                    "Suelta el aire por la boca contando hasta 4.",
-                    "Repite 4 o 5 veces. Si te mareas, respira normal y descansa.",
+                    "Toma aire por la nariz contando despacio hasta 4 (subes por un lado del cuadrado).",
+                    "Aguanta el aire contando hasta 4 (cruzas el lado de arriba).",
+                    "Suelta el aire por la boca contando hasta 4 (bajas por el otro lado).",
+                    "Quédate sin aire contando hasta 4 (cruzas el lado de abajo).",
+                    "Da 4 o 5 vueltas al cuadrado. Si te mareas, respira normal y descansa.",
                 ],
             },
             "respiracion_globo": {
@@ -46,17 +49,6 @@ TECNICAS = {
                     "Toma aire por la nariz e intenta que se infle la panza, no el pecho, como un globo.",
                     "Suelta el aire despacio por la boca, como si apagaras una vela sin prisa.",
                     "Hazlo 5 veces. Es la base de casi todos los ejercicios para calmarse.",
-                ],
-            },
-            "respiracion_cuadrado": {
-                "nombre": "La respiración del cuadrado",
-                "resumen": "Dibujar un cuadrado con la respiración: 4 lados, 4 tiempos.",
-                "video_youtube_id": "tEmt1Znux58",
-                "pasos": [
-                    "Imagina un cuadrado. Subes por un lado tomando aire en 4 tiempos.",
-                    "Cruzas el lado de arriba aguantando el aire 4 tiempos.",
-                    "Bajas por el otro lado soltando el aire en 4 tiempos.",
-                    "Cruzas el lado de abajo sin aire, 4 tiempos. Da 4 vueltas al cuadrado.",
                 ],
             },
             "cinco_sentidos": {
@@ -85,6 +77,7 @@ TECNICAS = {
     },
     "enojo": {
         "titulo": "Cuando siento mucho enojo (ira)",
+        "corto": "Enojo",
         "descripcion": "Para cuando el enojo crece rápido y no quieres hacer algo de lo que te arrepientas.",
         "color": "rojo",
         "sintomas": [
@@ -153,6 +146,7 @@ TECNICAS = {
     },
     "tristeza": {
         "titulo": "Cuando me siento triste o sin ganas (depresión)",
+        "corto": "Tristeza",
         "descripcion": "Para cuando la tristeza dura varios días y todo cuesta más.",
         "color": "morado",
         "sintomas": [
@@ -222,6 +216,7 @@ TECNICAS = {
     },
     "calma": {
         "titulo": "Cuando quiero calmar mi mente",
+        "corto": "Calma",
         "descripcion": "Ejercicios cortos para cuando hay mucho estrés o la cabeza no para.",
         "color": "verde",
         "sintomas": [
@@ -268,6 +263,7 @@ TECNICAS = {
     },
     "decir": {
         "titulo": "Cuando necesito decir lo que siento",
+        "corto": "Decir lo que siento",
         "descripcion": "Para pedir lo que necesitas o decir que no, sin pelear.",
         "color": "dorado",
         "sintomas": [
@@ -302,6 +298,7 @@ TECNICAS = {
     },
     "dormir": {
         "titulo": "Cuando no puedo dormir",
+        "corto": "Dormir",
         "descripcion": "Para las noches en que la cabeza no se apaga.",
         "color": "azul",
         "sintomas": [
@@ -336,6 +333,7 @@ TECNICAS = {
     },
     "estudiar": {
         "titulo": "Para estudiar mejor",
+        "corto": "Estudiar",
         "descripcion": "Hábitos de estudio para aprender más con menos estrés.",
         "color": "verde",
         "sintomas": [

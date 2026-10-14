@@ -1,42 +1,94 @@
-.articulo-card { position: relative; padding-top: 34px; }
 .articulo-categoria {
-  position: absolute;
-  top: 14px;
-  left: 18px;
-  font-size: 10px;
+  display: inline-block;
+  font-size: 13px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.04em;
-  padding: 3px 9px;
+  padding: 4px 11px;
   border-radius: 10px;
-  display: inline-block;
+  margin-bottom: 10px;
 }
-.articulo-contenido .articulo-categoria { position: static; margin-bottom: 14px; }
 
 .cat-identifica { background: var(--azul-suave); color: var(--azul-honduras); }
 .cat-infórmate { background: var(--dorado-suave); color: #7a5000; }
 .cat-cuídate { background: var(--verde-suave); color: var(--verde-liceo); }
-
-.articulo-contenido { padding: 0 20px 30px; max-width: 480px; margin: 0 auto; }
-.articulo-contenido p {
-  font-size: 14px;
-  line-height: 1.6;
-  color: var(--blanco);
-  margin: 0 0 14px;
-}
+.cat-conceptos { background: #efe3ff; color: #5a2d91; }
 
 .articulo-cta { text-align: center; margin-top: 24px; }
 .articulo-cta a {
   display: inline-block;
-  padding: 10px 20px;
-  border-radius: 20px;
+  padding: 12px 22px;
+  border-radius: 22px;
   background: var(--verde-liceo);
+  border: 1px solid var(--dorado);
   color: #fff;
   text-decoration: none;
-  font-size: 13px;
+  font-size: 16px;
   font-weight: 600;
 }
 .articulo-cta a:hover { background: var(--verde-liceo-claro); }
+
+/* Glosario: palabras técnicas en cuadrícula; cada una lleva a su artículo
+   dentro de esta misma página. */
+.glosario { padding: 6px 16px 18px; }
+.glosario-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; }
+.glosario-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 12px 14px;
+  border-radius: 14px;
+  background: var(--tarjeta-fondo);
+  border: 1px solid rgba(201, 162, 39, 0.5);
+  text-decoration: none;
+  color: var(--blanco);
+  transition: transform var(--transicion-suave), border-color var(--transicion-suave);
+}
+.glosario-item:hover, .glosario-item:focus-visible { transform: translateY(-2px); border-color: var(--amarillo); }
+.glosario-termino { font-size: 17px; font-weight: 700; color: var(--amarillo); line-height: 1.25; }
+.glosario-def { font-size: 15px; line-height: 1.4; color: var(--blanco-suave); }
+
+/* Buscador de temas dentro de la barra de categorías. */
+.filtro-articulos { flex: 1 0 180px; display: flex; }
+.filtro-articulos input {
+  width: 100%;
+  min-width: 0;
+  padding: 9px 14px;
+  border-radius: 999px;
+  border: 1px solid var(--dorado);
+  background: rgba(0, 0, 0, 0.25);
+  color: var(--blanco);
+  font: inherit;
+  font-size: 15px;
+}
+.filtro-articulos input::placeholder { color: var(--blanco-suave); }
+.filtro-vacio { text-align: center; font-size: 17px; padding: 20px; }
+
+/* Infórmate por categoría, con cada artículo completo a la vista. */
+.informate-categoria { margin: 22px 0 8px; padding: 0 16px; scroll-margin-top: 72px; }
+.informate-categoria-titulo { margin: 0 0 4px; font-size: 26px; color: var(--amarillo); }
+.informate-categoria-desc { margin: 0 0 14px; font-size: 16px; opacity: 0.9; }
+.articulos-columnas { columns: 1; column-gap: 18px; }
+.articulo-completo {
+  break-inside: avoid;
+  margin: 0 0 18px;
+  padding: 18px 18px 8px;
+  border-radius: 16px;
+  background: var(--tarjeta-fondo);
+  border: 1px solid rgba(201, 162, 39, 0.45);
+  border-top: 5px solid var(--dorado);
+  box-shadow: var(--sombra-suave);
+  scroll-margin-top: 72px;
+}
+.articulo-completo h3 { margin: 0 0 8px; font-size: 22px; line-height: 1.25; color: var(--amarillo); }
+.articulo-completo p { font-size: 16px; line-height: 1.6; margin: 0 0 12px; color: var(--blanco); }
+.articulo-completo .articulo-resumen { font-weight: 600; color: var(--blanco-suave); }
+.articulo-completo .video-ligero { margin: 4px 0 14px; }
+
+@media (min-width: 900px) {
+  .articulos-columnas { columns: 2; }
+  .glosario-grid { grid-template-columns: repeat(4, 1fr); }
+}
 
 /* Collage de imágenes en artículos (por ejemplo, personajes). Las fotos
    salen del centro a su lugar al cargar; al pasar el mouse por el
@@ -50,8 +102,8 @@
   position: absolute;
   top: 50%;
   left: 50%;
-  width: 118px;
-  height: 118px;
+  width: 104px;
+  height: 104px;
   object-fit: cover;
   padding: 6px 6px 22px;
   background: #ffffff;
@@ -70,26 +122,11 @@
 .collage:hover .collage-foto { translate: calc(-50% + var(--x) * 1.18) calc(-50% + var(--y) * 1.4); }
 .collage .collage-foto:hover { rotate: 0deg; scale: 1.12; z-index: 2; }
 @media (min-width: 560px) {
-  .collage { height: 260px; }
-  .collage-foto { width: 150px; height: 150px; }
+  .collage { height: 240px; }
+  .collage-foto { width: 120px; height: 120px; }
 }
 @media (prefers-reduced-motion: reduce) {
   .collage-foto { animation: none; transition: none; }
 }
 
-/* Infórmate agrupado por categoría, y videos en artículos y tests. */
-.informate-categoria { margin: 26px 0 8px; }
-.informate-categoria-titulo { margin: 0 16px 2px; font-size: 22px; }
-.informate-categoria-desc { margin: 0 16px 10px; font-size: 14px; opacity: 0.85; }
-.articulo-con-video {
-  display: inline-block;
-  margin-left: 6px;
-  padding: 2px 8px;
-  border-radius: 999px;
-  background: rgba(255, 200, 61, 0.15);
-  color: #ffc83d;
-  font-size: 11px;
-  font-weight: 700;
-}
-.contenido-video { margin: 14px 0 18px; border-radius: 12px; overflow: hidden; }
-.contenido-video iframe { display: block; border: 0; }
+.articulo-completo[hidden], .informate-categoria[hidden], .filtro-vacio[hidden] { display: none; }

@@ -592,6 +592,164 @@ ARTICULOS = {
 }
 
 
+# Conceptos técnicos de psicología: cada uno con su nombre real, quién lo
+# estudió, y un ejemplo de la vida en el liceo para que se entienda.
+ARTICULOS.update({
+    "efecto-pigmalion": {
+        "titulo": "El efecto Pigmalión (la profecía autocumplida)",
+        "categoria": "Conceptos",
+        "resumen": "Lo que otros esperan de ti, y lo que tú esperas de ti, puede cambiar lo que logras.",
+        "contenido": [
+            "Una profecía autocumplida es una creencia que, sin darnos cuenta, hace que pase justo lo que creíamos. El sociólogo Robert Merton le puso ese nombre en 1948.",
+            "El efecto Pigmalión es un tipo de profecía autocumplida. En 1968, los psicólogos Robert Rosenthal y Lenore Jacobson le dijeron a unos maestros que ciertos alumnos iban a mejorar mucho ese año. En realidad esos alumnos se eligieron al azar. Aun así, muchos de ellos mejoraron más que sus compañeros.",
+            "¿Por qué? Porque cuando alguien espera mucho de ti, sin querer te trata distinto: te explica con más paciencia, te da más oportunidades y te anima más. Y eso sí cambia los resultados.",
+            "También funciona al revés (a eso se le llama efecto Golem): si alguien, o tú mismo/a, piensa \"yo no sirvo para matemáticas\", es fácil dejar de intentarlo, y el resultado termina \"confirmando\" la idea.",
+            "Lo útil: tus expectativas sobre ti también cuentan. Cambiar \"no puedo\" por \"todavía no me sale\" no es magia, pero te hace seguir practicando, y eso es lo que cambia el resultado.",
+        ],
+    },
+    "indefension-aprendida": {
+        "titulo": "La indefensión aprendida",
+        "categoria": "Conceptos",
+        "resumen": "Cuando después de fallar muchas veces dejas de intentarlo, aunque ahora sí podrías lograrlo.",
+        "contenido": [
+            "La indefensión aprendida es lo que pasa cuando una persona vive muchas veces algo malo que no puede controlar, y aprende que \"haga lo que haga, no sirve de nada\". Después, aunque la situación cambie y sí pueda hacer algo, ya no lo intenta.",
+            "El psicólogo Martin Seligman la describió a finales de los años 60. Más tarde se estudió mucho en personas, y se vio que está muy relacionada con la tristeza profunda y la depresión.",
+            "En el liceo se puede escuchar así: \"¿para qué estudio si igual voy a reprobar?\". Esa frase no es flojera: muchas veces es cansancio de haberlo intentado sin ver resultados.",
+            "La salida es recuperar la sensación de control con pasos pequeños que sí se pueden lograr: estudiar un solo tema, terminar una tarea corta, pedir ayuda en una sola duda. Cada logro pequeño le enseña al cerebro que el esfuerzo sí cambia algo.",
+            "Si sientes que ya nada de lo que haces sirve, eso merece hablarse con la psicóloga. No es un defecto tuyo: es algo que se aprendió, y lo que se aprende se puede cambiar.",
+        ],
+    },
+    "disonancia-cognitiva": {
+        "titulo": "La disonancia cognitiva",
+        "categoria": "Conceptos",
+        "resumen": "La incomodidad que sientes cuando haces algo que va en contra de lo que crees.",
+        "contenido": [
+            "La disonancia cognitiva es la incomodidad que sentimos cuando lo que hacemos no cuadra con lo que pensamos o creemos. El psicólogo Leon Festinger la explicó en 1957.",
+            "Como esa incomodidad molesta, la mente busca quitársela. A veces cambiamos lo que hacemos, pero muchas otras veces cambiamos lo que pensamos para justificarnos.",
+            "Un ejemplo del liceo: sabes que burlarse de alguien está mal, pero te ríes con el grupo para encajar. Para no sentirte mal, tu mente dice \"solo era una broma\" o \"él también se lo buscó\".",
+            "Otro ejemplo: alguien sabe que necesita dormir, pero se queda en el celular hasta tarde, y se dice \"total, mañana no hay nada importante\".",
+            "Darte cuenta de esa incomodidad es útil: es una alarma que te avisa que algo no va con tus valores. En vez de taparla con excusas, puedes usarla para cambiar lo que haces.",
+        ],
+    },
+    "efecto-foco": {
+        "titulo": "El efecto foco (efecto reflector)",
+        "categoria": "Conceptos",
+        "resumen": "Sientes que todos te están mirando y juzgando, pero en realidad casi nadie lo nota.",
+        "contenido": [
+            "El efecto foco (en inglés, spotlight effect) es la sensación de que tenemos un reflector encima: creemos que los demás notan nuestros errores, nuestra ropa o nuestra apariencia mucho más de lo que de verdad lo hacen.",
+            "En el año 2000, los psicólogos Thomas Gilovich, Victoria Medvec y Kenneth Savitsky pidieron a unos estudiantes que entraran a un salón con una camiseta que les daba vergüenza. Ellos pensaron que la mitad del grupo lo iba a notar; en realidad lo notó más o menos una de cada cuatro personas.",
+            "Pasa porque cada quien vive dentro de su propia cabeza: tú estás pendiente de ti, y los demás… están pendientes de sí mismos.",
+            "En el liceo: si te equivocas al pasar al frente, o se te cae algo en el comedor, lo más probable es que a los cinco minutos casi nadie se acuerde. Tú sí, pero ellos no.",
+            "Recordar este efecto ayuda mucho con la vergüenza y la ansiedad social. Puedes preguntarte: \"¿yo me acordaría si le pasara a otra persona?\". Casi siempre la respuesta es no.",
+        ],
+    },
+    "sesgo-negatividad": {
+        "titulo": "El sesgo de negatividad",
+        "categoria": "Conceptos",
+        "resumen": "Por qué un comentario malo pesa más que diez buenos.",
+        "contenido": [
+            "El sesgo de negatividad es la tendencia del cerebro a darle más importancia a lo malo que a lo bueno. Un comentario feo se recuerda más que muchos elogios, y un error pesa más que varios aciertos.",
+            "Varios investigadores lo han estudiado. En 2001, el psicólogo Roy Baumeister y su equipo revisaron muchos estudios y lo resumieron en una frase: \"lo malo es más fuerte que lo bueno\".",
+            "Tiene una explicación: hace miles de años, fijarse en los peligros ayudaba a sobrevivir. El problema es que hoy el cerebro reacciona igual a un mensaje en el chat del grado que a una amenaza real.",
+            "Por eso, cuando tienes un mal día, puede parecer que \"todo salió mal\", aunque también pasaron cosas buenas que tu mente dejó pasar.",
+            "Se puede equilibrar a propósito. La herramienta \"Tres cosas buenas\" (en la sección Herramientas) entrena justo eso: buscar cada noche tres cosas que sí salieron bien.",
+        ],
+    },
+    "conformidad-asch": {
+        "titulo": "La conformidad: el experimento de Asch",
+        "categoria": "Conceptos",
+        "resumen": "Por qué a veces decimos lo mismo que el grupo, aunque sepamos que está mal.",
+        "contenido": [
+            "La conformidad es cambiar lo que decimos o hacemos para coincidir con el grupo. Es la base de lo que llamamos presión de grupo.",
+            "En los años 50, el psicólogo Solomon Asch hizo un experimento famoso. Mostraba unas líneas y preguntaba cuál era igual a otra. La respuesta era muy fácil, pero los demás del grupo eran actores del investigador y respondían mal a propósito.",
+            "Resultado: alrededor de 3 de cada 4 participantes dieron la respuesta equivocada del grupo al menos una vez, aunque veían claramente cuál era la correcta.",
+            "El dato más importante: cuando había una sola persona que se atrevía a decir la respuesta correcta, la presión bajaba muchísimo. Un solo aliado cambia todo.",
+            "En el liceo esto se ve con las burlas, los retos peligrosos o el \"todos lo hacen\". Si tú eres esa primera persona que dice \"no\", estás haciendo que para los demás sea más fácil decir que no también.",
+        ],
+    },
+    "efecto-zeigarnik": {
+        "titulo": "El efecto Zeigarnik",
+        "categoria": "Conceptos",
+        "resumen": "Por qué lo que dejaste a medias se queda dando vueltas en tu cabeza.",
+        "contenido": [
+            "El efecto Zeigarnik es la tendencia a recordar más las tareas que dejamos sin terminar que las que ya terminamos. Lleva el nombre de la psicóloga Bluma Zeigarnik, que lo estudió en 1927.",
+            "Las investigaciones posteriores han tenido resultados distintos, así que no es una regla exacta. Pero la idea ayuda a entender algo que casi todos vivimos: lo pendiente \"pica\" en la mente.",
+            "Por eso a veces no te puedes dormir pensando en la tarea que no hiciste: el cerebro la mantiene encendida como un recordatorio.",
+            "Se puede usar a tu favor de dos formas. Primera: para dejar de procrastinar, empieza la tarea aunque sea 5 minutos; una vez empezada, la mente quiere terminarla.",
+            "Segunda: antes de dormir, escribe en un papel lo que tienes pendiente y cuándo lo harás. Al verlo anotado, la mente se relaja porque ya no tiene que \"cuidarlo\" toda la noche.",
+        ],
+    },
+    "locus-control": {
+        "titulo": "El locus de control",
+        "categoria": "Conceptos",
+        "resumen": "¿Sientes que lo que te pasa depende de ti, o de la suerte y los demás?",
+        "contenido": [
+            "El locus de control es dónde pones la causa de lo que te pasa. El psicólogo Julian Rotter lo describió en 1966.",
+            "Si tu locus de control es interno, sientes que tus resultados dependen sobre todo de ti: de tu esfuerzo y tus decisiones. Si es externo, sientes que dependen sobre todo de la suerte, del profesor o de los demás.",
+            "Ejemplo: sacas mala nota en un examen. Con locus interno piensas \"no estudié lo suficiente; la próxima vez me organizo mejor\". Con locus externo piensas \"el profe me tiene mala\" o \"tuve mala suerte\".",
+            "Lo sano es el equilibrio. Sentir que todo depende de ti puede llevarte a culparte de cosas que no controlas, como la separación de tus papás. Sentir que nada depende de ti te quita las ganas de intentarlo.",
+            "Una buena pregunta para cualquier problema es: \"¿qué parte de esto sí depende de mí?\". Ahí es donde vale la pena poner tu energía.",
+        ],
+    },
+    "error-atribucion": {
+        "titulo": "El error fundamental de atribución",
+        "categoria": "Conceptos",
+        "resumen": "Cuando otro se equivoca, pensamos que \"así es\"; cuando nos equivocamos nosotros, \"fue la situación\".",
+        "contenido": [
+            "El error fundamental de atribución es la tendencia a explicar lo que hacen los demás por su forma de ser, y no por la situación que están viviendo. El psicólogo Lee Ross le dio ese nombre en 1977.",
+            "Ejemplo: un compañero no te saluda en el pasillo y piensas \"es un creído\". Pero quizás no te vio, tenía un problema en casa o iba preocupado por un examen.",
+            "Con nosotros mismos hacemos lo contrario: si no saludamos, sabemos que fue porque íbamos apurados o tristes. Conocemos nuestras circunstancias, pero no las de los demás.",
+            "Este error causa muchos conflictos y chismes entre compañeros, porque juzgamos rápido a las personas por un solo momento.",
+            "Antes de sacar conclusiones sobre alguien, puedes preguntarte: \"¿qué le podría estar pasando para actuar así?\". No justifica todo, pero te ayuda a no juzgar de más.",
+        ],
+    },
+    "efecto-barnum": {
+        "titulo": "El efecto Barnum (o efecto Forer)",
+        "categoria": "Conceptos",
+        "resumen": "Por qué los horóscopos y los \"tests de personalidad\" de redes parecen describirte perfecto.",
+        "contenido": [
+            "El efecto Barnum es la tendencia a creer que una descripción muy general fue hecha especialmente para nosotros. Frases como \"a veces eres alegre, pero otras veces necesitas estar solo/a\" le quedan a casi cualquier persona.",
+            "En 1949, el psicólogo Bertram Forer le dio a sus estudiantes una \"descripción personal\" según un test que habían hecho. En realidad todos recibieron exactamente el mismo texto. Aun así, en promedio calificaron que los describía muy bien, más de 4 de 5 puntos.",
+            "Por eso los horóscopos, los tests de \"¿qué personaje eres?\" y muchos videos de redes se sienten tan exactos: dicen cosas que le pasan a casi todo el mundo.",
+            "Esto es importante con la salud mental: un video que dice \"si te pasa esto, tienes ansiedad\" o \"tienes TDAH\" puede hacerte sentir identificado/a, aunque no sea tu caso. Un diagnóstico de verdad solo lo puede hacer un profesional.",
+            "Las autoevaluaciones de esta página tampoco son diagnósticos: son una señal para reflexionar y, si algo te preocupa, para hablarlo con la psicóloga.",
+        ],
+    },
+    "neuroplasticidad": {
+        "titulo": "La neuroplasticidad",
+        "categoria": "Conceptos",
+        "resumen": "Tu cerebro cambia con lo que practicas: por eso los hábitos y las técnicas sí funcionan.",
+        "contenido": [
+            "La neuroplasticidad es la capacidad del cerebro para cambiar y reorganizarse con la experiencia. Cada vez que aprendes o practicas algo, las conexiones entre tus neuronas se fortalecen.",
+            "Una frase que se usa mucho en psicología lo resume: \"las neuronas que se activan juntas, se conectan juntas\". La idea viene del psicólogo Donald Hebb, en 1949.",
+            "Por eso al principio algo cuesta mucho (como tocar guitarra o resolver ecuaciones), y con la práctica se vuelve más fácil: tu cerebro literalmente construyó un camino para eso.",
+            "Lo mismo pasa con las emociones. Si practicas la respiración 4-4-4-4 cuando estás tranquilo/a, a tu cerebro le resulta más fácil usarla cuando estás nervioso/a. Las técnicas funcionan mejor cuanto más se practican.",
+            "Lo más esperanzador: la neuroplasticidad es muy fuerte en la adolescencia. Las formas de pensar y reaccionar no están \"fijas\": se pueden entrenar y cambiar.",
+        ],
+    },
+})
+
+# Artículos que ya existían y que también son conceptos técnicos.
+for _slug in ("sesgo-confirmacion", "experimento-milgram", "falsa-memoria", "efecto-placebo",
+              "dunning-kruger", "aversion-perdida", "efecto-halo", "efecto-espectador"):
+    ARTICULOS[_slug]["categoria"] = "Conceptos"
+
+ARTICULOS["efecto-halo"]["contenido"] = [
+    "El efecto halo es un sesgo (un \"atajo\" de la mente) que nos hace pensar que, si alguien tiene una cualidad buena, seguro también tiene otras. Si alguien es atractivo/a o simpático/a, tendemos a creer que también es inteligente, honesto/a o buena persona, aunque no tengamos pruebas.",
+    "El psicólogo Edward Thorndike lo describió en 1920: notó que los oficiales del ejército que calificaban bien a un soldado en una cosa (por ejemplo, su apariencia) lo calificaban bien en casi todo lo demás.",
+    "También existe al revés, el efecto halo negativo: si alguien nos cae mal por una sola cosa, empezamos a ver todo lo que hace como malo.",
+    "En el liceo se nota en los grupos y en la popularidad: a veces se le \"perdonan\" cosas a alguien que todos admiran, o se juzga de más a alguien solo por cómo se ve.",
+    "Ser consciente de este sesgo ayuda a juzgar a las personas por lo que hacen de verdad, y no solo por la primera impresión.",
+]
+ARTICULOS["efecto-espectador"]["contenido"] = [
+    "El efecto espectador es un fenómeno de la psicología social: entre más personas ven una emergencia, menos probable es que alguna ayude.",
+    "Lo estudiaron los psicólogos John Darley y Bibb Latané en 1968. Vieron que cuando una persona creía estar sola frente a una emergencia, ayudaba casi siempre; cuando creía que había más gente, tardaba más o no hacía nada.",
+    "La causa principal se llama difusión de responsabilidad: cada persona piensa \"seguro alguien más va a actuar\", y al final nadie actúa. No es porque la gente sea mala.",
+    "En el liceo pasa mucho con el bullying: varios ven la burla y nadie dice nada, cada uno esperando que otro lo haga. Por eso, si ves que molestan a alguien, tu acción cuenta, aunque haya mucha gente. Avisar a un adulto o a la psicóloga ya es actuar.",
+    "Y si alguna vez necesitas ayuda en público, señala a una persona específica (\"tú, el de la camisa azul, ayúdame\"). Eso rompe la difusión de responsabilidad y hace mucho más probable que alguien reaccione.",
+]
+
+
 # Videos de YouTube (en español) que acompañan algunos artículos. Cada ID se
 # verificó con YouTube antes de agregarlo. Para agregar otro: "slug": "ID".
 VIDEOS_ARTICULOS = {
@@ -611,4 +769,35 @@ CATEGORIAS_INFORMATE = [
     ("Cuídate", "Ideas para cuidarte y sentirte mejor."),
     ("Identifica", "Para reconocer patrones en ti o en otras personas."),
     ("Infórmate", "Cómo funciona la mente, explicado fácil."),
+    ("Conceptos", "Palabras técnicas de la psicología, con quién las estudió y ejemplos del liceo."),
+]
+
+# Glosario al inicio de Infórmate: (palabra técnica, qué es en una frase, artículo).
+GLOSARIO = [
+    ("Efecto espectador", "Entre más gente ve una emergencia, menos probable es que alguien ayude.", "efecto-espectador"),
+    ("Efecto halo", "Si alguien tiene una cualidad buena, creemos que todo en esa persona es bueno.", "efecto-halo"),
+    ("Efecto Pigmalión", "Lo que se espera de ti influye en lo que logras.", "efecto-pigmalion"),
+    ("Indefensión aprendida", "Dejar de intentarlo después de fallar muchas veces.", "indefension-aprendida"),
+    ("Disonancia cognitiva", "Incomodidad cuando haces algo que va contra lo que crees.", "disonancia-cognitiva"),
+    ("Efecto foco", "Creer que todos te miran, cuando casi nadie lo nota.", "efecto-foco"),
+    ("Sesgo de negatividad", "Lo malo pesa más en la mente que lo bueno.", "sesgo-negatividad"),
+    ("Conformidad", "Decir lo mismo que el grupo, aunque sepas que está mal.", "conformidad-asch"),
+    ("Sesgo de confirmación", "Creer solo lo que confirma lo que ya pensabas.", "sesgo-confirmacion"),
+    ("Efecto Dunning-Kruger", "Quien menos sabe de algo suele sentirse más seguro.", "dunning-kruger"),
+    ("Efecto Zeigarnik", "Lo que dejas a medias se queda dando vueltas en la mente.", "efecto-zeigarnik"),
+    ("Locus de control", "Sentir que lo que te pasa depende de ti o de afuera.", "locus-control"),
+    ("Error de atribución", "Juzgar a otros por su forma de ser y no por su situación.", "error-atribucion"),
+    ("Efecto Barnum", "Creer que una descripción general fue hecha para ti.", "efecto-barnum"),
+    ("Efecto placebo", "Creer que algo te ayudará hace que de verdad te ayude.", "efecto-placebo"),
+    ("Aversión a la pérdida", "Perder algo duele más de lo que alegra ganarlo.", "aversion-perdida"),
+    ("Neuroplasticidad", "El cerebro cambia con lo que practicas.", "neuroplasticidad"),
+    ("Neuronas espejo", "Neuronas que se activan al ver lo que otros sienten o hacen.", "neuronas-espejo"),
+    ("Cortisol", "La hormona que el cuerpo libera con el estrés.", "cortisol"),
+    ("Dopamina", "Sustancia del cerebro ligada al deseo y la motivación.", "dopamina"),
+    ("Amígdala", "La parte del cerebro que dispara el miedo antes de pensarlo.", "amigdala-emociones"),
+    ("Rumiación", "Un pensamiento que da vueltas sin llegar a ningún lado.", "rumiacion"),
+    ("Catastrofismo", "Saltar directo al peor escenario posible.", "catastrofismo"),
+    ("Somatización", "Cuando el cuerpo expresa lo que la mente no ha procesado.", "somatizacion"),
+    ("Proyección", "Ver en otros lo que en realidad sientes tú.", "proyeccion"),
+    ("Síndrome del impostor", "Sentir que no mereces tus logros.", "sindrome-impostor"),
 ]

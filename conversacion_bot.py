@@ -62,7 +62,7 @@ TEMAS = {
             "¿Cómo has estado durmiendo con todo esto?",
             "¿Qué tienes pendiente que más te preocupa?",
         ],
-        "herramienta": "Respiración 4-4-4",
+        "herramienta": "Respiración 4-4-4-4",
     },
     "bullying": {
         "preguntas": [
@@ -136,7 +136,7 @@ TEMAS = {
     "rendimiento_academico": {"preguntas": PREGUNTAS_ESTUDIO, "herramienta": "La técnica del tomate (25 y 5)"},
     "procrastinacion": {"preguntas": PREGUNTAS_ESTUDIO, "herramienta": "La técnica del tomate (25 y 5)"},
     "dificultad_academica": {"preguntas": PREGUNTAS_ESTUDIO, "herramienta": "Explicárselo a alguien"},
-    "abrumado": {"preguntas": PREGUNTAS_GENERALES, "herramienta": "Respiración 4-4-4"},
+    "abrumado": {"preguntas": PREGUNTAS_GENERALES, "herramienta": "Respiración 4-4-4-4"},
     "pensamiento_catastrofico": {"preguntas": PREGUNTAS_GENERALES, "herramienta": "Revisar lo que me digo"},
     "perfeccionismo": {"preguntas": PREGUNTAS_GENERALES, "herramienta": "Revisar lo que me digo"},
     "culpa": {"preguntas": PREGUNTAS_GENERALES, "herramienta": "Revisar lo que me digo"},
