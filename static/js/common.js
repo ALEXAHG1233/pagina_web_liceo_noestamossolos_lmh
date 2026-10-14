@@ -1896,3 +1896,64 @@ function activarMacbook() {
 }
 
 document.addEventListener("DOMContentLoaded", activarMacbook);
+
+// Texto ondulado (squiggly) en los títulos grandes: un filtro SVG de ruido
+// deforma un poco las letras, y cada pocos milisegundos cambia el ruido
+// (semilla y fuerza al azar dentro de un rango), así parece dibujado a mano
+// y "vibra". Si la persona pidió menos movimiento, no se aplica.
+const ONDULADO_SELECTOR = [
+  ".seccion h2:not(.sr-only)", ".multitud-texto h2", ".pila-titulo", ".macbook-titulo",
+  ".diario-header h1", ".informate-categoria-titulo", ".categoria-titulo", ".hero-amigos h1",
+].join(", ");
+const ONDULADOS = [
+  { id: "ondulado-suave", escala: [4, 5], paso: 90 },
+  { id: "ondulado-fuerte", escala: [6, 9], paso: 70 },
+];
+
+function activarTextoOndulado() {
+  if (SIN_MOVIMIENTO) return;
+  const titulos = document.querySelectorAll(ONDULADO_SELECTOR);
+  if (!titulos.length) return;
+
+  const ns = "http://www.w3.org/2000/svg";
+  const svg = document.createElementNS(ns, "svg");
+  svg.setAttribute("aria-hidden", "true");
+  svg.setAttribute("focusable", "false");
+  svg.style.cssText = "position:absolute;width:0;height:0;overflow:hidden";
+  const filtros = ONDULADOS.map((cfg) => {
+    const filtro = document.createElementNS(ns, "filter");
+    filtro.id = cfg.id;
+    const ruido = document.createElementNS(ns, "feTurbulence");
+    ruido.setAttribute("type", "fractalNoise");
+    ruido.setAttribute("baseFrequency", "0.02");
+    ruido.setAttribute("numOctaves", "3");
+    ruido.setAttribute("result", "ruido");
+    const mover = document.createElementNS(ns, "feDisplacementMap");
+    mover.setAttribute("in", "SourceGraphic");
+    mover.setAttribute("in2", "ruido");
+    mover.setAttribute("xChannelSelector", "R");
+    mover.setAttribute("yChannelSelector", "G");
+    filtro.append(ruido, mover);
+    svg.appendChild(filtro);
+    return { ...cfg, ruido, mover };
+  });
+  document.body.appendChild(svg);
+
+  // El título principal de cada página va más fuerte; los demás, suave.
+  titulos.forEach((t) => {
+    const fuerte = t.matches(".diario-header h1, .hero-amigos h1, .multitud-texto h2, .macbook-titulo");
+    t.classList.add(fuerte ? "ondulado-fuerte" : "ondulado-suave");
+  });
+
+  filtros.forEach((f) => {
+    const [min, max] = f.escala;
+    const cambiar = () => {
+      f.ruido.setAttribute("seed", String(Math.floor(Math.random() * 1000)));
+      f.mover.setAttribute("scale", (min + Math.random() * (max - min)).toFixed(1));
+    };
+    cambiar();
+    setInterval(() => { if (!document.hidden) cambiar(); }, f.paso);
+  });
+}
+
+document.addEventListener("DOMContentLoaded", activarTextoOndulado);

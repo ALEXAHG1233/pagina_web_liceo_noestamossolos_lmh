@@ -76,3 +76,7 @@ input[type="submit"]:active {
   .articulo-cta a, .video-ver-mas, .salto, .libro-boton, .animo-btn, .btn-siguiente,
   .whatsapp-flotante, .volver, input[type="submit"], .test-empezar { scale: none !important; }
 }
+
+/* Texto ondulado en títulos grandes (los filtros los crea common.js). */
+.ondulado-suave { filter: url(#ondulado-suave); }
+.ondulado-fuerte { filter: url(#ondulado-fuerte); }
