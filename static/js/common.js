@@ -1110,20 +1110,87 @@ function activarCuadrosCyber() {
 
 document.addEventListener("DOMContentLoaded", activarCuadrosCyber);
 
-// Estela de tinta líquida detrás del cursor (splash_cursor.js). Solo en
-// computadoras con mouse y si no se pidió reducir el movimiento: en
-// celular gastaría batería y se activaría al hacer scroll con el dedo.
-function cargarEstelaCursor() {
+// Cursor con estela brillante (como GlowCursor): una línea dorada que
+// sigue al mouse y se desvanece en 1.4 segundos, con resplandor, y un
+// estallido de chispas al hacer clic. Solo en computadoras con mouse y si
+// no se pidió reducir el movimiento.
+function activarCursorBrillante() {
   const conMouse = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
-  if (!conMouse || SIN_MOVIMIENTO || document.getElementById("script-estela")) return;
-  const script = document.createElement("script");
-  script.id = "script-estela";
-  script.src = "/static/js/splash_cursor.js";
-  script.defer = true;
-  document.head.appendChild(script);
+  if (!conMouse || SIN_MOVIMIENTO) return;
+  const AJUSTES = { color: [255, 200, 61], intensidad: 1.3, grosor: 3, duracion: 1.4, resplandor: 1.2 };
+  const [R, G, B] = AJUSTES.color;
+  const lienzo = document.createElement("canvas");
+  lienzo.className = "cursor-brillante";
+  lienzo.setAttribute("aria-hidden", "true");
+  document.body.appendChild(lienzo);
+  const ctx = lienzo.getContext("2d");
+  let dpr = 1;
+  const medir = () => {
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    lienzo.width = window.innerWidth * dpr;
+    lienzo.height = window.innerHeight * dpr;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  };
+  medir();
+  window.addEventListener("resize", medir);
+
+  const puntos = [];       // { x, y, t }
+  const estallidos = [];   // chispas del clic
+  let animando = false;
+  window.addEventListener("pointermove", (e) => {
+    if (e.pointerType !== "mouse") return;
+    puntos.push({ x: e.clientX, y: e.clientY, t: performance.now() });
+    if (puntos.length > 120) puntos.shift();
+    empezar();
+  }, { passive: true });
+  window.addEventListener("pointerdown", (e) => {
+    if (e.pointerType !== "mouse") return;
+    for (let i = 0; i < 14; i++) {
+      const a = (i / 14) * Math.PI * 2;
+      const v = 1.5 + Math.random() * 2.5;
+      estallidos.push({ x: e.clientX, y: e.clientY, vx: Math.cos(a) * v, vy: Math.sin(a) * v, vida: 1 });
+    }
+    empezar();
+  }, { passive: true });
+
+  function empezar() { if (!animando) { animando = true; requestAnimationFrame(cuadro); } }
+
+  function cuadro(ahora) {
+    ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+    const vida = AJUSTES.duracion * 1000;
+    while (puntos.length && ahora - puntos[0].t > vida) puntos.shift();
+    ctx.globalCompositeOperation = "lighter";
+    ctx.lineCap = "round";
+    ctx.lineJoin = "round";
+    ctx.shadowColor = "rgba(" + R + "," + G + "," + B + ",0.9)";
+    ctx.shadowBlur = 14 * AJUSTES.resplandor;
+    for (let i = 1; i < puntos.length; i++) {
+      const p0 = puntos[i - 1], p1 = puntos[i];
+      const frescura = 1 - (ahora - p1.t) / vida;
+      ctx.strokeStyle = "rgba(" + R + "," + G + "," + B + "," + Math.min(1, frescura * 0.8 * AJUSTES.intensidad).toFixed(3) + ")";
+      ctx.lineWidth = AJUSTES.grosor * (0.4 + frescura * 0.8);
+      ctx.beginPath();
+      ctx.moveTo(p0.x, p0.y);
+      ctx.lineTo(p1.x, p1.y);
+      ctx.stroke();
+    }
+    for (let i = estallidos.length - 1; i >= 0; i--) {
+      const c = estallidos[i];
+      c.x += c.vx; c.y += c.vy; c.vx *= 0.94; c.vy *= 0.94; c.vida -= 0.035;
+      if (c.vida <= 0) { estallidos.splice(i, 1); continue; }
+      ctx.fillStyle = "rgba(" + R + "," + G + "," + B + "," + c.vida.toFixed(2) + ")";
+      ctx.beginPath();
+      ctx.arc(c.x, c.y, 2.2 * c.vida + 0.6, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    ctx.shadowBlur = 0;
+    ctx.globalCompositeOperation = "source-over";
+    if (puntos.length > 1 || estallidos.length) requestAnimationFrame(cuadro);
+    else { animando = false; ctx.clearRect(0, 0, window.innerWidth, window.innerHeight); }
+  }
 }
 
-document.addEventListener("DOMContentLoaded", cargarEstelaCursor);
+document.addEventListener("DOMContentLoaded", activarCursorBrillante);
 
 // Imágenes de la portada que "se voltean" al pasar el mouse: se envuelven
 // en un contenedor que hereda el margen, el ancho máximo y las esquinas
@@ -2188,3 +2255,335 @@ function activarFocoRedes() {
 }
 
 document.addEventListener("DOMContentLoaded", activarFocoRedes);
+
+
+// Texto con profundidad 3D en los títulos grandes (los mismos del texto
+// ondulado). Cada título lleva capas copiadas detrás (translateZ hacia
+// atrás) con un color más oscuro. Se inclina hasta 7.5° hacia el mouse;
+// si el mouse no se mueve, gira despacio solo. Solo se animan los títulos
+// que se ven en pantalla. El ondulado se pasa a la cara del texto, porque
+// un filtro en el título aplanaría el 3D.
+function activarTextoProfundo() {
+  if (SIN_MOVIMIENTO) return;
+  const titulos = Array.from(document.querySelectorAll(ONDULADO_SELECTOR));
+  if (!titulos.length) return;
+  const INCLINACION = 7.5, SUAVE = 0.14, GIRO = 0.35;
+
+  const items = titulos.map((t) => {
+    const tamano = parseFloat(getComputedStyle(t).fontSize) || 24;
+    const capas = Math.round(Math.min(16, Math.max(8, tamano / 2.4)));
+    const paso = Math.max(0.6, tamano * 0.028);   // px entre capas
+    const texto = t.textContent;
+    const cara = document.createElement("span");
+    cara.className = "profundidad-cara";
+    while (t.firstChild) cara.appendChild(t.firstChild);
+    ["ondulado-suave", "ondulado-fuerte"].forEach((c) => {
+      if (t.classList.contains(c)) { t.classList.remove(c); cara.classList.add(c); }
+    });
+    const cuerpo = document.createElement("span");
+    cuerpo.className = "profundidad-cuerpo";
+    for (let i = capas; i >= 1; i--) {
+      const capa = document.createElement("span");
+      capa.className = "profundidad-capa";
+      capa.setAttribute("aria-hidden", "true");
+      capa.textContent = texto;
+      capa.style.transform = "translateZ(" + (-i * paso).toFixed(2) + "px)";
+      capa.style.opacity = (0.55 + 0.45 * (1 - i / capas)).toFixed(2);
+      cuerpo.appendChild(capa);
+    }
+    cuerpo.appendChild(cara);
+    const escena = document.createElement("span");
+    escena.className = "profundidad-escena";
+    escena.appendChild(cuerpo);
+    t.appendChild(escena);
+    t.classList.add("profundidad", "profundidad-sombra");
+    return { t, cuerpo, rx: 0, ry: 0, visible: false };
+  });
+
+  const observador = new IntersectionObserver((entradas) => {
+    entradas.forEach((e) => {
+      const item = items.find((i) => i.t === e.target);
+      if (item) item.visible = e.isIntersecting;
+    });
+  });
+  items.forEach((i) => observador.observe(i.t));
+
+  let mouse = null, ultimo = -1e9;
+  window.addEventListener("pointermove", (e) => {
+    mouse = { x: e.clientX, y: e.clientY };
+    ultimo = performance.now();
+  }, { passive: true });
+
+  const inicio = performance.now();
+  let anterior = 0;
+  function cuadro(ahora) {
+    requestAnimationFrame(cuadro);
+    if (document.hidden || ahora - anterior < 33) return;
+    anterior = ahora;
+    const t = (ahora - inicio) / 1000;
+    const siguiendo = mouse && ahora - ultimo < 2500;
+    items.forEach((it) => {
+      if (!it.visible) return;
+      let ox, oy;
+      if (siguiendo) {
+        const r = it.t.getBoundingClientRect();
+        const fx = Math.max(-1, Math.min(1, (mouse.x - (r.left + r.width / 2)) / (window.innerWidth / 2)));
+        const fy = Math.max(-1, Math.min(1, (mouse.y - (r.top + r.height / 2)) / (window.innerHeight / 2)));
+        ox = -fy * INCLINACION;
+        oy = fx * INCLINACION;
+      } else {
+        ox = Math.sin(t * GIRO * 1.3) * INCLINACION * 0.5;
+        oy = Math.sin(t * GIRO) * INCLINACION;
+      }
+      it.rx += (ox - it.rx) * SUAVE;
+      it.ry += (oy - it.ry) * SUAVE;
+      it.cuerpo.style.transform = "rotateX(" + it.rx.toFixed(2) + "deg) rotateY(" + it.ry.toFixed(2) + "deg)";
+    });
+  }
+  requestAnimationFrame(cuadro);
+}
+
+document.addEventListener("DOMContentLoaded", activarTextoProfundo);
+
+
+// Bola de plasma (como CrystalizedBall) alrededor del círculo de
+// "Respira conmigo": un halo que respira con el círculo, rayos eléctricos
+// que salen del centro y chisporrotean, destellos, chispas y partículas
+// cuadradas que suben como polvo. Los rayos se inclinan hacia el mouse.
+// Dorado, como el círculo. Solo se anima cuando el cuadro se ve.
+function activarBolaPlasma() {
+  const lienzo = document.querySelector("[data-bola-plasma]");
+  if (!lienzo) return;
+  const ctx = lienzo.getContext("2d");
+  const circulo = lienzo.parentElement.querySelector("[data-respira-circulo]");
+  const AJUSTES = {
+    color: [255, 200, 61], rayos: 6, chisporroteo: 0.85, destellos: 0.65, brillo: 0.9,
+    chispas: 0.6, particulas: 260, vaiven: 0.5, titileo: 0.5, bruma: 0.7, fuerzaMouse: 0.7,
+  };
+  const [R, G, B] = AJUSTES.color;
+  const rgba = (a) => "rgba(" + R + "," + G + "," + B + "," + a.toFixed(3) + ")";
+  let ancho = 0, alto = 0, dpr = 1, visible = false, mouse = null;
+
+  function medir() {
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    ancho = lienzo.clientWidth; alto = lienzo.clientHeight;
+    lienzo.width = ancho * dpr; lienzo.height = alto * dpr;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+
+  const azar = (a, b) => a + Math.random() * (b - a);
+  const particulas = Array.from({ length: AJUSTES.particulas }, () => nuevaParticula(true));
+  function nuevaParticula(cualquierAltura) {
+    return {
+      x: azar(0, 1), y: cualquierAltura ? azar(0, 1) : 1.05,
+      vel: azar(0.02, 0.08), tam: azar(1, 2.6), fase: azar(0, 6.28), luz: azar(0.2, 0.8),
+    };
+  }
+  const chispas = [];
+
+  // Un rayo: línea quebrada del centro hacia afuera.
+  function rayo(cx, cy, angulo, largo, grosor, alfa) {
+    ctx.beginPath();
+    ctx.moveTo(cx, cy);
+    const pasos = 9;
+    for (let i = 1; i <= pasos; i++) {
+      const t = i / pasos;
+      const desvio = (Math.random() - 0.5) * 22 * AJUSTES.chisporroteo * Math.sin(t * Math.PI);
+      const a = angulo + desvio / (largo * t + 20);
+      ctx.lineTo(cx + Math.cos(a) * largo * t, cy + Math.sin(a) * largo * t);
+    }
+    ctx.strokeStyle = rgba(alfa);
+    ctx.lineWidth = grosor;
+    ctx.shadowColor = rgba(0.9);
+    ctx.shadowBlur = 12 * AJUSTES.brillo;
+    ctx.stroke();
+    ctx.shadowBlur = 0;
+  }
+
+  const angulos = Array.from({ length: AJUSTES.rayos }, (_, i) => (i / AJUSTES.rayos) * Math.PI * 2);
+  const inicio = performance.now();
+  let anterior = 0;
+
+  function cuadro(ahora) {
+    requestAnimationFrame(cuadro);
+    if (!visible || document.hidden || ahora - anterior < 33) return;
+    anterior = ahora;
+    const t = (ahora - inicio) / 1000;
+    const entrada = Math.min(t / 1.2, 1);
+    ctx.clearRect(0, 0, ancho, alto);
+    const cx = ancho / 2, cy = alto / 2;
+    const rc = circulo.getBoundingClientRect();
+    const radio = Math.max(rc.width, 40) / 2;   // crece y se encoge con el círculo
+    ctx.globalAlpha = entrada;
+
+    // Bruma y halo.
+    const halo = ctx.createRadialGradient(cx, cy, radio * 0.6, cx, cy, radio * 2.4);
+    halo.addColorStop(0, rgba(0.35 * AJUSTES.brillo));
+    halo.addColorStop(0.5, rgba(0.12 * AJUSTES.bruma));
+    halo.addColorStop(1, rgba(0));
+    ctx.fillStyle = halo;
+    ctx.fillRect(0, 0, ancho, alto);
+
+    // Partículas cuadradas que suben (polvo).
+    particulas.forEach((p, i) => {
+      p.y -= p.vel * 0.033;
+      p.x += Math.sin(t * 0.8 + p.fase) * 0.0008 * AJUSTES.vaiven;
+      if (p.y < -0.05) particulas[i] = nuevaParticula(false);
+      const tit = 1 - AJUSTES.titileo * 0.5 * (1 + Math.sin(t * 3 + p.fase));
+      ctx.fillStyle = rgba(p.luz * tit * 0.8);
+      ctx.fillRect(p.x * ancho, p.y * alto, p.tam, p.tam);
+    });
+
+    // Rayos eléctricos: giran despacio; con el mouse cerca, se inclinan hacia él.
+    let anguloMouse = null;
+    if (mouse) {
+      const rl = lienzo.getBoundingClientRect();
+      const mx = mouse.x - rl.left, my = mouse.y - rl.top;
+      if (mx > -40 && my > -40 && mx < ancho + 40 && my < alto + 40) anguloMouse = Math.atan2(my - cy, mx - cx);
+    }
+    angulos.forEach((a, i) => {
+      let ang = a + t * 0.4 + Math.sin(t * 1.3 + i) * 0.3;
+      if (anguloMouse !== null) {
+        let d = Math.atan2(Math.sin(anguloMouse - ang), Math.cos(anguloMouse - ang));
+        ang += d * AJUSTES.fuerzaMouse * 0.6;
+      }
+      const largo = radio * azar(1.25, 1.75);
+      rayo(cx, cy, ang, largo, azar(1, 2.2), azar(0.45, 0.85));
+      // Destello en la punta.
+      if (Math.random() < AJUSTES.destellos * 0.5) {
+        const px = cx + Math.cos(ang) * largo, py = cy + Math.sin(ang) * largo;
+        const d = ctx.createRadialGradient(px, py, 0, px, py, 12);
+        d.addColorStop(0, "rgba(255,255,255,0.9)");
+        d.addColorStop(1, rgba(0));
+        ctx.fillStyle = d;
+        ctx.fillRect(px - 12, py - 12, 24, 24);
+        // Chispas que saltan de la punta.
+        if (Math.random() < AJUSTES.chispas) {
+          chispas.push({ x: px, y: py, vx: azar(-1.5, 1.5), vy: azar(-1.5, 1.5), vida: 1 });
+        }
+      }
+    });
+
+    // Chispas.
+    for (let i = chispas.length - 1; i >= 0; i--) {
+      const c = chispas[i];
+      c.x += c.vx; c.y += c.vy; c.vida -= 0.06;
+      if (c.vida <= 0) { chispas.splice(i, 1); continue; }
+      ctx.fillStyle = "rgba(255,255,255," + c.vida.toFixed(2) + ")";
+      ctx.fillRect(c.x, c.y, 2, 2);
+    }
+
+    // Borde de cristal de la bola.
+    ctx.beginPath();
+    ctx.arc(cx, cy, radio * 1.75, 0, Math.PI * 2);
+    ctx.strokeStyle = rgba(0.25);
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+    ctx.globalAlpha = 1;
+  }
+
+  window.addEventListener("pointermove", (e) => { mouse = { x: e.clientX, y: e.clientY }; }, { passive: true });
+  new IntersectionObserver((e) => { visible = e[0].isIntersecting; }).observe(lienzo);
+  window.addEventListener("resize", medir);
+  medir();
+  if (SIN_MOVIMIENTO) { visible = true; cuadro(performance.now() + 2000); visible = false; return; }
+  requestAnimationFrame(cuadro);
+}
+
+document.addEventListener("DOMContentLoaded", activarBolaPlasma);
+
+
+// Letras elásticas (como ElasticMesh, material "globo") en los textos
+// pequeños de color amarillo: cada letra es como un globito; cuando el
+// mouse se acerca (70 px) las letras se estiran hacia él, al presionar se
+// aplastan, y al soltar rebotan con un resorte hasta quedarse quietas.
+function activarLetrasElasticas() {
+  if (SIN_MOVIMIENTO) return;
+  const AMARILLO = "rgb(255, 200, 61)";
+  const candidatos = document.querySelectorAll("h3, h4, .glosario-termino, .cerebro-parte strong, .categoria-sintomas strong");
+  const letras = [];
+  candidatos.forEach((el) => {
+    if (el.children.length || !el.textContent.trim()) return;
+    const estilo = getComputedStyle(el);
+    if (estilo.color !== AMARILLO || parseFloat(estilo.fontSize) > 26) return;
+    const texto = el.textContent;
+    el.setAttribute("aria-label", texto.trim());
+    el.classList.add("texto-globo");
+    const piezas = [];
+    texto.split(/(\s+)/).forEach((trozo) => {
+      if (!trozo) return;
+      if (/^\s+$/.test(trozo)) { piezas.push(document.createTextNode(" ")); return; }
+      const palabra = document.createElement("span");
+      palabra.className = "globo-palabra";
+      palabra.setAttribute("aria-hidden", "true");
+      Array.from(trozo).forEach((c) => {
+        const l = document.createElement("span");
+        l.className = "globo-letra";
+        l.textContent = c;
+        palabra.appendChild(l);
+        letras.push({ el: l, x: 0, y: 0, vx: 0, vy: 0, s: 1, vs: 0 });
+      });
+      piezas.push(palabra);
+    });
+    el.replaceChildren(...piezas);
+  });
+  if (!letras.length) return;
+  const conMouse = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+  if (!conMouse) return;
+
+  const RADIO = 70, ESTIRAR = 0.5, RIGIDEZ = 0.5, VAIVEN = 0.6;
+  let mouse = null, presionado = false, animando = false;
+  window.addEventListener("pointermove", (e) => { mouse = { x: e.clientX, y: e.clientY }; empezar(); }, { passive: true });
+  window.addEventListener("pointerdown", () => { presionado = true; empezar(); }, { passive: true });
+  window.addEventListener("pointerup", () => { presionado = false; empezar(); }, { passive: true });
+
+  function empezar() { if (!animando) { animando = true; requestAnimationFrame(paso); } }
+
+  function paso() {
+    let movimiento = 0;
+    letras.forEach((l) => {
+      let ox = 0, oy = 0, os = 1;
+      if (mouse) {
+        const r = l.el.getBoundingClientRect();
+        if (r.bottom > -50 && r.top < window.innerHeight + 50) {
+          const cx = r.left + r.width / 2 - l.x, cy = r.top + r.height / 2 - l.y;
+          const dx = mouse.x - cx, dy = mouse.y - cy;
+          const d = Math.hypot(dx, dy);
+          if (d < RADIO) {
+            const f = 1 - d / RADIO;
+            ox = dx * f * ESTIRAR * 0.35;
+            oy = dy * f * ESTIRAR * 0.35;
+            os = presionado ? 1 - f * 0.35 : 1 + f * 0.25;
+          }
+        }
+      }
+      // Resorte con un poco de rebote (wobble).
+      const k = 0.12 + RIGIDEZ * 0.18, amort = 0.9 - VAIVEN * 0.25;
+      l.vx = (l.vx + (ox - l.x) * k) * amort;
+      l.vy = (l.vy + (oy - l.y) * k) * amort;
+      l.vs = (l.vs + (os - l.s) * k) * amort;
+      l.x += l.vx; l.y += l.vy; l.s += l.vs;
+      movimiento += Math.abs(l.vx) + Math.abs(l.vy) + Math.abs(l.vs) * 20 + Math.abs(ox - l.x) + Math.abs(oy - l.y);
+      const quieto = Math.abs(l.x) < 0.05 && Math.abs(l.y) < 0.05 && Math.abs(l.s - 1) < 0.003;
+      l.el.style.transform = quieto ? "" :
+        "translate(" + l.x.toFixed(2) + "px," + l.y.toFixed(2) + "px) scale(" + (2 - l.s).toFixed(3) + "," + l.s.toFixed(3) + ")";
+    });
+    if (movimiento > 0.05) requestAnimationFrame(paso);
+    else animando = false;
+  }
+}
+
+document.addEventListener("DOMContentLoaded", activarLetrasElasticas);
+
+
+// Alto del encabezado fijo de las páginas internas: lo usan la barra de
+// categorías (que se pega justo debajo) y los saltos a un artículo.
+function medirEncabezado() {
+  const encabezado = document.querySelector(".diario-header");
+  if (!encabezado) return;
+  const poner = () => document.documentElement.style.setProperty("--alto-encabezado", encabezado.offsetHeight + "px");
+  poner();
+  window.addEventListener("resize", poner);
+}
+
+document.addEventListener("DOMContentLoaded", medirEncabezado);

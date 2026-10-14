@@ -65,7 +65,7 @@
 .filtro-vacio { text-align: center; font-size: 17px; padding: 20px; }
 
 /* Infórmate por categoría, con cada artículo completo a la vista. */
-.informate-categoria { margin: 22px 0 8px; padding: 0 16px; scroll-margin-top: 72px; }
+.informate-categoria { margin: 22px 0 8px; padding: 0 16px; scroll-margin-top: calc(var(--alto-encabezado, 0px) + 72px); }
 .informate-categoria-titulo { margin: 0 0 4px; font-size: 26px; color: var(--amarillo); }
 .informate-categoria-desc { margin: 0 0 14px; font-size: 16px; opacity: 0.9; }
 .articulos-columnas { columns: 1; column-gap: 18px; }
@@ -78,7 +78,7 @@
   border: 1px solid rgba(201, 162, 39, 0.45);
   border-top: 5px solid var(--dorado);
   box-shadow: var(--sombra-suave);
-  scroll-margin-top: 72px;
+  scroll-margin-top: calc(var(--alto-encabezado, 0px) + 72px);
 }
 .articulo-completo h3 { margin: 0 0 8px; font-size: 22px; line-height: 1.25; color: var(--amarillo); }
 .articulo-completo p { font-size: 16px; line-height: 1.6; margin: 0 0 12px; color: var(--blanco); }

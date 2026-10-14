@@ -2547,3 +2547,8 @@ body:has(.dock) .whatsapp-flotante { bottom: 80px; }
   background: radial-gradient(circle, rgba(255, 255, 255, calc(0.35 * var(--fo))), transparent 65%);
   pointer-events: none;
 }
+
+/* Bola de plasma alrededor del círculo de "Respira conmigo". */
+.respira-escena { position: relative; height: 260px; }
+.respira-bola { position: absolute; inset: -10px; width: calc(100% + 20px); height: calc(100% + 20px); pointer-events: none; }
+.respira-circulo { position: relative; z-index: 1; }

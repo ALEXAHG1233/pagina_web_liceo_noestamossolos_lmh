@@ -159,106 +159,6 @@
     </div>
   </section>
 
-  <section class="seccion contadores reveal" aria-labelledby="titulo-contadores">
-    <h2 id="titulo-contadores">Juntos en esta comunidad</h2>
-    <p class="seccion-subtitulo">Números reales de la página, contados de forma anónima.</p>
-    <div class="contadores-grid">
-      {% for valor, texto in [
-        (contadores.visitas, "visitas a la página"),
-        (contadores.conversaciones, "conversaciones de apoyo"),
-        (contadores.autoevaluaciones, "autoevaluaciones hechas"),
-        (contadores.participaciones, "registros de ánimo, mensajes del muro y reseñas"),
-      ] %}
-        <div class="contador">
-          <span class="contador-numero" data-contar="{{ valor }}" data-duracion="2">{{ "{:,}".format(valor) }}</span>
-          <span class="contador-texto">{{ texto }}</span>
-        </div>
-      {% endfor %}
-    </div>
-  </section>
-
-  <section class="seccion mural reveal" id="mural" aria-labelledby="titulo-mural">
-    <h2 id="titulo-mural">Mural de psicología</h2>
-    <p class="seccion-subtitulo">Toca cada cuadro: respira, descubre datos y pon a prueba lo que sabes.</p>
-    <div class="bento">
-
-      <article class="bento-cuadro bento-grande bento-respira" data-respira>
-        <h3>Respira conmigo</h3>
-        <p class="bento-texto">Respiración 4-4-4-4: sigue el círculo.</p>
-        <div class="respira-escena">
-          <div class="respira-circulo" data-respira-circulo><span data-respira-fase>Listo</span></div>
-        </div>
-        <p class="respira-cuenta" data-respira-cuenta aria-live="polite">Toca empezar cuando quieras.</p>
-        <button type="button" class="bento-boton" data-respira-boton>Empezar</button>
-      </article>
-
-      <article class="bento-cuadro bento-ancho" data-animo-rapido>
-        <h3>¿Cómo te sientes hoy?</h3>
-        <div class="animo-rapido-opciones" role="group" aria-label="Elige cómo te sientes">
-          <button type="button" data-animo="ansiedad">Nervioso/a</button>
-          <button type="button" data-animo="enojo">Enojado/a</button>
-          <button type="button" data-animo="tristeza">Triste</button>
-          <button type="button" data-animo="dormir">Cansado/a</button>
-          <button type="button" data-animo="bien">Bien</button>
-        </div>
-        <p class="bento-texto" data-animo-respuesta aria-live="polite">Elige una opción y te sugerimos algo que puede ayudarte.</p>
-        <a class="bento-enlace" data-animo-enlace href="{{ url_for('herramientas') }}" hidden>Ver la herramienta →</a>
-      </article>
-
-      <article class="bento-cuadro" data-mito>
-        <h3>¿Mito o realidad?</h3>
-        <p class="mito-frase" data-mito-frase></p>
-        <div class="mito-botones">
-          <button type="button" data-mito-elegir="mito">Mito</button>
-          <button type="button" data-mito-elegir="realidad">Realidad</button>
-        </div>
-        <p class="bento-texto" data-mito-respuesta aria-live="polite"></p>
-        <button type="button" class="bento-boton bento-boton-suave" data-mito-otra>Otra pregunta</button>
-      </article>
-
-      <article class="bento-cuadro" data-dato
-        data-glosario='{{ glosario | tojson }}' data-base="{{ url_for('informate') }}">
-        <h3>Dato de psicología</h3>
-        <p class="dato-termino" data-dato-termino></p>
-        <p class="bento-texto" data-dato-def></p>
-        <div class="bento-acciones">
-          <button type="button" class="bento-boton bento-boton-suave" data-dato-otro>Otro dato</button>
-          <a class="bento-enlace" data-dato-enlace href="{{ url_for('informate') }}">Leer más →</a>
-        </div>
-      </article>
-
-      <article class="bento-cuadro bento-ancho bento-cerebro">
-        <h3>Tu cerebro cuando hay estrés</h3>
-        <div class="cerebro-partes">
-          <button type="button" class="cerebro-parte" aria-pressed="false" data-cerebro>
-            <strong>Amígdala: la alarma</strong>
-            <span>Detecta peligro en milisegundos y prepara el cuerpo para huir o pelear: corazón rápido, manos frías.</span>
-          </button>
-          <button type="button" class="cerebro-parte" aria-pressed="false" data-cerebro>
-            <strong>Corteza prefrontal: el freno</strong>
-            <span>Piensa, planea y calma la alarma. Respirar despacio le da tiempo para volver a tomar el control.</span>
-          </button>
-        </div>
-      </article>
-
-      <article class="bento-cuadro bento-frase" data-frase>
-        <h3>Para hoy</h3>
-        <p class="frase-texto" data-frase-texto aria-live="polite">Lo que sientes es válido, aunque nadie más lo vea.</p>
-        <button type="button" class="bento-boton bento-boton-suave" data-frase-otra>Otra frase</button>
-      </article>
-
-      <article class="bento-cuadro bento-ayuda">
-        <h3>¿Necesitas hablar ya?</h3>
-        <p class="bento-texto">Llama gratis al <strong>150</strong> (Teléfono de la Esperanza) o escribe a la psicóloga del liceo.</p>
-        <div class="bento-acciones">
-          <a class="bento-boton" href="tel:150">Llamar al 150</a>
-          <a class="bento-enlace" href="{{ url_for('estudiante') }}">Hablar con la psicóloga →</a>
-        </div>
-      </article>
-
-    </div>
-  </section>
-
   <section class="multitud" aria-labelledby="titulo-multitud">
     <div class="multitud-texto">
       <span class="multitud-etiqueta">Hablar ayuda</span>
@@ -616,6 +516,107 @@
       <h3>Hablar con la psicóloga ahora</h3>
       <p>Es anónimo, y es gratis. No tienes que esperar a que algo esté "lo suficientemente grave".</p>
     </a>
+  </section>
+
+  <section class="seccion mural reveal" id="mural" aria-labelledby="titulo-mural">
+    <h2 id="titulo-mural">Mural de psicología</h2>
+    <p class="seccion-subtitulo">Toca cada cuadro: respira, descubre datos y pon a prueba lo que sabes.</p>
+    <div class="bento">
+
+      <article class="bento-cuadro bento-grande bento-respira" data-respira>
+        <h3>Respira conmigo</h3>
+        <p class="bento-texto">Respiración 4-4-4-4: sigue el círculo.</p>
+        <div class="respira-escena">
+          <canvas class="respira-bola" data-bola-plasma aria-hidden="true"></canvas>
+          <div class="respira-circulo" data-respira-circulo><span data-respira-fase>Listo</span></div>
+        </div>
+        <p class="respira-cuenta" data-respira-cuenta aria-live="polite">Toca empezar cuando quieras.</p>
+        <button type="button" class="bento-boton" data-respira-boton>Empezar</button>
+      </article>
+
+      <article class="bento-cuadro bento-ancho" data-animo-rapido>
+        <h3>¿Cómo te sientes hoy?</h3>
+        <div class="animo-rapido-opciones" role="group" aria-label="Elige cómo te sientes">
+          <button type="button" data-animo="ansiedad">Nervioso/a</button>
+          <button type="button" data-animo="enojo">Enojado/a</button>
+          <button type="button" data-animo="tristeza">Triste</button>
+          <button type="button" data-animo="dormir">Cansado/a</button>
+          <button type="button" data-animo="bien">Bien</button>
+        </div>
+        <p class="bento-texto" data-animo-respuesta aria-live="polite">Elige una opción y te sugerimos algo que puede ayudarte.</p>
+        <a class="bento-enlace" data-animo-enlace href="{{ url_for('herramientas') }}" hidden>Ver la herramienta →</a>
+      </article>
+
+      <article class="bento-cuadro" data-mito>
+        <h3>¿Mito o realidad?</h3>
+        <p class="mito-frase" data-mito-frase></p>
+        <div class="mito-botones">
+          <button type="button" data-mito-elegir="mito">Mito</button>
+          <button type="button" data-mito-elegir="realidad">Realidad</button>
+        </div>
+        <p class="bento-texto" data-mito-respuesta aria-live="polite"></p>
+        <button type="button" class="bento-boton bento-boton-suave" data-mito-otra>Otra pregunta</button>
+      </article>
+
+      <article class="bento-cuadro" data-dato
+        data-glosario='{{ glosario | tojson }}' data-base="{{ url_for('informate') }}">
+        <h3>Dato de psicología</h3>
+        <p class="dato-termino" data-dato-termino></p>
+        <p class="bento-texto" data-dato-def></p>
+        <div class="bento-acciones">
+          <button type="button" class="bento-boton bento-boton-suave" data-dato-otro>Otro dato</button>
+          <a class="bento-enlace" data-dato-enlace href="{{ url_for('informate') }}">Leer más →</a>
+        </div>
+      </article>
+
+      <article class="bento-cuadro bento-ancho bento-cerebro">
+        <h3>Tu cerebro cuando hay estrés</h3>
+        <div class="cerebro-partes">
+          <button type="button" class="cerebro-parte" aria-pressed="false" data-cerebro>
+            <strong>Amígdala: la alarma</strong>
+            <span>Detecta peligro en milisegundos y prepara el cuerpo para huir o pelear: corazón rápido, manos frías.</span>
+          </button>
+          <button type="button" class="cerebro-parte" aria-pressed="false" data-cerebro>
+            <strong>Corteza prefrontal: el freno</strong>
+            <span>Piensa, planea y calma la alarma. Respirar despacio le da tiempo para volver a tomar el control.</span>
+          </button>
+        </div>
+      </article>
+
+      <article class="bento-cuadro bento-frase" data-frase>
+        <h3>Para hoy</h3>
+        <p class="frase-texto" data-frase-texto aria-live="polite">Lo que sientes es válido, aunque nadie más lo vea.</p>
+        <button type="button" class="bento-boton bento-boton-suave" data-frase-otra>Otra frase</button>
+      </article>
+
+      <article class="bento-cuadro bento-ayuda">
+        <h3>¿Necesitas hablar ya?</h3>
+        <p class="bento-texto">Llama gratis al <strong>150</strong> (Teléfono de la Esperanza) o escribe a la psicóloga del liceo.</p>
+        <div class="bento-acciones">
+          <a class="bento-boton" href="tel:150">Llamar al 150</a>
+          <a class="bento-enlace" href="{{ url_for('estudiante') }}">Hablar con la psicóloga →</a>
+        </div>
+      </article>
+
+    </div>
+  </section>
+
+  <section class="seccion contadores reveal" aria-labelledby="titulo-contadores">
+    <h2 id="titulo-contadores">Juntos en esta comunidad</h2>
+    <p class="seccion-subtitulo">Números reales de la página, contados de forma anónima.</p>
+    <div class="contadores-grid">
+      {% for valor, texto in [
+        (contadores.visitas, "visitas a la página"),
+        (contadores.conversaciones, "conversaciones de apoyo"),
+        (contadores.autoevaluaciones, "autoevaluaciones hechas"),
+        (contadores.participaciones, "registros de ánimo, mensajes del muro y reseñas"),
+      ] %}
+        <div class="contador">
+          <span class="contador-numero" data-contar="{{ valor }}" data-duracion="2">{{ "{:,}".format(valor) }}</span>
+          <span class="contador-texto">{{ texto }}</span>
+        </div>
+      {% endfor %}
+    </div>
   </section>
 
   <section class="seccion recurso-individual reveal">

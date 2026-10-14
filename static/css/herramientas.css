@@ -1,4 +1,4 @@
-.herramientas-categoria { padding: 10px 20px 28px; scroll-margin-top: 72px; }
+.herramientas-categoria { padding: 10px 20px 28px; scroll-margin-top: calc(var(--alto-encabezado, 0px) + 72px); }
 .categoria-titulo { font-size: 24px; line-height: 1.25; margin: 0 0 6px; text-align: center; color: var(--amarillo); }
 .categoria-descripcion { font-size: 16px; color: var(--blanco-suave); text-align: center; margin: 0 0 16px; }
 
@@ -23,7 +23,7 @@
    Se quedan pegados arriba al bajar. */
 .saltos {
   position: sticky;
-  top: 0;
+  top: var(--alto-encabezado, 0px);
   z-index: 20;
   display: flex;
   gap: 8px;
@@ -59,7 +59,7 @@
   border-radius: 16px;
   padding: 18px 18px 20px;
   box-shadow: var(--sombra-suave);
-  scroll-margin-top: 72px;
+  scroll-margin-top: calc(var(--alto-encabezado, 0px) + 72px);
 }
 .herramienta-completa.borde-azul { border-top-color: #4aa8f0; }
 .herramienta-completa.borde-rojo { border-top-color: #e66a6a; }
