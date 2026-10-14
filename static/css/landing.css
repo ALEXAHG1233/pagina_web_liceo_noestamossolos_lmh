@@ -2552,3 +2552,9 @@ body:has(.dock) .whatsapp-flotante { bottom: 80px; }
 .respira-escena { position: relative; height: 260px; }
 .respira-bola { position: absolute; inset: -10px; width: calc(100% + 20px); height: calc(100% + 20px); pointer-events: none; }
 .respira-circulo { position: relative; z-index: 1; }
+
+/* Recursos de psicología: todos del mismo alto, en filas parejas. */
+.recursos-grid { grid-auto-rows: 1fr; align-items: stretch; }
+.recursos-grid > .girar-caja,
+.recursos-grid > .girar-caja .girar-interior,
+.recursos-grid .girar-interior > * { height: 100%; }

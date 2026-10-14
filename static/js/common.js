@@ -2587,3 +2587,169 @@ function medirEncabezado() {
 }
 
 document.addEventListener("DOMContentLoaded", medirEncabezado);
+
+
+// Borde eléctrico (como ElectricBorder): 3 rayos dorados que recorren el
+// borde redondeado del cuadro, temblando con ruido, con resplandor. Se
+// pone en la bienvenida, las imágenes grandes, "Hablar ayuda", los pasos,
+// las tarjetas de "¿Por qué hablar ayuda?", las opciones de Herramientas e
+// Infórmate y los recursos de psicología. Solo se animan los que se ven.
+const ELECTRICO_SELECTOR = [
+  ".bienvenida-marco", ".marco-scroll", ".multitud", ".pasos-caja",
+  ".tarjetas > .girar-caja", ".opcion-recurso", ".recursos-grid > .girar-caja",
+].join(", ");
+
+function activarBordeElectrico() {
+  const AJUSTES = { color: [255, 200, 61], velocidad: 1, caos: 0.5, separacion: 0.6, rayos: 3, grosor: 1.5, radio: 24 };
+  const [R, G, B] = AJUSTES.color;
+  const MARGEN = 16;
+  const items = [];
+
+  document.querySelectorAll(ELECTRICO_SELECTOR).forEach((el) => {
+    let host = el;
+    if (getComputedStyle(el).overflow !== "visible" || el.matches(".multitud")) {
+      // Envolver para que el resplandor no quede recortado.
+      const caja = document.createElement("div");
+      caja.className = "borde-electrico";
+      const estilo = getComputedStyle(el);
+      caja.style.margin = estilo.margin;
+      caja.style.maxWidth = estilo.maxWidth;
+      caja.style.width = el.matches(".bienvenida-marco") ? estilo.width : "";
+      el.style.margin = "0";
+      if (el.matches(".bienvenida-marco")) el.style.width = "100%";
+      el.parentNode.insertBefore(caja, el);
+      caja.appendChild(el);
+      host = caja;
+    } else {
+      host.classList.add("borde-electrico-host");
+    }
+    const lienzo = document.createElement("canvas");
+    lienzo.className = "borde-electrico-lienzo";
+    lienzo.setAttribute("aria-hidden", "true");
+    host.appendChild(lienzo);
+    const radio = parseFloat(getComputedStyle(el).borderTopLeftRadius) || AJUSTES.radio;
+    items.push({ host, lienzo, ctx: lienzo.getContext("2d"), radio, visible: false, w: 0, h: 0, semilla: Math.random() * 100 });
+  });
+  if (!items.length) return;
+
+  // Ruido suave en 1D (valor interpolado), para que los rayos tiemblen.
+  const tabla = Array.from({ length: 512 }, () => Math.random() * 2 - 1);
+  const ruido = (x) => {
+    const i = Math.floor(x), f = x - i;
+    const a = tabla[i & 511], b = tabla[(i + 1) & 511];
+    const s = f * f * (3 - 2 * f);
+    return a + (b - a) * s;
+  };
+
+  // Punto y normal en el perímetro de un rectángulo redondeado (s de 0 a 1).
+  function perimetro(w, h, r, s) {
+    r = Math.min(r, w / 2, h / 2);
+    const rectos = [w - 2 * r, h - 2 * r, w - 2 * r, h - 2 * r];
+    const arco = (Math.PI * r) / 2;
+    const total = rectos.reduce((a, b) => a + b, 0) + arco * 4;
+    let d = s * total;
+    const esquinas = [[w - r, r], [w - r, h - r], [r, h - r], [r, r]];
+    const dirs = [[1, 0], [0, 1], [-1, 0], [0, -1]];
+    const inicios = [[r, 0], [w, r], [w - r, h], [0, h - r]];
+    for (let lado = 0; lado < 4; lado++) {
+      if (d <= rectos[lado]) {
+        const [x0, y0] = inicios[lado], [dx, dy] = dirs[lado];
+        return { x: x0 + dx * d, y: y0 + dy * d, nx: dy, ny: -dx };
+      }
+      d -= rectos[lado];
+      if (d <= arco) {
+        const [cx, cy] = esquinas[lado];
+        const ang = -Math.PI / 2 + lado * (Math.PI / 2) + d / r;
+        return { x: cx + Math.cos(ang) * r, y: cy + Math.sin(ang) * r, nx: Math.cos(ang), ny: Math.sin(ang) };
+      }
+      d -= arco;
+    }
+    return { x: r, y: 0, nx: 0, ny: -1 };
+  }
+
+  function medir(it) {
+    const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+    it.w = it.host.offsetWidth;
+    it.h = it.host.offsetHeight;
+    it.lienzo.width = Math.round((it.w + MARGEN * 2) * dpr);
+    it.lienzo.height = Math.round((it.h + MARGEN * 2) * dpr);
+    it.ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+
+  function dibujar(it, t) {
+    const { ctx, w, h } = it;
+    if (!w || !h) return;
+    ctx.clearRect(0, 0, w + MARGEN * 2, h + MARGEN * 2);
+    const largo = 2 * (w + h);
+    const puntos = Math.min(400, Math.max(60, Math.round(largo / 7)));
+    const amplitud = 6 * AJUSTES.separacion;
+    for (let k = 0; k < AJUSTES.rayos; k++) {
+      ctx.beginPath();
+      for (let i = 0; i <= puntos; i++) {
+        const s = i / puntos;
+        const p = perimetro(w, h, it.radio, s);
+        const n = ruido(s * largo * 0.02 * (1 + AJUSTES.caos) + t * 2.2 * AJUSTES.velocidad + k * 37 + it.semilla)
+                + 0.5 * ruido(s * largo * 0.06 + t * 4.1 * AJUSTES.velocidad + k * 11);
+        const desv = n * amplitud * (0.6 + AJUSTES.caos);
+        const x = MARGEN + p.x + p.nx * desv, y = MARGEN + p.y + p.ny * desv;
+        if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+      }
+      ctx.closePath();
+      // Resplandor (línea gruesa y transparente) y luego el rayo fino y brillante.
+      ctx.strokeStyle = "rgba(" + R + "," + G + "," + B + ",0.18)";
+      ctx.lineWidth = AJUSTES.grosor * 5;
+      ctx.stroke();
+      ctx.strokeStyle = "rgba(" + R + "," + G + "," + B + "," + (0.55 + 0.15 * k).toFixed(2) + ")";
+      ctx.lineWidth = AJUSTES.grosor;
+      ctx.stroke();
+    }
+  }
+
+  const observador = new IntersectionObserver((entradas) => {
+    entradas.forEach((e) => {
+      const it = items.find((i) => i.host === e.target);
+      if (it) { it.visible = e.isIntersecting; if (it.visible) medir(it); }
+    });
+  });
+  items.forEach((it) => observador.observe(it.host));
+  window.addEventListener("resize", () => items.forEach(medir));
+
+  if (SIN_MOVIMIENTO) {
+    setTimeout(() => items.forEach((it) => { medir(it); dibujar(it, 0); }), 300);
+    return;
+  }
+  const inicio = performance.now();
+  let anterior = 0;
+  function cuadro(ahora) {
+    requestAnimationFrame(cuadro);
+    if (document.hidden || ahora - anterior < 40) return;   // ~25 cuadros por segundo
+    anterior = ahora;
+    const t = (ahora - inicio) / 1000;
+    items.forEach((it) => {
+      if (!it.visible) return;
+      if (it.host.offsetWidth !== it.w || it.host.offsetHeight !== it.h) medir(it);
+      dibujar(it, t);
+    });
+  }
+  requestAnimationFrame(cuadro);
+}
+
+document.addEventListener("DOMContentLoaded", activarBordeElectrico);
+
+
+// Destello que barre al pasar el mouse, en todos los cuadros y todas las
+// imágenes grandes de las páginas.
+const BARRIDO_IMAGENES = ".img-volteo, .perspectiva-foto, .pila-tarjeta, .bienvenida-marco, .libro3d-tapa, .video-ligero";
+
+function activarBarrido() {
+  document.querySelectorAll(ADORNOS_SELECTOR + ", " + CYBER_SELECTOR + ", " + BARRIDO_IMAGENES + ", .red-card").forEach((el) => {
+    if (el.querySelector(":scope > .barrido")) return;
+    const capa = document.createElement("span");
+    capa.className = "barrido";
+    capa.setAttribute("aria-hidden", "true");
+    el.appendChild(capa);
+    el.classList.add("con-barrido");
+  });
+}
+
+document.addEventListener("DOMContentLoaded", activarBarrido);
