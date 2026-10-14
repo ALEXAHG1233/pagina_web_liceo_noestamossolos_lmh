@@ -1691,56 +1691,7 @@ body:has(.dock) .whatsapp-flotante { bottom: 80px; }
 .seccion :is(.tarjeta, .opcion, .playlist-card).cyber-activo { transition: transform 125ms ease-out, box-shadow 300ms ease, border-color 300ms ease, filter 300ms ease; }
 .seccion :is(.tarjeta, .opcion, .playlist-card) > :not(.cyber-deco) { position: relative; z-index: 1; }
 
-.cyber-deco { position: absolute; inset: 0; z-index: 0; pointer-events: none; }
-/* Resplandor de fondo al pasar el mouse. */
-.cyber-deco::before {
-  content: "";
-  position: absolute;
-  inset: -25%;
-  background: radial-gradient(circle at center, rgba(var(--cyber-acento), 0.16) 0%, rgba(var(--cyber-acento), 0.05) 50%, transparent 70%);
-  filter: blur(20px);
-  opacity: 0;
-  transition: opacity 300ms ease;
-}
-.cyber-brillo {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(125deg, transparent 0%, rgba(255, 255, 255, 0.05) 45%, rgba(255, 255, 255, 0.1) 50%, rgba(255, 255, 255, 0.05) 55%, transparent 100%);
-  opacity: 0;
-  transition: opacity 300ms ease;
-}
-.cyber-esquinas i {
-  position: absolute;
-  width: 14px;
-  height: 14px;
-  border: 2px solid rgba(var(--cyber-acento), 0.4);
-  transition: border-color 300ms ease, box-shadow 300ms ease;
-}
-.cyber-esquinas i:nth-child(1) { top: 9px; left: 9px; border-right: 0; border-bottom: 0; }
-.cyber-esquinas i:nth-child(2) { top: 9px; right: 9px; border-left: 0; border-bottom: 0; }
-.cyber-esquinas i:nth-child(3) { bottom: 9px; left: 9px; border-right: 0; border-top: 0; }
-.cyber-esquinas i:nth-child(4) { bottom: 9px; right: 9px; border-left: 0; border-top: 0; }
-.cyber-scan {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(to bottom, transparent, rgba(var(--cyber-acento), 0.1), transparent);
-  translate: 0 -100%;
-  opacity: 0;
-}
-.cyber-particulas i {
-  position: absolute;
-  width: 3px;
-  height: 3px;
-  border-radius: 50%;
-  background: #ffc83d;
-  opacity: 0;
-}
-.cyber-particulas i:nth-child(1) { --dx: 1; --dy: -1; top: 40%; left: 20%; }
-.cyber-particulas i:nth-child(2) { --dx: -1; --dy: -1; top: 60%; right: 20%; }
-.cyber-particulas i:nth-child(3) { --dx: 0.5; --dy: 1; top: 20%; left: 40%; }
-.cyber-particulas i:nth-child(4) { --dx: -0.5; --dy: 1; top: 80%; right: 40%; }
-.cyber-particulas i:nth-child(5) { --dx: 1; --dy: 0.5; top: 30%; left: 60%; }
-.cyber-particulas i:nth-child(6) { --dx: -1; --dy: 0.5; top: 70%; right: 60%; }
+/* Los adornos (.cyber-deco y sus partes) están en pop.css, para todas las páginas. */
 
 .seccion :is(.tarjeta, .opcion, .playlist-card):hover .cyber-deco::before,
 .seccion :is(.tarjeta, .opcion, .playlist-card):hover .cyber-brillo { opacity: 1; }
@@ -1750,15 +1701,6 @@ body:has(.dock) .whatsapp-flotante { bottom: 80px; }
 }
 .seccion :is(.tarjeta, .opcion, .playlist-card):hover .cyber-scan { opacity: 1; animation: escaneoCyber 2s linear infinite; }
 .seccion :is(.tarjeta, .opcion, .playlist-card):hover .cyber-particulas i { animation: particulaCyber 2s infinite; }
-@keyframes escaneoCyber {
-  from { translate: 0 -100%; }
-  to { translate: 0 100%; }
-}
-@keyframes particulaCyber {
-  0% { translate: 0 0; opacity: 0; }
-  50% { opacity: 1; }
-  100% { translate: calc(var(--dx) * 30px) calc(var(--dy) * 30px); opacity: 0; }
-}
 
 /* Variantes con color propio. */
 .seccion .opcion-principal {
@@ -2000,7 +1942,7 @@ body:has(.dock) .whatsapp-flotante { bottom: 80px; }
    La sección mide más que la pantalla; su contenido se queda fijo
    (sticky) mientras bajas, y la portada de bienvenida (un canvas) se
    deshace como arena dorada hasta dejar ver el banner de abajo. */
-.bienvenida { position: relative; height: 210vh; background: var(--verde-oscuro); }
+.bienvenida { position: relative; height: 210vh; }
 .bienvenida-pegajoso {
   position: sticky;
   top: 0;
@@ -2639,8 +2581,8 @@ body:has(.dock) .whatsapp-flotante { bottom: 80px; }
 }
 .marco-scroll > .img-volteo { border-radius: 16px; }
 
-/* Fondo 3D del océano verde (static/js/oceano.js), detrás de todo. */
-.oceano-fondo {
+/* Fondo de onda de plasma verde y dorada (static/js/plasma.js), detrás de todo. */
+.plasma-fondo {
   position: fixed;
   inset: 0;
   z-index: -3;
@@ -2650,4 +2592,4 @@ body:has(.dock) .whatsapp-flotante { bottom: 80px; }
   pointer-events: none;
 }
 /* En modo claro se usa el fondo crema de siempre. */
-:root[data-tema="claro"] .oceano-fondo { display: none; }
+:root[data-tema="claro"] .plasma-fondo { display: none; }

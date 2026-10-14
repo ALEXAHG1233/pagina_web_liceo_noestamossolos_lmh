@@ -80,3 +80,88 @@ input[type="submit"]:active {
 /* Texto ondulado en títulos grandes (los filtros los crea common.js). */
 .ondulado-suave { filter: url(#ondulado-suave); }
 .ondulado-fuerte { filter: url(#ondulado-fuerte); }
+
+/* ---------- Adornos "cyber" en todos los cuadros de todas las páginas ----------
+   Las 4 cosas: esquinas doradas, brillo, línea de escaneo y partículas.
+   common.js agrega el adorno (.cyber-deco) y la clase .con-adornos. */
+.con-adornos {
+  --cyber-acento: 201, 162, 39;
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+}
+/* :where() no suma especificidad: si un hijo ya tiene su propia posición, se respeta. */
+.con-adornos > :where(:not(.cyber-deco)) { position: relative; z-index: 1; }
+
+.cyber-deco { position: absolute; inset: 0; z-index: 0; pointer-events: none; }
+/* Resplandor de fondo al pasar el mouse. */
+.cyber-deco::before {
+  content: "";
+  position: absolute;
+  inset: -25%;
+  background: radial-gradient(circle at center, rgba(var(--cyber-acento), 0.16) 0%, rgba(var(--cyber-acento), 0.05) 50%, transparent 70%);
+  filter: blur(20px);
+  opacity: 0;
+  transition: opacity 300ms ease;
+}
+.cyber-brillo {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(125deg, transparent 0%, rgba(255, 255, 255, 0.05) 45%, rgba(255, 255, 255, 0.1) 50%, rgba(255, 255, 255, 0.05) 55%, transparent 100%);
+  opacity: 0;
+  transition: opacity 300ms ease;
+}
+.cyber-esquinas i {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  border: 2px solid rgba(var(--cyber-acento), 0.4);
+  transition: border-color 300ms ease, box-shadow 300ms ease;
+}
+.cyber-esquinas i:nth-child(1) { top: 9px; left: 9px; border-right: 0; border-bottom: 0; }
+.cyber-esquinas i:nth-child(2) { top: 9px; right: 9px; border-left: 0; border-bottom: 0; }
+.cyber-esquinas i:nth-child(3) { bottom: 9px; left: 9px; border-right: 0; border-top: 0; }
+.cyber-esquinas i:nth-child(4) { bottom: 9px; right: 9px; border-left: 0; border-top: 0; }
+.cyber-scan {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, transparent, rgba(var(--cyber-acento), 0.1), transparent);
+  translate: 0 -100%;
+  opacity: 0;
+}
+.cyber-particulas i {
+  position: absolute;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: #ffc83d;
+  opacity: 0;
+}
+.cyber-particulas i:nth-child(1) { --dx: 1; --dy: -1; top: 40%; left: 20%; }
+.cyber-particulas i:nth-child(2) { --dx: -1; --dy: -1; top: 60%; right: 20%; }
+.cyber-particulas i:nth-child(3) { --dx: 0.5; --dy: 1; top: 20%; left: 40%; }
+.cyber-particulas i:nth-child(4) { --dx: -0.5; --dy: 1; top: 80%; right: 40%; }
+.cyber-particulas i:nth-child(5) { --dx: 1; --dy: 0.5; top: 30%; left: 60%; }
+.cyber-particulas i:nth-child(6) { --dx: -1; --dy: 0.5; top: 70%; right: 60%; }
+
+.con-adornos:hover .cyber-deco::before,
+.con-adornos:hover .cyber-brillo { opacity: 1; }
+.con-adornos:hover .cyber-esquinas i {
+  border-color: rgba(255, 200, 61, 0.9);
+  box-shadow: 0 0 10px rgba(255, 200, 61, 0.45);
+}
+.con-adornos:hover .cyber-scan { opacity: 1; animation: escaneoCyber 2s linear infinite; }
+.con-adornos:hover .cyber-particulas i { animation: particulaCyber 2s infinite; }
+@keyframes escaneoCyber {
+  from { translate: 0 -100%; }
+  to { translate: 0 100%; }
+}
+@keyframes particulaCyber {
+  0% { translate: 0 0; opacity: 0; }
+  50% { opacity: 1; }
+  100% { translate: calc(var(--dx) * 30px) calc(var(--dy) * 30px); opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cyber-scan, .cyber-particulas i { animation: none !important; }
+}

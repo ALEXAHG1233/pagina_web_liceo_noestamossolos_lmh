@@ -1053,20 +1053,42 @@ document.addEventListener("DOMContentLoaded", activarLibro);
 // donde apunta el cursor (hasta 10° arriba/abajo y 8° a los lados).
 const CYBER_SELECTOR = ".seccion :is(.tarjeta, .opcion, .playlist-card)";
 
+// Los demás cuadros de todas las páginas reciben los mismos 4 adornos
+// (esquinas, brillo, escaneo y partículas), sin la inclinación 3D.
+const ADORNOS_SELECTOR = [
+  ".recurso-card", ".contador", ".bento-cuadro", ".pasos-caja", ".emergencia",
+  ".test-grande", ".test-pregunta", ".test-resultado",
+  ".herramienta-completa", ".categoria-sintomas", ".articulo-completo", ".glosario-item",
+  ".racha-card", ".stat-card", ".login-card", ".muro-card", ".resena-card",
+  ".playlist-card", ".amigo-card", ".futuro-panel",
+].join(", ");
+
+function agregarAdornos(cuadro) {
+  if (cuadro.querySelector(":scope > .cyber-deco")) return;
+  const deco = document.createElement("span");
+  deco.className = "cyber-deco";
+  deco.setAttribute("aria-hidden", "true");
+  deco.innerHTML =
+    '<span class="cyber-brillo"></span>' +
+    '<span class="cyber-esquinas"><i></i><i></i><i></i><i></i></span>' +
+    '<span class="cyber-scan"></span>' +
+    '<span class="cyber-particulas"><i></i><i></i><i></i><i></i><i></i><i></i></span>';
+  cuadro.prepend(deco);
+}
+
+function activarAdornosEnTodo() {
+  document.querySelectorAll(ADORNOS_SELECTOR).forEach((cuadro) => {
+    if (cuadro.matches(CYBER_SELECTOR)) return;   // esos ya los maneja activarCuadrosCyber
+    cuadro.classList.add("con-adornos");
+    agregarAdornos(cuadro);
+  });
+}
+
+document.addEventListener("DOMContentLoaded", activarAdornosEnTodo);
+
 function activarCuadrosCyber() {
   const cuadros = document.querySelectorAll(CYBER_SELECTOR);
-  cuadros.forEach((cuadro) => {
-    if (cuadro.querySelector(":scope > .cyber-deco")) return;
-    const deco = document.createElement("span");
-    deco.className = "cyber-deco";
-    deco.setAttribute("aria-hidden", "true");
-    deco.innerHTML =
-      '<span class="cyber-brillo"></span>' +
-      '<span class="cyber-esquinas"><i></i><i></i><i></i><i></i></span>' +
-      '<span class="cyber-scan"></span>' +
-      '<span class="cyber-particulas"><i></i><i></i><i></i><i></i><i></i><i></i></span>';
-    cuadro.prepend(deco);
-  });
+  cuadros.forEach(agregarAdornos);
 
   const conMouse = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
   if (!conMouse || SIN_MOVIMIENTO) return;
