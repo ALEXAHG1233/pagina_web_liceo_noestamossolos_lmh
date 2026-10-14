@@ -1475,3 +1475,384 @@ function activarTecladoEscritor() {
 }
 
 document.addEventListener("DOMContentLoaded", activarTecladoEscritor);
+
+
+// Estante de libros: tocar un lomo muestra ese libro (pestañas accesibles,
+// también con las flechas del teclado).
+function activarEstanteLibros() {
+  document.querySelectorAll("[data-estante]").forEach((estante) => {
+    const lomos = Array.from(estante.querySelectorAll(".estante-lomo"));
+    const elegir = (lomo, enfocar) => {
+      lomos.forEach((l) => {
+        const activo = l === lomo;
+        l.classList.toggle("activo", activo);
+        l.setAttribute("aria-selected", activo ? "true" : "false");
+        l.tabIndex = activo ? 0 : -1;
+        const panel = document.getElementById(l.getAttribute("aria-controls"));
+        if (panel) panel.hidden = !activo;
+      });
+      if (enfocar) lomo.focus();
+    };
+    lomos.forEach((lomo, i) => {
+      lomo.tabIndex = lomo.classList.contains("activo") ? 0 : -1;
+      lomo.addEventListener("click", () => elegir(lomo, false));
+      lomo.addEventListener("keydown", (e) => {
+        if (e.key === "ArrowRight") { e.preventDefault(); elegir(lomos[(i + 1) % lomos.length], true); }
+        if (e.key === "ArrowLeft") { e.preventDefault(); elegir(lomos[(i - 1 + lomos.length) % lomos.length], true); }
+      });
+    });
+  });
+}
+
+document.addEventListener("DOMContentLoaded", activarEstanteLibros);
+
+
+// Marquesina: el foco sigue al mouse y las palabras cercanas se iluminan
+// y se acercan un poco a él (efecto imán).
+function activarMarquesina() {
+  document.querySelectorAll("[data-marquesina]").forEach((marq) => {
+    if (SIN_MOVIMIENTO) return;
+    const items = marq.querySelectorAll(".marquesina-item");
+    marq.addEventListener("pointermove", (e) => {
+      const caja = marq.getBoundingClientRect();
+      marq.style.setProperty("--fx", `${e.clientX - caja.left}px`);
+      marq.style.setProperty("--fy", `${e.clientY - caja.top}px`);
+      items.forEach((item) => {
+        const r = item.getBoundingClientRect();
+        const dx = e.clientX - (r.left + r.width / 2);
+        const dy = e.clientY - (r.top + r.height / 2);
+        const dist = Math.hypot(dx, dy);
+        if (dist < 130) {
+          const fuerza = (1 - dist / 130) * 0.35;
+          item.style.setProperty("--mx", `${dx * fuerza}px`);
+          item.style.setProperty("--my", `${dy * fuerza}px`);
+          item.classList.toggle("cerca", dist < 70);
+        } else {
+          item.style.removeProperty("--mx");
+          item.style.removeProperty("--my");
+          item.classList.remove("cerca");
+        }
+      });
+    });
+    marq.addEventListener("pointerleave", () => {
+      marq.style.setProperty("--fx", "-200px");
+      items.forEach((item) => {
+        item.style.removeProperty("--mx");
+        item.style.removeProperty("--my");
+        item.classList.remove("cerca");
+      });
+    });
+  });
+}
+
+document.addEventListener("DOMContentLoaded", activarMarquesina);
+
+// Mural de psicología: cada cuadro tiene su pequeña actividad.
+const ANIMO_SUGERENCIAS = {
+  ansiedad: ["Prueba la respiración 4-4-4-4: cuatro lados de 4 segundos. Baja los nervios en un minuto.", "ansiedad-respiracion"],
+  enojo: ["Usa el semáforo: alto (detente), piensa (¿qué siento?), actúa (elige qué hacer).", "enojo"],
+  tristeza: ["Da un paso pequeño hoy: algo sencillo que te haga bien, aunque no tengas ganas.", "tristeza"],
+  dormir: ["Esta noche prueba una rutina antes de dormir: sin pantalla 30 minutos antes.", "dormir"],
+  bien: ["¡Qué bueno! Hoy puedes anotar tres cosas buenas que te pasaron, para recordarlas.", "tristeza"],
+};
+const MITOS = [
+  ["Ir al psicólogo es solo para personas \"locas\".", "mito", "Cualquier persona puede ir: igual que vas al médico para cuidar tu cuerpo, el psicólogo ayuda a cuidar tu mente."],
+  ["Llorar es señal de debilidad.", "mito", "Llorar es una forma natural de soltar emociones. Lo hacen personas de todas las edades y es sano."],
+  ["En la adolescencia el cerebro cambia mucho con lo que practicas.", "realidad", "Se llama neuroplasticidad: en esta etapa es muy fuerte, por eso los hábitos que entrenas hoy cuentan."],
+  ["Preguntarle a alguien si piensa en suicidarse le da la idea.", "mito", "Preguntar con cariño no da la idea; al contrario, abre la puerta para que la persona pida ayuda."],
+  ["Moverte un rato puede ayudar a bajar el estrés.", "realidad", "La actividad física ayuda al cuerpo a gastar la energía del estrés y mejora el ánimo."],
+  ["Si alguien está triste, solo necesita \"echarle ganas\".", "mito", "La tristeza profunda no se quita con fuerza de voluntad; necesita apoyo, comprensión y a veces ayuda profesional."],
+];
+const FRASES_MURAL = [
+  "Lo que sientes es válido, aunque nadie más lo vea.",
+  "Pedir ayuda también es ser valiente.",
+  "No tienes que resolverlo todo hoy: un paso a la vez.",
+  "Un mal día no es una mala vida.",
+  "Tu valor no depende de una nota.",
+  "Está bien descansar. Descansar no es rendirse.",
+];
+
+function activarMural() {
+  const mural = document.querySelector(".bento");
+  if (!mural) return;
+
+  // Brillo que sigue al mouse dentro de cada cuadro.
+  mural.querySelectorAll(".bento-cuadro").forEach((cuadro) => {
+    cuadro.addEventListener("pointermove", (e) => {
+      const r = cuadro.getBoundingClientRect();
+      cuadro.style.setProperty("--bx", `${e.clientX - r.left}px`);
+      cuadro.style.setProperty("--by", `${e.clientY - r.top}px`);
+    });
+  });
+
+  // Respira conmigo: 4 fases de 4 segundos, 4 vueltas.
+  const respira = mural.querySelector("[data-respira]");
+  if (respira) {
+    const circulo = respira.querySelector("[data-respira-circulo]");
+    const fase = respira.querySelector("[data-respira-fase]");
+    const cuenta = respira.querySelector("[data-respira-cuenta]");
+    const boton = respira.querySelector("[data-respira-boton]");
+    const FASES = [["Inhala", true], ["Sostén", true], ["Exhala", false], ["Espera", false]];
+    let temporizador = null;
+    const parar = (mensaje) => {
+      clearInterval(temporizador);
+      temporizador = null;
+      circulo.classList.remove("grande");
+      fase.textContent = "Listo";
+      cuenta.textContent = mensaje;
+      boton.textContent = "Empezar";
+    };
+    boton.addEventListener("click", () => {
+      if (temporizador) { parar("Puedes volver a empezar cuando quieras."); return; }
+      let paso = 0;
+      boton.textContent = "Parar";
+      const tic = () => {
+        const indice = Math.floor(paso / 4) % 4;
+        const vuelta = Math.floor(paso / 16) + 1;
+        if (vuelta > 4) { parar("¡Muy bien! ¿Cómo te sientes ahora?"); return; }
+        const [nombre, grande] = FASES[indice];
+        fase.textContent = nombre;
+        circulo.classList.toggle("grande", grande);
+        cuenta.textContent = `${4 - (paso % 4)} · vuelta ${vuelta} de 4`;
+        paso += 1;
+      };
+      tic();
+      temporizador = setInterval(tic, 1000);
+    });
+  }
+
+  // ¿Cómo te sientes hoy?
+  const animo = mural.querySelector("[data-animo-rapido]");
+  if (animo) {
+    const respuesta = animo.querySelector("[data-animo-respuesta]");
+    const enlace = animo.querySelector("[data-animo-enlace]");
+    const base = enlace.getAttribute("href").split("#")[0];
+    animo.querySelectorAll("[data-animo]").forEach((btn) => {
+      btn.setAttribute("aria-pressed", "false");
+      btn.addEventListener("click", () => {
+        animo.querySelectorAll("[data-animo]").forEach((b) => b.setAttribute("aria-pressed", String(b === btn)));
+        const [texto, ancla] = ANIMO_SUGERENCIAS[btn.dataset.animo];
+        respuesta.textContent = texto;
+        enlace.href = `${base}#${ancla}`;
+        enlace.hidden = false;
+      });
+    });
+  }
+
+  // ¿Mito o realidad?
+  const mito = mural.querySelector("[data-mito]");
+  if (mito) {
+    const frase = mito.querySelector("[data-mito-frase]");
+    const respuesta = mito.querySelector("[data-mito-respuesta]");
+    const botones = mito.querySelectorAll("[data-mito-elegir]");
+    let actual = Math.floor(Math.random() * MITOS.length);
+    const mostrar = () => {
+      frase.textContent = MITOS[actual][0];
+      respuesta.textContent = "";
+      botones.forEach((b) => b.classList.remove("elegido"));
+    };
+    botones.forEach((b) => b.addEventListener("click", () => {
+      const [, correcta, explicacion] = MITOS[actual];
+      botones.forEach((x) => x.classList.toggle("elegido", x === b));
+      const acierto = b.dataset.mitoElegir === correcta;
+      respuesta.textContent = `${acierto ? "¡Correcto!" : "No exactamente."} Es ${correcta}. ${explicacion}`;
+    }));
+    mito.querySelector("[data-mito-otra]").addEventListener("click", () => {
+      actual = (actual + 1) % MITOS.length;
+      mostrar();
+    });
+    mostrar();
+  }
+
+  // Dato de psicología (del glosario de Infórmate).
+  const dato = mural.querySelector("[data-dato]");
+  if (dato) {
+    let lista = [];
+    try { lista = JSON.parse(dato.dataset.glosario || "[]"); } catch (e) {}
+    const termino = dato.querySelector("[data-dato-termino]");
+    const def = dato.querySelector("[data-dato-def]");
+    const enlace = dato.querySelector("[data-dato-enlace]");
+    let i = Math.floor(Math.random() * (lista.length || 1));
+    const mostrar = () => {
+      if (!lista.length) return;
+      const [t, d, slug] = lista[i % lista.length];
+      termino.textContent = t;
+      def.textContent = d;
+      enlace.href = `${dato.dataset.base}#${slug}`;
+    };
+    dato.querySelector("[data-dato-otro]").addEventListener("click", () => { i += 1; mostrar(); });
+    mostrar();
+  }
+
+  // Cerebro: tocar una parte la resalta.
+  mural.querySelectorAll("[data-cerebro]").forEach((parte, _, todas) => {
+    parte.addEventListener("click", () => {
+      todas.forEach((p) => p.setAttribute("aria-pressed", String(p === parte)));
+    });
+  });
+
+  // Frase para hoy.
+  const frase = mural.querySelector("[data-frase]");
+  if (frase) {
+    const texto = frase.querySelector("[data-frase-texto]");
+    let i = 0;
+    frase.querySelector("[data-frase-otra]").addEventListener("click", () => {
+      i = (i + 1) % FRASES_MURAL.length;
+      texto.textContent = FRASES_MURAL[i];
+    });
+  }
+}
+
+document.addEventListener("DOMContentLoaded", activarMural);
+
+
+// Multitud que camina: personas sencillas dibujadas en canvas (cabeza,
+// cabello, cuerpo y piernas que se mueven), con colores variados. Cada
+// una cruza de un lado al otro a su propio ritmo y vuelve a entrar.
+function activarMultitud() {
+  const lienzo = document.querySelector("[data-multitud]");
+  if (!lienzo) return;
+  const ctx = lienzo.getContext("2d");
+  const PIELES = ["#f2c9a0", "#e0ac7e", "#c68a5b", "#a0673f", "#7a4a2a", "#5a3520"];
+  const ROPA = ["#1f4d2c", "#2e6b41", "#c9a227", "#0072ce", "#c94b4b", "#5a2d91", "#e8732a", "#183020", "#f4f1e8"];
+  const PELO = ["#1b120c", "#3b2416", "#6b4423", "#a8742f", "#2b2b2b"];
+  const azar = (a, b) => a + Math.random() * (b - a);
+  const elegir = (lista) => lista[Math.floor(Math.random() * lista.length)];
+  let ancho = 0, alto = 0, personas = [];
+
+  function nuevaPersona(enCualquierLugar) {
+    const escala = azar(0.75, 1.15);
+    const dir = Math.random() < 0.5 ? 1 : -1;
+    return {
+      escala,
+      dir,
+      x: enCualquierLugar ? azar(0, ancho) : (dir === 1 ? -40 : ancho + 40),
+      fondo: azar(0, 1),            // 0 = atrás, 1 = adelante
+      vel: azar(28, 60) * escala,   // px por segundo
+      fase: azar(0, Math.PI * 2),
+      piel: elegir(PIELES),
+      camisa: elegir(ROPA),
+      pantalon: elegir(["#183020", "#2b2b2b", "#1d3d6b", "#5b4322"]),
+      pelo: elegir(PELO),
+      peinado: Math.floor(azar(0, 3)),
+    };
+  }
+
+  function medir() {
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    ancho = lienzo.clientWidth;
+    alto = lienzo.clientHeight;
+    lienzo.width = ancho * dpr;
+    lienzo.height = alto * dpr;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    const cuantas = Math.max(10, Math.round(ancho / 34));
+    personas = Array.from({ length: cuantas }, () => nuevaPersona(true));
+  }
+
+  function dibujar(p) {
+    const s = p.escala * (0.8 + p.fondo * 0.35);
+    const suelo = alto - 8 - (1 - p.fondo) * 70;
+    const paso = Math.sin(p.fase);
+    const rebote = Math.abs(Math.cos(p.fase)) * 3 * s;
+    ctx.save();
+    ctx.translate(p.x, suelo - rebote);
+    ctx.scale(s * p.dir, s);
+    ctx.lineCap = "round";
+    // Piernas
+    ctx.strokeStyle = p.pantalon;
+    ctx.lineWidth = 9;
+    ctx.beginPath(); ctx.moveTo(0, -46); ctx.lineTo(paso * 11, 0); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(0, -46); ctx.lineTo(-paso * 11, 0); ctx.stroke();
+    // Brazo de atrás
+    ctx.strokeStyle = p.piel;
+    ctx.lineWidth = 7;
+    ctx.beginPath(); ctx.moveTo(0, -84); ctx.lineTo(-paso * 12, -58); ctx.stroke();
+    // Cuerpo
+    ctx.fillStyle = p.camisa;
+    ctx.beginPath();
+    ctx.roundRect(-13, -92, 26, 50, 11);
+    ctx.fill();
+    // Brazo de adelante
+    ctx.strokeStyle = p.piel;
+    ctx.beginPath(); ctx.moveTo(0, -84); ctx.lineTo(paso * 12, -58); ctx.stroke();
+    // Cabeza
+    ctx.fillStyle = p.piel;
+    ctx.beginPath(); ctx.arc(0, -106, 12, 0, Math.PI * 2); ctx.fill();
+    // Cabello
+    ctx.fillStyle = p.pelo;
+    ctx.beginPath();
+    if (p.peinado === 0) ctx.arc(0, -109, 12.5, Math.PI, 0);
+    else if (p.peinado === 1) { ctx.arc(0, -108, 13, Math.PI * 0.95, Math.PI * 0.05); ctx.rect(-13, -110, 6, 22); }
+    else { ctx.arc(0, -110, 12, Math.PI, 0); ctx.arc(-9, -98, 5, 0, Math.PI * 2); }
+    ctx.fill();
+    ctx.restore();
+  }
+
+  let anterior = performance.now();
+  let visible = false;
+  function cuadro(ahora) {
+    const dt = Math.min((ahora - anterior) / 1000, 0.05);
+    anterior = ahora;
+    if (visible && !document.hidden) {
+      ctx.clearRect(0, 0, ancho, alto);
+      personas.sort((a, b) => a.fondo - b.fondo);
+      personas.forEach((p, i) => {
+        if (!SIN_MOVIMIENTO) {
+          p.x += p.vel * p.dir * dt;
+          p.fase += dt * p.vel / 9;
+        }
+        if (p.x < -60 || p.x > ancho + 60) personas[i] = nuevaPersona(false);
+        dibujar(personas[i]);
+      });
+    }
+    requestAnimationFrame(cuadro);
+  }
+
+  new IntersectionObserver((e) => { visible = e[0].isIntersecting; }).observe(lienzo);
+  window.addEventListener("resize", medir);
+  medir();
+  requestAnimationFrame(cuadro);
+}
+
+document.addEventListener("DOMContentLoaded", activarMultitud);
+
+// Tarjetas que se apilan al bajar: la sección es alta y su contenido
+// queda fijo; según cuánto bajes, cada tarjeta sube desde abajo y la
+// anterior se achica (hasta 0.7) y se inclina 5 grados.
+function activarPilaTarjetas() {
+  const pila = document.querySelector("[data-pila]");
+  if (!pila || SIN_MOVIMIENTO) return;
+  const tarjetas = Array.from(pila.querySelectorAll(".pila-tarjeta"));
+  const n = tarjetas.length;
+  if (n < 2) return;
+  pila.classList.add("lista");
+
+  function pintar() {
+    const caja = pila.getBoundingClientRect();
+    const recorrido = caja.height - window.innerHeight;
+    const avance = recorrido > 0 ? Math.min(Math.max(-caja.top / recorrido, 0), 1) * (n - 1) : 0;
+    tarjetas.forEach((t, i) => {
+      // Cuánto ha subido esta tarjeta (0 = abajo, fuera; 1 = en su lugar).
+      const subida = i === 0 ? 1 : Math.min(Math.max(avance - (i - 1), 0), 1);
+      // Cuánto la ha tapado la siguiente.
+      const tapada = Math.min(Math.max(avance - i, 0), 1);
+      const y = (1 - subida) * 110;
+      const escala = 1 - tapada * 0.3;
+      const giro = tapada * 5;
+      t.style.transform = `translateY(${y}%) scale(${escala}) rotate(${giro}deg)`;
+      t.style.zIndex = String(i + 1);
+      t.style.filter = tapada ? `brightness(${1 - tapada * 0.35})` : "none";
+    });
+  }
+
+  let pendiente = false;
+  window.addEventListener("scroll", () => {
+    if (pendiente) return;
+    pendiente = true;
+    requestAnimationFrame(() => { pendiente = false; pintar(); });
+  }, { passive: true });
+  window.addEventListener("resize", pintar);
+  pintar();
+}
+
+document.addEventListener("DOMContentLoaded", activarPilaTarjetas);

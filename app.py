@@ -36,6 +36,7 @@ from futuro_bot import generar_mensaje_futuro
 from tests_bot import TESTS, obtener_test, calcular_resultado
 from articulos_bot import ARTICULOS, CATEGORIAS_INFORMATE, GLOSARIO
 from herramientas_bot import TECNICAS
+from libros_bot import LIBROS
 
 app = Flask(__name__)
 # En producción, SECRET_KEY y las credenciales de la psicóloga se deben poner
@@ -501,6 +502,8 @@ def index():
         video_prevencion_id=VIDEO_PREVENCION_SUICIDIO_ID,
         recursos_psicologia=recursos,
         tests=TESTS,
+        libros=LIBROS,
+        glosario=GLOSARIO,
         contadores=obtener_contadores_portada(),
         indice_busqueda=construir_indice_busqueda(),
         temas_informate=[

@@ -119,6 +119,18 @@
     </div>
   </section>
 
+  <section class="marquesina" aria-label="Lo que encuentras aquí" data-marquesina>
+    <div class="marquesina-foco" aria-hidden="true"></div>
+    {% set palabras_marquesina = ["Escucha", "Apoyo", "Esperanza", "100 % anónimo", "Sin juicios", "Asistente a toda hora", "Psicóloga del liceo", "Línea 150", "Herramientas para calmarte", "Dios · Patria · Familia", "No estás solo/a"] %}
+    <div class="marquesina-pista">
+      {% for vuelta in range(2) %}
+        <ul class="marquesina-grupo"{% if vuelta %} aria-hidden="true"{% endif %}>
+          {% for p in palabras_marquesina %}<li class="marquesina-item">{{ p }}</li>{% endfor %}
+        </ul>
+      {% endfor %}
+    </div>
+  </section>
+
   {% set carrusel = [
     ("banner_muro_interactivo.webp", "Muro interactivo", url_for('muro')),
     ("banner_pasos_charlar.webp", "Pasos para charlar anónimamente", "#elegir-con-quien"),
@@ -163,6 +175,97 @@
         </div>
       {% endfor %}
     </div>
+  </section>
+
+  <section class="seccion mural reveal" id="mural" aria-labelledby="titulo-mural">
+    <h2 id="titulo-mural">Mural de psicología</h2>
+    <p class="seccion-subtitulo">Toca cada cuadro: respira, descubre datos y pon a prueba lo que sabes.</p>
+    <div class="bento">
+
+      <article class="bento-cuadro bento-grande bento-respira" data-respira>
+        <h3>Respira conmigo</h3>
+        <p class="bento-texto">Respiración 4-4-4-4: sigue el círculo.</p>
+        <div class="respira-escena">
+          <div class="respira-circulo" data-respira-circulo><span data-respira-fase>Listo</span></div>
+        </div>
+        <p class="respira-cuenta" data-respira-cuenta aria-live="polite">Toca empezar cuando quieras.</p>
+        <button type="button" class="bento-boton" data-respira-boton>Empezar</button>
+      </article>
+
+      <article class="bento-cuadro bento-ancho" data-animo-rapido>
+        <h3>¿Cómo te sientes hoy?</h3>
+        <div class="animo-rapido-opciones" role="group" aria-label="Elige cómo te sientes">
+          <button type="button" data-animo="ansiedad">Nervioso/a</button>
+          <button type="button" data-animo="enojo">Enojado/a</button>
+          <button type="button" data-animo="tristeza">Triste</button>
+          <button type="button" data-animo="dormir">Cansado/a</button>
+          <button type="button" data-animo="bien">Bien</button>
+        </div>
+        <p class="bento-texto" data-animo-respuesta aria-live="polite">Elige una opción y te sugerimos algo que puede ayudarte.</p>
+        <a class="bento-enlace" data-animo-enlace href="{{ url_for('herramientas') }}" hidden>Ver la herramienta →</a>
+      </article>
+
+      <article class="bento-cuadro" data-mito>
+        <h3>¿Mito o realidad?</h3>
+        <p class="mito-frase" data-mito-frase></p>
+        <div class="mito-botones">
+          <button type="button" data-mito-elegir="mito">Mito</button>
+          <button type="button" data-mito-elegir="realidad">Realidad</button>
+        </div>
+        <p class="bento-texto" data-mito-respuesta aria-live="polite"></p>
+        <button type="button" class="bento-boton bento-boton-suave" data-mito-otra>Otra pregunta</button>
+      </article>
+
+      <article class="bento-cuadro" data-dato
+        data-glosario='{{ glosario | tojson }}' data-base="{{ url_for('informate') }}">
+        <h3>Dato de psicología</h3>
+        <p class="dato-termino" data-dato-termino></p>
+        <p class="bento-texto" data-dato-def></p>
+        <div class="bento-acciones">
+          <button type="button" class="bento-boton bento-boton-suave" data-dato-otro>Otro dato</button>
+          <a class="bento-enlace" data-dato-enlace href="{{ url_for('informate') }}">Leer más →</a>
+        </div>
+      </article>
+
+      <article class="bento-cuadro bento-ancho bento-cerebro">
+        <h3>Tu cerebro cuando hay estrés</h3>
+        <div class="cerebro-partes">
+          <button type="button" class="cerebro-parte" aria-pressed="false" data-cerebro>
+            <strong>Amígdala: la alarma</strong>
+            <span>Detecta peligro en milisegundos y prepara el cuerpo para huir o pelear: corazón rápido, manos frías.</span>
+          </button>
+          <button type="button" class="cerebro-parte" aria-pressed="false" data-cerebro>
+            <strong>Corteza prefrontal: el freno</strong>
+            <span>Piensa, planea y calma la alarma. Respirar despacio le da tiempo para volver a tomar el control.</span>
+          </button>
+        </div>
+      </article>
+
+      <article class="bento-cuadro bento-frase" data-frase>
+        <h3>Para hoy</h3>
+        <p class="frase-texto" data-frase-texto aria-live="polite">Lo que sientes es válido, aunque nadie más lo vea.</p>
+        <button type="button" class="bento-boton bento-boton-suave" data-frase-otra>Otra frase</button>
+      </article>
+
+      <article class="bento-cuadro bento-ayuda">
+        <h3>¿Necesitas hablar ya?</h3>
+        <p class="bento-texto">Llama gratis al <strong>150</strong> (Teléfono de la Esperanza) o escribe a la psicóloga del liceo.</p>
+        <div class="bento-acciones">
+          <a class="bento-boton" href="tel:150">Llamar al 150</a>
+          <a class="bento-enlace" href="{{ url_for('estudiante') }}">Hablar con la psicóloga →</a>
+        </div>
+      </article>
+
+    </div>
+  </section>
+
+  <section class="multitud" aria-labelledby="titulo-multitud">
+    <div class="multitud-texto">
+      <span class="multitud-etiqueta">Hablar ayuda</span>
+      <h2 id="titulo-multitud">Miles de personas salen adelante cada año al identificar lo que sienten y hablarlo.</h2>
+      <p>Reconocer las señales, contarle a alguien de confianza y pedir ayuda a tiempo cambia historias. La tuya también puede cambiar.</p>
+    </div>
+    <canvas class="multitud-lienzo" data-multitud aria-hidden="true"></canvas>
   </section>
 
   <section class="seccion tigre-3d reveal">
@@ -406,6 +509,45 @@
     <a href="{{ url_for('informate') }}" class="video-ver-mas">Ver todos los artículos →</a>
   </section>
 
+  <section class="seccion estante-seccion reveal" id="libros" aria-labelledby="titulo-libros">
+    <h2 id="titulo-libros">Libros de apoyo</h2>
+    <p class="seccion-subtitulo">Libros reales que ayudan a entender lo que sentimos. Toca un lomo para sacarlo del estante.</p>
+    <div class="estante" role="tablist" aria-label="Libros del estante" data-estante>
+      {% for l in libros %}
+        <button type="button" role="tab" class="estante-lomo{% if loop.first %} activo{% endif %}"
+          id="lomo-{{ l.id }}" aria-controls="libro-{{ l.id }}" aria-selected="{{ 'true' if loop.first else 'false' }}"
+          style="--lomo: {{ l.lomo }}; --tinta: {{ l.tinta }}; --alto: {{ l.alto }}px;">
+          <span class="estante-lomo-titulo">{{ l.titulo }}</span>
+          <span class="estante-lomo-autor">{{ l.autor.split(' ')[-1] }}</span>
+        </button>
+      {% endfor %}
+    </div>
+    <div class="estante-tabla" aria-hidden="true"></div>
+    {% for l in libros %}
+      <article class="estante-detalle" role="tabpanel" id="libro-{{ l.id }}" aria-labelledby="lomo-{{ l.id }}"
+        {% if not loop.first %}hidden{% endif %} style="--lomo: {{ l.lomo }}; --tinta: {{ l.tinta }};">
+        <div class="libro3d" aria-hidden="true">
+          <div class="libro3d-cuerpo">
+            <div class="libro3d-tapa">
+              <span class="libro3d-tapa-titulo">{{ l.titulo }}</span>
+              <span class="libro3d-tapa-linea"></span>
+              <span class="libro3d-tapa-autor">{{ l.autor }}</span>
+            </div>
+            <div class="libro3d-paginas"></div>
+            <div class="libro3d-lomo"><span>{{ l.titulo }}</span></div>
+          </div>
+        </div>
+        <div class="estante-info">
+          <span class="estante-ayuda">Te ayuda con: {{ l.ayuda }}</span>
+          <h3>{{ l.titulo }}</h3>
+          <p class="estante-autor">{{ l.autor }} · {{ l.anio }}</p>
+          <p>{{ l.desc }}</p>
+          <p class="estante-nota">Búscalo en una biblioteca o librería, o pregúntale a la psicóloga por él.</p>
+        </div>
+      </article>
+    {% endfor %}
+  </section>
+
   <section class="seccion reveal" id="autoevaluaciones">
     <h2>Autoevaluaciones</h2>
     <p class="seccion-subtitulo">Mira tus patrones con más claridad. No son diagnósticos, solo una señal para reflexionar.</p>
@@ -519,6 +661,27 @@
       <a href="{{ url_for('futuro') }}" class="tarjeta-extra">
         <span>Mi futuro</span>
       </a>
+    </div>
+  </section>
+
+  {% set tarjetas_pila = [
+    ("banner_muro_interactivo.webp", "Muro interactivo", url_for('muro')),
+    ("banner_herramientas.webp", "Herramientas para sentirme mejor", url_for('herramientas')),
+    ("banner_informate.webp", "Infórmate", url_for('informate')),
+    ("banner_videos.webp", "Videos informativos", url_for('video')),
+    ("banner_por_que_hablar.webp", "¿Por qué hablar ayuda?", url_for('chatbot')),
+  ] %}
+  <section class="pila" data-pila style="--total: {{ tarjetas_pila|length }};" aria-label="Recorre lo que hay en la página">
+    <div class="pila-pegajoso">
+      <h2 class="pila-titulo">Todo lo que hay para ti</h2>
+      <div class="pila-marco">
+        {% for imagen, texto, enlace in tarjetas_pila %}
+          <a class="pila-tarjeta" href="{{ enlace }}" style="--i: {{ loop.index0 }};">
+            <img src="{{ url_for('static', filename='images/' ~ imagen) }}" alt="{{ texto }}" loading="lazy" draggable="false">
+            <span class="pila-etiqueta">{{ texto }} →</span>
+          </a>
+        {% endfor %}
+      </div>
     </div>
   </section>
 
