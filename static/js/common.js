@@ -2753,3 +2753,57 @@ function activarBarrido() {
 }
 
 document.addEventListener("DOMContentLoaded", activarBarrido);
+
+
+// Galería acordeón: al pasar el mouse (o tocar, en celular) un panel se
+// abre y los demás se cierran. El abierto ocupa la proporción indicada
+// (data-proporcion) del ancho. La foto se mueve un poco con el mouse y el
+// panel se inclina hasta 8°.
+function activarAcordeon() {
+  document.querySelectorAll("[data-acordeon]").forEach((acordeon) => {
+    const paneles = Array.from(acordeon.querySelectorAll(".acordeon-panel"));
+    const n = paneles.length;
+    if (!n) return;
+    const proporcion = Number(acordeon.dataset.proporcion) || 0.52;
+    const crecer = n > 1 ? (proporcion * (n - 1)) / (1 - proporcion) : 1;
+    const abrir = (i) => {
+      paneles.forEach((p, k) => {
+        const activo = k === i;
+        p.classList.toggle("activo", activo);
+        p.style.flexGrow = activo ? String(crecer) : "1";
+        p.setAttribute("aria-expanded", activo ? "true" : "false");
+      });
+    };
+    const conMouse = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+    paneles.forEach((p, i) => {
+      p.tabIndex = 0;
+      p.setAttribute("role", "button");
+      p.addEventListener(conMouse ? "pointerenter" : "click", (e) => {
+        if (!p.classList.contains("activo") && !conMouse) e.preventDefault();
+        abrir(i);
+      });
+      p.addEventListener("focus", () => abrir(i));
+      p.addEventListener("keydown", (e) => {
+        if (e.key === "ArrowRight" || e.key === "ArrowDown") { e.preventDefault(); paneles[(i + 1) % n].focus(); }
+        if (e.key === "ArrowLeft" || e.key === "ArrowUp") { e.preventDefault(); paneles[(i - 1 + n) % n].focus(); }
+      });
+      if (conMouse && !SIN_MOVIMIENTO) {
+        p.addEventListener("pointermove", (e) => {
+          const r = p.getBoundingClientRect();
+          const fx = (e.clientX - r.left) / r.width - 0.5, fy = (e.clientY - r.top) / r.height - 0.5;
+          p.style.setProperty("--px", (-fx * 20 * 0.5).toFixed(1) + "px");
+          p.style.setProperty("--py", (-fy * 20 * 0.5).toFixed(1) + "px");
+          p.style.transform = "rotateY(" + (fx * 8).toFixed(2) + "deg) rotateX(" + (-fy * 8).toFixed(2) + "deg)";
+        });
+        p.addEventListener("pointerleave", () => {
+          p.style.removeProperty("--px");
+          p.style.removeProperty("--py");
+          p.style.transform = "";
+        });
+      }
+    });
+    abrir(Math.min(Number(acordeon.dataset.inicial) || 0, n - 1));
+  });
+}
+
+document.addEventListener("DOMContentLoaded", activarAcordeon);

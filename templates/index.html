@@ -368,16 +368,30 @@
       <h3>Entiende lo que sientes y lo que te rodea</h3>
       <p>Artículos sobre salud mental, fobias, maltrato hacia la mujer y más, explicados con claridad.</p>
     </a>
-    <div class="temas-informate">
+    {% set imagenes_temas = {
+      "Cuídate": "banner_herramientas.webp",
+      "Identifica": "banner_con_quien_hablar.webp",
+      "Infórmate": "banner_informate.webp",
+      "Conceptos": "banner_psicopedagogia_canva.png",
+    } %}
+    <div class="acordeon" data-acordeon data-inicial="1" data-proporcion="0.52">
       {% for tema in temas_informate %}
-        <div class="tema-informate">
-          <a class="tema-informate-titulo" href="{{ url_for('informate') }}#cat-{{ tema.nombre|lower }}">{{ tema.nombre }} <span>{{ tema.total }} artículos</span></a>
-          <p>{{ tema.descripcion }}</p>
-          <ul>
-            {% for slug, titulo in tema.ejemplos %}
-              <li><a href="{{ url_for('informate', _anchor=slug) }}">{{ titulo }}</a></li>
-            {% endfor %}
-          </ul>
+        <div class="acordeon-panel" style="--i: {{ loop.index0 }};">
+          <img class="acordeon-foto" src="{{ url_for('static', filename='images/' ~ imagenes_temas.get(tema.nombre, 'banner_informate.webp')) }}" alt="" loading="lazy" draggable="false">
+          <div class="acordeon-velo"></div>
+          <div class="acordeon-contenido">
+            <a class="acordeon-titulo" href="{{ url_for('informate') }}#cat-{{ tema.nombre|lower }}">{{ tema.nombre }}</a>
+            <span class="acordeon-total">{{ tema.total }} artículos</span>
+            <div class="acordeon-detalle"><div class="acordeon-detalle-interior">
+              <p>{{ tema.descripcion }}</p>
+              <ul>
+                {% for slug, titulo in tema.ejemplos %}
+                  <li><a href="{{ url_for('informate', _anchor=slug) }}">{{ titulo }}</a></li>
+                {% endfor %}
+              </ul>
+              <a class="acordeon-ver" href="{{ url_for('informate') }}#cat-{{ tema.nombre|lower }}">Ver todo →</a>
+            </div></div>
+          </div>
         </div>
       {% endfor %}
     </div>
