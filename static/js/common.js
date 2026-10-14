@@ -2028,3 +2028,202 @@ function activarImagenesScroll() {
 }
 
 document.addEventListener("DOMContentLoaded", activarImagenesScroll);
+
+
+// Tarjetas que se voltean (como FlipCard): al tocarlas o arrastrarlas de
+// lado giran en Y con un pequeño rebote; adelante queda el título y atrás
+// el resto. Si la tarjeta es un enlace, el primer toque la voltea y el
+// segundo abre la página. Además, todas las tarjetas tienen un brillo que
+// sigue al mouse y se inclinan un poco (máximo 12°).
+const GIRAR_SELECTOR = ".tarjetas > .tarjeta, .contador, .recurso-card, .glosario-item, .test-grande";
+const GIRAR_FRENTE = "h2, h3, .recurso-numero, .recurso-titulo, .glosario-termino, .contador-numero, .contador-texto, .test-icono, .test-titulo, .cyber-deco";
+const SOLO_BRILLO = ".articulo-completo, .herramienta-completa, .test-pregunta, .emergencia, .bento-cuadro, .categoria-sintomas, .login-card, .playlist-card, .pasos-caja, .test-resultado";
+const PISTA_GIRAR = "↻ Toca para voltear";
+
+function prepararGiro(tarjeta) {
+  const esEnlace = tarjeta.tagName === "A";
+  const caja = document.createElement("div");
+  caja.className = "girar-caja";
+  const interior = document.createElement("div");
+  interior.className = "girar-interior";
+  tarjeta.parentNode.insertBefore(caja, tarjeta);
+  caja.appendChild(interior);
+
+  const atras = document.createElement("div");
+  atras.className = (tarjeta.className + " girar-atras").replace("cyber-activo", "");
+  atras.setAttribute("aria-hidden", "true");
+  Array.from(tarjeta.children).forEach((hijo) => {
+    if (!hijo.matches(GIRAR_FRENTE)) atras.appendChild(hijo);
+  });
+  if (!atras.children.length && tarjeta.matches(".contador")) {
+    const p = document.createElement("p");
+    p.className = "girar-texto";
+    p.textContent = "Se cuenta de forma anónima: nunca se guarda quién eres.";
+    atras.appendChild(p);
+  }
+  if (esEnlace) {
+    const ir = document.createElement("span");
+    ir.className = "girar-ir";
+    ir.textContent = "Toca otra vez para abrir →";
+    atras.appendChild(ir);
+  }
+  const titulo = tarjeta.textContent.trim().replace(/\s+/g, " ").slice(0, 80);
+  const pista = document.createElement("span");
+  pista.className = "girar-pista";
+  pista.setAttribute("aria-hidden", "true");
+  pista.textContent = PISTA_GIRAR;
+  tarjeta.appendChild(pista);
+  interior.append(tarjeta, atras);
+  agregarAdornos(atras);
+
+  if (!esEnlace) {
+    tarjeta.tabIndex = 0;
+    tarjeta.setAttribute("role", "button");
+  }
+  tarjeta.setAttribute("aria-label", titulo + " (toca para voltear)");
+
+  const voltear = (si) => {
+    const volteada = typeof si === "boolean" ? si : !caja.classList.contains("volteada");
+    caja.classList.toggle("volteada", volteada);
+    atras.setAttribute("aria-hidden", volteada ? "false" : "true");
+  };
+
+  // Arrastrar de lado también la voltea (y bloquea el clic que sigue).
+  let arrastre = null;
+  caja.addEventListener("pointerdown", (e) => { arrastre = { x: e.clientX, dx: 0 }; });
+  caja.addEventListener("pointermove", (e) => {
+    if (!arrastre) return;
+    arrastre.dx = e.clientX - arrastre.x;
+    if (Math.abs(arrastre.dx) > 8) {
+      const base = caja.classList.contains("volteada") ? 180 : 0;
+      const giro = Math.max(-90, Math.min(90, arrastre.dx * 0.6));
+      interior.style.transition = "none";
+      interior.style.transform = "rotateY(" + (base + giro) + "deg)";
+    }
+  });
+  const soltar = () => {
+    if (!arrastre) return;
+    const dx = arrastre.dx;
+    arrastre = null;
+    interior.style.transition = "";
+    interior.style.transform = "";
+    if (Math.abs(dx) > 60) {
+      voltear();
+      const bloquear = (ev) => { ev.preventDefault(); ev.stopPropagation(); };
+      caja.addEventListener("click", bloquear, { capture: true, once: true });
+      setTimeout(() => caja.removeEventListener("click", bloquear, { capture: true }), 0);
+    }
+  };
+  caja.addEventListener("pointerup", soltar);
+  caja.addEventListener("pointercancel", soltar);
+  caja.addEventListener("pointerleave", soltar);
+
+  tarjeta.addEventListener("click", (e) => {
+    if (e.target.closest("button, input, textarea, select")) return;
+    e.preventDefault();
+    voltear(true);
+  });
+  atras.addEventListener("click", (e) => {
+    if (e.target.closest("button, input, textarea, select, a")) return;
+    if (esEnlace) { window.location.href = tarjeta.href; return; }
+    voltear(false);
+  });
+  tarjeta.addEventListener("keydown", (e) => {
+    if (!esEnlace && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); voltear(); }
+  });
+  return caja;
+}
+
+function agregarBrilloEInclinacion(elemento, inclinar) {
+  const brillo = document.createElement("span");
+  brillo.className = "girar-brillo";
+  brillo.setAttribute("aria-hidden", "true");
+  const destino = elemento.matches(".girar-caja") ? elemento.querySelector(".girar-interior > :first-child") : elemento;
+  destino.appendChild(brillo);
+  if (!elemento.matches(".girar-caja")) elemento.classList.add("con-brillo");
+  const conMouse = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+  if (!conMouse || SIN_MOVIMIENTO) return;
+  elemento.addEventListener("pointermove", (e) => {
+    const r = elemento.getBoundingClientRect();
+    const fx = (e.clientX - r.left) / r.width, fy = (e.clientY - r.top) / r.height;
+    brillo.style.setProperty("--gx", (fx * 100) + "%");
+    brillo.style.setProperty("--gy", (fy * 100) + "%");
+    if (inclinar) {
+      elemento.style.transform = "perspective(1100px) rotateX(" + ((0.5 - fy) * 24).toFixed(2) +
+        "deg) rotateY(" + ((fx - 0.5) * 24).toFixed(2) + "deg) scale(1.03)";
+    }
+  });
+  elemento.addEventListener("pointerleave", () => {
+    if (inclinar) elemento.style.transform = "";
+  });
+}
+
+function activarTarjetasGiratorias() {
+  document.querySelectorAll(GIRAR_SELECTOR).forEach((t) => {
+    if (t.closest(".girar-caja")) return;
+    agregarBrilloEInclinacion(prepararGiro(t), true);
+  });
+  document.querySelectorAll(ADORNOS_SELECTOR + ", " + CYBER_SELECTOR).forEach((t) => {
+    if (t.closest(".girar-caja") || t.querySelector(":scope > .girar-brillo")) return;
+    // Los cuadros "cyber" ya se inclinan solos; los de mucho texto o con
+    // botones adentro solo llevan el brillo, para poder leerlos y usarlos.
+    const inclinar = !t.matches(SOLO_BRILLO) && !t.matches(CYBER_SELECTOR);
+    agregarBrilloEInclinacion(t, inclinar);
+  });
+}
+
+document.addEventListener("DOMContentLoaded", activarTarjetasGiratorias);
+
+
+// Foco de luz en las tarjetas de redes: el foco sigue al mouse con
+// suavidad, y se empieza a encender cuando el mouse está a menos de 80 px
+// de la tarjeta (antes de entrar), como "proximity" del original.
+function activarFocoRedes() {
+  const grupo = document.querySelector("[data-foco-redes]");
+  if (!grupo) return;
+  const tarjetas = Array.from(grupo.querySelectorAll(".red-card"));
+  tarjetas.forEach((t) => {
+    const destello = document.createElement("span");
+    destello.className = "red-destello";
+    destello.setAttribute("aria-hidden", "true");
+    t.appendChild(destello);
+  });
+  const conMouse = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+  if (!conMouse || SIN_MOVIMIENTO) return;
+
+  const CERCA = 80, SUAVE = 0.3;
+  const estado = tarjetas.map(() => ({ x: 0.5, y: 0.5, o: 0, ox: 0.5, oy: 0.5, oo: 0 }));
+  let mouse = null, animando = false;
+
+  function paso() {
+    let seguir = false;
+    tarjetas.forEach((t, i) => {
+      const e = estado[i];
+      if (mouse) {
+        const r = t.getBoundingClientRect();
+        const dx = Math.max(r.left - mouse.x, 0, mouse.x - r.right);
+        const dy = Math.max(r.top - mouse.y, 0, mouse.y - r.bottom);
+        const dist = Math.hypot(dx, dy);
+        e.ox = (mouse.x - r.left) / r.width;
+        e.oy = (mouse.y - r.top) / r.height;
+        e.oo = dist >= CERCA ? 0 : 1 - dist / CERCA;
+      } else {
+        e.oo = 0;
+      }
+      e.x += (e.ox - e.x) * SUAVE;
+      e.y += (e.oy - e.y) * SUAVE;
+      e.o += (e.oo - e.o) * SUAVE;
+      t.style.setProperty("--fx", (e.x * 100).toFixed(1) + "%");
+      t.style.setProperty("--fy", (e.y * 100).toFixed(1) + "%");
+      t.style.setProperty("--fo", e.o.toFixed(3));
+      if (Math.abs(e.ox - e.x) + Math.abs(e.oy - e.y) + Math.abs(e.oo - e.o) > 0.002) seguir = true;
+    });
+    animando = seguir;
+    if (seguir) requestAnimationFrame(paso);
+  }
+  const empezar = () => { if (!animando) { animando = true; requestAnimationFrame(paso); } };
+  window.addEventListener("pointermove", (e) => { mouse = { x: e.clientX, y: e.clientY }; empezar(); }, { passive: true });
+  document.addEventListener("pointerleave", () => { mouse = null; empezar(); });
+}
+
+document.addEventListener("DOMContentLoaded", activarFocoRedes);

@@ -2593,3 +2593,85 @@ body:has(.dock) .whatsapp-flotante { bottom: 80px; }
 }
 /* En modo claro se usa el fondo crema de siempre. */
 :root[data-tema="claro"] .plasma-fondo { display: none; }
+
+/* ---------- Redes con foco de luz (como SpotlightCard) ----------
+   Tarjetas oscuras: un foco blanco sigue al mouse (suave), el borde se
+   ilumina con el color de la red cuando el mouse se acerca (aunque aún
+   no esté encima) y hay un destello pequeño en el centro del foco.
+   common.js pone --fx, --fy y --fo (posición y fuerza del foco). */
+.redes-grid[data-foco-redes] .red-card {
+  --marca: 255, 255, 255;
+  --fx: 50%;
+  --fy: 50%;
+  --fo: 0;
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  gap: 10px;
+  padding: 18px 18px;
+  border-radius: 18px;
+  background: #0d1a12;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 16px 30px -16px rgba(0, 0, 0, 0.7);
+}
+.redes-grid[data-foco-redes] .red-facebook { --marca: 24, 119, 242; }
+.redes-grid[data-foco-redes] .red-instagram { --marca: 221, 42, 123; }
+.redes-grid[data-foco-redes] .red-youtube { --marca: 255, 40, 40; }
+.redes-grid[data-foco-redes] .red-card > * { position: relative; z-index: 2; }
+/* Foco de luz suave (blanco, intensidad 0.15, 240 px). */
+.redes-grid[data-foco-redes] .red-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background: radial-gradient(240px circle at var(--fx) var(--fy), rgba(255, 255, 255, calc(0.15 * var(--fo))), transparent 70%);
+  pointer-events: none;
+}
+/* Borde que brilla con el color de la red. */
+.redes-grid[data-foco-redes] .red-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  padding: 1.5px;
+  border-radius: inherit;
+  background: radial-gradient(200px circle at var(--fx) var(--fy), rgba(var(--marca), calc(0.6 * var(--fo) + 0.15)), transparent 70%);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+  pointer-events: none;
+}
+.redes-grid[data-foco-redes] .red-card svg {
+  flex: none;
+  width: 44px;
+  height: 44px;
+  padding: 9px;
+  border-radius: 12px;
+  background: rgb(var(--marca));
+  box-sizing: border-box;
+}
+.redes-grid[data-foco-redes] .red-instagram svg { background: linear-gradient(135deg, #f58529, #dd2a7b, #8134af, #515bd4); }
+.red-seguir {
+  padding: 8px 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  background: rgba(255, 255, 255, 0.06);
+  font-size: 14px;
+  font-weight: 700;
+  white-space: nowrap;
+  transition: background-color 200ms ease, color 200ms ease;
+}
+.red-card:hover .red-seguir { background: #ffffff; color: #0d1a12; }
+/* El destello: un punto brillante en el centro del foco. */
+.red-destello {
+  position: absolute !important;
+  z-index: 1 !important;
+  left: var(--fx);
+  top: var(--fy);
+  width: 60px;
+  height: 60px;
+  translate: -50% -50%;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 255, 255, calc(0.35 * var(--fo))), transparent 65%);
+  pointer-events: none;
+}
