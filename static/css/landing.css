@@ -2465,18 +2465,6 @@ body:has(.dock) .whatsapp-flotante { bottom: 80px; }
 }
 .marco-scroll > .img-volteo { border-radius: 16px; }
 
-/* Fondo de onda de plasma verde y dorada (static/js/plasma.js), detrás de todo. */
-.plasma-fondo {
-  position: fixed;
-  inset: 0;
-  z-index: -3;
-  width: 100%;
-  height: 100%;
-  display: block;
-  pointer-events: none;
-}
-/* En modo claro se usa el fondo crema de siempre. */
-:root[data-tema="claro"] .plasma-fondo { display: none; }
 
 /* ---------- Redes con foco de luz (como SpotlightCard) ----------
    Tarjetas oscuras: un foco blanco sigue al mouse (suave), el borde se
