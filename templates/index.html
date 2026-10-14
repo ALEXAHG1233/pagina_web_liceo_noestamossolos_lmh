@@ -21,11 +21,18 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='css/video.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/tests.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/pop.css') }}">
+  <script type="importmap">
+    { "imports": {
+      "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+      "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+    } }
+  </script>
 </head>
 {% from "_tests_tarjetas.html" import tarjetas_tests %}
 <body class="landing-body">
 
   <!-- Rayos de luz dorados detrás de todo el contenido (solo decorativos). -->
+  <canvas class="oceano-fondo" data-oceano aria-hidden="true"></canvas>
   <div class="rayos-fondo" aria-hidden="true"></div>
 
   <!-- Línea dorada de fondo que se va dibujando al bajar por la página
@@ -804,6 +811,7 @@
   <noscript><style>.reveal { opacity: 1 !important; transform: none !important; }</style></noscript>
   <script src="{{ url_for('static', filename='js/sonidos.js') }}"></script>
   <script src="{{ url_for('static', filename='js/common.js') }}"></script>
+  <script type="module" src="{{ url_for('static', filename='js/oceano.js') }}"></script>
   <script>
     if (typeof activarRevelado === "function") {
       activarRevelado();

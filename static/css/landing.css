@@ -2638,3 +2638,16 @@ body:has(.dock) .whatsapp-flotante { bottom: 80px; }
   will-change: transform;
 }
 .marco-scroll > .img-volteo { border-radius: 16px; }
+
+/* Fondo 3D del océano verde (static/js/oceano.js), detrás de todo. */
+.oceano-fondo {
+  position: fixed;
+  inset: 0;
+  z-index: -3;
+  width: 100%;
+  height: 100%;
+  display: block;
+  pointer-events: none;
+}
+/* En modo claro se usa el fondo crema de siempre. */
+:root[data-tema="claro"] .oceano-fondo { display: none; }
