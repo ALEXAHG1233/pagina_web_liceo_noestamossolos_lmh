@@ -1856,3 +1856,43 @@ function activarPilaTarjetas() {
 }
 
 document.addEventListener("DOMContentLoaded", activarPilaTarjetas);
+
+
+// MacBook que se abre al bajar: según cuánto has bajado dentro de la
+// sección (0 a 1), la pantalla pasa de inclinada (-28°) a derecha, crece
+// y baja; el título sube y se desvanece al principio.
+function activarMacbook() {
+  const seccion = document.querySelector("[data-macbook]");
+  if (!seccion) return;
+  const pantalla = seccion.querySelector("[data-macbook-pantalla]");
+  const titulo = seccion.querySelector("[data-macbook-titulo]");
+  const entre = (v, a, b) => Math.min(Math.max((v - a) / (b - a), 0), 1);
+  const mezclar = (a, b, t) => a + (b - a) * t;
+
+  function pintar() {
+    const celular = window.innerWidth < 768;
+    const caja = seccion.getBoundingClientRect();
+    // Igual que offset ["start start", "end start"]: 0 cuando el inicio de
+    // la sección toca arriba, 1 cuando su final pasa por arriba.
+    const p = SIN_MOVIMIENTO ? 0.3 : entre(-caja.top, 0, caja.height);
+    const t = entre(p, 0, 0.3);
+    const escalaX = mezclar(1.2, celular ? 1 : 1.5, t);
+    const escalaY = mezclar(0.6, celular ? 1 : 1.5, t);
+    const giro = p < 0.12 ? -28 : mezclar(-28, 0, entre(p, 0.12, 0.3));
+    const bajar = SIN_MOVIMIENTO ? 0 : mezclar(0, 1500, p);
+    pantalla.style.transform = `translateY(${bajar}px) rotateX(${giro}deg) scaleX(${escalaX}) scaleY(${escalaY})`;
+    titulo.style.transform = `translateY(${mezclar(0, 100, t)}px)`;
+    titulo.style.opacity = String(1 - entre(p, 0, 0.2));
+  }
+
+  let pendiente = false;
+  window.addEventListener("scroll", () => {
+    if (pendiente) return;
+    pendiente = true;
+    requestAnimationFrame(() => { pendiente = false; pintar(); });
+  }, { passive: true });
+  window.addEventListener("resize", pintar);
+  pintar();
+}
+
+document.addEventListener("DOMContentLoaded", activarMacbook);

@@ -2510,3 +2510,119 @@ body:has(.dock) .whatsapp-flotante { bottom: 80px; }
 .pila:not(.lista) .pila-pegajoso { position: static; height: auto; }
 .pila:not(.lista) .pila-marco { aspect-ratio: auto; display: grid; gap: 14px; }
 .pila:not(.lista) .pila-tarjeta { position: relative; aspect-ratio: 16 / 9; }
+
+/* ---------- MacBook que se abre al bajar ----------
+   La tapa empieza inclinada y, al bajar, la pantalla se endereza,
+   crece y se desliza hacia abajo (common.js pone los valores). Todo el
+   equipo se dibuja con CSS; en celular se muestra más pequeño. */
+.macbook { position: relative; min-height: 200vh; overflow: hidden; }
+.macbook-escala {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 120px;
+  perspective: 800px;
+  transform-origin: top center;
+  scale: 0.6;
+}
+.macbook-titulo {
+  margin: 0 0 70px;
+  font-size: 34px;
+  line-height: 1.2;
+  text-align: center;
+  color: var(--amarillo);
+  will-change: transform, opacity;
+}
+.macbook-tapa { position: relative; perspective: 800px; }
+.macbook-tapa-atras {
+  position: relative;
+  width: 32rem;
+  height: 12rem;
+  padding: 8px;
+  border-radius: 16px;
+  background: #010101;
+  transform: perspective(800px) rotateX(-25deg) translateZ(0);
+  transform-origin: bottom;
+  transform-style: preserve-3d;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: inset 0 2px 0 2px #171717;
+  box-sizing: border-box;
+}
+.macbook-tapa-atras img { width: 34px; height: 34px; border-radius: 50%; object-fit: cover; opacity: 0.85; }
+.macbook-pantalla {
+  position: absolute;
+  inset: 0;
+  width: 32rem;
+  height: 24rem;
+  padding: 8px;
+  border-radius: 16px;
+  background: #010101;
+  transform-origin: top;
+  transform-style: preserve-3d;
+  box-sizing: border-box;
+  will-change: transform;
+}
+.macbook-pantalla img { width: 100%; height: 100%; object-fit: cover; object-position: left top; border-radius: 8px; display: block; background: #272729; }
+.macbook-base {
+  position: relative;
+  z-index: -1;
+  width: 32rem;
+  height: 22rem;
+  border-radius: 16px;
+  overflow: hidden;
+  background: #272729;
+}
+.macbook-bisagra { position: relative; height: 40px; }
+.macbook-bisagra span { position: absolute; inset: 0 10%; height: 16px; background: #050505; }
+.macbook-centro { display: flex; }
+.macbook-parlante {
+  width: 10%;
+  height: 160px;
+  margin-top: 8px;
+  background-image: radial-gradient(circle, #08080a 0.5px, transparent 0.5px);
+  background-size: 3px 3px;
+}
+.macbook-teclado {
+  width: 80%;
+  margin: 0 4px;
+  padding: 4px;
+  border-radius: 6px;
+  background: #050505;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.macbook-fila { display: flex; gap: 2px; }
+.macbook-tecla {
+  flex: 1 1 0;
+  min-width: 0;
+  height: 24px;
+  border-radius: 4px;
+  background: #0a090d;
+  box-shadow: 0 0 0 0.5px rgba(255, 255, 255, 0.2), inset 0 -0.5px 2px #0d0d0f, 0 0 6px rgba(255, 255, 255, 0.08);
+  color: #fff;
+  font-size: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+.macbook-tecla-ancha { flex-grow: 1.6; }
+.macbook-espacio { flex-grow: 5; }
+.macbook-trackpad { width: 40%; height: 128px; margin: 4px auto; border-radius: 12px; box-shadow: inset 0 0 1px 1px rgba(0, 0, 0, 0.13); }
+.macbook-muesca {
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  width: 80px;
+  height: 8px;
+  translate: -50% 0;
+  border-radius: 24px 24px 0 0;
+  background: linear-gradient(0deg, #272729, #050505);
+}
+.macbook-sello { position: absolute; left: 16px; bottom: 16px; width: 40px; height: 40px; border-radius: 50%; object-fit: cover; rotate: -12deg; }
+@media (max-width: 420px) { .macbook-escala { scale: 0.5; } }
+@media (min-width: 640px) { .macbook-escala { scale: 0.85; } }
+@media (min-width: 960px) { .macbook-escala { scale: 1; padding-top: 200px; } }
