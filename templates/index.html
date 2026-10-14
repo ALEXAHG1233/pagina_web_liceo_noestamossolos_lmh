@@ -65,21 +65,14 @@
     </div>
   </nav>
 
-  <section class="bienvenida" data-disolver aria-label="Bienvenida">
-    <div class="bienvenida-pegajoso">
-      <div class="bienvenida-marco">
-        <img class="bienvenida-fondo"
-          src="{{ url_for('static', filename='images/banner_no_estas_solo.webp') }}"
-          alt="No Estás Solo — Programa Psicopedagógico, Liceo Militar de Honduras">
-        <canvas class="bienvenida-frente" aria-hidden="true"
-          data-escudo="{{ url_for('static', filename='images/escudo_liceo.png') }}"></canvas>
-      </div>
-      <p class="bienvenida-pista" aria-hidden="true">Baja para entrar <span>↓</span></p>
-    </div>
-  </section>
-
   <section class="hero hero-con-banner">
     <h1 class="sr-only">No Estás Solo LMH — Programa de Apoyo Psicopedagógico, Liceo Militar de Honduras</h1>
+    <div class="hero-banner-wrap">
+      <img
+        src="{{ url_for('static', filename='images/banner_no_estas_solo.webp') }}"
+        alt="No Estás Solo — Programa Psicopedagógico, Liceo Militar de Honduras"
+        class="hero-banner-img">
+    </div>
     <div class="morph" data-palabras="ESCUCHA|APOYO|ESPERANZA" data-intervalo="2500">
       <p class="sr-only">Escucha, apoyo y esperanza. No estamos solos LMH.</p>
       <div class="morph-palabras" aria-hidden="true">

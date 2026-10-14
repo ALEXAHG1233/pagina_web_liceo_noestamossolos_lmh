@@ -1110,87 +1110,20 @@ function activarCuadrosCyber() {
 
 document.addEventListener("DOMContentLoaded", activarCuadrosCyber);
 
-// Cursor con estela brillante (como GlowCursor): una línea dorada que
-// sigue al mouse y se desvanece en 1.4 segundos, con resplandor, y un
-// estallido de chispas al hacer clic. Solo en computadoras con mouse y si
-// no se pidió reducir el movimiento.
-function activarCursorBrillante() {
+// Estela de tinta líquida detrás del cursor (splash_cursor.js). Solo en
+// computadoras con mouse y si no se pidió reducir el movimiento: en
+// celular gastaría batería y se activaría al hacer scroll con el dedo.
+function cargarEstelaCursor() {
   const conMouse = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
-  if (!conMouse || SIN_MOVIMIENTO) return;
-  const AJUSTES = { color: [255, 200, 61], intensidad: 1.3, grosor: 3, duracion: 1.4, resplandor: 1.2 };
-  const [R, G, B] = AJUSTES.color;
-  const lienzo = document.createElement("canvas");
-  lienzo.className = "cursor-brillante";
-  lienzo.setAttribute("aria-hidden", "true");
-  document.body.appendChild(lienzo);
-  const ctx = lienzo.getContext("2d");
-  let dpr = 1;
-  const medir = () => {
-    dpr = Math.min(window.devicePixelRatio || 1, 2);
-    lienzo.width = window.innerWidth * dpr;
-    lienzo.height = window.innerHeight * dpr;
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-  };
-  medir();
-  window.addEventListener("resize", medir);
-
-  const puntos = [];       // { x, y, t }
-  const estallidos = [];   // chispas del clic
-  let animando = false;
-  window.addEventListener("pointermove", (e) => {
-    if (e.pointerType !== "mouse") return;
-    puntos.push({ x: e.clientX, y: e.clientY, t: performance.now() });
-    if (puntos.length > 120) puntos.shift();
-    empezar();
-  }, { passive: true });
-  window.addEventListener("pointerdown", (e) => {
-    if (e.pointerType !== "mouse") return;
-    for (let i = 0; i < 14; i++) {
-      const a = (i / 14) * Math.PI * 2;
-      const v = 1.5 + Math.random() * 2.5;
-      estallidos.push({ x: e.clientX, y: e.clientY, vx: Math.cos(a) * v, vy: Math.sin(a) * v, vida: 1 });
-    }
-    empezar();
-  }, { passive: true });
-
-  function empezar() { if (!animando) { animando = true; requestAnimationFrame(cuadro); } }
-
-  function cuadro(ahora) {
-    ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
-    const vida = AJUSTES.duracion * 1000;
-    while (puntos.length && ahora - puntos[0].t > vida) puntos.shift();
-    ctx.globalCompositeOperation = "lighter";
-    ctx.lineCap = "round";
-    ctx.lineJoin = "round";
-    ctx.shadowColor = "rgba(" + R + "," + G + "," + B + ",0.9)";
-    ctx.shadowBlur = 14 * AJUSTES.resplandor;
-    for (let i = 1; i < puntos.length; i++) {
-      const p0 = puntos[i - 1], p1 = puntos[i];
-      const frescura = 1 - (ahora - p1.t) / vida;
-      ctx.strokeStyle = "rgba(" + R + "," + G + "," + B + "," + Math.min(1, frescura * 0.8 * AJUSTES.intensidad).toFixed(3) + ")";
-      ctx.lineWidth = AJUSTES.grosor * (0.4 + frescura * 0.8);
-      ctx.beginPath();
-      ctx.moveTo(p0.x, p0.y);
-      ctx.lineTo(p1.x, p1.y);
-      ctx.stroke();
-    }
-    for (let i = estallidos.length - 1; i >= 0; i--) {
-      const c = estallidos[i];
-      c.x += c.vx; c.y += c.vy; c.vx *= 0.94; c.vy *= 0.94; c.vida -= 0.035;
-      if (c.vida <= 0) { estallidos.splice(i, 1); continue; }
-      ctx.fillStyle = "rgba(" + R + "," + G + "," + B + "," + c.vida.toFixed(2) + ")";
-      ctx.beginPath();
-      ctx.arc(c.x, c.y, 2.2 * c.vida + 0.6, 0, Math.PI * 2);
-      ctx.fill();
-    }
-    ctx.shadowBlur = 0;
-    ctx.globalCompositeOperation = "source-over";
-    if (puntos.length > 1 || estallidos.length) requestAnimationFrame(cuadro);
-    else { animando = false; ctx.clearRect(0, 0, window.innerWidth, window.innerHeight); }
-  }
+  if (!conMouse || SIN_MOVIMIENTO || document.getElementById("script-estela")) return;
+  const script = document.createElement("script");
+  script.id = "script-estela";
+  script.src = "/static/js/splash_cursor.js";
+  script.defer = true;
+  document.head.appendChild(script);
 }
 
-document.addEventListener("DOMContentLoaded", activarCursorBrillante);
+document.addEventListener("DOMContentLoaded", cargarEstelaCursor);
 
 // Imágenes de la portada que "se voltean" al pasar el mouse: se envuelven
 // en un contenedor que hereda el margen, el ancho máximo y las esquinas
@@ -1338,146 +1271,6 @@ function activarContadores() {
 
 document.addEventListener("DOMContentLoaded", activarContadores);
 
-
-// Bienvenida de la portada: una portada con el escudo y "Bienvenido/a"
-// dibujada en un canvas, que se disuelve con ruido (como arena, con borde
-// dorado) según cuánto bajes, dejando ver el banner que está debajo.
-function activarBienvenidaDisuelta() {
-  const seccion = document.querySelector("[data-disolver]");
-  if (!seccion || SIN_MOVIMIENTO) return;
-  const lienzo = seccion.querySelector(".bienvenida-frente");
-  const marco = seccion.querySelector(".bienvenida-marco");
-  const ctx = lienzo.getContext("2d");
-  if (!ctx) return;
-
-  // Ruido suave (value noise de 3 capas) en baja resolución.
-  const RW = 192, RH = 108;
-  let semilla = 7;
-  const azar = () => ((semilla = (semilla * 16807) % 2147483647) / 2147483647);
-  const ruido = new Float32Array(RW * RH);
-  [[12, 0.55], [24, 0.3], [48, 0.15]].forEach(([celda, peso]) => {
-    const gw = Math.ceil(RW / celda) + 2, gh = Math.ceil(RH / celda) + 2;
-    const rejilla = Array.from({ length: gw * gh }, azar);
-    for (let y = 0; y < RH; y++) {
-      for (let x = 0; x < RW; x++) {
-        const fx = x / celda, fy = y / celda;
-        const x0 = Math.floor(fx), y0 = Math.floor(fy);
-        const tx = fx - x0, ty = fy - y0;
-        const sx = tx * tx * (3 - 2 * tx), sy = ty * ty * (3 - 2 * ty);
-        const v = (i, j) => rejilla[(y0 + j) * gw + (x0 + i)];
-        const a = v(0, 0) + (v(1, 0) - v(0, 0)) * sx;
-        const b = v(0, 1) + (v(1, 1) - v(0, 1)) * sx;
-        ruido[y * RW + x] += (a + (b - a) * sy) * peso;
-      }
-    }
-  });
-
-  const mascara = document.createElement("canvas");
-  mascara.width = RW; mascara.height = RH;
-  const mctx = mascara.getContext("2d");
-  const datosMascara = mctx.createImageData(RW, RH);
-  const brillo = document.createElement("canvas");
-  brillo.width = RW; brillo.height = RH;
-  const bctx = brillo.getContext("2d");
-  const datosBrillo = bctx.createImageData(RW, RH);
-
-  // La portada de bienvenida se dibuja una vez en otro canvas.
-  const frente = document.createElement("canvas");
-  const escudo = new Image();
-  escudo.src = lienzo.dataset.escudo;
-
-  function dibujarFrente() {
-    const w = lienzo.width, h = lienzo.height;
-    frente.width = w; frente.height = h;
-    const f = frente.getContext("2d");
-    const fondo = f.createRadialGradient(w / 2, h * 0.4, 0, w / 2, h * 0.4, w * 0.75);
-    fondo.addColorStop(0, "#2e6b41");
-    fondo.addColorStop(1, "#0d2415");
-    f.fillStyle = fondo;
-    f.fillRect(0, 0, w, h);
-    const lado = h * 0.38;
-    if (escudo.complete && escudo.naturalWidth) {
-      // El escudo viene en un cuadro blanco: se recorta en círculo con borde dorado.
-      const cx = w / 2, cy = h * 0.1 + lado / 2, r = lado / 2;
-      f.save();
-      f.beginPath();
-      f.arc(cx, cy, r, 0, Math.PI * 2);
-      f.clip();
-      const escala = Math.max(lado / escudo.naturalWidth, lado / escudo.naturalHeight) * 1.08;
-      const ancho = escudo.naturalWidth * escala, alto = escudo.naturalHeight * escala;
-      f.drawImage(escudo, cx - ancho / 2, cy - alto / 2, ancho, alto);
-      f.restore();
-      f.strokeStyle = "#c9a227";
-      f.lineWidth = Math.max(2, h * 0.008);
-      f.beginPath();
-      f.arc(cx, cy, r, 0, Math.PI * 2);
-      f.stroke();
-    }
-    f.textAlign = "center";
-    f.fillStyle = "#ffc83d";
-    f.font = `700 ${Math.round(h * 0.13)}px Fraunces, Georgia, serif`;
-    f.fillText("Bienvenido/a", w / 2, h * 0.66);
-    f.fillStyle = "#ffffff";
-    f.font = `600 ${Math.round(h * 0.06)}px Montserrat, Arial, sans-serif`;
-    f.fillText("a No estamos solos LMH", w / 2, h * 0.79);
-    f.fillStyle = "rgba(255, 255, 255, 0.75)";
-    f.font = `500 ${Math.round(h * 0.042)}px Montserrat, Arial, sans-serif`;
-    f.fillText("Un espacio seguro y anónimo del Liceo Militar de Honduras", w / 2, h * 0.88);
-  }
-
-  function medir() {
-    const dpr = Math.min(window.devicePixelRatio || 1, 2);
-    lienzo.width = Math.min(Math.round(marco.clientWidth * dpr), 2000);
-    lienzo.height = Math.round(lienzo.width * 9 / 16);
-    dibujarFrente();
-    pintar();
-  }
-
-  function pintar() {
-    const caja = seccion.getBoundingClientRect();
-    const recorrido = caja.height - window.innerHeight;
-    const avance = recorrido > 0 ? Math.min(Math.max(-caja.top / recorrido, 0), 1) : 0;
-    const umbral = avance * 1.25 - 0.1;   // de -0.1 (entero) a 1.15 (desaparecido)
-    const md = datosMascara.data, bd = datosBrillo.data;
-    for (let i = 0; i < RW * RH; i++) {
-      const d = ruido[i] - umbral;
-      md[i * 4 + 3] = d <= 0 ? 0 : d >= 0.03 ? 255 : (d / 0.03) * 255;
-      const g = d > -0.015 && d < 0.05 ? 1 - Math.abs(d - 0.015) / 0.035 : 0;
-      bd[i * 4] = 255; bd[i * 4 + 1] = 200; bd[i * 4 + 2] = 61;
-      bd[i * 4 + 3] = Math.max(g, 0) * 255;
-    }
-    mctx.putImageData(datosMascara, 0, 0);
-    bctx.putImageData(datosBrillo, 0, 0);
-
-    const w = lienzo.width, h = lienzo.height;
-    ctx.globalCompositeOperation = "source-over";
-    ctx.clearRect(0, 0, w, h);
-    if (umbral < 1.1) {
-      ctx.drawImage(frente, 0, 0);
-      ctx.globalCompositeOperation = "destination-in";
-      ctx.imageSmoothingEnabled = true;
-      ctx.drawImage(mascara, 0, 0, w, h);
-      ctx.globalCompositeOperation = "lighter";
-      ctx.drawImage(brillo, 0, 0, w, h);
-      ctx.globalCompositeOperation = "source-over";
-    }
-    seccion.classList.toggle("revelada", avance > 0.85);
-  }
-
-  let pendiente = false;
-  window.addEventListener("scroll", () => {
-    if (pendiente) return;
-    pendiente = true;
-    requestAnimationFrame(() => { pendiente = false; pintar(); });
-  }, { passive: true });
-  window.addEventListener("resize", medir);
-  escudo.addEventListener("load", medir);
-  if (document.fonts && document.fonts.ready) document.fonts.ready.then(medir);
-  seccion.classList.add("lista");
-  medir();
-}
-
-document.addEventListener("DOMContentLoaded", activarBienvenidaDisuelta);
 
 
 // Teclado que escribe solo: arma las teclas, escribe cada frase letra por
@@ -2013,7 +1806,8 @@ document.addEventListener("DOMContentLoaded", activarTextoOndulado);
 // (20°) y un poco más grande, y queda derecho cuando llega al centro de
 // la pantalla. Usa las imágenes ya envueltas por activarImagenesVolteo.
 function activarImagenesScroll() {
-  const cajas = Array.from(document.querySelectorAll(".img-volteo"));
+  const cajas = Array.from(document.querySelectorAll(".img-volteo"))
+    .filter((caja) => !caja.querySelector(".hero-banner-img"));
   if (!cajas.length || SIN_MOVIMIENTO) return;
   const marcos = cajas.map((caja) => {
     const marco = document.createElement("div");
@@ -2591,11 +2385,11 @@ document.addEventListener("DOMContentLoaded", medirEncabezado);
 
 // Borde eléctrico (como ElectricBorder): 3 rayos dorados que recorren el
 // borde redondeado del cuadro, temblando con ruido, con resplandor. Se
-// pone en la bienvenida, las imágenes grandes, "Hablar ayuda", los pasos,
+// pone en las imágenes grandes, "Hablar ayuda", los pasos,
 // las tarjetas de "¿Por qué hablar ayuda?", las opciones de Herramientas e
 // Infórmate y los recursos de psicología. Solo se animan los que se ven.
 const ELECTRICO_SELECTOR = [
-  ".bienvenida-marco", ".marco-scroll", ".multitud", ".pasos-caja",
+  ".marco-scroll", ".multitud", ".pasos-caja",
   ".tarjetas > .girar-caja", ".opcion-recurso", ".recursos-grid > .girar-caja",
 ].join(", ");
 
@@ -2614,9 +2408,7 @@ function activarBordeElectrico() {
       const estilo = getComputedStyle(el);
       caja.style.margin = estilo.margin;
       caja.style.maxWidth = estilo.maxWidth;
-      caja.style.width = el.matches(".bienvenida-marco") ? estilo.width : "";
       el.style.margin = "0";
-      if (el.matches(".bienvenida-marco")) el.style.width = "100%";
       el.parentNode.insertBefore(caja, el);
       caja.appendChild(el);
       host = caja;
@@ -2739,7 +2531,7 @@ document.addEventListener("DOMContentLoaded", activarBordeElectrico);
 
 // Destello que barre al pasar el mouse, en todos los cuadros y todas las
 // imágenes grandes de las páginas.
-const BARRIDO_IMAGENES = ".img-volteo, .perspectiva-foto, .pila-tarjeta, .bienvenida-marco, .libro3d-tapa, .video-ligero";
+const BARRIDO_IMAGENES = ".img-volteo, .perspectiva-foto, .pila-tarjeta, .libro3d-tapa, .video-ligero";
 
 function activarBarrido() {
   document.querySelectorAll(ADORNOS_SELECTOR + ", " + CYBER_SELECTOR + ", " + BARRIDO_IMAGENES + ", .red-card").forEach((el) => {

@@ -247,8 +247,6 @@ input[type="submit"]:active {
 .profundidad-sombra .profundidad-capa:last-of-type { text-shadow: 0 10px 18px rgba(0, 0, 0, 0.45); }
 :root[data-tema="claro"] .profundidad { --color-fondo3d: #c9a227; }
 
-/* Cursor con estela brillante (lo dibuja common.js). */
-.cursor-brillante { position: fixed; inset: 0; width: 100vw; height: 100vh; z-index: 9999; pointer-events: none; }
 
 /* Letras elásticas tipo globo en los textos pequeños amarillos. */
 .globo-palabra { display: inline-block; white-space: nowrap; }
