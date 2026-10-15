@@ -162,7 +162,9 @@
       <h2 id="titulo-multitud">Miles de personas salen adelante cada año al identificar lo que sienten y hablarlo.</h2>
       <p>Reconocer las señales, contarle a alguien de confianza y pedir ayuda a tiempo cambia historias. La tuya también puede cambiar.</p>
     </div>
-    <canvas class="multitud-lienzo" data-multitud aria-hidden="true"></canvas>
+    <canvas class="multitud-lienzo" data-multitud aria-hidden="true"
+      data-personas="{{ url_for('static', filename='images/personas/persona1.png') }}|{{ url_for('static', filename='images/personas/persona2.png') }}|{{ url_for('static', filename='images/personas/persona3.png') }}|{{ url_for('static', filename='images/personas/persona4.png') }}"
+      data-miran="-1,1,1,1"></canvas>
   </section>
 
   <section class="seccion tigre-3d reveal">
@@ -172,7 +174,7 @@
       <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.5.0/model-viewer.min.js"></script>
       <model-viewer class="visor-tigre"
         src="{{ url_for('static', filename='models/tigre.glb') }}"
-        poster="{{ url_for('static', filename='images/tigrito_sin_fondo.png') }}"
+        poster="{{ url_for('static', filename='images/tigre_animal.png') }}"
         alt="Tigrito, la mascota del programa, en 3D"
         camera-controls auto-rotate auto-rotate-delay="0" rotation-per-second="20deg"
         touch-action="pan-y" interaction-prompt="none"
@@ -180,7 +182,7 @@
     {% else %}
       <p class="seccion-subtitulo">La mascota del programa, siempre lista para escucharte.</p>
       <div class="visor-tigre visor-tigre-imagen">
-        <img src="{{ url_for('static', filename='images/tigrito_sin_fondo.png') }}" alt="Tigrito, la mascota del programa" loading="lazy">
+        <img src="{{ url_for('static', filename='images/tigre_animal.png') }}" alt="Tigrito, la mascota del programa: un tigre con boina militar y bata de psicólogo" loading="lazy">
       </div>
     {% endif %}
   </section>

@@ -1588,35 +1588,29 @@ function activarMural() {
 document.addEventListener("DOMContentLoaded", activarMural);
 
 
-// Multitud que camina: personas sencillas dibujadas en canvas (cabeza,
-// cabello, cuerpo y piernas que se mueven), con colores variados. Cada
-// una cruza de un lado al otro a su propio ritmo y vuelve a entrar.
+// Multitud que camina: las fotos de personas reales (sin fondo) cruzan la
+// pantalla de un lado al otro, cada una a su ritmo, con un pequeño rebote
+// y balanceo al dar cada paso. Si una camina hacia el otro lado, la foto
+// se voltea para que mire hacia donde va. Las de atrás son más pequeñas.
 function activarMultitud() {
   const lienzo = document.querySelector("[data-multitud]");
   if (!lienzo) return;
   const ctx = lienzo.getContext("2d");
-  const PIELES = ["#f2c9a0", "#e0ac7e", "#c68a5b", "#a0673f", "#7a4a2a", "#5a3520"];
-  const ROPA = ["#1f4b2c", "#4d7111", "#91eaaf", "#0072ce", "#c94b4b", "#5a2d91", "#e8732a", "#183020", "#f4f1e8"];
-  const PELO = ["#1b120c", "#3b2416", "#6b4423", "#a8742f", "#2b2b2b"];
+  const rutas = (lienzo.dataset.personas || "").split("|").filter(Boolean);
+  const miran = (lienzo.dataset.miran || "").split(",").map(Number);
+  const fotos = rutas.map((src) => { const img = new Image(); img.src = src; return img; });
   const azar = (a, b) => a + Math.random() * (b - a);
-  const elegir = (lista) => lista[Math.floor(Math.random() * lista.length)];
   let ancho = 0, alto = 0, personas = [];
 
   function nuevaPersona(enCualquierLugar) {
-    const escala = azar(0.75, 1.15);
     const dir = Math.random() < 0.5 ? 1 : -1;
+    const foto = Math.floor(Math.random() * fotos.length);
     return {
-      escala,
-      dir,
-      x: enCualquierLugar ? azar(0, ancho) : (dir === 1 ? -40 : ancho + 40),
-      fondo: azar(0, 1),            // 0 = atrás, 1 = adelante
-      vel: azar(28, 60) * escala,   // px por segundo
+      foto, dir,
+      fondo: azar(0, 1),              // 0 = atrás (más chica), 1 = adelante
+      x: enCualquierLugar ? azar(0, ancho) : (dir === 1 ? -120 : ancho + 120),
+      vel: azar(34, 58),              // px por segundo
       fase: azar(0, Math.PI * 2),
-      piel: elegir(PIELES),
-      camisa: elegir(ROPA),
-      pantalon: elegir(["#183020", "#2b2b2b", "#1d3d6b", "#5b4322"]),
-      pelo: elegir(PELO),
-      peinado: Math.floor(azar(0, 3)),
     };
   }
 
@@ -1627,46 +1621,31 @@ function activarMultitud() {
     lienzo.width = ancho * dpr;
     lienzo.height = alto * dpr;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    const cuantas = Math.max(10, Math.round(ancho / 34));
+    const cuantas = Math.max(4, Math.min(9, Math.round(ancho / 130)));
     personas = Array.from({ length: cuantas }, () => nuevaPersona(true));
   }
 
   function dibujar(p) {
-    const s = p.escala * (0.8 + p.fondo * 0.35);
-    const suelo = alto - 8 - (1 - p.fondo) * 70;
-    const paso = Math.sin(p.fase);
-    const rebote = Math.abs(Math.cos(p.fase)) * 3 * s;
+    const img = fotos[p.foto];
+    if (!img.complete || !img.naturalWidth) return;
+    const altoFoto = (alto * 0.66) * (0.72 + p.fondo * 0.38);
+    const anchoFoto = altoFoto * (img.naturalWidth / img.naturalHeight);
+    const suelo = alto - 6 - (1 - p.fondo) * 46;
+    const rebote = Math.abs(Math.sin(p.fase)) * altoFoto * 0.025;   // sube un poco en cada paso
+    const balanceo = Math.sin(p.fase) * 0.025;                       // se inclina apenas
     ctx.save();
+    ctx.globalAlpha = 0.75 + p.fondo * 0.25;
     ctx.translate(p.x, suelo - rebote);
-    ctx.scale(s * p.dir, s);
-    ctx.lineCap = "round";
-    // Piernas
-    ctx.strokeStyle = p.pantalon;
-    ctx.lineWidth = 9;
-    ctx.beginPath(); ctx.moveTo(0, -46); ctx.lineTo(paso * 11, 0); ctx.stroke();
-    ctx.beginPath(); ctx.moveTo(0, -46); ctx.lineTo(-paso * 11, 0); ctx.stroke();
-    // Brazo de atrás
-    ctx.strokeStyle = p.piel;
-    ctx.lineWidth = 7;
-    ctx.beginPath(); ctx.moveTo(0, -84); ctx.lineTo(-paso * 12, -58); ctx.stroke();
-    // Cuerpo
-    ctx.fillStyle = p.camisa;
+    ctx.rotate(balanceo);
+    // La foto mira hacia "miran"; si camina al revés, se voltea.
+    const mira = miran[p.foto] || 1;
+    ctx.scale(p.dir === mira ? 1 : -1, 1);
+    // Sombra en el piso.
+    ctx.fillStyle = "rgba(0, 0, 0, 0.18)";
     ctx.beginPath();
-    ctx.roundRect(-13, -92, 26, 50, 11);
+    ctx.ellipse(0, rebote, anchoFoto * 0.32, altoFoto * 0.025, 0, 0, Math.PI * 2);
     ctx.fill();
-    // Brazo de adelante
-    ctx.strokeStyle = p.piel;
-    ctx.beginPath(); ctx.moveTo(0, -84); ctx.lineTo(paso * 12, -58); ctx.stroke();
-    // Cabeza
-    ctx.fillStyle = p.piel;
-    ctx.beginPath(); ctx.arc(0, -106, 12, 0, Math.PI * 2); ctx.fill();
-    // Cabello
-    ctx.fillStyle = p.pelo;
-    ctx.beginPath();
-    if (p.peinado === 0) ctx.arc(0, -109, 12.5, Math.PI, 0);
-    else if (p.peinado === 1) { ctx.arc(0, -108, 13, Math.PI * 0.95, Math.PI * 0.05); ctx.rect(-13, -110, 6, 22); }
-    else { ctx.arc(0, -110, 12, Math.PI, 0); ctx.arc(-9, -98, 5, 0, Math.PI * 2); }
-    ctx.fill();
+    ctx.drawImage(img, -anchoFoto / 2, -altoFoto, anchoFoto, altoFoto);
     ctx.restore();
   }
 
@@ -1681,9 +1660,9 @@ function activarMultitud() {
       personas.forEach((p, i) => {
         if (!SIN_MOVIMIENTO) {
           p.x += p.vel * p.dir * dt;
-          p.fase += dt * p.vel / 9;
+          p.fase += dt * p.vel / 11;
         }
-        if (p.x < -60 || p.x > ancho + 60) personas[i] = nuevaPersona(false);
+        if (p.x < -160 || p.x > ancho + 160) personas[i] = nuevaPersona(false);
         dibujar(personas[i]);
       });
     }
