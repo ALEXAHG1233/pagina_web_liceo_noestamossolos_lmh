@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contenido de la página — Panel de la psicóloga</title>
+  {% include "_cabeza.html" %}
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/diario.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/panel_contenido.css') }}">
+</head>
+<body class="diario-body panel-contenido">
+
+  <header class="diario-header">
+    <a href="{{ url_for('psicologa') }}" class="volver">← Volver a los chats</a>
+    <h1>Contenido de la página</h1>
+  </header>
+
+  {% with mensajes = get_flashed_messages(with_categories=true) %}
+    {% for categoria, texto in mensajes %}<p class="pc-aviso pc-aviso-{{ categoria }}">{{ texto }}</p>{% endfor %}
+  {% endwith %}
+
+  <p class="pc-intro">Aquí puedes cambiar lo que ven los estudiantes sin tocar el código. Los cambios se ven al instante en la página.</p>
+
+  <nav class="pc-pestanas" aria-label="Secciones del panel">
+    <a href="#articulos">Artículos</a>
+    <a href="#herramientas">Herramientas</a>
+    <a href="#textos">Frases y mural</a>
+    <a href="#moderar">Muro y reseñas</a>
+    <a href="#ajustes">WhatsApp</a>
+  </nav>
+
+  {# ---------------- Artículos ---------------- #}
+  <section class="pc-seccion" id="articulos">
+    <div class="pc-titulo">
+      <h2>Artículos de Infórmate</h2>
+      <a class="pc-boton" href="{{ url_for('psicologa_articulo', slug='nuevo') }}">+ Nuevo artículo</a>
+    </div>
+    {% for nombre, descripcion in categorias %}
+      <h3 class="pc-sub">{{ nombre }}</h3>
+      <ul class="pc-lista">
+        {% for slug, a in articulos.items() if a.categoria == nombre %}
+          <li class="pc-item{% if a.oculto %} pc-oculto{% endif %}">
+            <div class="pc-item-texto">
+              <strong>{{ a.titulo }}</strong>
+              <span class="pc-etiquetas">
+                {% if a.oculto %}<span class="pc-etiqueta pc-e-oculto">Escondido</span>{% endif %}
+                {% if a.origen == 'nuevo' %}<span class="pc-etiqueta">Nuevo</span>{% elif a.origen == 'editado' %}<span class="pc-etiqueta">Editado</span>{% endif %}
+                {% if a.video_youtube_id %}<span class="pc-etiqueta">Con video</span>{% endif %}
+              </span>
+            </div>
+            <div class="pc-acciones">
+              <a class="pc-accion" href="{{ url_for('psicologa_articulo', slug=slug) }}">Editar</a>
+              <form method="POST" action="{{ url_for('psicologa_accion') }}">
+                <input type="hidden" name="csrf" value="{{ csrf_token() }}">
+                <input type="hidden" name="tipo" value="articulo"><input type="hidden" name="clave" value="{{ slug }}">
+                <button class="pc-accion" name="accion" value="{{ 'mostrar' if a.oculto else 'ocultar' }}">{{ 'Mostrar' if a.oculto else 'Esconder' }}</button>
+                {% if a.origen != 'fabrica' %}
+                  <button class="pc-accion pc-peligro" name="accion" value="restaurar"
+                    onclick="return confirm('{{ '¿Borrar este artículo?' if a.origen == 'nuevo' else '¿Volver a la versión original?' }}')">{{ 'Borrar' if a.origen == 'nuevo' else 'Restaurar original' }}</button>
+                {% endif %}
+              </form>
+            </div>
+          </li>
+        {% endfor %}
+      </ul>
+    {% endfor %}
+  </section>
+
+  {# ---------------- Herramientas ---------------- #}
+  <section class="pc-seccion" id="herramientas">
+    <div class="pc-titulo">
+      <h2>Herramientas</h2>
+      <a class="pc-boton" href="{{ url_for('psicologa_herramienta', clave='nuevo') }}">+ Nueva herramienta</a>
+    </div>
+    {% for cat_id, cat in tecnicas.items() %}
+      <h3 class="pc-sub">{{ cat.titulo }}</h3>
+      <ul class="pc-lista">
+        {% for tec_id, t in cat.tecnicas.items() %}
+          <li class="pc-item{% if t.oculto %} pc-oculto{% endif %}">
+            <div class="pc-item-texto">
+              <strong>{{ t.nombre }}</strong>
+              <span class="pc-etiquetas">
+                {% if t.oculto %}<span class="pc-etiqueta pc-e-oculto">Escondida</span>{% endif %}
+                {% if t.origen == 'nuevo' %}<span class="pc-etiqueta">Nueva</span>{% elif t.origen == 'editado' %}<span class="pc-etiqueta">Editada</span>{% endif %}
+              </span>
+            </div>
+            <div class="pc-acciones">
+              <a class="pc-accion" href="{{ url_for('psicologa_herramienta', clave=cat_id ~ '/' ~ tec_id) }}">Editar</a>
+              <form method="POST" action="{{ url_for('psicologa_accion') }}">
+                <input type="hidden" name="csrf" value="{{ csrf_token() }}">
+                <input type="hidden" name="tipo" value="herramienta"><input type="hidden" name="clave" value="{{ cat_id }}/{{ tec_id }}">
+                <button class="pc-accion" name="accion" value="{{ 'mostrar' if t.oculto else 'ocultar' }}">{{ 'Mostrar' if t.oculto else 'Esconder' }}</button>
+                {% if t.origen != 'fabrica' %}
+                  <button class="pc-accion pc-peligro" name="accion" value="restaurar"
+                    onclick="return confirm('{{ '¿Borrar esta herramienta?' if t.origen == 'nuevo' else '¿Volver a la versión original?' }}')">{{ 'Borrar' if t.origen == 'nuevo' else 'Restaurar original' }}</button>
+                {% endif %}
+              </form>
+            </div>
+          </li>
+        {% endfor %}
+      </ul>
+    {% endfor %}
+  </section>
+
+  {# ---------------- Textos de la portada ---------------- #}
+  <section class="pc-seccion" id="textos">
+    <h2>Frases, mural e historias de la portada</h2>
+    <form method="POST" action="{{ url_for('psicologa_textos') }}" class="pc-form">
+      <input type="hidden" name="csrf" value="{{ csrf_token() }}">
+      <label class="pc-campo">
+        <span>Frases para hoy <small>(una por línea; salen en el mural, en "Para hoy")</small></span>
+        <textarea name="frases" rows="7">{{ frases }}</textarea>
+      </label>
+      <label class="pc-campo">
+        <span>¿Mito o realidad? <small>(una por línea: <code>Mito | frase | explicación</code> o <code>Realidad | frase | explicación</code>)</small></span>
+        <textarea name="mitos" rows="8">{{ mitos }}</textarea>
+      </label>
+      <label class="pc-campo">
+        <span>Historias de quienes ya dieron el paso <small>(una por línea: <code>año | historia</code>, por ejemplo <code>3 | Me animé a escribir…</code>)</small></span>
+        <textarea name="historias" rows="5">{{ historias }}</textarea>
+        <small class="pc-nota">Usa historias reales, anónimas y con permiso del estudiante. Nunca nombres ni datos que lo identifiquen.</small>
+      </label>
+      <button type="submit" class="pc-boton">Guardar textos</button>
+    </form>
+  </section>
+
+  {# ---------------- Moderación ---------------- #}
+  <section class="pc-seccion" id="moderar">
+    <h2>Muro y reseñas</h2>
+    <p class="pc-intro-chica">Lo escondido deja de verse en la página, pero puedes volver a mostrarlo. Borrar no se puede deshacer.</p>
+    <h3 class="pc-sub">Publicaciones del muro</h3>
+    <ul class="pc-lista">
+      {% for p in muro %}
+        <li class="pc-item{% if p.oculto %} pc-oculto{% endif %}">
+          <div class="pc-item-texto"><span>{{ p.contenido }}</span><small>{{ p.fecha[:10] }}{% if p.oculto %} · Escondida{% endif %}</small></div>
+          <form method="POST" action="{{ url_for('psicologa_accion') }}" class="pc-acciones">
+            <input type="hidden" name="csrf" value="{{ csrf_token() }}">
+            <input type="hidden" name="tipo" value="muro_posts"><input type="hidden" name="clave" value="{{ p.id }}">
+            <button class="pc-accion" name="accion" value="{{ 'mostrar' if p.oculto else 'ocultar' }}">{{ 'Mostrar' if p.oculto else 'Esconder' }}</button>
+            <button class="pc-accion pc-peligro" name="accion" value="borrar" onclick="return confirm('¿Borrar esta publicación para siempre?')">Borrar</button>
+          </form>
+        </li>
+      {% else %}
+        <li class="pc-vacio">Todavía no hay publicaciones.</li>
+      {% endfor %}
+    </ul>
+    <h3 class="pc-sub">Reseñas</h3>
+    <ul class="pc-lista">
+      {% for r in resenas %}
+        <li class="pc-item{% if r.oculto %} pc-oculto{% endif %}">
+          <div class="pc-item-texto"><span>{{ "★" * r.estrellas }} {{ r.comentario or "(sin comentario)" }}</span><small>{{ r.fecha[:10] }}{% if r.foto %} · con foto{% endif %}{% if r.oculto %} · Escondida{% endif %}</small></div>
+          <form method="POST" action="{{ url_for('psicologa_accion') }}" class="pc-acciones">
+            <input type="hidden" name="csrf" value="{{ csrf_token() }}">
+            <input type="hidden" name="tipo" value="resenas"><input type="hidden" name="clave" value="{{ r.id }}">
+            <button class="pc-accion" name="accion" value="{{ 'mostrar' if r.oculto else 'ocultar' }}">{{ 'Mostrar' if r.oculto else 'Esconder' }}</button>
+            <button class="pc-accion pc-peligro" name="accion" value="borrar" onclick="return confirm('¿Borrar esta reseña para siempre?')">Borrar</button>
+          </form>
+        </li>
+      {% else %}
+        <li class="pc-vacio">Todavía no hay reseñas.</li>
+      {% endfor %}
+    </ul>
+  </section>
+
+  {# ---------------- Ajustes ---------------- #}
+  <section class="pc-seccion" id="ajustes">
+    <h2>WhatsApp del botón verde</h2>
+    <form method="POST" action="{{ url_for('psicologa_ajustes') }}" class="pc-form">
+      <input type="hidden" name="csrf" value="{{ csrf_token() }}">
+      <label class="pc-campo">
+        <span>Número de WhatsApp <small>(8 dígitos de Honduras, o con 504 al inicio)</small></span>
+        <input type="tel" name="whatsapp_numero" value="{{ ajustes.whatsapp_numero }}" required>
+      </label>
+      <label class="pc-campo">
+        <span>A quién le escriben <small>(opcional; el botón dirá "Escribir a …")</small></span>
+        <input type="text" name="whatsapp_nombre" value="{{ ajustes.whatsapp_nombre }}" maxlength="40" placeholder="Ej.: Cap. Rodríguez">
+      </label>
+      <button type="submit" class="pc-boton">Guardar WhatsApp</button>
+    </form>
+  </section>
+
+  <script src="{{ url_for('static', filename='js/common.js') }}"></script>
+</body>
+</html>

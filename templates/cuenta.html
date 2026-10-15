@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% if modo == 'crear' %}Crear mi cuenta{% elif modo == 'entrar' %}Entrar a mi cuenta{% else %}Mi cuenta{% endif %} — No Estás Solo LMH</title>
+  {% include "_cabeza.html" %}
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/diario.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/cuenta.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/pop.css') }}">
+</head>
+<body class="diario-body">
+
+  <header class="diario-header">
+    <a href="{{ url_for('index') }}" class="volver">← Volver</a>
+    <h1>{% if modo == 'crear' %}Crear mi cuenta{% elif modo == 'entrar' %}Entrar a mi cuenta{% else %}Mi cuenta{% endif %}</h1>
+  </header>
+
+  {% with mensajes = get_flashed_messages(with_categories=true) %}
+    {% for categoria, texto in mensajes %}<p class="cuenta-aviso cuenta-aviso-{{ categoria }}">{{ texto }}</p>{% endfor %}
+  {% endwith %}
+
+  <section class="cuenta">
+    {% if modo != 'perfil' %}
+      <p class="cuenta-intro">
+        {% if modo == 'crear' %}
+          Es <b>opcional</b>: puedes usar toda la página sin cuenta. Con una cuenta, tu diario de ánimo te saluda con tu apodo y te sigue en cualquier celular o computadora.
+        {% else %}
+          Entra con tu apodo para ver tu diario de ánimo.
+        {% endif %}
+      </p>
+    {% endif %}
+
+    {% if error %}<p class="cuenta-error">{{ error }}</p>{% endif %}
+
+    <form method="POST" class="cuenta-form">
+      <input type="hidden" name="csrf" value="{{ csrf_token() }}">
+      <label class="cuenta-campo">
+        <span>Tu apodo</span>
+        <input type="text" name="apodo" value="{{ datos.apodo }}" minlength="3" maxlength="20" required autocomplete="username"
+          placeholder="Ej.: Tigre07, Luna, ElCadete">
+        {% if modo != 'entrar' %}<small>Mejor un apodo que tu nombre real: así nadie sabe quién eres.</small>{% endif %}
+      </label>
+
+      {% if modo != 'perfil' %}
+        <label class="cuenta-campo">
+          <span>Contraseña</span>
+          <input type="password" name="clave" minlength="6" required autocomplete="{{ 'new-password' if modo == 'crear' else 'current-password' }}">
+        </label>
+      {% endif %}
+      {% if modo == 'crear' %}
+        <label class="cuenta-campo">
+          <span>Repite la contraseña</span>
+          <input type="password" name="clave2" minlength="6" required autocomplete="new-password">
+        </label>
+      {% endif %}
+
+      {% if modo != 'entrar' %}
+        <fieldset class="cuenta-avatares">
+          <legend>Elige tu avatar</legend>
+          <div class="avatares-grid">
+            {% for clave, dibujo, color in avatares %}
+              <label class="avatar-opcion" style="--fondo: {{ color }};">
+                <input type="radio" name="avatar" value="{{ clave }}" {% if datos.avatar == clave %}checked{% endif %}>
+                <span class="avatar-circulo" aria-hidden="true">{{ dibujo }}</span>
+                <span class="sr-only">{{ clave }}</span>
+              </label>
+            {% endfor %}
+          </div>
+        </fieldset>
+      {% endif %}
+
+      <button type="submit" class="cuenta-boton">
+        {% if modo == 'crear' %}Crear mi cuenta{% elif modo == 'entrar' %}Entrar{% else %}Guardar cambios{% endif %}
+      </button>
+    </form>
+
+    {% if modo == 'crear' %}
+      <p class="cuenta-cambiar">¿Ya tienes cuenta? <a href="{{ url_for('cuenta_entrar') }}">Entra aquí</a></p>
+    {% elif modo == 'entrar' %}
+      <p class="cuenta-cambiar">¿No tienes cuenta? <a href="{{ url_for('cuenta_crear') }}">Crea una (es opcional)</a></p>
+    {% else %}
+      <div class="cuenta-acciones">
+        <a class="cuenta-enlace" href="{{ url_for('diario') }}">Ir a mi diario →</a>
+        <form method="POST" action="{{ url_for('cuenta_salir') }}">
+          <input type="hidden" name="csrf" value="{{ csrf_token() }}">
+          <button type="submit" class="cuenta-secundario">Cerrar sesión</button>
+        </form>
+        <form method="POST" action="{{ url_for('cuenta_borrar') }}" onsubmit="return confirm('¿Seguro? Se borra tu cuenta y todo tu diario. No se puede deshacer.');">
+          <input type="hidden" name="csrf" value="{{ csrf_token() }}">
+          <button type="submit" class="cuenta-peligro">Borrar mi cuenta y mi diario</button>
+        </form>
+      </div>
+    {% endif %}
+
+    <p class="cuenta-privacidad">Tus chats con la psicóloga y con el asistente siguen siendo anónimos: tu apodo no aparece en ellos.</p>
+  </section>
+
+  <script src="{{ url_for('static', filename='js/common.js') }}"></script>
+</body>
+</html>

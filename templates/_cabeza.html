@@ -1,0 +1,12 @@
+{# Va en el <head> de todas las páginas: ícono (logo del liceo), datos para
+   instalar la página como aplicación y el número del botón de WhatsApp. #}
+<link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static', filename='iconos/favicon-32.png') }}">
+<link rel="icon" type="image/png" sizes="64x64" href="{{ url_for('static', filename='iconos/favicon-64.png') }}">
+<link rel="apple-touch-icon" href="{{ url_for('static', filename='iconos/apple-touch-icon.png') }}">
+<link rel="manifest" href="{{ url_for('manifiesto') }}">
+<meta name="theme-color" content="#1f4b2c">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="No estamos solos">
+<meta name="whatsapp-numero" content="{{ whatsapp_numero }}">
+<meta name="whatsapp-nombre" content="{{ whatsapp_nombre }}">

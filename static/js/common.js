@@ -5,7 +5,11 @@
  */
 
 // Botón flotante de WhatsApp, visible en todas las páginas que cargan este script.
-const WHATSAPP_NUMERO = "50431746810";
+// El número y el nombre los pone la psicóloga en su panel (Ajustes); la
+// página los deja en <meta name="whatsapp-numero"> y "whatsapp-nombre".
+const leerMeta = (nombre) => document.querySelector(`meta[name="${nombre}"]`)?.content || "";
+const WHATSAPP_NUMERO = leerMeta("whatsapp-numero") || "50431746810";
+const WHATSAPP_NOMBRE = leerMeta("whatsapp-nombre");
 
 function crearBotonWhatsAppFlotante() {
   if (document.getElementById("whatsapp-flotante")) return;
@@ -15,10 +19,10 @@ function crearBotonWhatsAppFlotante() {
   boton.target = "_blank";
   boton.rel = "noopener noreferrer";
   boton.className = "whatsapp-flotante";
-  boton.setAttribute("aria-label", "Contactar por WhatsApp");
+  boton.setAttribute("aria-label", WHATSAPP_NOMBRE ? `Escribir por WhatsApp a ${WHATSAPP_NOMBRE}` : "Contactar por WhatsApp");
   boton.innerHTML =
     '<svg viewBox="0 0 32 32" width="26" height="26" fill="#fff"><path d="M16 3C9 3 3.2 8.7 3.2 15.8c0 2.6.7 5 2 7.1L3 29l6.3-2.1c2 1.1 4.3 1.7 6.7 1.7 7 0 12.8-5.7 12.8-12.8C28.8 8.7 23 3 16 3zm0 23.3c-2.1 0-4.1-.6-5.8-1.6l-.4-.2-3.8 1.3 1.3-3.7-.3-.4a10.4 10.4 0 0 1-1.7-5.7C5.3 9.9 10.1 5.1 16 5.1S26.7 9.9 26.7 15.8 21.9 26.3 16 26.3zm5.7-7.8c-.3-.2-1.8-.9-2.1-1-.3-.1-.5-.2-.7.2s-.8 1-1 1.2c-.2.2-.4.2-.7.1a8.6 8.6 0 0 1-2.5-1.5 9.3 9.3 0 0 1-1.7-2.1c-.2-.3 0-.5.1-.7l.4-.5c.1-.2.2-.3.3-.5.1-.2 0-.4 0-.5l-1-2.3c-.2-.6-.5-.5-.7-.5h-.6a1.2 1.2 0 0 0-.8.4 3.5 3.5 0 0 0-1.1 2.6c0 1.6 1.1 3.1 1.3 3.3.2.2 2.2 3.4 5.4 4.7.8.3 1.4.5 1.8.6.8.3 1.5.2 2-.1.6-.4 1.8-1.2 2.1-1.9.3-.7.3-1.3.2-1.4-.1-.2-.3-.3-.6-.4z"/></svg>' +
-    '<span class="whatsapp-flotante-texto">Escribir por WhatsApp</span>';
+    `<span class="whatsapp-flotante-texto">${WHATSAPP_NOMBRE ? "Escribir a " + WHATSAPP_NOMBRE : "Escribir por WhatsApp"}</span>`;
   document.body.appendChild(boton);
 }
 
@@ -1522,25 +1526,31 @@ function activarMural() {
   }
 
   // ¿Mito o realidad?
+  // Mitos y frases: los que puso la psicóloga en su panel (si no, los de siempre).
+  const leerLista = (el, attr, porDefecto) => {
+    try { const l = JSON.parse(el?.getAttribute(attr) || "null"); return Array.isArray(l) && l.length ? l : porDefecto; }
+    catch (e) { return porDefecto; }
+  };
   const mito = mural.querySelector("[data-mito]");
+  const MITOS_LISTA = leerLista(mito, "data-mitos", MITOS);
   if (mito) {
     const frase = mito.querySelector("[data-mito-frase]");
     const respuesta = mito.querySelector("[data-mito-respuesta]");
     const botones = mito.querySelectorAll("[data-mito-elegir]");
-    let actual = Math.floor(Math.random() * MITOS.length);
+    let actual = Math.floor(Math.random() * MITOS_LISTA.length);
     const mostrar = () => {
-      frase.textContent = MITOS[actual][0];
+      frase.textContent = MITOS_LISTA[actual][0];
       respuesta.textContent = "";
       botones.forEach((b) => b.classList.remove("elegido"));
     };
     botones.forEach((b) => b.addEventListener("click", () => {
-      const [, correcta, explicacion] = MITOS[actual];
+      const [, correcta, explicacion] = MITOS_LISTA[actual];
       botones.forEach((x) => x.classList.toggle("elegido", x === b));
       const acierto = b.dataset.mitoElegir === correcta;
       respuesta.textContent = `${acierto ? "¡Correcto!" : "No exactamente."} Es ${correcta}. ${explicacion}`;
     }));
     mito.querySelector("[data-mito-otra]").addEventListener("click", () => {
-      actual = (actual + 1) % MITOS.length;
+      actual = (actual + 1) % MITOS_LISTA.length;
       mostrar();
     });
     mostrar();
@@ -1577,10 +1587,11 @@ function activarMural() {
   const frase = mural.querySelector("[data-frase]");
   if (frase) {
     const texto = frase.querySelector("[data-frase-texto]");
+    const FRASES = leerLista(frase, "data-frases", FRASES_MURAL);
     let i = 0;
     frase.querySelector("[data-frase-otra]").addEventListener("click", () => {
-      i = (i + 1) % FRASES_MURAL.length;
-      texto.textContent = FRASES_MURAL[i];
+      i = (i + 1) % FRASES.length;
+      texto.textContent = FRASES[i];
     });
   }
 }
@@ -2787,3 +2798,46 @@ function activarMenuGooey() {
 }
 
 document.addEventListener("DOMContentLoaded", activarMenuGooey);
+
+
+// Aplicación instalable: registra el service worker y muestra el botón
+// "Instalar la app" cuando el navegador lo permite. En iPhone no hay botón
+// automático, así que se explica cómo hacerlo (Compartir → Agregar a inicio).
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("/sw.js", { scope: "/" }).catch(() => {});
+  });
+}
+
+function activarInstalarApp() {
+  const zonas = document.querySelectorAll("[data-instalar]");
+  if (!zonas.length) return;
+  const yaInstalada = window.matchMedia("(display-mode: standalone)").matches || navigator.standalone;
+  if (yaInstalada) return;
+  const esIphone = /iPhone|iPad|iPod/.test(navigator.userAgent);
+  let aviso = null;
+  window.addEventListener("beforeinstallprompt", (e) => {
+    e.preventDefault();
+    aviso = e;
+    zonas.forEach((z) => { z.hidden = false; });
+  });
+  zonas.forEach((z) => {
+    const boton = z.querySelector("[data-instalar-boton]");
+    const ayuda = z.querySelector("[data-instalar-ayuda]");
+    if (esIphone) {
+      z.hidden = false;
+      if (ayuda) ayuda.hidden = false;
+      if (boton) boton.hidden = true;
+    }
+    boton?.addEventListener("click", async () => {
+      if (!aviso) return;
+      aviso.prompt();
+      await aviso.userChoice;
+      aviso = null;
+      zonas.forEach((x) => { x.hidden = true; });
+    });
+  });
+  window.addEventListener("appinstalled", () => zonas.forEach((x) => { x.hidden = true; }));
+}
+
+document.addEventListener("DOMContentLoaded", activarInstalarApp);

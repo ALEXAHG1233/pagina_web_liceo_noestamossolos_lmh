@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Encuentra apoyo profesional &quot;No estamos solos LMH&quot;</title>
+  {% include "_cabeza.html" %}
   <meta name="description" content="No estamos solos LMH: espacio anónimo de apoyo emocional, orientación psicológica y bienestar para estudiantes del Liceo Militar de Honduras. Habla con una psicóloga real o con un asistente disponible siempre.">
   <meta property="og:title" content="Encuentra apoyo profesional &quot;No estamos solos LMH&quot;">
   <meta property="og:description" content="Espacio anónimo de apoyo emocional, orientación psicológica y bienestar para estudiantes del Liceo Militar de Honduras.">
@@ -60,6 +61,7 @@
         <a href="{{ url_for('muro') }}">Muro interactivo</a>
         <a href="{{ url_for('futuro') }}">Mi futuro</a>
         <a href="#contacto">Contacto</a>
+        {% if usuario %}<a href="{{ url_for('cuenta') }}">{{ usuario.avatar_dibujo }} {{ usuario.apodo }}</a>{% else %}<a href="{{ url_for('cuenta_entrar') }}">Mi cuenta</a>{% endif %}
         <a href="{{ url_for('estudiante') }}" class="nav-boton-ayuda boton-metal">Necesito ayuda</a>
       </div>
     </div>
@@ -226,21 +228,15 @@
   <section class="seccion historias reveal">
     <h2>Historias de quienes ya dieron el paso</h2>
 
-    <div class="historia">
-      <p>"Antes de los exámenes me bloqueaba y pensaba que era el único al que le pasaba. Probé la respiración 4-4-4-4 y le escribí a la psicóloga sin dar mi nombre. Todavía me pongo nervioso, pero ahora sé qué hacer cuando me pasa."</p>
-      <div class="historia-pie">
-        <span class="historia-avatar" aria-hidden="true">2°</span>
-        <span class="historia-autor">Estudiante de 2.° año</span>
+    {% for texto, anio in textos.historias %}
+      <div class="historia">
+        <p>"{{ texto }}"</p>
+        <div class="historia-pie">
+          <span class="historia-avatar" aria-hidden="true">{{ anio ~ '°' if anio else '★' }}</span>
+          <span class="historia-autor">{{ ('Estudiante de ' ~ anio ~ '.° año') if anio else 'Estudiante del liceo' }}</span>
+        </div>
       </div>
-    </div>
-
-    <div class="historia">
-      <p>"Tenía miedo de que se enteraran en mi casa o en el liceo. Cuando supe que era anónimo, me animé a escribir por primera vez. Ahora hablo seguido, y me siento más tranquilo/a."</p>
-      <div class="historia-pie">
-        <span class="historia-avatar" aria-hidden="true">4°</span>
-        <span class="historia-autor">Estudiante de 4.° año</span>
-      </div>
-    </div>
+    {% endfor %}
   </section>
 
   <section class="seccion seccion-con-banner como-funciona reveal">
@@ -567,7 +563,7 @@
         <a class="bento-enlace" data-animo-enlace href="{{ url_for('herramientas') }}" hidden>Ver la herramienta →</a>
       </article>
 
-      <article class="bento-cuadro" data-mito>
+      <article class="bento-cuadro" data-mito data-mitos='{{ textos.mitos | tojson }}'>
         <h3>¿Mito o realidad?</h3>
         <p class="mito-frase" data-mito-frase></p>
         <div class="mito-botones">
@@ -603,9 +599,9 @@
         </div>
       </article>
 
-      <article class="bento-cuadro bento-frase" data-frase>
+      <article class="bento-cuadro bento-frase" data-frase data-frases='{{ textos.frases | tojson }}'>
         <h3>Para hoy</h3>
-        <p class="frase-texto" data-frase-texto aria-live="polite">Lo que sientes es válido, aunque nadie más lo vea.</p>
+        <p class="frase-texto" data-frase-texto aria-live="polite">{{ textos.frases[0] if textos.frases else "" }}</p>
         <button type="button" class="bento-boton bento-boton-suave" data-frase-otra>Otra frase</button>
       </article>
 
@@ -721,6 +717,12 @@
       <p class="pie-dato"><a href="mailto:noestamossoloslmh@gmail.com">noestamossoloslmh@gmail.com</a></p>
       <p class="pie-dato">Teléfono: 3174-6810</p>
       <p class="pie-dato">San Pedro Sula, Honduras</p>
+      <div class="instalar-app" data-instalar hidden>
+        <button type="button" class="instalar-boton" data-instalar-boton>
+          <img src="{{ url_for('static', filename='iconos/favicon-64.png') }}" alt="" width="28" height="28"> Instalar la app en mi celular
+        </button>
+        <p class="instalar-ayuda" data-instalar-ayuda hidden>En iPhone: toca <b>Compartir</b> (el cuadro con la flecha) y luego <b>Agregar a inicio</b>.</p>
+      </div>
 
       <div class="pie-redes">
         <a href="https://www.instagram.com/noestassololmh" target="_blank" rel="noopener noreferrer" class="pie-red-icono" aria-label="Instagram">

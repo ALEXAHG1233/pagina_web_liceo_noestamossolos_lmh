@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ 'Nuevo' if nuevo else 'Editar' }} {{ 'artículo' if tipo == 'articulo' else 'herramienta' }} — Panel de la psicóloga</title>
+  {% include "_cabeza.html" %}
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/diario.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/panel_contenido.css') }}">
+</head>
+<body class="diario-body panel-contenido">
+
+  <header class="diario-header">
+    <a href="{{ url_for('psicologa_contenido', _anchor='articulos' if tipo == 'articulo' else 'herramientas') }}" class="volver">← Volver al contenido</a>
+    <h1>{{ 'Nuevo' if nuevo else 'Editar' }} {{ 'artículo' if tipo == 'articulo' else 'herramienta' }}</h1>
+  </header>
+
+  {% with mensajes = get_flashed_messages(with_categories=true) %}
+    {% for categoria, texto in mensajes %}<p class="pc-aviso pc-aviso-{{ categoria }}">{{ texto }}</p>{% endfor %}
+  {% endwith %}
+
+  <section class="pc-seccion">
+    <form method="POST" class="pc-form">
+      <input type="hidden" name="csrf" value="{{ csrf_token() }}">
+      {% if tipo == 'articulo' %}
+        <label class="pc-campo"><span>Título</span>
+          <input type="text" name="titulo" value="{{ item.titulo or '' }}" maxlength="140" required></label>
+        <label class="pc-campo"><span>Sección</span>
+          <select name="categoria">
+            {% for nombre, descripcion in categorias %}
+              <option value="{{ nombre }}" {% if item.categoria == nombre %}selected{% endif %}>{{ nombre }} — {{ descripcion }}</option>
+            {% endfor %}
+          </select></label>
+        <label class="pc-campo"><span>Resumen <small>(una o dos líneas, sale en negrita al inicio)</small></span>
+          <input type="text" name="resumen" value="{{ item.resumen or '' }}" maxlength="300"></label>
+        <label class="pc-campo"><span>Texto del artículo <small>(deja una línea en blanco entre párrafos)</small></span>
+          <textarea name="contenido" rows="16" required>{{ texto }}</textarea></label>
+        <label class="pc-campo"><span>Video de YouTube <small>(opcional: pega el enlace del video)</small></span>
+          <input type="text" name="video" value="{{ ('https://youtu.be/' ~ item.video_youtube_id) if item.video_youtube_id else '' }}" placeholder="https://www.youtube.com/watch?v=..."></label>
+      {% else %}
+        <label class="pc-campo"><span>Nombre de la herramienta</span>
+          <input type="text" name="nombre" value="{{ item.nombre or '' }}" maxlength="120" required></label>
+        {% if nuevo %}
+          <label class="pc-campo"><span>Para cuándo sirve</span>
+            <select name="categoria" required>
+              {% for cat_id, titulo in categorias %}<option value="{{ cat_id }}">{{ titulo }}</option>{% endfor %}
+            </select></label>
+        {% else %}
+          <p class="pc-intro-chica">Sección: {% for cat_id, titulo in categorias if cat_id == categoria_actual %}{{ titulo }}{% endfor %}</p>
+        {% endif %}
+        <label class="pc-campo"><span>Para qué sirve <small>(una línea)</small></span>
+          <input type="text" name="resumen" value="{{ item.resumen or '' }}" maxlength="300"></label>
+        <label class="pc-campo"><span>Pasos <small>(un paso por línea; se numeran solos)</small></span>
+          <textarea name="pasos" rows="10" required>{{ texto }}</textarea></label>
+        <label class="pc-campo"><span>Video de YouTube <small>(opcional: pega el enlace del video)</small></span>
+          <input type="text" name="video" value="{{ ('https://youtu.be/' ~ item.video_youtube_id) if item.video_youtube_id else '' }}" placeholder="https://www.youtube.com/watch?v=..."></label>
+      {% endif %}
+      <div class="pc-botones">
+        <button type="submit" class="pc-boton">Guardar</button>
+        <a class="pc-accion" href="{{ url_for('psicologa_contenido', _anchor='articulos' if tipo == 'articulo' else 'herramientas') }}">Cancelar</a>
+      </div>
+    </form>
+  </section>
+
+  <script src="{{ url_for('static', filename='js/common.js') }}"></script>
+</body>
+</html>

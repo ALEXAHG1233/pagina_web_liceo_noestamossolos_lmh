@@ -37,6 +37,8 @@ from tests_bot import TESTS, obtener_test, calcular_resultado
 from articulos_bot import ARTICULOS, CATEGORIAS_INFORMATE, GLOSARIO
 from herramientas_bot import TECNICAS
 from libros_bot import LIBROS
+import contenido
+import cuentas
 
 app = Flask(__name__)
 # En producción, SECRET_KEY y las credenciales de la psicóloga se deben poner
@@ -47,16 +49,41 @@ app.config["MAX_CONTENT_LENGTH"] = 5 * 1024 * 1024  # 5 MB, para que no se abuse
 socketio = SocketIO(app, cors_allowed_origins="*")
 
 
+def csrf_token():
+    """Código secreto por sesión que llevan los formularios de cuentas y del
+    panel, para que otra página no pueda enviarlos en nombre de alguien."""
+    if "csrf" not in session:
+        session["csrf"] = uuid.uuid4().hex
+    return session["csrf"]
+
+
+def csrf_valido():
+    return request.form.get("csrf") == session.get("csrf")
+
+
+def usuario_actual():
+    return cuentas.obtener(session.get("usuario_id"))
+
+
 @app.context_processor
 def datos_globales():
     # Las páginas solo dicen que el asistente es IA cuando de verdad lo es.
-    return {"ia_activa": ia_asistente.ia_disponible()}
+    ajustes = contenido.ajustes()
+    return {
+        "ia_activa": ia_asistente.ia_disponible(),
+        "whatsapp_numero": ajustes["whatsapp_numero"],
+        "whatsapp_nombre": ajustes["whatsapp_nombre"],
+        "usuario": usuario_actual(),
+        "csrf_token": csrf_token,
+    }
 
 # DATA_DIR: carpeta para los datos que deben sobrevivir a cada actualización
 # (en Render, el disco persistente montado en /var/data). Sin ella, todo se
 # guarda junto al código, como en la computadora de desarrollo.
 DATA_DIR = os.environ.get("DATA_DIR")
 DB_PATH = os.path.join(DATA_DIR, "apoyo_emocional.db") if DATA_DIR else "apoyo_emocional.db"
+contenido.configurar(DB_PATH)
+cuentas.configurar(DB_PATH)
 
 PSICOLOGA_USUARIO = os.environ.get("PSICOLOGA_USUARIO", "psicologa")
 PSICOLOGA_CLAVE = os.environ.get("PSICOLOGA_CLAVE", "cambia-esta-clave")
@@ -182,6 +209,8 @@ def init_db():
         )
         """
     )
+    contenido.init_tablas(conn)
+    cuentas.init_tablas(conn)
     conn.commit()
     conn.close()
 
@@ -360,7 +389,7 @@ def obtener_resenas(limite=30):
     conn = sqlite3.connect(DB_PATH)
     cur = conn.cursor()
     cur.execute(
-        "SELECT estrellas, comentario, fecha, foto FROM resenas ORDER BY id DESC LIMIT ?",
+        "SELECT estrellas, comentario, fecha, foto FROM resenas WHERE COALESCE(oculto, 0) = 0 ORDER BY id DESC LIMIT ?",
         (limite,),
     )
     filas = cur.fetchall()
@@ -394,7 +423,7 @@ def obtener_muro_posts(limite=50):
     conn = sqlite3.connect(DB_PATH)
     cur = conn.cursor()
     cur.execute(
-        "SELECT contenido, fecha FROM muro_posts ORDER BY id DESC LIMIT ?",
+        "SELECT contenido, fecha FROM muro_posts WHERE COALESCE(oculto, 0) = 0 ORDER BY id DESC LIMIT ?",
         (limite,),
     )
     filas = cur.fetchall()
@@ -405,7 +434,7 @@ def obtener_muro_posts(limite=50):
 def obtener_resumen_resenas():
     conn = sqlite3.connect(DB_PATH)
     cur = conn.cursor()
-    cur.execute("SELECT COUNT(*), AVG(estrellas) FROM resenas")
+    cur.execute("SELECT COUNT(*), AVG(estrellas) FROM resenas WHERE COALESCE(oculto, 0) = 0")
     total, promedio = cur.fetchone()
     conn.close()
     return {
@@ -467,7 +496,7 @@ def construir_indice_busqueda():
          "url": url_for(ruta, _anchor=ancla) if ancla else url_for(ruta)}
         for ruta, ancla, nombre, meta, palabras in PAGINAS_BUSCADOR
     ]
-    for cat_id, cat in TECNICAS.items():
+    for cat_id, cat in contenido.tecnicas().items():
         for tec_id, tec in cat["tecnicas"].items():
             indice.append({
                 "nombre": tec["nombre"], "meta": tec["resumen"], "tipo": "Técnica",
@@ -479,7 +508,7 @@ def construir_indice_busqueda():
             "nombre": test["titulo"], "meta": test["descripcion"], "tipo": "Autoevaluación",
             "palabras": "test", "url": url_for("test_detalle", test_id=test_id),
         })
-    for slug, art in ARTICULOS.items():
+    for slug, art in contenido.articulos().items():
         indice.append({
             "nombre": art["titulo"], "meta": art["resumen"], "tipo": "Artículo",
             "palabras": art.get("categoria", ""),
@@ -491,10 +520,11 @@ def construir_indice_busqueda():
 @app.route("/")
 def index():
     registrar_visita()
+    articulos = contenido.articulos()
     recursos = [
-        {"slug": slug, **ARTICULOS[slug]}
+        {"slug": slug, **articulos[slug]}
         for slug in RECURSOS_PORTADA
-        if slug in ARTICULOS
+        if slug in articulos
     ]
     return render_template(
         "index.html",
@@ -503,27 +533,73 @@ def index():
         recursos_psicologia=recursos,
         tests=TESTS,
         libros=LIBROS,
-        glosario=GLOSARIO,
+        glosario=[g for g in GLOSARIO if g[2] in articulos],
+        textos=contenido.textos(),
         contadores=obtener_contadores_portada(),
         indice_busqueda=construir_indice_busqueda(),
         temas_informate=[
             {
                 "nombre": nombre,
                 "descripcion": descripcion,
-                "total": sum(1 for a in ARTICULOS.values() if a["categoria"] == nombre),
+                "total": sum(1 for a in articulos.values() if a["categoria"] == nombre),
                 "ejemplos": [
-                    (slug, a["titulo"]) for slug, a in ARTICULOS.items() if a["categoria"] == nombre
+                    (slug, a["titulo"]) for slug, a in articulos.items() if a["categoria"] == nombre
                 ][:3],
             }
             for nombre, descripcion in CATEGORIAS_INFORMATE
         ],
         videos_informate=[
             (slug, a["titulo"], a["video_youtube_id"])
-            for slug, a in ARTICULOS.items() if a.get("video_youtube_id")
+            for slug, a in articulos.items() if a.get("video_youtube_id")
         ],
         # El visor 3D de Tigrito solo aparece cuando ya existe el modelo.
         modelo_tigre=os.path.exists(os.path.join(app.static_folder, "models", "tigre.glb")),
     )
+
+
+# ---------------------------------------------------------------------------
+# Aplicación instalable (PWA): manifiesto, service worker y página sin conexión
+# ---------------------------------------------------------------------------
+@app.route("/manifest.webmanifest")
+def manifiesto():
+    datos = {
+        "name": "No estamos solos LMH",
+        "short_name": "No estamos solos",
+        "description": "Apoyo emocional anónimo para los estudiantes del Liceo Militar de Honduras.",
+        "lang": "es",
+        "start_url": "/?app=1",
+        "scope": "/",
+        "display": "standalone",
+        "background_color": "#1f4b2c",
+        "theme_color": "#1f4b2c",
+        "icons": [
+            {"src": url_for("static", filename="iconos/icono-192.png"), "sizes": "192x192", "type": "image/png"},
+            {"src": url_for("static", filename="iconos/icono-512.png"), "sizes": "512x512", "type": "image/png"},
+            {"src": url_for("static", filename="iconos/icono-maskable-512.png"), "sizes": "512x512", "type": "image/png", "purpose": "maskable"},
+        ],
+        "shortcuts": [
+            {"name": "Hablar con la psicóloga", "url": "/estudiante"},
+            {"name": "Mi diario de ánimo", "url": "/diario"},
+            {"name": "Herramientas", "url": "/herramientas"},
+        ],
+    }
+    resp = jsonify(datos)
+    resp.mimetype = "application/manifest+json"
+    return resp
+
+
+@app.route("/sw.js")
+def service_worker():
+    # Se sirve desde la raíz para que pueda funcionar en todas las páginas.
+    resp = send_from_directory(os.path.join(app.static_folder, "js"), "sw.js", mimetype="application/javascript")
+    resp.headers["Cache-Control"] = "no-cache"
+    resp.headers["Service-Worker-Allowed"] = "/"
+    return resp
+
+
+@app.route("/sin-conexion")
+def sin_conexion():
+    return render_template("sin_conexion.html")
 
 
 @app.route("/api/estado-psicologa")
@@ -577,12 +653,21 @@ def chatbot_persona(persona):
     )
 
 
-@app.route("/diario")
-def diario():
+def token_diario():
+    """El diario de quien tiene cuenta usa el código de su cuenta (lo sigue
+    en cualquier dispositivo); sin cuenta, el código anónimo de la sesión."""
+    u = usuario_actual()
+    if u:
+        return u["token_diario"]
     if "token" not in session:
         session["token"] = f"Usuario-{uuid.uuid4().hex[:6]}"
         registrar_sesion(session["token"])
-    token = session["token"]
+    return session["token"]
+
+
+@app.route("/diario")
+def diario():
+    token = token_diario()
     racha = calcular_racha(token)
     historial = obtener_animos_recientes(token, dias=7)
     nuevo = request.args.get("nuevo") == "1"
@@ -591,11 +676,9 @@ def diario():
 
 @app.route("/diario/registrar/<estado>")
 def diario_registrar(estado):
-    if "token" not in session:
-        session["token"] = f"Usuario-{uuid.uuid4().hex[:6]}"
-        registrar_sesion(session["token"])
+    token = token_diario()
     if estado in ("genial", "bien", "normal", "mal", "muy_mal"):
-        guardar_animo(session["token"], estado)
+        guardar_animo(token, estado)
     return redirect(url_for("diario", nuevo=1))
 
 
@@ -741,7 +824,7 @@ def test_detalle(test_id):
 @app.route("/informate")
 def informate():
     return render_template(
-        "informate.html", articulos=ARTICULOS, categorias=CATEGORIAS_INFORMATE, glosario=GLOSARIO
+        "informate.html", articulos=contenido.articulos(), categorias=CATEGORIAS_INFORMATE, glosario=GLOSARIO
     )
 
 
@@ -749,21 +832,21 @@ def informate():
 def informate_articulo(slug):
     # Los artículos ya se leen completos en Infórmate: los enlaces viejos
     # llevan a ese artículo dentro de la página.
-    if slug not in ARTICULOS:
+    if slug not in contenido.articulos():
         return redirect(url_for("informate"))
     return redirect(url_for("informate", _anchor=slug))
 
 
 @app.route("/herramientas")
 def herramientas():
-    return render_template("herramientas.html", categorias=TECNICAS)
+    return render_template("herramientas.html", categorias=contenido.tecnicas())
 
 
 @app.route("/herramientas/<categoria>/<tecnica>")
 def herramientas_detalle(categoria, tecnica):
     # Cada herramienta ya se ve completa en Herramientas: los enlaces viejos
     # llevan a esa herramienta dentro de la página.
-    cat = TECNICAS.get(categoria)
+    cat = contenido.tecnicas().get(categoria)
     if not cat or tecnica not in cat["tecnicas"]:
         return redirect(url_for("herramientas"))
     return redirect(url_for("herramientas", _anchor=f"{categoria}-{tecnica}"))
@@ -926,6 +1009,215 @@ def psicologa_estadisticas():
     if not session.get("es_psicologa"):
         return redirect(url_for("psicologa_login"))
     return render_template("psicologa_estadisticas.html", stats=obtener_estadisticas())
+
+
+# ---------------------------------------------------------------------------
+# Cuentas opcionales de estudiantes (apodo + avatar)
+# ---------------------------------------------------------------------------
+@app.route("/cuenta/crear", methods=["GET", "POST"])
+def cuenta_crear():
+    if usuario_actual():
+        return redirect(url_for("cuenta"))
+    error = None
+    datos = {"apodo": "", "avatar": cuentas.AVATARES[0][0]}
+    if request.method == "POST":
+        datos = {"apodo": request.form.get("apodo", ""), "avatar": request.form.get("avatar", "")}
+        if not csrf_valido():
+            error = "La página expiró. Vuelve a intentarlo."
+        elif request.form.get("clave") != request.form.get("clave2"):
+            error = "Las dos contraseñas no son iguales."
+        else:
+            usuario_id, error = cuentas.crear(datos["apodo"], request.form.get("clave"), datos["avatar"])
+            if usuario_id:
+                session["usuario_id"] = usuario_id
+                # El diario que ya llevaba sin cuenta pasa a su cuenta.
+                cuentas.pasar_diario(session.get("token"), cuentas.obtener(usuario_id)["token_diario"])
+                flash("¡Listo! Tu cuenta está creada. Tu diario ahora te sigue en cualquier dispositivo.", "exito")
+                return redirect(url_for("diario"))
+    return render_template("cuenta.html", modo="crear", error=error, datos=datos, avatares=cuentas.AVATARES)
+
+
+@app.route("/cuenta/entrar", methods=["GET", "POST"])
+def cuenta_entrar():
+    if usuario_actual():
+        return redirect(url_for("cuenta"))
+    error = None
+    if request.method == "POST":
+        if not csrf_valido():
+            error = "La página expiró. Vuelve a intentarlo."
+        else:
+            usuario_id = cuentas.entrar(request.form.get("apodo"), request.form.get("clave"))
+            if usuario_id:
+                session["usuario_id"] = usuario_id
+                return redirect(url_for("diario"))
+            error = "Apodo o contraseña incorrectos."
+    return render_template("cuenta.html", modo="entrar", error=error, datos={"apodo": request.form.get("apodo", "")}, avatares=cuentas.AVATARES)
+
+
+@app.route("/cuenta", methods=["GET", "POST"])
+def cuenta():
+    u = usuario_actual()
+    if not u:
+        return redirect(url_for("cuenta_entrar"))
+    error = None
+    if request.method == "POST":
+        if not csrf_valido():
+            error = "La página expiró. Vuelve a intentarlo."
+        else:
+            error = cuentas.actualizar(u["id"], request.form.get("apodo"), request.form.get("avatar"))
+            if not error:
+                flash("Guardamos tus cambios.", "exito")
+                return redirect(url_for("cuenta"))
+    return render_template("cuenta.html", modo="perfil", error=error, datos=u, avatares=cuentas.AVATARES)
+
+
+@app.route("/cuenta/salir", methods=["POST"])
+def cuenta_salir():
+    if csrf_valido():
+        session.pop("usuario_id", None)
+    return redirect(url_for("index"))
+
+
+@app.route("/cuenta/borrar", methods=["POST"])
+def cuenta_borrar():
+    u = usuario_actual()
+    if u and csrf_valido():
+        cuentas.borrar(u["id"])
+        session.pop("usuario_id", None)
+        flash("Tu cuenta y tu diario se borraron.", "exito")
+    return redirect(url_for("index"))
+
+
+# ---------------------------------------------------------------------------
+# Panel de contenido de la psicóloga (cambiar la página sin tocar el código)
+# ---------------------------------------------------------------------------
+def solo_psicologa():
+    return bool(session.get("es_psicologa"))
+
+
+@app.route("/psicologa/contenido")
+def psicologa_contenido():
+    if not solo_psicologa():
+        return redirect(url_for("psicologa_login"))
+    t = contenido.textos()
+    return render_template(
+        "psicologa_contenido.html",
+        articulos=contenido.articulos(incluir_ocultos=True),
+        categorias=CATEGORIAS_INFORMATE,
+        tecnicas=contenido.tecnicas(incluir_ocultos=True),
+        frases="\n".join(t["frases"]),
+        mitos=contenido.mitos_a_texto(t["mitos"]),
+        historias=contenido.historias_a_texto(t["historias"]),
+        muro=contenido.publicaciones_muro(),
+        resenas=contenido.resenas_todas(),
+        ajustes=contenido.ajustes(),
+    )
+
+
+@app.route("/psicologa/contenido/articulo/<slug>", methods=["GET", "POST"])
+def psicologa_articulo(slug):
+    if not solo_psicologa():
+        return redirect(url_for("psicologa_login"))
+    articulos = contenido.articulos(incluir_ocultos=True)
+    nuevo = slug == "nuevo"
+    if not nuevo and slug not in articulos:
+        return redirect(url_for("psicologa_contenido", _anchor="articulos"))
+    if request.method == "POST" and csrf_valido():
+        titulo = (request.form.get("titulo") or "").strip()[:140]
+        texto = (request.form.get("contenido") or "").strip()
+        if titulo and texto:
+            guardado = contenido.guardar_articulo(
+                None if nuevo else slug, titulo,
+                request.form.get("categoria") or CATEGORIAS_INFORMATE[0][0],
+                (request.form.get("resumen") or "").strip()[:300], texto,
+                request.form.get("video") or "",
+            )
+            flash("Artículo guardado. Ya se ve en Infórmate.", "exito")
+            return redirect(url_for("psicologa_contenido", _anchor="articulos"))
+        flash("Falta el título o el texto del artículo.", "aviso")
+    a = {} if nuevo else articulos[slug]
+    return render_template("psicologa_editar.html", tipo="articulo", nuevo=nuevo, clave=slug, item=a,
+                           texto="\n\n".join(a.get("contenido", [])), categorias=CATEGORIAS_INFORMATE)
+
+
+@app.route("/psicologa/contenido/herramienta/<path:clave>", methods=["GET", "POST"])
+def psicologa_herramienta(clave):
+    if not solo_psicologa():
+        return redirect(url_for("psicologa_login"))
+    tecnicas = contenido.tecnicas(incluir_ocultos=True)
+    nuevo = clave == "nuevo"
+    t, cat_id = {}, None
+    if not nuevo:
+        cat_id, _, tec_id = clave.partition("/")
+        t = tecnicas.get(cat_id, {}).get("tecnicas", {}).get(tec_id)
+        if t is None:
+            return redirect(url_for("psicologa_contenido", _anchor="herramientas"))
+    if request.method == "POST" and csrf_valido():
+        nombre = (request.form.get("nombre") or "").strip()[:120]
+        pasos = (request.form.get("pasos") or "").strip()
+        categoria = cat_id or request.form.get("categoria")
+        if nombre and pasos and categoria in tecnicas:
+            contenido.guardar_herramienta(None if nuevo else clave, categoria, nombre,
+                                          (request.form.get("resumen") or "").strip()[:300], pasos,
+                                          request.form.get("video") or "")
+            flash("Herramienta guardada. Ya se ve en Herramientas.", "exito")
+            return redirect(url_for("psicologa_contenido", _anchor="herramientas"))
+        flash("Falta el nombre, la categoría o los pasos.", "aviso")
+    return render_template("psicologa_editar.html", tipo="herramienta", nuevo=nuevo, clave=clave, item=t,
+                           texto="\n".join(t.get("pasos", [])), categoria_actual=cat_id,
+                           categorias=[(c, cat["titulo"]) for c, cat in tecnicas.items()])
+
+
+@app.route("/psicologa/contenido/accion", methods=["POST"])
+def psicologa_accion():
+    """Esconder, mostrar o restaurar artículos y herramientas; moderar el muro y las reseñas."""
+    if not solo_psicologa() or not csrf_valido():
+        return redirect(url_for("psicologa_login"))
+    tipo, clave, accion = request.form.get("tipo"), request.form.get("clave", ""), request.form.get("accion")
+    ancla = "articulos"
+    if tipo == "articulo":
+        if accion in ("ocultar", "mostrar"):
+            contenido.poner_oculto_articulo(clave, accion == "ocultar")
+        elif accion == "restaurar":
+            contenido.restaurar_articulo(clave)
+    elif tipo == "herramienta":
+        ancla = "herramientas"
+        if accion in ("ocultar", "mostrar"):
+            contenido.poner_oculto_herramienta(clave, accion == "ocultar")
+        elif accion == "restaurar":
+            contenido.restaurar_herramienta(clave)
+    elif tipo in ("muro_posts", "resenas") and clave.isdigit():
+        ancla = "moderar"
+        contenido.moderar(tipo, int(clave), accion)
+    return redirect(url_for("psicologa_contenido", _anchor=ancla))
+
+
+@app.route("/psicologa/contenido/textos", methods=["POST"])
+def psicologa_textos():
+    if not solo_psicologa() or not csrf_valido():
+        return redirect(url_for("psicologa_login"))
+    if request.form.get("restaurar"):
+        contenido.restaurar_texto(request.form["restaurar"])
+    else:
+        contenido.guardar_texto("frases", contenido.separar_lineas(request.form.get("frases")))
+        contenido.guardar_texto("mitos", contenido.texto_a_mitos(request.form.get("mitos")))
+        contenido.guardar_texto("historias", contenido.texto_a_historias(request.form.get("historias")))
+    flash("Textos de la portada guardados.", "exito")
+    return redirect(url_for("psicologa_contenido", _anchor="textos"))
+
+
+@app.route("/psicologa/contenido/ajustes", methods=["POST"])
+def psicologa_ajustes():
+    if not solo_psicologa() or not csrf_valido():
+        return redirect(url_for("psicologa_login"))
+    numero = contenido.numero_whatsapp(request.form.get("whatsapp_numero"))
+    if len(numero) >= 10:
+        contenido.guardar_ajuste("whatsapp_numero", numero)
+        contenido.guardar_ajuste("whatsapp_nombre", (request.form.get("whatsapp_nombre") or "").strip()[:40])
+        flash("WhatsApp guardado. El botón verde ya escribe a ese número.", "exito")
+    else:
+        flash("Ese número no parece correcto. Escribe los 8 dígitos (ej. 9999-9999).", "aviso")
+    return redirect(url_for("psicologa_contenido", _anchor="ajustes"))
 
 
 # ---------------------------------------------------------------------------

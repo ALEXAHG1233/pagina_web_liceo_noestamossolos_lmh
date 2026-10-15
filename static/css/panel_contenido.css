@@ -1,0 +1,103 @@
+/* Panel de contenido de la psicóloga. Sencillo y claro: es una herramienta de trabajo. */
+.panel-contenido { padding-bottom: 60px; }
+.pc-intro { margin: 16px 20px 0; font-size: 16px; line-height: 1.5; color: var(--blanco-suave); }
+.pc-intro-chica { font-size: 15px; color: var(--blanco-suave); margin: 0 0 10px; }
+.pc-aviso { margin: 12px 20px 0; padding: 12px 16px; border-radius: 12px; font-size: 16px; }
+.pc-aviso-exito { background: var(--verde-suave); color: var(--verde-liceo); }
+.pc-aviso-aviso { background: #fcebeb; color: #791f1f; }
+.pc-pestanas {
+  position: sticky;
+  top: var(--alto-encabezado, 0px);
+  z-index: 20;
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding: 10px 20px;
+  margin-top: 12px;
+  background: var(--verde-oscuro);
+}
+.pc-pestanas a {
+  flex: none;
+  padding: 8px 14px;
+  border-radius: 999px;
+  border: 1px solid var(--dorado);
+  color: var(--blanco);
+  text-decoration: none;
+  font-size: 15px;
+  font-weight: 600;
+}
+.pc-pestanas a:hover { background: var(--dorado); color: var(--verde-oscuro); }
+.pc-seccion { padding: 18px 20px 8px; scroll-margin-top: calc(var(--alto-encabezado, 0px) + 60px); }
+.pc-seccion h2 { margin: 0 0 12px; font-size: 24px; color: var(--amarillo); }
+.pc-titulo { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.pc-sub { margin: 18px 0 8px; font-size: 17px; color: var(--dorado); }
+.pc-lista { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+.pc-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: var(--tarjeta-fondo);
+  border: 1px solid rgba(145, 234, 175, 0.35);
+}
+.pc-oculto { opacity: 0.6; border-style: dashed; }
+.pc-item-texto { display: flex; flex-direction: column; gap: 4px; min-width: 0; flex: 1 1 240px; font-size: 15px; }
+.pc-item-texto strong { font-size: 16px; }
+.pc-item-texto small { color: var(--blanco-suave); }
+.pc-etiquetas { display: flex; gap: 6px; flex-wrap: wrap; }
+.pc-etiqueta { font-size: 12px; font-weight: 700; padding: 2px 8px; border-radius: 999px; background: rgba(195, 233, 86, 0.2); color: var(--amarillo); }
+.pc-e-oculto { background: rgba(255, 255, 255, 0.12); color: var(--blanco); }
+.pc-acciones { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
+.pc-acciones form { display: flex; gap: 6px; flex-wrap: wrap; }
+.pc-accion {
+  padding: 7px 12px;
+  border-radius: 999px;
+  border: 1px solid var(--dorado);
+  background: transparent;
+  color: var(--blanco);
+  font: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+}
+.pc-accion:hover { background: rgba(145, 234, 175, 0.18); }
+.pc-peligro { border-color: #e87a7a; color: #ffb3b3; }
+.pc-vacio { font-size: 15px; color: var(--blanco-suave); }
+.pc-boton {
+  display: inline-block;
+  padding: 10px 18px;
+  border: none;
+  border-radius: 999px;
+  background: var(--amarillo);
+  color: var(--verde-oscuro);
+  font: inherit;
+  font-size: 15px;
+  font-weight: 800;
+  text-decoration: none;
+  cursor: pointer;
+}
+.pc-form { display: flex; flex-direction: column; gap: 14px; }
+.pc-campo { display: flex; flex-direction: column; gap: 6px; font-size: 16px; font-weight: 700; color: var(--blanco); }
+.pc-campo small { font-weight: 500; color: var(--blanco-suave); }
+.pc-campo code { background: rgba(0, 0, 0, 0.25); padding: 1px 5px; border-radius: 5px; }
+.pc-campo input, .pc-campo textarea, .pc-campo select {
+  padding: 11px 14px;
+  border: 1px solid var(--dorado);
+  border-radius: 10px;
+  font: inherit;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 1.5;
+  background: #f4fffc;
+  color: #183020;
+}
+.pc-campo textarea { resize: vertical; }
+.pc-nota { font-weight: 500; color: #ffd2d2; }
+.pc-botones { display: flex; gap: 10px; align-items: center; }
+@media (min-width: 900px) {
+  .panel-contenido { max-width: 1040px; }
+}

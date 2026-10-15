@@ -4,9 +4,10 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Mi diario — No Estás Solo LMH</title>
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 64 64%22><path fill=%22%231f4d2c%22 d=%22M32 56s-20-12.6-27-24.4C-.2 21.6 4.6 10 15.4 8.4c6-.9 11.6 2 16.6 7.6 5-5.6 10.6-8.5 16.6-7.6C59.4 10 64.2 21.6 59 31.6 52 43.4 32 56 32 56Z%22/></svg>">
+  {% include "_cabeza.html" %}
   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/diario.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/cuenta.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/pop.css') }}">
 </head>
 <body class="diario-body">
@@ -18,6 +19,25 @@
     <a href="{{ url_for('index') }}" class="volver">← Volver</a>
     <h1>Mi diario</h1>
   </header>
+
+  {% with mensajes = get_flashed_messages(with_categories=true) %}
+    {% for categoria, texto in mensajes %}<p class="cuenta-aviso cuenta-aviso-{{ categoria }}">{{ texto }}</p>{% endfor %}
+  {% endwith %}
+
+  {% if usuario %}
+    <section class="diario-saludo">
+      <span class="avatar-circulo" style="--fondo: {{ usuario.avatar_color }};" aria-hidden="true">{{ usuario.avatar_dibujo }}</span>
+      <div class="diario-saludo-texto">
+        <strong>Hola, {{ usuario.apodo }}</strong>
+        <a href="{{ url_for('cuenta') }}">Mi cuenta: cambiar apodo o avatar</a>
+      </div>
+    </section>
+  {% else %}
+    <p class="diario-invitacion">
+      ¿Quieres que tu diario te salude con tu apodo y te siga en cualquier celular?
+      <a href="{{ url_for('cuenta_crear') }}">Crea una cuenta</a> (es opcional) o <a href="{{ url_for('cuenta_entrar') }}">entra</a>.
+    </p>
+  {% endif %}
 
   <section class="racha-card">
     <span class="racha-numero">{{ racha }}</span>

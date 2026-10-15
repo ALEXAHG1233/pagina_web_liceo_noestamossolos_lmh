@@ -2838,3 +2838,21 @@ body:has(.dock) .whatsapp-flotante { bottom: 80px; }
 .visor-tigre-imagen .tigrito-sin-fondo { height: 440px; max-height: 440px; }
 @media (min-width: 960px) { .visor-tigre-imagen .tigrito-sin-fondo { height: 466px; max-height: 466px; } }
 .visor-tigre.visor-tigre-imagen:has(.tigrito-sin-fondo) { height: 480px; }
+
+/* Botón "Instalar la app" (en Contáctenos). */
+.instalar-app { margin: 16px auto 4px; text-align: center; }
+.instalar-boton {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 22px;
+  border: none;
+  border-radius: 999px;
+  background: var(--amarillo);
+  color: var(--verde-oscuro);
+  font: inherit;
+  font-size: 16px;
+  font-weight: 800;
+  cursor: pointer;
+}
+.instalar-ayuda { margin: 10px auto 0; max-width: 360px; font-size: 15px; line-height: 1.5; color: var(--blanco-suave); }
