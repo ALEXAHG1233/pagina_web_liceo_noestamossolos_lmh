@@ -2824,3 +2824,17 @@ body:has(.dock) .whatsapp-flotante { bottom: 80px; }
 @media (min-width: 960px) { .visor-tigre.visor-tigre-imagen { height: 680px; } }
 .visor-tigre-imagen .tigrito-foto { height: 520px; max-height: 520px; width: auto; }
 @media (min-width: 960px) { .visor-tigre-imagen .tigrito-foto { height: 660px; max-height: 660px; } }
+
+/* Tigrito sin fondo: sin marco, flotando con su sombra. */
+.visor-tigre-imagen .tigrito-sin-fondo {
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  filter: drop-shadow(0 22px 26px rgba(0, 0, 0, 0.5));
+  animation: flotarTigre 4s ease-in-out infinite;
+}
+@media (prefers-reduced-motion: reduce) { .visor-tigre-imagen .tigrito-sin-fondo { animation: none; } }
+/* La imagen mide 466 px de alto: no se agranda más para que no se vea borrosa. */
+.visor-tigre-imagen .tigrito-sin-fondo { height: 440px; max-height: 440px; }
+@media (min-width: 960px) { .visor-tigre-imagen .tigrito-sin-fondo { height: 466px; max-height: 466px; } }
+.visor-tigre.visor-tigre-imagen:has(.tigrito-sin-fondo) { height: 480px; }
