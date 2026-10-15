@@ -2778,3 +2778,22 @@ body:has(.dock) .whatsapp-flotante { bottom: 80px; }
   .gooey-pildora { transition: none; }
   .gooey-particula { display: none; }
 }
+
+/* Logo del liceo centrado sobre "No estamos solos LMH". */
+.logo-centrado {
+  display: block;
+  width: clamp(120px, 34vw, 180px);
+  height: auto;
+  margin: 6px auto 4px;
+  filter: drop-shadow(0 10px 18px rgba(0, 0, 0, 0.45));
+}
+/* El logo nuevo ya trae su aro verde: sin borde extra ni recorte. */
+.pie-logo {
+  width: 110px;
+  height: auto;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  filter: drop-shadow(0 8px 14px rgba(0, 0, 0, 0.45));
+  object-fit: contain;
+}
