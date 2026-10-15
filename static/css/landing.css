@@ -2798,16 +2798,5 @@ body:has(.dock) .whatsapp-flotante { bottom: 80px; }
   object-fit: contain;
 }
 
-/* Ondas verdes debajo del logo (la imagen ya no tiene fondo blanco). */
-.logo-zona { position: relative; isolation: isolate; padding: 4px 0 10px; }
-.onda-logo {
-  position: absolute;
-  left: 50%;
-  top: 58%;
-  z-index: -1;
-  width: min(118%, 760px);
-  height: auto;
-  translate: -50% -50%;
-  opacity: 0.9;
-  pointer-events: none;
-}
+/* Zona del logo del liceo. */
+.logo-zona { position: relative; padding: 4px 0 10px; }
