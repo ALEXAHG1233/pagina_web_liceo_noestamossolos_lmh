@@ -31,9 +31,10 @@
     <h2>Describe tu experiencia</h2>
     <p class="muro-intro">Comparte algo que viviste o cómo te sientes, de forma anónima. Otros estudiantes podrán leerlo.</p>
     <form method="POST" action="{{ url_for('muro') }}" class="form-muro">
-      <textarea name="contenido" maxlength="300" rows="4" placeholder="Escribe aquí tu experiencia..." required></textarea>
-      <p class="nota-privacidad">Esto se muestra públicamente a otros estudiantes, sin tu nombre. No compartas datos personales. Si lo que escribes suena a una crisis real, no se publica aquí — se avisa directo a la psicóloga.</p>
-      <button type="submit">Publicar en el muro</button>
+      <textarea name="contenido" maxlength="300" rows="6" placeholder="Escribe aquí tu experiencia (sin nombres ni datos personales)..." required></textarea>
+      <button type="submit" class="boton-publicar">
+        <span class="boton-publicar-cara">Publicar en el muro</span>
+      </button>
     </form>
   </section>
 
@@ -41,7 +42,7 @@
     <h2>Lo que han compartido otros estudiantes</h2>
     {% if posts %}
       {% for contenido, fecha in posts %}
-        <div class="muro-card">
+        <div class="muro-card" style="--i: {{ loop.index0 }};">
           <p class="muro-texto">{{ contenido }}</p>
           <span class="muro-fecha">{{ fecha[:10] }}</span>
         </div>

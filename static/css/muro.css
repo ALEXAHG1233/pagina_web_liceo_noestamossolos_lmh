@@ -73,3 +73,54 @@
 }
 .muro-texto { margin: 0; font-size: 14px; color: var(--blanco); line-height: 1.5; }
 .muro-fecha { display: block; margin-top: 6px; font-size: 11px; color: var(--blanco-suave); }
+
+/* "Describe tu experiencia", más grande. */
+.nuevo-post-muro h2 { font-size: clamp(28px, 7vw, 38px); line-height: 1.15; margin: 10px 0 10px; color: var(--amarillo); }
+.nuevo-post-muro .muro-intro { font-size: 17px; max-width: 520px; }
+.form-muro textarea { max-width: 560px; font-size: 17px; padding: 14px 16px; min-height: 170px; border-radius: 16px; }
+
+/* Botón "Publicar en el muro" tipo PopButton: tiene un borde de abajo
+   (como un botón físico) que se hunde al presionarlo y rebota al soltarlo. */
+.form-muro .boton-publicar {
+  position: relative;
+  padding: 0 0 6px;
+  border: none;
+  border-radius: 999px;
+  background: #3b570d;
+  cursor: pointer;
+  box-shadow: 0 14px 24px -12px rgba(0, 0, 0, 0.7);
+  transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.form-muro .boton-publicar:hover { background: #3b570d; transform: translateY(-2px) scale(1.04); box-shadow: 0 18px 28px -12px rgba(0, 0, 0, 0.7); }
+.boton-publicar-cara {
+  display: block;
+  padding: 15px 34px;
+  border-radius: 999px;
+  background: linear-gradient(180deg, #d4f27a, var(--amarillo));
+  color: var(--verde-oscuro);
+  font-size: 18px;
+  font-weight: 800;
+  translate: 0 -6px;
+  transition: translate 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.form-muro .boton-publicar:hover .boton-publicar-cara { translate: 0 -8px; }
+.form-muro .boton-publicar:active { transform: scale(0.97); }
+.form-muro .boton-publicar:active .boton-publicar-cara { translate: 0 -1px; transition-duration: 0.08s; }
+
+/* Lo que han compartido: cada tarjeta flota suavemente a su ritmo. */
+.lista-muro .muro-card {
+  animation: entrarMensaje 420ms ease both, flotarMuro 6s ease-in-out infinite;
+  animation-delay: calc(var(--i, 0) * 80ms), calc(var(--i, 0) * -1.3s);
+}
+@keyframes flotarMuro {
+  0%, 100% { translate: 0 0; rotate: -0.4deg; }
+  50% { translate: 0 -6px; rotate: 0.4deg; }
+}
+.muro-texto { font-size: 16px; }
+@media (min-width: 760px) {
+  .lista-muro { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }
+  .lista-muro > h2, .lista-muro > .sin-registros { grid-column: 1 / -1; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .lista-muro .muro-card { animation: none; }
+}
