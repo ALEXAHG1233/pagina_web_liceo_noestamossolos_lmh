@@ -174,7 +174,7 @@
       <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.5.0/model-viewer.min.js"></script>
       <model-viewer class="visor-tigre"
         src="{{ url_for('static', filename='models/tigre.glb') }}"
-        poster="{{ url_for('static', filename='images/tigre_animal.png') }}"
+        poster="{{ url_for('static', filename='images/tigrito_liceo.webp') }}"
         alt="Tigrito, la mascota del programa, en 3D"
         camera-controls auto-rotate auto-rotate-delay="0" rotation-per-second="20deg"
         touch-action="pan-y" interaction-prompt="none"
@@ -182,7 +182,7 @@
     {% else %}
       <p class="seccion-subtitulo">La mascota del programa, siempre lista para escucharte.</p>
       <div class="visor-tigre visor-tigre-imagen">
-        <img src="{{ url_for('static', filename='images/tigre_animal.png') }}" alt="Tigrito, la mascota del programa: un tigre con boina militar y bata de psicólogo" loading="lazy">
+        <img class="tigrito-foto" src="{{ url_for('static', filename='images/tigrito_liceo.webp') }}" alt="Tigrito, la mascota del programa: un tigre con boina y uniforme del Liceo Militar de Honduras, frente al liceo y la bandera de Honduras" loading="lazy" width="800" height="1200">
       </div>
     {% endif %}
   </section>

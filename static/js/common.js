@@ -1836,7 +1836,7 @@ document.addEventListener("DOMContentLoaded", activarImagenesScroll);
 // el resto. Si la tarjeta es un enlace, el primer toque la voltea y el
 // segundo abre la página. Además, todas las tarjetas tienen un brillo que
 // sigue al mouse y se inclinan un poco (máximo 12°).
-const GIRAR_SELECTOR = ".tarjetas > .tarjeta, .contador, .recurso-card, .glosario-item, .test-grande";
+const GIRAR_SELECTOR = ".tarjetas > .tarjeta, .contador, .glosario-item, .test-grande";
 const GIRAR_FRENTE = "h2, h3, .recurso-imagen, .recurso-numero, .recurso-titulo, .glosario-termino, .contador-numero, .contador-texto, .test-icono, .test-titulo, .cyber-deco";
 const SOLO_BRILLO = ".articulo-completo, .herramienta-completa, .test-pregunta, .emergencia, .bento-cuadro, .categoria-sintomas, .login-card, .playlist-card, .pasos-caja, .test-resultado";
 const PISTA_GIRAR = "↻ Toca para voltear";
@@ -2369,7 +2369,7 @@ document.addEventListener("DOMContentLoaded", medirEncabezado);
 // Infórmate y los recursos de psicología. Solo se animan los que se ven.
 const ELECTRICO_SELECTOR = [
   ".marco-scroll", ".multitud", ".pasos-caja",
-  ".tarjetas > .girar-caja", ".opcion-recurso", ".recursos-grid > .girar-caja",
+  ".tarjetas > .girar-caja", ".opcion-recurso", ".recursos-grid > .recurso-card",
 ].join(", ");
 
 function activarBordeElectrico() {

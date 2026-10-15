@@ -2807,3 +2807,20 @@ body:has(.dock) .whatsapp-flotante { bottom: 80px; }
 .pila-tarjeta { background: #0d2214; }
 .perspectiva-foto img,
 .pila-tarjeta img { object-fit: contain; object-position: center; }
+
+/* Tigrito en uniforme frente al liceo: foto completa, sin recortar. */
+.visor-tigre-imagen .tigrito-foto {
+  width: auto;
+  max-width: 100%;
+  height: 100%;
+  max-height: none;
+  object-fit: contain;
+  border-radius: 18px;
+  border: 2px solid var(--dorado);
+  box-shadow: 0 20px 40px -18px rgba(0, 0, 0, 0.8);
+  animation: none;
+}
+.visor-tigre.visor-tigre-imagen { height: 540px; }
+@media (min-width: 960px) { .visor-tigre.visor-tigre-imagen { height: 680px; } }
+.visor-tigre-imagen .tigrito-foto { height: 520px; max-height: 520px; width: auto; }
+@media (min-width: 960px) { .visor-tigre-imagen .tigrito-foto { height: 660px; max-height: 660px; } }
