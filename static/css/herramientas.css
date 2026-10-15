@@ -4,7 +4,7 @@
 
 .color-azul { color: #7cc4ff; }
 .color-dorado { color: var(--amarillo); }
-.color-verde { color: #9be3b0; }
+.color-verde { color: #91eaaf; }
 .color-rojo { color: #ff9b9b; }
 .color-morado { color: #d7b8ff; }
 
@@ -54,7 +54,7 @@
 .herramientas-grid { display: grid; grid-template-columns: 1fr; gap: 16px; }
 .herramienta-completa {
   background: var(--tarjeta-fondo);
-  border: 1px solid rgba(201, 162, 39, 0.45);
+  border: 1px solid rgba(145, 234, 175, 0.45);
   border-top: 5px solid var(--dorado);
   border-radius: 16px;
   padding: 18px 18px 20px;
@@ -64,7 +64,7 @@
 .herramienta-completa.borde-azul { border-top-color: #4aa8f0; }
 .herramienta-completa.borde-rojo { border-top-color: #e66a6a; }
 .herramienta-completa.borde-morado { border-top-color: #b48cf0; }
-.herramienta-completa.borde-verde { border-top-color: #5cc47c; }
+.herramienta-completa.borde-verde { border-top-color: #91eaaf; }
 .herramienta-completa h3 { margin: 0 0 6px; font-size: 21px; line-height: 1.25; color: var(--amarillo); }
 .herramienta-resumen { font-size: 16px; line-height: 1.5; color: var(--blanco-suave); margin: 0 0 16px; }
 

@@ -84,7 +84,7 @@ input[type="submit"]:active {
 /* ---------- Adornos "cyber" en todos los cuadros de todas las páginas ----------
    Las 4 cosas: esquinas doradas, brillo, línea de escaneo y partículas.
    common.js agrega el adorno (.cyber-deco) y la clase .con-adornos. */
-.con-adornos { --cyber-acento: 201, 162, 39; }
+.con-adornos { --cyber-acento: 145, 234, 175; }
 :where(.con-adornos) { position: relative; isolation: isolate; overflow: hidden; }
 /* :where() no suma especificidad: si un hijo ya tiene su propia posición, se respeta. */
 .con-adornos > :where(:not(.cyber-deco)) { position: relative; z-index: 1; }
@@ -130,7 +130,7 @@ input[type="submit"]:active {
   width: 3px;
   height: 3px;
   border-radius: 50%;
-  background: #ffc83d;
+  background: #c3e956;
   opacity: 0;
 }
 .cyber-particulas i:nth-child(1) { --dx: 1; --dy: -1; top: 40%; left: 20%; }
@@ -143,8 +143,8 @@ input[type="submit"]:active {
 .con-adornos:hover .cyber-deco::before,
 .con-adornos:hover .cyber-brillo { opacity: 1; }
 .con-adornos:hover .cyber-esquinas i {
-  border-color: rgba(255, 200, 61, 0.9);
-  box-shadow: 0 0 10px rgba(255, 200, 61, 0.45);
+  border-color: rgba(195, 233, 86, 0.9);
+  box-shadow: 0 0 10px rgba(195, 233, 86, 0.45);
 }
 .con-adornos:hover .cyber-scan { opacity: 1; animation: escaneoCyber 2s linear infinite; }
 .con-adornos:hover .cyber-particulas i { animation: particulaCyber 2s infinite; }
@@ -224,7 +224,7 @@ input[type="submit"]:active {
    Detrás del texto hay varias copias apiladas hacia atrás (capas) de un
    color más oscuro, así el título se ve "macizo". common.js lo inclina
    hacia el mouse o lo hace girar despacio solo. */
-.profundidad { --color-fondo3d: #6b4f00; }
+.profundidad { --color-fondo3d: #3b570d; }
 .profundidad-escena { display: inline-block; perspective: 900px; max-width: 100%; }
 .profundidad-cuerpo {
   position: relative;
@@ -241,7 +241,7 @@ input[type="submit"]:active {
   user-select: none;
 }
 .profundidad-sombra .profundidad-capa:last-of-type { text-shadow: 0 10px 18px rgba(0, 0, 0, 0.45); }
-:root[data-tema="claro"] .profundidad { --color-fondo3d: #c9a227; }
+:root[data-tema="claro"] .profundidad { --color-fondo3d: #91eaaf; }
 
 
 /* Letras elásticas tipo globo en los textos pequeños amarillos. */
@@ -249,7 +249,7 @@ input[type="submit"]:active {
 .globo-letra {
   display: inline-block;
   transform-origin: 50% 80%;
-  background: linear-gradient(180deg, #fff6d6 0%, #ffd66b 35%, #ffc83d 60%, #d99c00 100%);
+  background: linear-gradient(180deg, #f4fffc 0%, #d4f27a 35%, #c3e956 60%, #9cc23a 100%);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;

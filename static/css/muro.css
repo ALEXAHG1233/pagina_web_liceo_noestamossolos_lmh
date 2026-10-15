@@ -39,7 +39,7 @@
 }
 .form-muro textarea:focus {
   border-color: var(--amarillo);
-  box-shadow: 0 0 0 3px rgba(201, 162, 39, 0.25);
+  box-shadow: 0 0 0 3px rgba(145, 234, 175, 0.25);
   outline: none;
 }
 

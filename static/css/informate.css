@@ -10,7 +10,7 @@
 }
 
 .cat-identifica { background: var(--azul-suave); color: var(--azul-honduras); }
-.cat-infórmate { background: var(--dorado-suave); color: #7a5000; }
+.cat-infórmate { background: var(--dorado-suave); color: #4d7111; }
 .cat-cuídate { background: var(--verde-suave); color: var(--verde-liceo); }
 .cat-conceptos { background: #efe3ff; color: #5a2d91; }
 
@@ -39,7 +39,7 @@
   padding: 12px 14px;
   border-radius: 14px;
   background: var(--tarjeta-fondo);
-  border: 1px solid rgba(201, 162, 39, 0.5);
+  border: 1px solid rgba(145, 234, 175, 0.5);
   text-decoration: none;
   color: var(--blanco);
   transition: transform var(--transicion-suave), border-color var(--transicion-suave);
@@ -75,7 +75,7 @@
   padding: 18px 18px 8px;
   border-radius: 16px;
   background: var(--tarjeta-fondo);
-  border: 1px solid rgba(201, 162, 39, 0.45);
+  border: 1px solid rgba(145, 234, 175, 0.45);
   border-top: 5px solid var(--dorado);
   box-shadow: var(--sombra-suave);
   scroll-margin-top: calc(var(--alto-encabezado, 0px) + 72px);

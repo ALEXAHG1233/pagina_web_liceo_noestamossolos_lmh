@@ -272,9 +272,9 @@ const FONDOS_DISPONIBLES = {
   claro: { tipo: "color", valor: "#f6f3ec" },
   // Fondo tipo WhatsApp: beige con un patrón de puntitos verdes.
   whatsapp: { tipo: "color", valor: "radial-gradient(rgba(18, 46, 27, 0.09) 1.3px, transparent 1.5px) 0 0 / 18px 18px, #efeae2", titulo: "WhatsApp" },
-  verde: { tipo: "color", valor: "#e3efe6" },
+  verde: { tipo: "color", valor: "#e6fbef" },
   azul: { tipo: "color", valor: "#e1f0fb" },
-  dorado: { tipo: "color", valor: "#fbead2" },
+  dorado: { tipo: "color", valor: "#eaf9c4" },
   rosa: { tipo: "color", valor: "#fbe4ec" },
   morado: { tipo: "color", valor: "#ece1fb" },
   coral: { tipo: "color", valor: "#fde3da" },
@@ -1596,7 +1596,7 @@ function activarMultitud() {
   if (!lienzo) return;
   const ctx = lienzo.getContext("2d");
   const PIELES = ["#f2c9a0", "#e0ac7e", "#c68a5b", "#a0673f", "#7a4a2a", "#5a3520"];
-  const ROPA = ["#1f4d2c", "#2e6b41", "#c9a227", "#0072ce", "#c94b4b", "#5a2d91", "#e8732a", "#183020", "#f4f1e8"];
+  const ROPA = ["#1f4b2c", "#4d7111", "#91eaaf", "#0072ce", "#c94b4b", "#5a2d91", "#e8732a", "#183020", "#f4f1e8"];
   const PELO = ["#1b120c", "#3b2416", "#6b4423", "#a8742f", "#2b2b2b"];
   const azar = (a, b) => a + Math.random() * (b - a);
   const elegir = (lista) => lista[Math.floor(Math.random() * lista.length)];
@@ -2151,7 +2151,7 @@ function activarBolaPlasma() {
   const ctx = lienzo.getContext("2d");
   const circulo = lienzo.parentElement.querySelector("[data-respira-circulo]");
   const AJUSTES = {
-    color: [255, 200, 61], rayos: 6, chisporroteo: 0.85, destellos: 0.65, brillo: 0.9,
+    color: [195, 233, 86], rayos: 6, chisporroteo: 0.85, destellos: 0.65, brillo: 0.9,
     chispas: 0.6, particulas: 260, vaiven: 0.5, titileo: 0.5, bruma: 0.7, fuerzaMouse: 0.7,
   };
   const [R, G, B] = AJUSTES.color;
@@ -2293,7 +2293,7 @@ document.addEventListener("DOMContentLoaded", activarBolaPlasma);
 // aplastan, y al soltar rebotan con un resorte hasta quedarse quietas.
 function activarLetrasElasticas() {
   if (SIN_MOVIMIENTO) return;
-  const AMARILLO = "rgb(255, 200, 61)";
+  const AMARILLO = "rgb(195, 233, 86)";
   const candidatos = document.querySelectorAll("h3, h4, .glosario-termino, .cerebro-parte strong, .categoria-sintomas strong");
   const letras = [];
   candidatos.forEach((el) => {
@@ -2394,7 +2394,7 @@ const ELECTRICO_SELECTOR = [
 ].join(", ");
 
 function activarBordeElectrico() {
-  const AJUSTES = { color: [255, 200, 61], velocidad: 1, caos: 0.5, separacion: 0.6, rayos: 3, grosor: 1.5, radio: 24 };
+  const AJUSTES = { color: [195, 233, 86], velocidad: 1, caos: 0.5, separacion: 0.6, rayos: 3, grosor: 1.5, radio: 24 };
   const [R, G, B] = AJUSTES.color;
   const MARGEN = 16;
   const items = [];

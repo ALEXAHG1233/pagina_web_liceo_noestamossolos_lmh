@@ -43,7 +43,7 @@
 .msg.fe {
   align-self: flex-start;
   background: radial-gradient(circle at 20% 20%, #fbf3e2, #f3ead9 65%);
-  color: #4a3900;
+  color: #2f450a;
   border-left: 3px solid var(--dorado);
   max-width: 85%;
   box-shadow: var(--sombra-suave);
@@ -55,7 +55,7 @@
   border: none;
   border-radius: 20px;
   background: var(--dorado);
-  color: #4a3900;
+  color: #2f450a;
   font-size: 14px;
   font-weight: 600;
   cursor: pointer;

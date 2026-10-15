@@ -1,20 +1,20 @@
 @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Montserrat:wght@400;500;600;700;800&family=Poppins:wght@500;600;700&display=swap');
 
 :root {
-  --verde-liceo: #1f4d2c;
-  --verde-liceo-claro: #2e6b41;
-  --verde-suave: #e3efe6;
+  --verde-liceo: #1f4b2c;
+  --verde-liceo-claro: #4d7111;
+  --verde-suave: #e6fbef;
   --verde-oscuro: #122e1b;
-  --dorado: #c9a227;
-  --dorado-suave: #fbead2;
+  --dorado: #91eaaf;
+  --dorado-suave: #eaf9c4;
   --naranja: #e8732a;
   --naranja-suave: #fde3cc;
-  --amarillo: #ffc83d;
+  --amarillo: #c3e956;
   --azul-honduras: #0072ce;
   --azul-suave: #e1f0fb;
   --negro: #1a1a1a;
-  --blanco: #ffffff;
-  --blanco-suave: rgba(255, 255, 255, 0.82);
+  --blanco: #f4fffc;
+  --blanco-suave: rgba(244, 255, 252, 0.84);
   --fondo: var(--verde-liceo);
   --tarjeta-fondo: var(--verde-liceo-claro);
   --tarjeta-borde: var(--dorado);
@@ -292,7 +292,7 @@ button, .opcion-boton, .btn-sonido, input[type="submit"] { font-weight: 700; }
 }
 .msg.estudiante { align-self: flex-end; background: var(--azul-honduras); color: #fff; }
 .msg.psicologa { align-self: flex-start; background: var(--verde-suave); color: var(--verde-liceo); }
-.msg.asistente { align-self: flex-start; background: var(--dorado-suave); color: #7a5000; }
+.msg.asistente { align-self: flex-start; background: var(--dorado-suave); color: #4d7111; }
 .msg.sistema { align-self: center; background: #ececec; color: #5a5a56; font-size: 12px; font-style: italic; text-align: center; max-width: 90%; }
 
 .msg-fila {
@@ -322,7 +322,7 @@ button, .opcion-boton, .btn-sonido, input[type="submit"] { font-weight: 700; }
 }
 .msg-fila.estudiante .avatar { background: var(--azul-honduras); }
 .msg-fila.psicologa .avatar { background: var(--verde-liceo); }
-.msg-fila.asistente .avatar { background: var(--dorado); color: #4a3900; }
+.msg-fila.asistente .avatar { background: var(--dorado); color: #2f450a; }
 .msg-fila.sistema { align-self: center; flex-direction: row; max-width: 90%; }
 .msg-fila.sistema .avatar { background: #b9b6a9; width: 20px; height: 20px; font-size: 11px; }
 
@@ -594,7 +594,7 @@ body:has(.chat-container) .whatsapp-flotante {
     margin: 16px auto;
     border-radius: 18px;
     overflow: hidden;
-    border: 1px solid rgba(201, 162, 39, 0.35);
+    border: 1px solid rgba(145, 234, 175, 0.35);
   }
 }
 
@@ -736,7 +736,7 @@ body:has(.chat-container) .whatsapp-flotante {
   background: #ffffff;
   font-size: 16px;
 }
-.chat-wa .wa-form input:focus { box-shadow: 0 0 0 2px rgba(201, 162, 39, 0.55); }
+.chat-wa .wa-form input:focus { box-shadow: 0 0 0 2px rgba(145, 234, 175, 0.55); }
 .chat-wa .wa-enviar {
   display: grid;
   place-items: center;
@@ -760,9 +760,9 @@ body:has(.chat-container) .whatsapp-flotante {
   margin-left: 4px;
   padding: 1px 7px;
   border-radius: 999px;
-  background: rgba(201, 162, 39, 0.25);
-  border: 1px solid rgba(201, 162, 39, 0.6);
-  color: #ffc83d;
+  background: rgba(145, 234, 175, 0.25);
+  border: 1px solid rgba(145, 234, 175, 0.6);
+  color: #c3e956;
   font-size: 10px;
   font-weight: 700;
   letter-spacing: 0.06em;
@@ -781,7 +781,7 @@ body:has(.chat-container) .whatsapp-flotante {
   align-items: center;
   gap: 12px;
   padding: 12px 16px;
-  background: linear-gradient(90deg, #c9a227, #ffc83d);
+  background: linear-gradient(90deg, #91eaaf, #c3e956);
   color: #122e1b;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
   position: relative;
@@ -799,7 +799,7 @@ body:has(.chat-container) .whatsapp-flotante {
   margin: 4px auto 12px;
   padding: 10px 18px;
   border-radius: 999px;
-  background: #ffc83d;
+  background: #c3e956;
   color: #122e1b;
   font-size: 17px;
   font-weight: 800;

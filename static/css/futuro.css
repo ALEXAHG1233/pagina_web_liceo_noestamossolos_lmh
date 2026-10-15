@@ -41,8 +41,8 @@
   animation: entrarMensaje 400ms ease both;
 }
 .futuro-panel-bonito {
-  background: linear-gradient(135deg, var(--dorado), #e8c766);
-  color: #4a3900;
+  background: linear-gradient(135deg, var(--dorado), #c3e956);
+  color: #2f450a;
   box-shadow: var(--sombra-media);
 }
 .futuro-panel-bonito h2 { margin: 4px 0 12px; font-size: 20px; }

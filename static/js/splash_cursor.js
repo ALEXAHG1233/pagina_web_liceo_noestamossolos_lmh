@@ -24,12 +24,12 @@
     COLOR_UPDATE_SPEED: 10,
   };
 
-  // Dorado, amarillo, verde claro y un poco de blanco.
+  // Colores de la paleta: lima, menta, oliva y blanco menta.
   const COLORES = [
-    [0.79, 0.64, 0.15],
-    [1.0, 0.78, 0.24],
-    [0.24, 0.72, 0.42],
-    [1.0, 0.92, 0.6],
+    [0.76, 0.91, 0.34],
+    [0.57, 0.92, 0.69],
+    [0.30, 0.44, 0.07],
+    [0.96, 1.0, 0.99],
   ];
 
   function iniciar() {

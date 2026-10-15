@@ -33,9 +33,9 @@
   margin: 20px;
   padding: 24px;
   border-radius: 16px;
-  background: linear-gradient(135deg, var(--dorado), #e8c766);
+  background: linear-gradient(135deg, var(--dorado), #c3e956);
   text-align: center;
-  color: #4a3900;
+  color: #2f450a;
   box-shadow: var(--sombra-media);
   animation: entrarMensaje 420ms ease both;
 }
@@ -81,9 +81,9 @@
 .animo-btn:hover { transform: translateY(-4px) scale(1.05); box-shadow: var(--sombra-media); }
 .animo-btn:active { background: var(--azul-suave); transform: scale(0.95); }
 
-.mood-genial { border-top-color: #2e6b41; }
+.mood-genial { border-top-color: #4d7111; }
 .mood-bien { border-top-color: #0072ce; }
-.mood-normal { border-top-color: #c9a227; }
+.mood-normal { border-top-color: #91eaaf; }
 .mood-mal { border-top-color: #d98a3d; }
 .mood-muy_mal { border-top-color: #c94b4b; }
 
@@ -119,9 +119,9 @@
   border-radius: 50%;
   background: #d3d1c7;
 }
-.dia-punto.mood-genial { background: #2e6b41; }
+.dia-punto.mood-genial { background: #4d7111; }
 .dia-punto.mood-bien { background: #0072ce; }
-.dia-punto.mood-normal { background: #c9a227; }
+.dia-punto.mood-normal { background: #91eaaf; }
 .dia-punto.mood-mal { background: #d98a3d; }
 .dia-punto.mood-muy_mal { background: #c94b4b; }
 .dia-fecha { font-size: 10px; color: var(--blanco-suave); }
