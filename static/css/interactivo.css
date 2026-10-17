@@ -1,0 +1,218 @@
+/* Partes interactivas con imágenes 3D: herramientas paso a paso, señales que se tocan,
+   caritas de ánimo, mito o realidad con puntos y autoevaluaciones de una pregunta a la vez. */
+
+/* Las imágenes 3D flotan suavemente. */
+.icono-3d-flota { animation: flotar3d 4.5s ease-in-out infinite; filter: drop-shadow(0 10px 14px rgba(0, 0, 0, 0.35)); }
+@keyframes flotar3d {
+  0%, 100% { translate: 0 0; rotate: -3deg; }
+  50% { translate: 0 -8px; rotate: 3deg; }
+}
+@keyframes saltito {
+  0% { scale: 1; }
+  35% { scale: 1.22; }
+  60% { scale: 0.94; }
+  100% { scale: 1; }
+}
+@keyframes entraDesdeLado {
+  from { opacity: 0; translate: 18px 0; }
+  to { opacity: 1; translate: 0 0; }
+}
+@keyframes sacudir {
+  0%, 100% { translate: 0 0; }
+  25% { translate: -6px 0; }
+  75% { translate: 6px 0; }
+}
+
+/* ---------- Herramientas ---------- */
+.categoria-cabeza {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  max-width: 760px;
+  margin: 0 auto 10px;
+  text-align: left;
+}
+.categoria-cabeza .categoria-titulo,
+.categoria-cabeza .categoria-descripcion { text-align: left; }
+.categoria-icono { width: 92px; height: 92px; flex: none; }
+
+.sintomas-chips { max-width: 760px; margin: 4px auto 18px; text-align: center; }
+.sintomas-pregunta { margin: 0 0 10px; font-size: 17px; color: var(--blanco); }
+.sintomas-pregunta span { color: var(--blanco-suave); font-size: 15px; }
+.chips { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
+.chip-sintoma {
+  padding: 9px 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(145, 234, 175, 0.55);
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--blanco);
+  font: inherit;
+  font-size: 15px;
+  line-height: 1.3;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s, border-color 0.2s;
+}
+.chip-sintoma::before { content: "○ "; color: var(--dorado); }
+.chip-sintoma:hover { border-color: var(--amarillo); }
+.chip-sintoma[aria-pressed="true"] { background: var(--amarillo); color: var(--verde-oscuro); border-color: var(--amarillo); animation: saltito 0.35s ease; }
+.chip-sintoma[aria-pressed="true"]::before { content: "✓ "; color: var(--verde-oscuro); }
+.sintomas-respuesta {
+  margin: 12px auto 0;
+  max-width: 560px;
+  padding: 10px 16px;
+  border-radius: 14px;
+  background: rgba(195, 233, 86, 0.14);
+  color: var(--blanco);
+  font-size: 16px;
+  animation: entraDesdeLado 0.3s ease;
+}
+.sintomas-respuesta a { color: var(--amarillo); font-weight: 700; }
+
+.herr-cabeza { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 12px; }
+.herr-icono { width: 56px; height: 56px; flex: none; filter: drop-shadow(0 6px 8px rgba(0, 0, 0, 0.3)); transition: rotate 0.3s, scale 0.3s; }
+.herramienta-interactiva:hover .herr-icono { rotate: -8deg; scale: 1.1; }
+.herr-cabeza h3 { margin: 2px 0 4px; }
+.herr-cabeza .herramienta-resumen { margin: 0; }
+
+/* Reproductor de pasos: se ve un paso a la vez. */
+.pasos-reproductor [hidden], [data-sintomas] [hidden], [data-animo-rapido] [hidden] { display: none !important; }
+.paso-tarjeta {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  min-height: 92px;
+  padding: 16px;
+  border-radius: 16px;
+  background: rgba(0, 0, 0, 0.2);
+}
+.paso-numero {
+  flex: none;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--amarillo);
+  color: var(--verde-oscuro);
+  font-size: 20px;
+  font-weight: 800;
+  box-shadow: 0 0 0 6px rgba(195, 233, 86, 0.18);
+}
+.paso-texto { margin: 0; font-size: 18px; line-height: 1.5; color: var(--blanco); }
+.paso-tarjeta.entra .paso-texto, .paso-tarjeta.entra .paso-numero { animation: entraDesdeLado 0.3s ease; }
+.paso-barra { height: 6px; margin: 12px 2px 10px; border-radius: 999px; background: rgba(255, 255, 255, 0.12); overflow: hidden; }
+.paso-barra span { display: block; height: 100%; width: 0; border-radius: inherit; background: linear-gradient(90deg, var(--dorado), var(--amarillo)); transition: width 0.35s ease; }
+.paso-controles { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.paso-contador { font-size: 14px; color: var(--blanco-suave); }
+.paso-boton {
+  padding: 10px 16px;
+  border-radius: 999px;
+  border: 1px solid var(--dorado);
+  background: transparent;
+  color: var(--blanco);
+  font: inherit;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.paso-boton:disabled { opacity: 0.35; cursor: default; }
+.paso-boton-principal { background: var(--amarillo); border-color: var(--amarillo); color: var(--verde-oscuro); }
+.paso-fin { text-align: center; padding: 10px 0 2px; animation: entraDesdeLado 0.3s ease; }
+.paso-fin img { width: 70px; height: 70px; animation: saltito 0.6s ease; }
+.paso-fin p { margin: 6px 0 10px; font-size: 18px; font-weight: 800; color: var(--amarillo); }
+.herramienta-interactiva .video-ligero { margin-top: 14px; }
+
+/* ---------- Mural: ¿cómo te sientes hoy? ---------- */
+.animo-caritas { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; }
+.animo-caritas button {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 8px 2px 10px;
+  border: 2px solid transparent;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--blanco);
+  font: inherit;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s, translate 0.2s;
+}
+.animo-caritas img { width: 100%; max-width: 72px; height: auto; aspect-ratio: 1; transition: scale 0.25s, rotate 0.25s; }
+.animo-caritas button:hover { translate: 0 -3px; }
+.animo-caritas button:hover img { scale: 1.1; rotate: -6deg; }
+.animo-caritas button[aria-pressed="true"] { border-color: var(--amarillo); background: rgba(195, 233, 86, 0.16); }
+.animo-caritas button[aria-pressed="true"] img { animation: saltito 0.5s ease; }
+.animo-respuesta {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: 16px;
+  background: rgba(0, 0, 0, 0.18);
+}
+.animo-respuesta img { width: 52px; height: 52px; flex: none; }
+.animo-respuesta.entra { animation: entraDesdeLado 0.3s ease; }
+.animo-respuesta .bento-texto { color: var(--blanco); }
+
+/* Imagen 3D al lado del título de cada cuadro del mural. */
+.bento-cabeza { display: flex; align-items: center; gap: 10px; }
+.bento-cabeza img { width: 46px; height: 46px; flex: none; filter: drop-shadow(0 6px 8px rgba(0, 0, 0, 0.3)); }
+
+/* Mito o realidad */
+.mito-botones button { display: inline-flex; align-items: center; gap: 6px; padding: 8px 14px 8px 8px; }
+.mito-botones button img { width: 30px; height: 30px; }
+.mito-botones button:disabled { cursor: default; }
+.mito-puntos { margin: 0; font-size: 14px; font-weight: 700; color: var(--blanco-suave); }
+.mito-puntos strong { color: var(--amarillo); font-size: 16px; }
+[data-mito].acierto { border-color: var(--amarillo); box-shadow: 0 0 0 3px rgba(195, 233, 86, 0.35), var(--sombra-suave); }
+[data-mito].fallo { animation: sacudir 0.35s ease; }
+.mito-frase.entra, .dato-termino.entra, .dato-def.entra { animation: entraDesdeLado 0.3s ease; }
+
+/* Dato de psicología */
+.dato-bombillo.brilla { animation: saltito 0.5s ease; filter: drop-shadow(0 0 16px rgba(242, 251, 176, 0.9)); }
+
+/* ---------- Autoevaluaciones ---------- */
+.test-icono-3d { width: 84px; height: 84px; }
+.test-grande:hover .test-icono-3d { animation: saltito 0.5s ease; }
+
+.test-progreso { max-width: 760px; margin: 0 auto 6px; padding: 0 16px; }
+.test-progreso-barra { height: 8px; border-radius: 999px; background: rgba(255, 255, 255, 0.12); overflow: hidden; }
+.test-progreso-barra span { display: block; height: 100%; width: 0; border-radius: inherit; background: linear-gradient(90deg, var(--dorado), var(--amarillo)); transition: width 0.35s ease; }
+.test-progreso-texto { margin: 6px 0 0; font-size: 14px; color: var(--blanco-suave); text-align: center; }
+
+.test-pregunta-img { display: block; width: 110px; height: 110px; margin: 0 auto 6px; }
+.form-test.paso-a-paso .test-pregunta { display: none; text-align: center; }
+.form-test.paso-a-paso .test-pregunta.activa { display: block; animation: entraDesdeLado 0.3s ease; }
+.form-test.paso-a-paso .test-pregunta legend { text-align: center; font-size: 21px; }
+.form-test.paso-a-paso .test-opcion { text-align: left; }
+.form-test.paso-a-paso > button[type="submit"] { display: none; }
+.form-test.paso-a-paso.listo > button[type="submit"] { display: block; animation: saltito 0.5s ease; }
+.test-navegacion { display: none; justify-content: space-between; gap: 10px; }
+.form-test.paso-a-paso .test-navegacion { display: flex; }
+
+/* Las opciones van de verde (lo mejor) a coral (lo que más preocupa). */
+.test-opcion .escala { flex: none; width: 14px; height: 14px; border-radius: 50%; background: var(--c, var(--dorado)); box-shadow: 0 0 0 4px color-mix(in srgb, var(--c, var(--dorado)) 25%, transparent); }
+.test-opcion.nivel-0 { --c: #91eaaf; }
+.test-opcion.nivel-1 { --c: #c3e956; }
+.test-opcion.nivel-2 { --c: #f2c66d; }
+.test-opcion.nivel-3 { --c: #f2a08c; }
+.test-opcion:has(input:checked) .escala { animation: saltito 0.4s ease; }
+
+@media (max-width: 420px) {
+  .animo-caritas button { font-size: 12px; }
+  .categoria-icono { width: 70px; height: 70px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .icono-3d-flota,
+  .chip-sintoma[aria-pressed="true"],
+  .paso-tarjeta.entra .paso-texto, .paso-tarjeta.entra .paso-numero,
+  .animo-caritas button[aria-pressed="true"] img,
+  [data-mito].fallo,
+  .test-pregunta.activa,
+  .sintomas-respuesta { animation: none !important; }
+}

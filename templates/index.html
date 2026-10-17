@@ -21,9 +21,10 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='css/musica.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/video.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/tests.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/interactivo.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/pop.css') }}">
 </head>
-{% from "_tests_tarjetas.html" import tarjetas_tests %}
+{% from "_tests_tarjetas.html" import tarjetas_tests with context %}
 <body class="landing-body">
 
   <!-- Rayos de luz dorados detrás de todo el contenido (solo decorativos). -->
@@ -552,33 +553,46 @@
 
       <article class="bento-cuadro bento-ancho" data-animo-rapido>
         <h3>¿Cómo te sientes hoy?</h3>
-        <div class="animo-rapido-opciones" role="group" aria-label="Elige cómo te sientes">
-          <button type="button" data-animo="ansiedad">Nervioso/a</button>
-          <button type="button" data-animo="enojo">Enojado/a</button>
-          <button type="button" data-animo="tristeza">Triste</button>
-          <button type="button" data-animo="dormir">Cansado/a</button>
-          <button type="button" data-animo="bien">Bien</button>
+        <div class="animo-caritas" role="group" aria-label="Elige cómo te sientes">
+          {% for clave, cara, nombre in [("ansiedad", "nervioso", "Nervioso/a"), ("enojo", "enojado", "Enojado/a"), ("tristeza", "triste", "Triste"), ("dormir", "cansado", "Cansado/a"), ("bien", "bien", "Bien")] %}
+            <button type="button" data-animo="{{ clave }}" data-cara="{{ url_for('static', filename='img/3d/cara_' ~ cara ~ '.webp') }}">
+              <img src="{{ url_for('static', filename='img/3d/cara_' ~ cara ~ '.webp') }}" alt="" width="72" height="72" loading="lazy">
+              <span>{{ nombre }}</span>
+            </button>
+          {% endfor %}
         </div>
-        <p class="bento-texto" data-animo-respuesta aria-live="polite">Elige una opción y te sugerimos algo que puede ayudarte.</p>
-        <a class="bento-enlace" data-animo-enlace href="{{ url_for('herramientas') }}" hidden>Ver la herramienta →</a>
+        <div class="animo-respuesta" data-animo-caja>
+          <img src="{{ url_for('static', filename='img/3d/obj_burbuja.webp') }}" alt="" width="52" height="52" data-animo-img loading="lazy">
+          <div>
+            <p class="bento-texto" data-animo-respuesta aria-live="polite">Toca una carita y te sugerimos algo que puede ayudarte.</p>
+            <a class="bento-enlace" data-animo-enlace href="{{ url_for('herramientas') }}" hidden>Probar la herramienta →</a>
+          </div>
+        </div>
       </article>
 
       <article class="bento-cuadro" data-mito data-mitos='{{ textos.mitos | tojson }}'>
-        <h3>¿Mito o realidad?</h3>
+        <div class="bento-cabeza">
+          <img src="{{ url_for('static', filename='img/3d/obj_burbuja.webp') }}" alt="" width="46" height="46" loading="lazy">
+          <h3>¿Mito o realidad?</h3>
+        </div>
         <p class="mito-frase" data-mito-frase></p>
         <div class="mito-botones">
-          <button type="button" data-mito-elegir="mito">Mito</button>
-          <button type="button" data-mito-elegir="realidad">Realidad</button>
+          <button type="button" data-mito-elegir="mito"><img src="{{ url_for('static', filename='img/3d/obj_equis.webp') }}" alt="" width="30" height="30">Mito</button>
+          <button type="button" data-mito-elegir="realidad"><img src="{{ url_for('static', filename='img/3d/obj_escudo.webp') }}" alt="" width="30" height="30">Realidad</button>
         </div>
         <p class="bento-texto" data-mito-respuesta aria-live="polite"></p>
+        <p class="mito-puntos" data-mito-puntos aria-live="polite">Aciertos: <strong>0</strong> de 0</p>
         <button type="button" class="bento-boton bento-boton-suave" data-mito-otra>Otra pregunta</button>
       </article>
 
       <article class="bento-cuadro" data-dato
         data-glosario='{{ glosario | tojson }}' data-base="{{ url_for('informate') }}">
-        <h3>Dato de psicología</h3>
+        <div class="bento-cabeza">
+          <img class="dato-bombillo" src="{{ url_for('static', filename='img/3d/obj_bombillo.webp') }}" alt="" width="46" height="46" loading="lazy" data-dato-img>
+          <h3>Dato de psicología</h3>
+        </div>
         <p class="dato-termino" data-dato-termino></p>
-        <p class="bento-texto" data-dato-def></p>
+        <p class="bento-texto dato-def" data-dato-def></p>
         <div class="bento-acciones">
           <button type="button" class="bento-boton bento-boton-suave" data-dato-otro>Otro dato</button>
           <a class="bento-enlace" data-dato-enlace href="{{ url_for('informate') }}">Leer más →</a>
@@ -586,7 +600,10 @@
       </article>
 
       <article class="bento-cuadro bento-ancho bento-cerebro">
-        <h3>Tu cerebro cuando hay estrés</h3>
+        <div class="bento-cabeza">
+          <img src="{{ url_for('static', filename='img/3d/obj_rayo.webp') }}" alt="" width="46" height="46" loading="lazy">
+          <h3>Tu cerebro cuando hay estrés</h3>
+        </div>
         <div class="cerebro-partes">
           <button type="button" class="cerebro-parte" aria-pressed="false" data-cerebro>
             <strong>Amígdala: la alarma</strong>
@@ -600,13 +617,19 @@
       </article>
 
       <article class="bento-cuadro bento-frase" data-frase data-frases='{{ textos.frases | tojson }}'>
-        <h3>Para hoy</h3>
+        <div class="bento-cabeza">
+          <img src="{{ url_for('static', filename='img/3d/obj_estrella.webp') }}" alt="" width="46" height="46" loading="lazy">
+          <h3>Para hoy</h3>
+        </div>
         <p class="frase-texto" data-frase-texto aria-live="polite">{{ textos.frases[0] if textos.frases else "" }}</p>
         <button type="button" class="bento-boton bento-boton-suave" data-frase-otra>Otra frase</button>
       </article>
 
       <article class="bento-cuadro bento-ayuda">
-        <h3>¿Necesitas hablar ya?</h3>
+        <div class="bento-cabeza">
+          <img src="{{ url_for('static', filename='img/3d/obj_telefono.webp') }}" alt="" width="46" height="46" loading="lazy">
+          <h3>¿Necesitas hablar ya?</h3>
+        </div>
         <p class="bento-texto">Llama gratis al <strong>150</strong> (Teléfono de la Esperanza) o escribe a la psicóloga del liceo.</p>
         <div class="bento-acciones">
           <a class="bento-boton" href="tel:150">Llamar al 150</a>

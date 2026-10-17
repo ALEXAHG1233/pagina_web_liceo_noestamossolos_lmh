@@ -20,3 +20,9 @@ static/videos/*
 # Configuración local de la herramienta de desarrollo (Claude Code), no es
 # parte del sitio
 .claude/
+
+# Presentación (archivos grandes, se generan con presentacion/*.py)
+presentacion/recursos/
+presentacion/*.pptx
+
+graphify-out/

@@ -1512,6 +1512,8 @@ function activarMural() {
   if (animo) {
     const respuesta = animo.querySelector("[data-animo-respuesta]");
     const enlace = animo.querySelector("[data-animo-enlace]");
+    const caja = animo.querySelector("[data-animo-caja]");
+    const imagen = animo.querySelector("[data-animo-img]");
     const base = enlace.getAttribute("href").split("#")[0];
     animo.querySelectorAll("[data-animo]").forEach((btn) => {
       btn.setAttribute("aria-pressed", "false");
@@ -1521,6 +1523,8 @@ function activarMural() {
         respuesta.textContent = texto;
         enlace.href = `${base}#${ancla}`;
         enlace.hidden = false;
+        if (imagen && btn.dataset.cara) imagen.src = btn.dataset.cara;
+        if (caja) { caja.classList.remove("entra"); void caja.offsetWidth; caja.classList.add("entra"); }
       });
     });
   }
@@ -1537,16 +1541,26 @@ function activarMural() {
     const frase = mito.querySelector("[data-mito-frase]");
     const respuesta = mito.querySelector("[data-mito-respuesta]");
     const botones = mito.querySelectorAll("[data-mito-elegir]");
+    const puntos = mito.querySelector("[data-mito-puntos]");
     let actual = Math.floor(Math.random() * MITOS_LISTA.length);
+    let aciertos = 0, jugadas = 0;
+    const reanimar = (el, clase) => { el.classList.remove(clase); void el.offsetWidth; el.classList.add(clase); };
     const mostrar = () => {
       frase.textContent = MITOS_LISTA[actual][0];
+      reanimar(frase, "entra");
       respuesta.textContent = "";
-      botones.forEach((b) => b.classList.remove("elegido"));
+      mito.classList.remove("acierto", "fallo");
+      botones.forEach((b) => { b.classList.remove("elegido"); b.disabled = false; });
     };
     botones.forEach((b) => b.addEventListener("click", () => {
       const [, correcta, explicacion] = MITOS_LISTA[actual];
-      botones.forEach((x) => x.classList.toggle("elegido", x === b));
+      botones.forEach((x) => { x.classList.toggle("elegido", x === b); x.disabled = true; });
       const acierto = b.dataset.mitoElegir === correcta;
+      jugadas += 1;
+      if (acierto) aciertos += 1;
+      mito.classList.remove("acierto", "fallo");
+      reanimar(mito, acierto ? "acierto" : "fallo");
+      if (puntos) puntos.innerHTML = `Aciertos: <strong>${aciertos}</strong> de ${jugadas}`;
       respuesta.textContent = `${acierto ? "¡Correcto!" : "No exactamente."} Es ${correcta}. ${explicacion}`;
     }));
     mito.querySelector("[data-mito-otra]").addEventListener("click", () => {
@@ -1572,7 +1586,15 @@ function activarMural() {
       def.textContent = d;
       enlace.href = `${dato.dataset.base}#${slug}`;
     };
-    dato.querySelector("[data-dato-otro]").addEventListener("click", () => { i += 1; mostrar(); });
+    const bombillo = dato.querySelector("[data-dato-img]");
+    const reanimar = (el, clase) => { if (!el) return; el.classList.remove(clase); void el.offsetWidth; el.classList.add(clase); };
+    dato.querySelector("[data-dato-otro]").addEventListener("click", () => {
+      i += 1;
+      mostrar();
+      reanimar(bombillo, "brilla");
+      reanimar(termino, "entra");
+      reanimar(def, "entra");
+    });
     mostrar();
   }
 
@@ -2841,3 +2863,123 @@ function activarInstalarApp() {
 }
 
 document.addEventListener("DOMContentLoaded", activarInstalarApp);
+
+
+// Herramientas paso a paso: en vez de la lista completa, se ve un paso a la
+// vez con su número grande, una barra de avance y botones para ir y volver.
+// Sin JavaScript la lista sigue completa.
+function activarPasos() {
+  document.querySelectorAll("[data-pasos]").forEach((caja) => {
+    const lista = caja.querySelector("ol");
+    const pasos = lista ? [...lista.querySelectorAll("li")].map((li) => li.textContent.trim()) : [];
+    if (pasos.length < 2) return;
+    const tarjeta = caja.closest("article");
+    const icono = tarjeta?.querySelector(".herr-icono")?.getAttribute("src") || "";
+    lista.hidden = true;
+    const ui = document.createElement("div");
+    ui.innerHTML = `
+      <div class="paso-tarjeta">
+        <span class="paso-numero" aria-hidden="true">1</span>
+        <p class="paso-texto" aria-live="polite"></p>
+      </div>
+      <div class="paso-barra" aria-hidden="true"><span></span></div>
+      <div class="paso-controles">
+        <button type="button" class="paso-boton" data-atras>← Atrás</button>
+        <span class="paso-contador"></span>
+        <button type="button" class="paso-boton paso-boton-principal" data-sigue>Siguiente →</button>
+      </div>
+      <div class="paso-fin" hidden>
+        <img src="${icono}" alt="" width="70" height="70">
+        <p>¡Lo lograste! ¿Cómo te sientes ahora?</p>
+        <button type="button" class="paso-boton" data-otra-vez>Hacerlo otra vez</button>
+      </div>`;
+    caja.appendChild(ui);
+    const tarjetaPaso = ui.querySelector(".paso-tarjeta");
+    const numero = ui.querySelector(".paso-numero");
+    const texto = ui.querySelector(".paso-texto");
+    const barra = ui.querySelector(".paso-barra span");
+    const contador = ui.querySelector(".paso-contador");
+    const atras = ui.querySelector("[data-atras]");
+    const sigue = ui.querySelector("[data-sigue]");
+    const fin = ui.querySelector(".paso-fin");
+    const controles = [tarjetaPaso, ui.querySelector(".paso-barra"), ui.querySelector(".paso-controles")];
+    let i = 0;
+    const pintar = () => {
+      numero.textContent = i + 1;
+      texto.textContent = pasos[i];
+      barra.style.width = `${((i + 1) / pasos.length) * 100}%`;
+      contador.textContent = `Paso ${i + 1} de ${pasos.length}`;
+      atras.disabled = i === 0;
+      sigue.textContent = i === pasos.length - 1 ? "¡Terminé! ✓" : "Siguiente →";
+      tarjetaPaso.classList.remove("entra"); void tarjetaPaso.offsetWidth; tarjetaPaso.classList.add("entra");
+    };
+    const terminar = (si) => {
+      controles.forEach((el) => { el.hidden = si; });
+      fin.hidden = !si;
+    };
+    atras.addEventListener("click", () => { if (i > 0) { i -= 1; pintar(); } });
+    sigue.addEventListener("click", () => {
+      if (i < pasos.length - 1) { i += 1; pintar(); } else { terminar(true); }
+    });
+    ui.querySelector("[data-otra-vez]").addEventListener("click", () => { i = 0; terminar(false); pintar(); });
+    pintar();
+  });
+}
+document.addEventListener("DOMContentLoaded", activarPasos);
+
+
+// Señales de cada categoría: se tocan como etiquetas. No se guarda nada;
+// solo sirve para que el estudiante se reconozca y vea qué probar.
+function activarSintomas() {
+  document.querySelectorAll("[data-sintomas]").forEach((caja) => {
+    const respuesta = caja.querySelector("[data-sintomas-respuesta]");
+    const chips = [...caja.querySelectorAll(".chip-sintoma")];
+    const hablar = document.querySelector(".herramientas-cta a")?.getAttribute("href") || "/estudiante";
+    chips.forEach((chip) => chip.addEventListener("click", () => {
+      chip.setAttribute("aria-pressed", String(chip.getAttribute("aria-pressed") !== "true"));
+      const n = chips.filter((c) => c.getAttribute("aria-pressed") === "true").length;
+      if (!n) { respuesta.hidden = true; return; }
+      respuesta.hidden = false;
+      respuesta.innerHTML = n < 3
+        ? "Es normal sentir esto a veces. Prueba una de las herramientas de abajo 👇"
+        : `Son varias señales juntas. Prueba una herramienta y, si sigue pasando, <a href="${hablar}">habla con la psicóloga</a>.`;
+    }));
+  });
+}
+document.addEventListener("DOMContentLoaded", activarSintomas);
+
+
+// Autoevaluaciones de una pregunta a la vez: al elegir una opción pasa sola a
+// la siguiente; al final aparece el botón de ver resultado.
+function activarTestPasoAPaso() {
+  const form = document.querySelector("[data-test-paso-a-paso]");
+  if (!form) return;
+  const preguntas = [...form.querySelectorAll(".test-pregunta")];
+  if (preguntas.length < 2) return;
+  const barra = document.querySelector("[data-test-barra]");
+  const texto = document.querySelector("[data-test-texto]");
+  const nav = form.querySelector(".test-navegacion");
+  const atras = nav.querySelector("[data-test-atras]");
+  const sigue = nav.querySelector("[data-test-sigue]");
+  form.classList.add("paso-a-paso");
+  document.querySelector("[data-test-progreso]")?.removeAttribute("hidden");
+  let i = 0;
+  const respondida = (k) => !!preguntas[k].querySelector("input:checked");
+  const pintar = () => {
+    preguntas.forEach((p, k) => p.classList.toggle("activa", k === i));
+    const hechas = preguntas.filter((_, k) => respondida(k)).length;
+    barra.style.width = `${(hechas / preguntas.length) * 100}%`;
+    texto.textContent = `Pregunta ${i + 1} de ${preguntas.length}`;
+    atras.disabled = i === 0;
+    sigue.disabled = !respondida(i) || i === preguntas.length - 1;
+    form.classList.toggle("listo", hechas === preguntas.length);
+  };
+  preguntas.forEach((p, k) => p.addEventListener("change", () => {
+    pintar();
+    if (k === i && i < preguntas.length - 1) setTimeout(() => { i += 1; pintar(); }, 380);
+  }));
+  atras.addEventListener("click", () => { if (i > 0) { i -= 1; pintar(); } });
+  sigue.addEventListener("click", () => { if (i < preguntas.length - 1 && respondida(i)) { i += 1; pintar(); } });
+  pintar();
+}
+document.addEventListener("DOMContentLoaded", activarTestPasoAPaso);

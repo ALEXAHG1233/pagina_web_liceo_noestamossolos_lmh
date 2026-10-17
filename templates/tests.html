@@ -8,9 +8,10 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/diario.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/tests.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/interactivo.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/pop.css') }}">
 </head>
-{% from "_tests_tarjetas.html" import tarjetas_tests %}
+{% from "_tests_tarjetas.html" import tarjetas_tests with context %}
 <body class="diario-body">
 
   <header class="diario-header">

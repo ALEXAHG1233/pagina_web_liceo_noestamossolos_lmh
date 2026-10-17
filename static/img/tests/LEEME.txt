@@ -1,0 +1,1 @@
+Pon aquí imágenes propias para las autoevaluaciones (por ejemplo estudio_1.jpg) y escribe su nombre en tests_bot.py, en IMAGENES.

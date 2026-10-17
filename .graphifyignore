@@ -1,0 +1,7 @@
+# graphify no debe leer estos archivos (datos de estudiantes y claves).
+*.db
+*.db-journal
+*.sqlite
+.env
+venv/
+presentacion/recursos/

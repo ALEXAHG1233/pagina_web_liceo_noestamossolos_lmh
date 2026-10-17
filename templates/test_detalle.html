@@ -8,8 +8,10 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/diario.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/tests.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/interactivo.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/pop.css') }}">
 </head>
+{% from "_tests_tarjetas.html" import imagen_test %}
 <body class="diario-body">
 
   <header class="diario-header">
@@ -28,19 +30,31 @@
             allowfullscreen loading="lazy"></iframe>
         </div>
       {% endif %}
-      <form method="POST" action="{{ url_for('test_detalle', test_id=test_id) }}" class="form-test">
+      <div class="test-progreso" data-test-progreso hidden>
+        <div class="test-progreso-barra"><span data-test-barra></span></div>
+        <p class="test-progreso-texto" data-test-texto aria-live="polite"></p>
+      </div>
+      <form method="POST" action="{{ url_for('test_detalle', test_id=test_id) }}" class="form-test" data-test-paso-a-paso>
         {% for pregunta in test.preguntas %}
           {% set indice_pregunta = loop.index0 %}
           <fieldset class="test-pregunta">
+            {% if pregunta.imagen %}
+              <img class="test-pregunta-img icono-3d-flota" src="{{ imagen_test(pregunta.imagen) }}" alt="" width="110" height="110" loading="lazy">
+            {% endif %}
             <legend>{{ loop.index }}. {{ pregunta.texto }}</legend>
             {% for opcion in pregunta.opciones %}
-              <label class="test-opcion">
+              <label class="test-opcion nivel-{{ loop.index0 }}">
                 <input type="radio" name="pregunta_{{ indice_pregunta }}" value="{{ loop.index0 }}" required>
+                <span class="escala" aria-hidden="true"></span>
                 {{ opcion }}
               </label>
             {% endfor %}
           </fieldset>
         {% endfor %}
+        <div class="test-navegacion">
+          <button type="button" class="paso-boton" data-test-atras>← Anterior</button>
+          <button type="button" class="paso-boton" data-test-sigue>Siguiente →</button>
+        </div>
         <button type="submit">Ver resultado</button>
       </form>
     </section>

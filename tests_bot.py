@@ -146,3 +146,18 @@ def calcular_resultado(test_id, respuestas):
 
 # Video que acompaña algunas autoevaluaciones (ID verificado en YouTube).
 TESTS["estres"]["video_youtube_id"] = "Nvtr6Ms4bmo"  # Respiración en 4 tiempos (PrepaTec)
+
+
+# Imágenes de cada autoevaluación y de cada pregunta.
+# - Un nombre sin punto (por ejemplo "obj_libro") usa las imágenes 3D de static/img/3d.
+# - Un nombre con extensión (por ejemplo "estudio_1.jpg") usa una imagen propia
+#   guardada en static/img/tests/. Así se pueden cambiar por fotos o dibujos del liceo.
+IMAGENES = {
+    "habitos_estudio": ("obj_libro", ["obj_hoja_menta", "obj_reloj", "obj_telefono", "obj_taza", "obj_burbuja", "obj_luna"]),
+    "estres": ("obj_rayo", ["obj_luna", "obj_bombillo", "obj_rayo", "obj_corazon", "obj_nube", "obj_candado"]),
+    "alimentacion": ("obj_manzana", ["obj_manzana", "obj_corazon", "obj_candado", "obj_estrella", "obj_burbuja"]),
+}
+for _id, (_portada, _por_pregunta) in IMAGENES.items():
+    TESTS[_id]["imagen"] = _portada
+    for _pregunta, _img in zip(TESTS[_id]["preguntas"], _por_pregunta):
+        _pregunta.setdefault("imagen", _img)

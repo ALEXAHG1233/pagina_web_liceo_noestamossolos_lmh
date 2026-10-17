@@ -9,6 +9,7 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='css/diario.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/tests.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/herramientas.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/interactivo.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/pop.css') }}">
 </head>
 <body class="diario-body">
@@ -28,26 +29,45 @@
     {% endfor %}
   </nav>
 
+  {# Imagen 3D de cada categoría (static/img/3d). #}
+  {% set ICONOS_CAT = {"ansiedad": "obj_corazon", "enojo": "obj_rayo", "tristeza": "obj_nube", "calma": "obj_hoja_menta",
+                       "decir": "obj_burbuja", "dormir": "obj_luna", "estudiar": "obj_libro"} %}
   {% for cat_id, cat in categorias.items() %}
+    {% set icono = url_for('static', filename='img/3d/' ~ ICONOS_CAT.get(cat_id, 'obj_estrella') ~ '.webp') %}
     <section class="herramientas-categoria" id="{{ cat_id }}">
-      <h2 class="categoria-titulo color-{{ cat.color }}">{{ cat.titulo }}</h2>
-      <p class="categoria-descripcion">{{ cat.descripcion }}</p>
+      <div class="categoria-cabeza">
+        <img class="categoria-icono icono-3d-flota" src="{{ icono }}" alt="" width="92" height="92" loading="lazy">
+        <div>
+          <h2 class="categoria-titulo color-{{ cat.color }}">{{ cat.titulo }}</h2>
+          <p class="categoria-descripcion">{{ cat.descripcion }}</p>
+        </div>
+      </div>
       {% if cat.sintomas %}
-        <div class="categoria-sintomas">
-          <strong>¿Cómo sé que me pasa esto?</strong>
-          <ul>
-            {% for s in cat.sintomas %}<li>{{ s }}</li>{% endfor %}
-          </ul>
+        {# Señales como etiquetas que se tocan; no se guarda nada. #}
+        <div class="sintomas-chips" data-sintomas>
+          <p class="sintomas-pregunta"><strong>¿Te pasa algo de esto?</strong> <span>Toca lo que sientes</span></p>
+          <div class="chips" role="group" aria-label="Señales de {{ cat.corto | lower }}">
+            {% for s in cat.sintomas %}<button type="button" class="chip-sintoma" aria-pressed="false">{{ s }}</button>{% endfor %}
+          </div>
+          <p class="sintomas-respuesta" data-sintomas-respuesta aria-live="polite" hidden></p>
         </div>
       {% endif %}
       <div class="herramientas-grid">
         {% for item_id, item in cat.tecnicas.items() %}
-          <article class="herramienta-completa borde-{{ cat.color }}" id="{{ cat_id }}-{{ item_id }}">
-            <h3>{{ item.nombre }}</h3>
-            <p class="herramienta-resumen">{{ item.resumen }}</p>
-            <ol class="herramienta-pasos">
-              {% for paso in item.pasos %}<li>{{ paso }}</li>{% endfor %}
-            </ol>
+          <article class="herramienta-completa herramienta-interactiva borde-{{ cat.color }}" id="{{ cat_id }}-{{ item_id }}">
+            <div class="herr-cabeza">
+              <img class="herr-icono" src="{{ icono }}" alt="" width="56" height="56" loading="lazy">
+              <div>
+                <h3>{{ item.nombre }}</h3>
+                <p class="herramienta-resumen">{{ item.resumen }}</p>
+              </div>
+            </div>
+            {# Sin JavaScript se ven todos los pasos; con JavaScript, uno por uno. #}
+            <div class="pasos-reproductor" data-pasos>
+              <ol class="herramienta-pasos">
+                {% for paso in item.pasos %}<li>{{ paso }}</li>{% endfor %}
+              </ol>
+            </div>
             {% if item.video_youtube_id %}
               <button type="button" class="video-ligero" data-video="{{ item.video_youtube_id }}" aria-label="Ver el video de {{ item.nombre }}">
                 <img src="https://i.ytimg.com/vi/{{ item.video_youtube_id }}/hqdefault.jpg" alt="" loading="lazy" width="480" height="360">
