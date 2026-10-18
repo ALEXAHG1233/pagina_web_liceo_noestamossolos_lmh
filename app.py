@@ -65,6 +65,17 @@ def usuario_actual():
     return cuentas.obtener(session.get("usuario_id"))
 
 
+@app.url_defaults
+def version_estaticos(endpoint, valores):
+    """Agrega ?v=<fecha del archivo> a los archivos de static/. Así, cuando cambia un
+    estilo o un script, el navegador (y la app instalada) bajan la versión nueva."""
+    if endpoint == "static" and "filename" in valores and "v" not in valores:
+        try:
+            valores["v"] = int(os.stat(os.path.join(app.static_folder, valores["filename"])).st_mtime)
+        except OSError:
+            pass
+
+
 @app.context_processor
 def datos_globales():
     # Las páginas solo dicen que el asistente es IA cuando de verdad lo es.

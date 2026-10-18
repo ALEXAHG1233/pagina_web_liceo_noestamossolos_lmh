@@ -298,24 +298,52 @@
 .seccion-con-banner .video-landing-intro,
 .seccion-con-banner .video-ver-mas { padding-left: 24px; padding-right: 24px; }
 
-/* Revelado progresivo al hacer scroll */
+/* Revelado al hacer scroll, al bajar y al subir: cada sección entra suave
+   desde el lado por donde llega (abajo al bajar, arriba al subir), con un
+   poquito de escala y desenfoque, y se desvanece al salir de la pantalla. */
 .reveal {
+  --desde: 34px;
   opacity: 0;
-  transform: translateY(24px);
-  transition: opacity 800ms var(--ease-salida), transform 800ms var(--ease-salida);
+  transform: translateY(var(--desde)) scale(0.97);
+  filter: blur(6px);
+  transition:
+    opacity 900ms var(--ease-salida),
+    transform 1000ms var(--ease-salida),
+    filter 900ms var(--ease-salida);
 }
-.reveal.visible { opacity: 1; transform: translateY(0); }
+.reveal.desde-arriba { --desde: -34px; }
+.reveal.visible { opacity: 1; transform: none; filter: none; }
 
-/* Las tarjetas de un grupo entran una tras otra. Se anima "translate" (no
-   "transform") para no pelear con el levantamiento al pasar el mouse. */
+/* Las tarjetas de un grupo entran una tras otra (cada vez que la sección
+   aparece). Se anima "translate" (no "transform") para no pelear con el
+   levantamiento al pasar el mouse. */
 .reveal .escalonado { opacity: 0; }
 .reveal.visible .escalonado {
-  animation: entrarEscalonado 700ms var(--ease-salida) both;
-  animation-delay: calc(min(var(--i, 0), 8) * 80ms + 120ms);
+  animation: entrarEscalonado 750ms var(--ease-salida) both;
+  animation-delay: calc(min(var(--i, 0), 8) * 90ms + 160ms);
 }
+.reveal.desde-arriba.visible .escalonado { animation-name: entrarEscalonadoArriba; }
 @keyframes entrarEscalonado {
-  from { opacity: 0; translate: 0 18px; }
+  from { opacity: 0; translate: 0 22px; scale: 0.96; }
+  to { opacity: 1; translate: 0 0; scale: 1; }
+}
+@keyframes entrarEscalonadoArriba {
+  from { opacity: 0; translate: 0 -22px; scale: 0.96; }
+  to { opacity: 1; translate: 0 0; scale: 1; }
+}
+
+/* Al abrir la página: el menú baja y la portada aparece despacio. */
+@media (prefers-reduced-motion: no-preference) {
+  .landing-body .nav-principal { animation: bajarMenu 700ms var(--ease-salida) both; }
+  .landing-body .hero-banner-wrap { animation: aparecerPortada 1100ms var(--ease-salida) 120ms both; }
+}
+@keyframes bajarMenu {
+  from { opacity: 0; translate: 0 -100%; }
   to { opacity: 1; translate: 0 0; }
+}
+@keyframes aparecerPortada {
+  from { opacity: 0; transform: scale(0.95) translateY(18px); filter: blur(8px); }
+  to { opacity: 1; transform: none; filter: none; }
 }
 
 /* Entrada suave del texto y botón del hero al cargar. */
@@ -643,7 +671,7 @@
 
 @media (prefers-reduced-motion: reduce) {
   .hero, .hero-blob, .hero-icono, .reveal { animation: none !important; transition: none !important; }
-  .reveal { opacity: 1 !important; transform: none !important; }
+  .reveal { opacity: 1 !important; transform: none !important; filter: none !important; }
   .reveal .escalonado,
   .hero-con-banner .hero-frase,
   .hero-con-banner .btn-musica-hero { animation: none !important; opacity: 1 !important; }

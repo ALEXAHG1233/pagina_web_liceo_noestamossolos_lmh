@@ -212,16 +212,22 @@ function activarRevelado(selector = ".reveal") {
     return;
   }
 
+  // Entra al bajar y al subir: la clase "desde-arriba" dice por dónde llega,
+  // y al salir por completo de la pantalla se esconde para volver a entrar.
   const observer = new IntersectionObserver(
     (entradas) => {
       entradas.forEach((entrada) => {
-        if (entrada.isIntersecting) {
-          entrada.target.classList.add("visible");
-          observer.unobserve(entrada.target);
+        const el = entrada.target;
+        const arriba = entrada.boundingClientRect.top < (entrada.rootBounds ? entrada.rootBounds.top : 0);
+        if (entrada.isIntersecting && (entrada.intersectionRatio >= 0.12 || entrada.intersectionRect.height > window.innerHeight * 0.3)) {
+          el.classList.add("visible");
+        } else if (!entrada.isIntersecting) {
+          el.classList.toggle("desde-arriba", arriba);
+          el.classList.remove("visible");
         }
       });
     },
-    { threshold: 0.15 }
+    { threshold: [0, 0.12, 0.3] }
   );
 
   elementos.forEach((el) => observer.observe(el));
