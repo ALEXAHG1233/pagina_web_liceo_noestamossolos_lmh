@@ -1,5 +1,6 @@
 import os
 import random
+import time
 import sqlite3
 import uuid
 from datetime import datetime
@@ -30,6 +31,7 @@ from werkzeug.utils import secure_filename
 from filtro_riesgo import analizar_riesgo
 from filtro_ofensivo import contiene_lenguaje_ofensivo
 import ia_asistente
+import ia_proveedores
 from respuestas_bot import generar_respuesta, RESPUESTA_DERIVACION, PERSONAJES
 import conversacion_bot
 from futuro_bot import generar_mensaje_futuro
@@ -82,6 +84,7 @@ def datos_globales():
     ajustes = contenido.ajustes()
     return {
         "ia_activa": ia_asistente.ia_disponible(),
+        "voz_activa": ia_proveedores.voz_disponible(),
         "whatsapp_numero": ajustes["whatsapp_numero"],
         "whatsapp_nombre": ajustes["whatsapp_nombre"],
         "usuario": usuario_actual(),
@@ -618,6 +621,30 @@ def estado_psicologa():
     """Solo dice si la psicóloga tiene el panel abierto (para el puntito
     verde de la barra inferior). No expone nada más."""
     return jsonify({"conectada": psicologa_esta_conectada()})
+
+
+@app.route("/api/voz/transcribir", methods=["POST"])
+def voz_transcribir():
+    """Convierte en texto lo que el estudiante dijo por voz (Whisper en Groq).
+    El audio no se guarda: se transcribe y se descarta. El texto que vuelve se
+    envía al chat como cualquier mensaje, así que pasa por el filtro de riesgo."""
+    if not request.headers.get("X-CSRF") or request.headers.get("X-CSRF") != session.get("csrf"):
+        return jsonify({"error": "sesion"}), 403
+    ahora = time.time()
+    recientes = [t for t in session.get("voz_usos", []) if ahora - t < 60]
+    if len(recientes) >= 20:  # máximo 20 grabaciones por minuto
+        return jsonify({"error": "espera"}), 429
+    session["voz_usos"] = recientes + [ahora]
+    audio = request.files.get("audio")
+    if not audio:
+        return jsonify({"error": "sin_audio"}), 400
+    datos = audio.read()
+    if len(datos) < 800:  # grabación vacía o de menos de medio segundo
+        return jsonify({"texto": ""})
+    texto = ia_proveedores.transcribir(datos, audio.mimetype or "audio/webm")
+    if texto is None:
+        return jsonify({"error": "sin_servicio"}), 503
+    return jsonify({"texto": texto})
 
 
 @app.route("/fotos-resenas/<nombre>")

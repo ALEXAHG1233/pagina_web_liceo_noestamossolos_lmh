@@ -7,6 +7,7 @@
   {% include "_cabeza.html" %}
   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/pop.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/voz.css') }}">
 </head>
 <body>
   <div class="chat-container">
@@ -43,9 +44,11 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.5/socket.io.min.js"></script>
   <script>
     const TOKEN = "{{ token }}";
+    const IMAGEN_PSICOLOGA = {{ url_for('static', filename='images/tigrito_psicologo.png') | tojson }};
   </script>
   <script src="{{ url_for('static', filename='js/sonidos.js') }}"></script>
   <script src="{{ url_for('static', filename='js/common.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/voz.js') }}"></script>
   <script src="{{ url_for('static', filename='js/estudiante.js') }}"></script>
 </body>
 </html>

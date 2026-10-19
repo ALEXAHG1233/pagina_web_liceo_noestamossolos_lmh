@@ -4,7 +4,7 @@
 //   de la psicóloga); si no hay conexión, se muestra la última copia o la
 //   página "Sin conexión", que recuerda las líneas 150 y 911.
 // - Nunca guarda el chat, el panel de la psicóloga ni las cuentas.
-const VERSION = "v5";
+const VERSION = "v6";
 const CACHE = `no-estamos-solos-${VERSION}`;
 const PRECARGA = [
   "/sin-conexion",

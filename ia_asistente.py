@@ -1,6 +1,8 @@
 """
-Respuestas del asistente (Sami, Leo, Nia) con inteligencia artificial,
-usando la API de Claude (Anthropic).
+Respuestas del asistente (Sami, Leo, Nia) con inteligencia artificial.
+Usa varios servicios en cadena (Claude, Groq, Gemini, Mistral, OpenRouter,
+NVIDIA, Hugging Face): si uno se queda sin saldo o falla, pasa al siguiente
+(ver ia_proveedores.py).
 
 Reglas de seguridad del diseño:
   - Este módulo SOLO se usa cuando filtro_riesgo marcó el mensaje como
@@ -12,19 +14,14 @@ Reglas de seguridad del diseño:
   - No se envía a la IA ningún dato personal: solo el texto anónimo de la
     conversación (el "token" nunca sale del servidor).
 
-La clave se lee de la variable de entorno ANTHROPIC_API_KEY. Nunca se
-escribe en el código ni se sube a GitHub.
+Las claves se leen del archivo .env (o del panel de Render). Nunca se
+escriben en el código ni se suben a GitHub.
 """
 
 import logging
-import os
 
-try:
-    import anthropic
-except ImportError:  # Sin la librería instalada, el asistente usa las reglas.
-    anthropic = None
+import ia_proveedores
 
-MODELO = "claude-opus-5-5"
 MAX_MENSAJES_HISTORIAL = 12  # últimos mensajes que la IA recuerda por conversación
 
 log = logging.getLogger(__name__)
@@ -62,20 +59,8 @@ PERSONALIDADES = {
 
 
 def ia_disponible():
-    """True si la IA está lista para usarse (librería instalada y clave configurada)."""
-    return anthropic is not None and bool(os.environ.get("ANTHROPIC_API_KEY"))
-
-
-_cliente = None
-
-
-def _obtener_cliente():
-    global _cliente
-    if _cliente is None:
-        # Pocos reintentos y tiempo límite corto: si la IA tarda, el chat
-        # responde con las reglas en vez de dejar al estudiante esperando.
-        _cliente = anthropic.Anthropic(timeout=40.0, max_retries=1)
-    return _cliente
+    """True si hay al menos un servicio de IA configurado en .env."""
+    return ia_proveedores.alguno_disponible()
 
 
 def _armar_mensajes(historial, mensaje_actual):
@@ -92,36 +77,16 @@ def _armar_mensajes(historial, mensaje_actual):
 
 
 def responder(historial, mensaje_actual, persona=None, nombre="el asistente"):
-    """Devuelve el texto de la respuesta, o None si la IA no está disponible
-    o no pudo responder (en ese caso app.py usa las respuestas por reglas)."""
+    """Devuelve el texto de la respuesta, o None si ninguna IA pudo responder
+    (en ese caso app.py usa las respuestas por reglas). Si un servicio se queda
+    sin saldo o falla, se pasa solo al siguiente (ia_proveedores.py)."""
     if not ia_disponible():
         return None
-
     sistema = INSTRUCCIONES.format(
         nombre=nombre,
         personalidad=PERSONALIDADES.get(persona, "amable, paciente y cercana."),
     )
-    try:
-        respuesta = _obtener_cliente().beta.messages.create(
-            model=MODELO,
-            max_tokens=4000,
-            system=sistema,
-            messages=_armar_mensajes(historial, mensaje_actual),
-            # Conversación de chat: poco razonamiento, respuestas rápidas.
-            output_config={"effort": "low"},
-            # Si el modelo se negara a responder, la API reintenta sola con
-            # otro modelo en la misma llamada.
-            betas=["server-side-fallback-2026-07-01"],
-            fallbacks="default",
-        )
-    except anthropic.APIStatusError as e:
-        log.warning("IA no respondió (HTTP %s): %s", e.status_code, e.message)
-        return None
-    except anthropic.APIConnectionError:
-        log.warning("IA no respondió: error de conexión")
-        return None
-
-    if respuesta.stop_reason == "refusal":
-        return None
-    texto = "".join(b.text for b in respuesta.content if b.type == "text").strip()
-    return texto or None
+    texto, servicio = ia_proveedores.conversar(sistema, _armar_mensajes(historial, mensaje_actual))
+    if texto:
+        log.info("Respondió la IA de %s", servicio)
+    return texto

@@ -107,6 +107,7 @@ socket.on("nuevo_mensaje", (data) => {
   ocultarEscribiendo();
   agregarMensaje(data.emisor, data.contenido);
   if (data.emisor !== "estudiante") Sonidos.recibido();
+  if (data.emisor === "psicologa") Voz.alResponder(data.contenido);
 });
 
 socket.on("alguien_escribiendo", (data) => {
@@ -118,6 +119,7 @@ socket.on("alguien_dejo_de_escribir", (data) => {
 });
 
 socket.on("apoyo_emergencia", (data) => {
+  Voz.emergencia();
   mostrarApoyoEmergencia(apoyoDiv, socket, TOKEN, data.mensaje);
 });
 
@@ -139,4 +141,20 @@ socket.on("estado_psicologa", (data) => {
   fila.querySelector(".msg").textContent = data.mensaje;
   mensajesDiv.appendChild(fila);
   mensajesDiv.scrollTop = mensajesDiv.scrollHeight;
+});
+
+// Voz: hablar en vez de escribir, escuchar lo que responde la psicóloga y el modo voz.
+Voz.iniciar({
+  form,
+  input,
+  barra: document.querySelector(".acciones-header"),
+  nombre: "La psicóloga",
+  imagen: IMAGEN_PSICOLOGA,
+  etiqueta: "Psicóloga del liceo · persona real",
+  esperando: "Tu mensaje llegó. La psicóloga te responde en cuanto pueda…",
+  enviar: (texto) => {
+    Sonidos.desbloquear();
+    socket.emit("mensaje_estudiante", { token: TOKEN, contenido: texto });
+    Sonidos.enviar();
+  },
 });

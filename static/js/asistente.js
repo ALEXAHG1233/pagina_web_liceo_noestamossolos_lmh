@@ -127,11 +127,13 @@ socket.on("nuevo_mensaje", (data) => {
     });
     agregarMensaje(data.emisor, data.contenido);
     Sonidos.recibido();
+    Voz.alResponder(data.contenido);
   }, espera);
 });
 
 socket.on("apoyo_emergencia", (data) => {
   ocultarEscribiendo();
+  Voz.emergencia();
   mostrarApoyoEmergencia(apoyoDiv, socket, TOKEN, data.mensaje);
 });
 
@@ -140,4 +142,22 @@ socket.on("contacto_emergencia_confirmado", (data) => {
   aviso.className = "apoyo-confirmacion";
   aviso.textContent = data.mensaje;
   apoyoDiv.appendChild(aviso);
+});
+
+// Voz: hablar en vez de escribir, escuchar las respuestas y el modo voz.
+Voz.iniciar({
+  form,
+  input,
+  barra: document.querySelector(".wa-acciones"),
+  nombre: NOMBRE_ASISTENTE,
+  imagen: IMAGEN_ASISTENTE,
+  etiqueta: ASISTENTE_ES_IA ? "Asistente con inteligencia artificial · no es una persona" : "Asistente virtual · no es una persona",
+  esperando: `${NOMBRE_ASISTENTE} está pensando…`,
+  vozMasculina: PERSONA === "leo",
+  tono: { sami: 1.05, leo: 0.95, nia: 1.15 }[PERSONA] || 1,
+  enviar: (texto) => {
+    Sonidos.desbloquear();
+    socket.emit("mensaje_chatbot", { token: TOKEN, contenido: texto, persona: PERSONA });
+    Sonidos.enviar();
+  },
 });

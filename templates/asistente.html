@@ -7,6 +7,7 @@
   {% include "_cabeza.html" %}
   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/pop.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/voz.css') }}">
 </head>
 <body class="chat-wa-body">
   <div class="chat-container chat-wa">
@@ -67,9 +68,13 @@
     const TOKEN = "{{ token }}";
     const PERSONA = "{{ persona_id or '' }}";
     const AVATAR_ASISTENTE = "{{ persona.avatar if persona else 'A' }}";
+    const NOMBRE_ASISTENTE = {{ (persona.nombre if persona else "el asistente") | tojson }};
+    const IMAGEN_ASISTENTE = {{ (url_for('static', filename=persona.imagen) if persona and persona.imagen else "") | tojson }};
+    const ASISTENTE_ES_IA = {{ "true" if ia_activa else "false" }};
   </script>
   <script src="{{ url_for('static', filename='js/sonidos.js') }}"></script>
   <script src="{{ url_for('static', filename='js/common.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/voz.js') }}"></script>
   <script src="{{ url_for('static', filename='js/asistente.js') }}"></script>
 </body>
 </html>
