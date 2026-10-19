@@ -51,10 +51,12 @@ def main():
         estado, datos = pedir(url, cab)
         if estado == 200:
             ids = modelos_de(datos)
-            modelo = p.get("modelo")
+            import ia_proveedores
+            modelos = ia_proveedores._modelos(p)
             extra = ""
-            if ids and modelo:
-                extra = " · modelo " + (modelo if modelo in ids or any(i.endswith(modelo) for i in ids) else f"{modelo} (NO aparece en la lista)")
+            if ids and modelos:
+                marcas = [m if (m in ids or any(i.endswith(m) for i in ids)) else f"{m} (no aparece)" for m in modelos]
+                extra = " · modelos: " + ", ".join(marcas)
             if p["id"] == "openrouter" and isinstance(datos.get("data"), dict):
                 d = datos["data"]
                 extra = f" · límite {d.get('limit')} · usado {d.get('usage')}"
