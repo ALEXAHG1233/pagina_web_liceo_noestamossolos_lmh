@@ -3,7 +3,26 @@
   margin: 0;
   max-width: 720px;
   margin: 0 auto;
+  /* El degradado de fondo va en una capa fija aparte (abajo): con
+     "background-attachment: fixed" el navegador repintaba todo al desplazarse. */
+  background: var(--verde-oscuro);
+  background-attachment: scroll;
 }
+.landing-body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -3;
+  pointer-events: none;
+  background: linear-gradient(180deg, var(--verde-liceo) 0%, var(--verde-oscuro) 100%);
+}
+:root[data-tema="claro"] .landing-body { background: #f4fffc; }
+:root[data-tema="claro"] .landing-body::before { background: linear-gradient(180deg, #f4fffc 0%, #dff7e8 100%); }
+
+/* Las secciones que están lejos de la pantalla no se dibujan hasta que te acercas
+   (la página va más fluida). common.js mide antes la altura real de cada una. */
+.landing-body.dibujo-diferido > section.seccion { content-visibility: auto; }
+
 
 /* Barra de navegación superior, fija, con menú hamburguesa en celular. */
 .nav-principal {
@@ -146,7 +165,8 @@
   .nav-boton-ayuda { margin-top: 0; padding: 8px 18px; }
 }
 
-#recursos, #contacto, #elegir-con-quien { scroll-margin-top: 70px; }
+#recursos, #contacto, #elegir-con-quien,
+.landing-body > section[id] { scroll-margin-top: 78px; }  /* que el menú fijo no tape el título */
 
 /* Subrayado dorado animado en los enlaces del menú (solo escritorio). */
 @media (min-width: 860px) {
@@ -1441,15 +1461,17 @@ body:has(.dock) .whatsapp-flotante { bottom: 80px; }
   top: -70%;
   width: 200%;
   height: 200%;
-  background: repeating-conic-gradient(from 0deg at 50% 0%, rgba(195, 233, 86, 0.16) 0deg 2.5deg, transparent 2.5deg 7deg);
+  background: repeating-conic-gradient(from 0deg at 50% 0%, transparent 0deg, rgba(195, 233, 86, 0.16) 0.8deg 1.7deg, transparent 2.5deg 7deg);
   -webkit-mask-image: radial-gradient(ellipse 55% 100% at 50% 0%, #000 30%, transparent 85%);
   mask-image: radial-gradient(ellipse 55% 100% at 50% 0%, #000 30%, transparent 85%);
-  filter: blur(3px);
+  /* Bordes suaves con el propio degradado (antes era un desenfoque que el
+     navegador recalculaba en cada cuadro sobre una capa enorme). */
   transform-origin: 50% 0;
+  will-change: transform, opacity;
   animation: rayosVaiven 16s ease-in-out infinite alternate;
 }
 .rayos-fondo::after {
-  background: repeating-conic-gradient(from 1.5deg at 50% 0%, rgba(255, 232, 150, 0.11) 0deg 1.5deg, transparent 1.5deg 9deg);
+  background: repeating-conic-gradient(from 1.5deg at 50% 0%, transparent 0deg, rgba(255, 232, 150, 0.11) 0.5deg 1deg, transparent 1.5deg 9deg);
   animation-duration: 23s;
   animation-direction: alternate-reverse;
 }

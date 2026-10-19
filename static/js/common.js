@@ -90,6 +90,12 @@ document.addEventListener("DOMContentLoaded", activarCambioTema);
 
 const SIN_MOVIMIENTO = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
+// Mientras la persona baja o sube la página, los efectos que se dibujan solos
+// esperan un momento: así el desplazamiento va suave.
+let ultimoDesplazamiento = 0;
+window.addEventListener("scroll", () => { ultimoDesplazamiento = performance.now(); }, { passive: true });
+const desplazando = () => performance.now() - ultimoDesplazamiento < 180;
+
 // Barra dorada fina arriba que muestra cuánto has bajado en la página.
 function crearBarraProgreso() {
   if (!document.querySelector(".landing-body") || document.getElementById("barra-progreso")) return;
@@ -501,8 +507,11 @@ function activarMorphTexto() {
     quieta();
     let inicioCiclo = performance.now();
     let cruzando = false;
+    let seVe = true;
+    new IntersectionObserver((e) => { seVe = e[0].isIntersecting; }).observe(caja);
 
     function cuadro(ahora) {
+      if (!seVe || document.hidden) { inicioCiclo = ahora; requestAnimationFrame(cuadro); return; }
       const transcurrido = ahora - inicioCiclo;
       const pausa = intervalo - MORPH_DURACION;
       if (transcurrido >= intervalo) {
@@ -944,9 +953,11 @@ function activarLineaFondo() {
   if (!trazo || SIN_MOVIMIENTO) return;
   let pendiente = false;
 
+  let alturaPagina = document.documentElement.scrollHeight;
+  if ("ResizeObserver" in window) new ResizeObserver(() => { alturaPagina = document.documentElement.scrollHeight; }).observe(document.body);
   function actualizar() {
     pendiente = false;
-    const recorrido = document.documentElement.scrollHeight - window.innerHeight;
+    const recorrido = alturaPagina - window.innerHeight;
     const progreso = recorrido > 0 ? Math.min(Math.max(window.scrollY / recorrido, 0), 1) : 1;
     const visible = 0.5 + progreso * 0.5;
     trazo.style.strokeDashoffset = String(1 - visible);
@@ -2083,8 +2094,9 @@ function activarTextoProfundo() {
 
   const items = titulos.map((t) => {
     const tamano = parseFloat(getComputedStyle(t).fontSize) || 24;
-    const capas = Math.round(Math.min(16, Math.max(8, tamano / 2.4)));
-    const paso = Math.max(0.6, tamano * 0.028);   // px entre capas
+    // Menos capas pero más separadas: el mismo grosor con menos trabajo para el navegador.
+    const capas = Math.round(Math.min(7, Math.max(4, tamano / 5.5)));
+    const paso = Math.max(1.2, tamano * 0.06);   // px entre capas
     const texto = t.textContent;
     const cara = document.createElement("span");
     cara.className = "profundidad-cara";
@@ -2130,22 +2142,29 @@ function activarTextoProfundo() {
   let anterior = 0;
   function cuadro(ahora) {
     requestAnimationFrame(cuadro);
-    if (document.hidden || ahora - anterior < 33) return;
+    if (document.hidden || ahora - anterior < 33 || desplazando()) return;
     anterior = ahora;
     const t = (ahora - inicio) / 1000;
     const siguiendo = mouse && ahora - ultimo < 2500;
-    items.forEach((it) => {
-      if (!it.visible) return;
+    const visibles = items.filter((it) => it.visible);
+    // Primero se leen todas las posiciones y después se mueven (si se mezclan,
+    // el navegador recalcula la página una vez por cada título).
+    const rects = siguiendo ? visibles.map((it) => it.t.getBoundingClientRect()) : [];
+    visibles.forEach((it, k) => {
       let ox, oy;
       if (siguiendo) {
-        const r = it.t.getBoundingClientRect();
+        const r = rects[k];
         const fx = Math.max(-1, Math.min(1, (mouse.x - (r.left + r.width / 2)) / (window.innerWidth / 2)));
         const fy = Math.max(-1, Math.min(1, (mouse.y - (r.top + r.height / 2)) / (window.innerHeight / 2)));
         ox = -fy * INCLINACION;
         oy = fx * INCLINACION;
       } else {
-        ox = Math.sin(t * GIRO * 1.3) * INCLINACION * 0.5;
-        oy = Math.sin(t * GIRO) * INCLINACION;
+        ox = 0;  // mouse quieto: vuelve despacio al frente y deja de moverse
+        oy = 0;
+      }
+      if (!siguiendo && Math.abs(it.rx) < 0.05 && Math.abs(it.ry) < 0.05) {
+        if (it.rx || it.ry) { it.rx = it.ry = 0; it.cuerpo.style.transform = "none"; }
+        return;
       }
       it.rx += (ox - it.rx) * SUAVE;
       it.ry += (oy - it.ry) * SUAVE;
@@ -2177,7 +2196,7 @@ function activarBolaPlasma() {
   let ancho = 0, alto = 0, dpr = 1, visible = false, mouse = null;
 
   function medir() {
-    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    dpr = Math.min(window.devicePixelRatio || 1, 1.25);
     ancho = lienzo.clientWidth; alto = lienzo.clientHeight;
     lienzo.width = ancho * dpr; lienzo.height = alto * dpr;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
@@ -2204,12 +2223,12 @@ function activarBolaPlasma() {
       const a = angulo + desvio / (largo * t + 20);
       ctx.lineTo(cx + Math.cos(a) * largo * t, cy + Math.sin(a) * largo * t);
     }
+    ctx.strokeStyle = rgba(alfa * 0.22);
+    ctx.lineWidth = grosor + 7 * AJUSTES.brillo;
+    ctx.stroke();
     ctx.strokeStyle = rgba(alfa);
     ctx.lineWidth = grosor;
-    ctx.shadowColor = rgba(0.9);
-    ctx.shadowBlur = 12 * AJUSTES.brillo;
     ctx.stroke();
-    ctx.shadowBlur = 0;
   }
 
   const angulos = Array.from({ length: AJUSTES.rayos }, (_, i) => (i / AJUSTES.rayos) * Math.PI * 2);
@@ -2478,7 +2497,7 @@ function activarBordeElectrico() {
   }
 
   function medir(it) {
-    const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+    const dpr = 1;
     it.w = it.host.offsetWidth;
     it.h = it.host.offsetHeight;
     it.lienzo.width = Math.round((it.w + MARGEN * 2) * dpr);
@@ -2491,7 +2510,7 @@ function activarBordeElectrico() {
     if (!w || !h) return;
     ctx.clearRect(0, 0, w + MARGEN * 2, h + MARGEN * 2);
     const largo = 2 * (w + h);
-    const puntos = Math.min(400, Math.max(60, Math.round(largo / 7)));
+    const puntos = Math.min(220, Math.max(48, Math.round(largo / 12)));
     const amplitud = 6 * AJUSTES.separacion;
     for (let k = 0; k < AJUSTES.rayos; k++) {
       ctx.beginPath();
@@ -2522,7 +2541,16 @@ function activarBordeElectrico() {
     });
   });
   items.forEach((it) => observador.observe(it.host));
-  window.addEventListener("resize", () => items.forEach(medir));
+  // El tamaño de cada cuadro se vuelve a medir solo cuando cambia (no en cada cuadro
+  // de la animación: eso obligaba al navegador a recalcular toda la página).
+  if ("ResizeObserver" in window) {
+    const tamanos = new ResizeObserver((entradas) => {
+      entradas.forEach((e) => { const it = items.find((i) => i.host === e.target); if (it) medir(it); });
+    });
+    items.forEach((it) => tamanos.observe(it.host));
+  } else {
+    window.addEventListener("resize", () => items.forEach(medir));
+  }
 
   if (SIN_MOVIMIENTO) {
     setTimeout(() => items.forEach((it) => { medir(it); dibujar(it, 0); }), 300);
@@ -2532,14 +2560,11 @@ function activarBordeElectrico() {
   let anterior = 0;
   function cuadro(ahora) {
     requestAnimationFrame(cuadro);
-    if (document.hidden || ahora - anterior < 40) return;   // ~25 cuadros por segundo
+    if (document.hidden || ahora - anterior < 50) return;   // ~20 cuadros por segundo
     anterior = ahora;
     const t = (ahora - inicio) / 1000;
-    items.forEach((it) => {
-      if (!it.visible) return;
-      if (it.host.offsetWidth !== it.w || it.host.offsetHeight !== it.h) medir(it);
-      dibujar(it, t);
-    });
+    if (desplazando()) return;  // mientras se baja o sube la página, los rayos esperan
+    items.forEach((it) => { if (it.visible) dibujar(it, t); });
   }
   requestAnimationFrame(cuadro);
 }
@@ -2989,3 +3014,23 @@ function activarTestPasoAPaso() {
   pintar();
 }
 document.addEventListener("DOMContentLoaded", activarTestPasoAPaso);
+
+
+// Secciones lejanas sin dibujar (la página va más fluida): primero se mide la
+// altura real de cada sección y se guarda como su tamaño de reserva. Así el
+// navegador no tiene que adivinar alturas y los saltos del menú caen exactos.
+function activarDibujoDiferido() {
+  const cuerpo = document.querySelector(".landing-body");
+  if (!cuerpo || !("contentVisibility" in document.body.style)) return;
+  const secciones = Array.from(cuerpo.querySelectorAll(":scope > section.seccion"));
+  const reservar = () => {
+    cuerpo.classList.remove("dibujo-diferido");
+    secciones.forEach((s) => { s.style.containIntrinsicSize = "auto " + s.offsetHeight + "px"; });
+    cuerpo.classList.add("dibujo-diferido");
+  };
+  if (document.readyState === "complete") reservar();
+  else window.addEventListener("load", reservar);
+  let espera = null;
+  window.addEventListener("resize", () => { clearTimeout(espera); espera = setTimeout(reservar, 400); });
+}
+document.addEventListener("DOMContentLoaded", activarDibujoDiferido);

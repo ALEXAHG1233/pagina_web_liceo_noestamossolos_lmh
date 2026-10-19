@@ -12,11 +12,11 @@
 
   const config = {
     SIM_RESOLUTION: 128,
-    DYE_RESOLUTION: 1024,
+    DYE_RESOLUTION: 512,
     DENSITY_DISSIPATION: 3.5,
     VELOCITY_DISSIPATION: 2,
     PRESSURE: 0.1,
-    PRESSURE_ITERATIONS: 20,
+    PRESSURE_ITERATIONS: 12,
     CURL: 3,
     SPLAT_RADIUS: 0.2,
     SPLAT_FORCE: 6000,
@@ -554,7 +554,30 @@
     let lastUpdateTime = Date.now();
     let colorUpdateTimer = 0.0;
 
+    // Para que la página vaya fluida: la simulación solo corre mientras el mouse
+    // se mueve (y un momento después, hasta que la tinta se desvanece). Con el
+    // mouse quieto no gasta nada; al moverlo, se despierta sola.
+    const DORMIR_TRAS_MS = 2200;
+    let ultimoMovimiento = 0;
+    let corriendo = false;
+    function despertar() {
+      ultimoMovimiento = Date.now();
+      if (!corriendo && !document.hidden) {
+        corriendo = true;
+        lastUpdateTime = Date.now();
+        requestAnimationFrame(updateFrame);
+      }
+    }
+
     function updateFrame() {
+      if (document.hidden || Date.now() - ultimoMovimiento > DORMIR_TRAS_MS) {
+        corriendo = false;
+        gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+        gl.viewport(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight);
+        gl.clearColor(0, 0, 0, 0);
+        gl.clear(gl.COLOR_BUFFER_BIT);
+        return;
+      }
       const dt = calcDeltaTime();
       if (resizeCanvas()) initFramebuffers();
       updateColors(dt);
@@ -750,15 +773,15 @@
       pointer.deltaX = correctDeltaX(pointer.texcoordX - pointer.prevTexcoordX);
       pointer.deltaY = correctDeltaY(pointer.texcoordY - pointer.prevTexcoordY);
       pointer.moved = Math.abs(pointer.deltaX) > 0 || Math.abs(pointer.deltaY) > 0;
+      if (pointer.moved) despertar();
     }, { passive: true });
 
     window.addEventListener("mousedown", (e) => {
       pointer.texcoordX = scaleByPixelRatio(e.clientX) / canvas.width;
       pointer.texcoordY = 1.0 - scaleByPixelRatio(e.clientY) / canvas.height;
       clickSplat();
+      despertar();
     });
-
-    updateFrame();
   }
 
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", iniciar);
