@@ -103,10 +103,12 @@ PROVEEDORES = [
         "verificar": lambda c: ("https://huggingface.co/api/whoami-v2", _bearer(c)),
     },
     {
-        # Servicio extra: para usarlo hay que poner también BAI_URL (dirección del chat,
-        # compatible con OpenAI) y BAI_MODELO en .env.
-        "id": "bai", "nombre": "BAI", "clave": "BAI_KEY", "modelo": None, "url": None,
-        "verificar": lambda c: ((os.environ.get("BAI_URL", "").rsplit("/chat/completions", 1)[0] + "/models"), _bearer(c)),
+        # B.AI (docs.b.ai): una sola clave da acceso a modelos de Claude, GPT, Gemini,
+        # Qwen y otros. Necesita saldo en la cuenta de B.AI; sin saldo se salta sola.
+        "id": "bai", "nombre": "B.AI", "clave": "BAI_KEY",
+        "modelo": ["claude-haiku-5.5", "gemini-3.5-flash", "gpt-5.4-mini", "qwen3.8-flash"],
+        "url": "https://api.b.ai/v1/chat/completions",
+        "verificar": lambda c: ("https://api.b.ai/v1/models", _bearer(c)),
     },
 ]
 POR_ID = {p["id"]: p for p in PROVEEDORES}
@@ -172,6 +174,8 @@ def _clasificar(estado, texto):
         return 3600, "sin cuota en este modelo por ahora"  # a veces otro modelo del mismo servicio sí tiene
     if "workspace" in t:
         return 3600, "a la clave le falta el workspace (ANTHROPIC_WORKSPACE_ID)"
+    if "deposit" in t or "access restricted" in t:
+        return 6 * 3600, "sin saldo (hace falta un depósito en la cuenta)"
     if estado in (401, 403):
         return 3600, "clave rechazada"
     if estado == 429:
