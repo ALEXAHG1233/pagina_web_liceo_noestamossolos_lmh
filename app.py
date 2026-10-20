@@ -532,6 +532,17 @@ def construir_indice_busqueda():
     return indice
 
 
+@app.template_global()
+def imagen_recurso(slug, solo_foto=False):
+    """Ilustración de un tema de psicología (static/images/recursos): primero la
+    imagen elegida por el equipo (.webp) y, si no hay, el dibujo (.svg)."""
+    for ext in ("webp",) if solo_foto else ("webp", "svg"):
+        ruta = f"images/recursos/{slug}.{ext}"
+        if os.path.exists(os.path.join(app.static_folder, ruta)):
+            return ruta
+    return None
+
+
 @app.route("/")
 def index():
     registrar_visita()

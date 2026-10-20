@@ -57,6 +57,10 @@
             <span class="articulo-categoria cat-{{ a.categoria|lower }}">{{ a.categoria }}</span>
             <h3>{{ a.titulo }}</h3>
             <p class="articulo-resumen">{{ a.resumen }}</p>
+            {% set foto = imagen_recurso(slug, solo_foto=True) %}
+            {% if foto %}
+              <img class="articulo-imagen articulo-imagen-{{ slug }}" src="{{ url_for('static', filename=foto) }}" alt="" loading="lazy" width="900" height="560">
+            {% endif %}
             {% if a.collage %}
               <div class="collage" role="group" aria-label="Collage de personajes">
                 {% for archivo, desc, x, y, giro in a.collage %}

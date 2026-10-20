@@ -130,3 +130,16 @@
 }
 
 .articulo-completo[hidden], .informate-categoria[hidden], .filtro-vacio[hidden] { display: none; }
+
+/* Imagen de cada tema (static/images/recursos/<tema>.webp). */
+.articulo-imagen {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: 340px;
+  margin: 12px 0 16px;
+  object-fit: cover;
+  border-radius: 16px;
+  background: #ffffff;
+}
+.articulo-imagen-superar-perdida { object-position: center 30%; }
