@@ -2911,3 +2911,17 @@ body:has(.dock) .whatsapp-flotante { bottom: 80px; }
 
 /* Las fotos altas se recortan por arriba para que se vea lo importante. */
 .recurso-imagen.recurso-superar-perdida { object-position: center 30%; }
+
+/* "Respiración 4-4-4-4" con letras que se voltean. */
+.respira-lema {
+  margin: 2px 0 0;
+  min-height: 1.3em;
+  font-family: var(--letra-titulo);
+  font-variation-settings: "SOFT" 100;
+  font-size: clamp(24px, 2.6vw, 32px);
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--amarillo);
+}
+.respira-circulo [data-respira-fase] { display: inline-block; }
+.landing-body .respira-lema, .landing-body .respira-lema span { font-family: var(--letra-titulo); }

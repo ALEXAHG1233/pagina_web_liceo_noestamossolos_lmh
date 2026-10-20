@@ -473,6 +473,49 @@ function mostrarApoyoEmergencia(apoyoDiv, socket, token, mensaje) {
 // intervalo la palabra se queda quieta.
 const MORPH_DURACION = 1000;
 
+// Letras que se voltean (FlipFadeText): cambia el texto de un elemento letra por
+// letra, con giro y desvanecido. Sirve para palabras que rotan solas
+// (data-flip-fade + data-palabras="a|b|c") y para textos que cambia el código.
+function voltearTexto(el, texto) {
+  if (!el || el.dataset.textoActual === texto) return;
+  el.dataset.textoActual = texto;
+  el.classList.add("flip-fade");
+  el.setAttribute("aria-label", texto);
+  const poner = () => {
+    el.classList.remove("saliendo");
+    el.textContent = "";
+    [...texto].forEach((letra, i) => {
+      const span = document.createElement("span");
+      span.className = "flip-fade-letra" + (letra === " " ? " espacio" : "");
+      span.style.setProperty("--i", i);
+      span.setAttribute("aria-hidden", "true");
+      span.textContent = letra === " " ? " " : letra;
+      el.appendChild(span);
+    });
+  };
+  if (SIN_MOVIMIENTO || !el.querySelector(".flip-fade-letra")) { poner(); return; }
+  el.classList.add("saliendo");
+  clearTimeout(el._flipTiempo);
+  el._flipTiempo = setTimeout(poner, 240);
+}
+
+function activarFlipFade() {
+  document.querySelectorAll("[data-flip-fade][data-palabras]").forEach((el) => {
+    const palabras = el.dataset.palabras.split("|").map((p) => p.trim()).filter(Boolean);
+    if (!palabras.length) return;
+    let i = 0;
+    voltearTexto(el, palabras[0]);
+    if (palabras.length < 2 || SIN_MOVIMIENTO) return;
+    setInterval(() => {
+      if (el.dataset.pausa === "1" || document.hidden) return;
+      i = (i + 1) % palabras.length;
+      voltearTexto(el, palabras[i]);
+    }, parseInt(el.dataset.intervalo, 10) || 2600);
+  });
+}
+
+document.addEventListener("DOMContentLoaded", activarFlipFade);
+
 function activarMorphTexto() {
   document.querySelectorAll(".morph").forEach((caja) => {
     const palabras = (caja.dataset.palabras || "").split("|").filter(Boolean);
@@ -1504,26 +1547,29 @@ function activarMural() {
     const fase = respira.querySelector("[data-respira-fase]");
     const cuenta = respira.querySelector("[data-respira-cuenta]");
     const boton = respira.querySelector("[data-respira-boton]");
+    const lema = respira.querySelector("[data-flip-fade]");
     const FASES = [["Inhala", true], ["Sostén", true], ["Exhala", false], ["Espera", false]];
     let temporizador = null;
     const parar = (mensaje) => {
       clearInterval(temporizador);
       temporizador = null;
       circulo.classList.remove("grande");
-      fase.textContent = "Listo";
+      voltearTexto(fase, "Listo");
       cuenta.textContent = mensaje;
       boton.textContent = "Empezar";
+      if (lema) { delete lema.dataset.pausa; voltearTexto(lema, "Respiración 4-4-4-4"); }
     };
     boton.addEventListener("click", () => {
       if (temporizador) { parar("Puedes volver a empezar cuando quieras."); return; }
       let paso = 0;
       boton.textContent = "Parar";
+      if (lema) { lema.dataset.pausa = "1"; voltearTexto(lema, "Sigue el círculo"); }
       const tic = () => {
         const indice = Math.floor(paso / 4) % 4;
         const vuelta = Math.floor(paso / 16) + 1;
         if (vuelta > 4) { parar("¡Muy bien! ¿Cómo te sientes ahora?"); return; }
         const [nombre, grande] = FASES[indice];
-        fase.textContent = nombre;
+        voltearTexto(fase, nombre);
         circulo.classList.toggle("grande", grande);
         cuenta.textContent = `${4 - (paso % 4)} · vuelta ${vuelta} de 4`;
         paso += 1;

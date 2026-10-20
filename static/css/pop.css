@@ -312,3 +312,71 @@ body { overflow-x: clip; }
 @media (prefers-reduced-motion: reduce) {
   .barrido::before { display: none; }
 }
+
+/* ---------- Botón "pop" en relieve (el mismo de "Publicar en el muro") ----------
+   El botón tiene un borde de abajo más oscuro, como una tecla: al pasar el mouse
+   sube con un rebote y al tocarlo se hunde. Los botones metálicos dorados
+   conservan su propio estilo. */
+:is(.bento-boton, .mito-botones button, .paso-boton, .btn-siguiente, .libro-boton, .cuenta-boton,
+    .instalar-boton, .tigre-boton, .test-empezar, .pc-boton, .emergencia-boton):not(.boton-metal) {
+  --pop-base: #3b570d;
+  position: relative;
+  box-shadow: 0 5px 0 var(--pop-base), 0 12px 20px -10px rgba(0, 0, 0, 0.6);
+  translate: 0 -2px;
+  transition:
+    translate 260ms cubic-bezier(0.34, 1.56, 0.64, 1),
+    box-shadow 260ms cubic-bezier(0.34, 1.56, 0.64, 1),
+    scale 360ms cubic-bezier(0.34, 1.56, 0.64, 1),
+    background-color 200ms ease, color 200ms ease, border-color 200ms ease;
+}
+:is(.bento-boton-suave, .tigre-boton-texto, .paso-boton:not(.paso-boton-principal), .mito-botones button) { --pop-base: #0d2416; }
+.emergencia-boton:not(.boton-metal) { --pop-base: #5b1d1d; }
+@media (hover: hover) {
+  :is(.bento-boton, .mito-botones button, .paso-boton, .btn-siguiente, .libro-boton, .cuenta-boton,
+      .instalar-boton, .tigre-boton, .test-empezar, .pc-boton, .emergencia-boton):not(.boton-metal):not(:disabled):hover {
+    translate: 0 -5px;
+    box-shadow: 0 8px 0 var(--pop-base), 0 18px 26px -12px rgba(0, 0, 0, 0.6);
+  }
+}
+:is(.bento-boton, .mito-botones button, .paso-boton, .btn-siguiente, .libro-boton, .cuenta-boton,
+    .instalar-boton, .tigre-boton, .test-empezar, .pc-boton, .emergencia-boton):not(.boton-metal):not(:disabled):active {
+  translate: 0 3px;
+  box-shadow: 0 0 0 var(--pop-base), 0 4px 8px -4px rgba(0, 0, 0, 0.5);
+  transition-duration: 80ms;
+}
+:is(.bento-boton, .mito-botones button, .paso-boton, .btn-siguiente, .libro-boton, .cuenta-boton,
+    .instalar-boton, .tigre-boton, .test-empezar, .pc-boton, .emergencia-boton):disabled {
+  translate: 0 0;
+  box-shadow: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  :is(.bento-boton, .mito-botones button, .paso-boton, .btn-siguiente, .libro-boton, .cuenta-boton,
+      .instalar-boton, .tigre-boton, .test-empezar, .pc-boton, .emergencia-boton) { transition: none; }
+}
+
+/* ---------- Letras que se voltean (FlipFadeText) ----------
+   Cada letra gira y aparece una tras otra; al cambiar de palabra, las letras
+   viejas giran hacia arriba y se van. */
+.flip-fade { display: inline-block; perspective: 600px; white-space: nowrap; }
+.flip-fade-letra {
+  display: inline-block;
+  transform-origin: 50% 100%;
+  animation: flipFadeEntra 520ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: calc(var(--i) * 38ms);
+}
+.flip-fade-letra.espacio { width: 0.28em; }
+.flip-fade.saliendo .flip-fade-letra {
+  animation: flipFadeSale 260ms ease-in both;
+  animation-delay: calc(var(--i) * 18ms);
+}
+@keyframes flipFadeEntra {
+  from { opacity: 0; transform: rotateX(-90deg) translateY(0.35em); filter: blur(4px); }
+  to { opacity: 1; transform: none; filter: blur(0); }
+}
+@keyframes flipFadeSale {
+  from { opacity: 1; transform: none; filter: blur(0); }
+  to { opacity: 0; transform: rotateX(90deg) translateY(-0.3em); filter: blur(4px); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .flip-fade-letra, .flip-fade.saliendo .flip-fade-letra { animation: none; }
+}
