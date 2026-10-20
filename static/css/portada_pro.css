@@ -356,3 +356,8 @@
 .capitulo-cabeza { border-radius: var(--radio-grande); padding: clamp(14px, 2vw, 22px); }
 .icono-corazon { vertical-align: -2px; margin-right: 6px; }
 .nav-tema-icono svg { display: block; }
+
+/* Botón para hablar con el Tigre debajo de Tigrito. */
+.tigrito-hablar { display: flex; flex-direction: column; align-items: center; gap: 10px; margin: 24px 0 0; text-align: center; }
+.tigrito-hablar small { color: var(--texto-suave); font-size: 15px; }
+.tigrito-boton { padding: 13px 30px; font-size: 16px; text-decoration: none; background: var(--dorado); color: var(--verde-oscuro); }

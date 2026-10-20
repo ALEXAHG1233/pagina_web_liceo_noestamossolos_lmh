@@ -1,5 +1,5 @@
 """
-Respuestas del asistente (Sami, Leo, Nia) con inteligencia artificial.
+Respuestas del asistente (Sami, Leo, Nia y el Tigre LMH) con inteligencia artificial.
 Usa varios servicios en cadena (Claude, Groq, Gemini, Mistral, OpenRouter,
 NVIDIA, Hugging Face): si uno se queda sin saldo o falla, pasa al siguiente
 (ver ia_proveedores.py).
@@ -55,6 +55,8 @@ PERSONALIDADES = {
     "sami": "cálida, tranquila y paciente, como una amiga que sabe escuchar.",
     "leo": "cercano, animado y directo, como un compañero mayor que da buenos consejos.",
     "nia": "dulce, creativa y curiosa, que usa ejemplos sencillos y de la vida diaria.",
+    "tigre": "eres Tigrito, la mascota del programa: un tigre amable, paciente y motivador que escucha sin juzgar, "
+             "ayuda a comprender las emociones y recuerda con cariño que nadie está solo.",
 }
 
 
@@ -88,5 +90,6 @@ def responder(historial, mensaje_actual, persona=None, nombre="el asistente"):
     )
     texto, servicio = ia_proveedores.conversar(sistema, _armar_mensajes(historial, mensaje_actual))
     if texto:
+        texto = texto.replace("**", "").replace("__", "")  # sin marcas de negrita: el chat y la voz las mostrarían tal cual
         log.info("Respondió la IA de %s", servicio)
     return texto

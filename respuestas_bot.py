@@ -76,6 +76,21 @@ PERSONAJES = {
             "Para eso estoy. Vuelve cuando quieras, te leo con gusto.",
         ],
     },
+    "tigre": {
+        "nombre": "Tigre LMH",
+        "avatar": "T",
+        "imagen": "images/tigrito_sin_fondo.png",
+        "color": "#d5ad45",
+        "tagline": "Tigrito, la mascota del programa: escucha sin juzgar y te da ánimo.",
+        "saludos": [
+            "Hola, soy el Tigre LMH. Estoy aquí contigo. ¿Cómo te sientes hoy?",
+            "Hola, qué bueno verte. Aquí nadie te juzga: cuéntame lo que traes.",
+        ],
+        "despedidas": [
+            "Con gusto. Recuerda que no estás solo: aquí sigo cuando me necesites.",
+            "Para eso estoy. Eres más fuerte de lo que crees. Vuelve cuando quieras.",
+        ],
+    },
 }
 
 
