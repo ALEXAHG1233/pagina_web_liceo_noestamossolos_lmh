@@ -81,6 +81,7 @@ function mostrarEscribiendo() {
   filaEscribiendo = document.createElement("div");
   filaEscribiendo.classList.add("msg-fila", "asistente", "escribiendo");
   ponerEstado("escribiendo…");
+  window.dispatchEvent(new CustomEvent("voz-estado", { detail: "pensando" }));
   filaEscribiendo.innerHTML = `
     <div class="avatar">${AVATAR_ASISTENTE || "A"}</div>
     <div class="msg-contenido">
@@ -96,6 +97,7 @@ function ocultarEscribiendo() {
     filaEscribiendo = null;
   }
   ponerEstado("en línea");
+  window.dispatchEvent(new CustomEvent("voz-estado", { detail: "listo" }));
 }
 
 form.addEventListener("submit", (e) => {
@@ -133,6 +135,7 @@ socket.on("nuevo_mensaje", (data) => {
 
 socket.on("apoyo_emergencia", (data) => {
   ocultarEscribiendo();
+  window.dispatchEvent(new CustomEvent("voz-estado", { detail: "crisis" }));
   Voz.emergencia();
   mostrarApoyoEmergencia(apoyoDiv, socket, TOKEN, data.mensaje);
 });
@@ -154,6 +157,7 @@ Voz.iniciar({
   etiqueta: ASISTENTE_ES_IA ? "Asistente con inteligencia artificial · no es una persona" : "Asistente virtual · no es una persona",
   esperando: `${NOMBRE_ASISTENTE} está pensando…`,
   vozMasculina: PERSONA === "leo" || PERSONA === "tigre",
+  cara: document.getElementById("plantilla-cara-tigre")?.innerHTML.trim() || "",
   tono: { sami: 1.05, leo: 0.95, nia: 1.15, tigre: 0.9 }[PERSONA] || 1,
   enviar: (texto) => {
     Sonidos.desbloquear();

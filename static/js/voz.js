@@ -22,6 +22,8 @@ const Voz = (() => {
   let grabando = null;      // { detener() }
   let ocupado = false;      // esperando transcripción o respuesta
   let ui = {};
+  // Avisa a la página qué está pasando (lo usa la cara del Tigre para mover los ojos).
+  const avisar = (estado) => window.dispatchEvent(new CustomEvent("voz-estado", { detail: estado }));
 
   // ---------- Grabar y convertir en texto ----------
   function grabarServidor(alTerminar, conSilencio) {
@@ -143,8 +145,8 @@ const Voz = (() => {
       if (voz) { frase.voice = voz; frase.lang = voz.lang; }
       frase.rate = cfg?.velocidad || 1;
       frase.pitch = cfg?.tono || 1;
-      frase.onstart = () => ponerEstado("hablando", `${cfg.nombre} está hablando…`);
-      frase.onend = frase.onerror = () => resolver();
+      frase.onstart = () => { avisar("hablando"); ponerEstado("hablando", `${cfg.nombre} está hablando…`); };
+      frase.onend = frase.onerror = () => { avisar("listo"); resolver(); };
       sintesis.speak(frase);
     });
   }
@@ -152,6 +154,7 @@ const Voz = (() => {
   // ---------- Pantalla del modo voz ----------
   function ponerEstado(estado, texto) {
     if (!ui.llamada) return;
+    avisar(estado);
     ui.llamada.dataset.estado = estado;
     ui.estado.textContent = texto;
     const escuchando = estado === "escuchando";
@@ -177,7 +180,7 @@ const Voz = (() => {
         <p class="voz-quien">${cfg.etiqueta}</p>
         <div class="voz-avatar" aria-hidden="true">
           <span class="voz-aro"></span><span class="voz-aro voz-aro-2"></span>
-          ${cfg.imagen ? `<img src="${cfg.imagen}" alt="">` : `<span class="voz-letra">${cfg.nombre[0]}</span>`}
+          ${cfg.cara || (cfg.imagen ? `<img src="${cfg.imagen}" alt="">` : `<span class="voz-letra">${cfg.nombre[0]}</span>`)}
         </div>
         <h2 class="voz-nombre">${cfg.nombre}</h2>
         <p class="voz-estado" aria-live="polite">Toca "Hablar" cuando quieras</p>
@@ -279,12 +282,14 @@ const Voz = (() => {
       mic.addEventListener("click", () => {
         if (grabando) { grabando.detener(); return; }
         mic.classList.add("grabando");
+        avisar("escuchando");
         mic.setAttribute("aria-label", "Detener y enviar");
         const placeholder = input.placeholder;
         input.placeholder = "Te escucho… toca el micrófono para terminar";
         const terminar = (texto, blob) => {
           const fin = (t) => {
             mic.classList.remove("grabando");
+            avisar("listo");
             mic.setAttribute("aria-label", "Hablar en vez de escribir");
             input.placeholder = placeholder;
             if (t) { input.value = t; cfg.enviar(t); input.value = ""; }
@@ -294,7 +299,7 @@ const Voz = (() => {
           else fin(texto || "");
         };
         const arrancar = servidor ? grabarServidor(terminar, true) : grabarNavegador(terminar);
-        arrancar.catch(() => { mic.classList.remove("grabando"); input.placeholder = "No se pudo usar el micrófono"; });
+        arrancar.catch(() => { mic.classList.remove("grabando"); avisar("listo"); input.placeholder = "No se pudo usar el micrófono"; });
       });
     }
     const barra = cfg.barra;

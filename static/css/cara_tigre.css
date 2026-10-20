@@ -1,0 +1,109 @@
+/* La cara del Tigre LMH: los colores de su página propia (verde bosque y dorado). */
+.cara-tigre {
+  --dorado-tigre: #d5ad45;
+  --oro-claro: #f5d878;
+  --ojo-ancho: 96px;
+  --ojo-alto: 64px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  text-align: center;
+  color: #fff;
+}
+.cara-tigre-boina {
+  display: inline-block;
+  padding: 5px 20px;
+  background: #315c36;
+  border: 2px solid var(--dorado-tigre);
+  border-radius: 50% 50% 12px 12px;
+  color: var(--oro-claro);
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: 4px;
+  transform: rotate(-5deg);
+}
+.cara-tigre-ojos { display: flex; justify-content: center; gap: calc(var(--ojo-ancho) * 0.14); }
+.cara-tigre-ojo {
+  position: relative;
+  width: var(--ojo-ancho);
+  height: var(--ojo-alto);
+  overflow: hidden;
+  background: #e8f3d9;
+  border: 4px solid var(--dorado-tigre);
+  border-radius: 50%;
+  box-shadow: 0 0 18px #b8e8a855;
+  animation: caraParpadeo 5.2s infinite;
+  transition: box-shadow 0.3s;
+}
+.cara-tigre-ojo + .cara-tigre-ojo { animation-delay: 0.04s; }
+.cara-tigre-pupila {
+  --px: 0px;
+  --py: 0px;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 29%;
+  height: 56%;
+  background: #16251a;
+  border-radius: 50%;
+  transform: translate(calc(-50% + var(--px)), calc(-50% + var(--py)));
+  transition: transform 0.25s ease-out;
+}
+.cara-tigre-pupila::after {
+  content: "";
+  position: absolute;
+  top: 16%;
+  left: 18%;
+  width: 30%;
+  height: 24%;
+  background: #fff;
+  border-radius: 50%;
+}
+.cara-tigre-frase { margin: 0; font-size: 15px; color: #dce9d8; min-height: 1.3em; }
+
+/* Lo que está haciendo el Tigre. */
+.cara-tigre[data-estado="escuchando"] .cara-tigre-ojo { box-shadow: 0 0 30px #f5d878cc; }
+.cara-tigre[data-estado="pensando"] .cara-tigre-pupila { animation: caraPensar 1.3s ease-in-out infinite; }
+.cara-tigre[data-estado="hablando"] .cara-tigre-ojos { animation: caraHablar 0.85s ease-in-out infinite; }
+.cara-tigre[data-estado="crisis"] .cara-tigre-ojo { border-color: #f2a08c; box-shadow: 0 0 24px #f2a08c66; }
+.cara-tigre[data-estado="crisis"] .cara-tigre-pupila { height: 46%; }
+
+@keyframes caraParpadeo {
+  0%, 44%, 47.5%, 82%, 85%, 100% { transform: scaleY(1); }
+  45.5%, 83.5% { transform: scaleY(0.08); }
+}
+@keyframes caraPensar {
+  0%, 100% { transform: translate(-75%, -62%); }
+  50% { transform: translate(-25%, -62%); }
+}
+@keyframes caraHablar {
+  0%, 100% { transform: scaleY(1); }
+  50% { transform: scaleY(0.86); }
+}
+
+/* En el chat: una franja compacta arriba de los mensajes. */
+.cara-tigre-chat {
+  flex-direction: row;
+  justify-content: center;
+  gap: 18px;
+  padding: 10px 16px 12px;
+  background: radial-gradient(circle at 50% 0%, #243b2a, #0a1c12 85%);
+  border-bottom: 2px solid #d5ad4566;
+}
+.cara-tigre-chat .cara-tigre-texto { display: flex; flex-direction: column; align-items: flex-start; gap: 6px; text-align: left; }
+.cara-tigre-chat .cara-tigre-nombre { margin: 0; font-size: 14px; font-weight: 700; letter-spacing: 2px; color: var(--oro-claro); }
+@media (max-width: 520px) {
+  .cara-tigre-chat { --ojo-ancho: 70px; --ojo-alto: 48px; gap: 12px; padding: 8px 10px 10px; }
+  .cara-tigre-chat .cara-tigre-nombre { display: none; }
+  .cara-tigre-chat .cara-tigre-frase { font-size: 13px; }
+}
+
+/* En el modo voz: la cara grande en lugar de la foto. */
+.voz-avatar .cara-tigre { --ojo-ancho: 120px; --ojo-alto: 82px; position: relative; z-index: 1; gap: 12px; }
+.voz-avatar:has(.cara-tigre) { width: auto; height: auto; min-height: 190px; }
+.voz-avatar:has(.cara-tigre) .voz-aro { display: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  .cara-tigre-ojo, .cara-tigre-pupila, .cara-tigre-ojos { animation: none !important; transition: none; }
+}
