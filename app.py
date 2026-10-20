@@ -486,7 +486,8 @@ RECURSOS_PORTADA = [
 # "palabras" son términos extra con los que alguien podría buscarlas.
 PAGINAS_BUSCADOR = [
     ("estudiante", None, "Hablar con la psicóloga", "Chat anónimo con una persona real", "ayuda triste ansiedad miedo hablar chat"),
-    ("chatbot", None, "Hablar con el asistente", "Disponible a cualquier hora", "bot sami leo nia tigre tigrito conversar"),
+    ("chatbot", None, "Hablar con el asistente", "Disponible a cualquier hora", "bot sami leo nia conversar"),
+    ("tigre_voz", None, "Habla con el Tigre por voz", "Le hablas y te responde con su voz", "tigre tigrito voz hablar escuchar microfono"),
     ("diario", None, "Mi diario de ánimo", "Registra cómo te sientes cada día", "emociones registro animo"),
     ("herramientas", None, "Herramientas para sentirme mejor", "Ansiedad, enojo, tristeza, dormir y estudiar", "calma tecnicas relajacion respiracion ira depresion estres"),
     ("informate", None, "Infórmate", "Artículos sobre salud mental", "leer articulos temas"),
@@ -668,16 +669,32 @@ def chatbot():
     if "token" not in session:
         session["token"] = f"Usuario-{uuid.uuid4().hex[:6]}"
         registrar_sesion(session["token"])
-    return render_template("elegir_amigo.html", personajes=PERSONAJES)
+    return render_template("elegir_amigo.html", personajes=PERSONAJES_DEL_CHAT)
+
+
+# El Tigre LMH no sale en el chat: tiene su propia página para hablar por voz.
+PERSONAJES_DEL_CHAT = {k: p for k, p in PERSONAJES.items() if not p.get("solo_voz")}
 
 
 @app.route("/chatbot/sorpresa")
 def chatbot_sorpresa():
-    return redirect(url_for("chatbot_persona", persona=random.choice(list(PERSONAJES.keys()))))
+    return redirect(url_for("chatbot_persona", persona=random.choice(list(PERSONAJES_DEL_CHAT.keys()))))
+
+
+@app.route("/tigre")
+def tigre_voz():
+    """Hablar con el Tigre LMH por voz: su cara, sus ojos y su voz, sin chat.
+    Usa el mismo camino que el chat (filtro de riesgo, aviso a la psicóloga, IA)."""
+    if "token" not in session:
+        session["token"] = f"Usuario-{uuid.uuid4().hex[:6]}"
+        registrar_sesion(session["token"])
+    return render_template("tigre_voz.html", token=session["token"], persona=PERSONAJES["tigre"])
 
 
 @app.route("/chatbot/<persona>")
 def chatbot_persona(persona):
+    if persona == "tigre":
+        return redirect(url_for("tigre_voz"))
     if persona not in PERSONAJES:
         return redirect(url_for("chatbot"))
     if "token" not in session:

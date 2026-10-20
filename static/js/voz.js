@@ -153,8 +153,9 @@ const Voz = (() => {
 
   // ---------- Pantalla del modo voz ----------
   function ponerEstado(estado, texto) {
-    if (!ui.llamada) return;
     avisar(estado);
+    cfg?.alEstado?.(estado, texto);
+    if (!ui.llamada) return;
     ui.llamada.dataset.estado = estado;
     ui.estado.textContent = texto;
     const escuchando = estado === "escuchando";
@@ -331,6 +332,17 @@ const Voz = (() => {
   }
 
   return {
+    // Para páginas que solo hablan y escuchan, sin chat (la página del Tigre).
+    configurar(opciones) {
+      cfg = { etiqueta: "", esperando: "Pensando…", nombre: "el asistente", ...opciones };
+      if (sintesis) sintesis.getVoices();
+    },
+    puedeEscuchar: !!(servidor || SR),
+    puedeHablar: !!sintesis,
+    escuchar,
+    hablar,
+    detener() { grabando?.detener(); },
+    callar() { sintesis?.cancel(); avisar("listo"); },
     iniciar(opciones) {
       cfg = { etiqueta: "", esperando: "Pensando…", ...opciones };
       if (sintesis) sintesis.getVoices();  // algunos navegadores cargan las voces tarde

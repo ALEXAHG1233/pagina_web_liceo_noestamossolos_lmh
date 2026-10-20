@@ -109,7 +109,7 @@
         </a>
         <a class="puerta" href="{{ url_for('chatbot') }}">
           <span class="puerta-icono" aria-hidden="true"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="8" width="16" height="12" rx="3"/><path d="M12 4v4M9 13h.01M15 13h.01M9.5 17h5"/></svg></span>
-          <span class="puerta-texto"><strong>Conversar con Sami, Leo, Nia o el Tigre</strong><small>{{ "Asistente con inteligencia artificial, a toda hora" if ia_activa else "Asistente automático, a toda hora" }}</small></span>
+          <span class="puerta-texto"><strong>Conversar con Sami, Leo o Nia</strong><small>{{ "Asistente con inteligencia artificial, a toda hora" if ia_activa else "Asistente automático, a toda hora" }}</small></span>
         </a>
         <a class="puerta" href="#mural">
           <span class="puerta-icono" aria-hidden="true"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9h11a3 3 0 1 0-3-3M3 15h15a3 3 0 1 1-3 3M3 12h8"/></svg></span>
@@ -200,8 +200,8 @@
       </div>
     {% endif %}
     <p class="tigrito-hablar">
-      <a class="opcion-boton boton-metal tigrito-boton" href="{{ url_for('chatbot_persona', persona='tigre') }}">Hablar con el Tigre</a>
-      <small>Te escucha por chat o por voz. {{ "Usa inteligencia artificial, no es una persona." if ia_activa else "Es un asistente automático, no una persona." }}</small>
+      <a class="opcion-boton boton-metal tigrito-boton" href="{{ url_for('tigre_voz') }}">Hablar con el Tigre por voz</a>
+      <small>Le hablas y te responde con su voz. {{ "Usa inteligencia artificial, no es una persona." if ia_activa else "Es un asistente automático, no una persona." }}</small>
     </p>
   </section>
 
@@ -235,6 +235,11 @@
         <h3>Hablar con el asistente</h3>
         <p>Disponible en cualquier momento para ayudarte a ordenar tus ideas.</p>
         <span class="opcion-boton boton-metal">Comenzar</span>
+      </a>
+      <a href="{{ url_for('tigre_voz') }}" class="opcion opcion-tigre opcion-grande">
+        <h3>Hablar con el Tigre por voz</h3>
+        <p>Tócalo, háblale y te responde con su voz. Sin escribir nada.</p>
+        <span class="opcion-boton boton-metal">Hablarle</span>
       </a>
     </div>
   </section>
@@ -879,7 +884,7 @@
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></svg>
       <span class="dock-insignia" hidden></span>
     </a>
-    <a class="dock-item" href="{{ url_for('chatbot') }}" aria-label="Hablar con el asistente" data-etiqueta="Hablar con el asistente" data-siempre-activo data-menu='[{"t":"Hablar con Sami","u":"{{ url_for('chatbot_persona', persona='sami') }}"},{"t":"Hablar con Leo","u":"{{ url_for('chatbot_persona', persona='leo') }}"},{"t":"Hablar con Nia","u":"{{ url_for('chatbot_persona', persona='nia') }}"},{"t":"Hablar con el Tigre LMH","u":"{{ url_for('chatbot_persona', persona='tigre') }}"},{"s":1},{"t":"Elegir con quién","u":"{{ url_for('chatbot') }}"}]'>
+    <a class="dock-item" href="{{ url_for('chatbot') }}" aria-label="Hablar con el asistente" data-etiqueta="Hablar con el asistente" data-siempre-activo data-menu='[{"t":"Hablar con Sami","u":"{{ url_for('chatbot_persona', persona='sami') }}"},{"t":"Hablar con Leo","u":"{{ url_for('chatbot_persona', persona='leo') }}"},{"t":"Hablar con Nia","u":"{{ url_for('chatbot_persona', persona='nia') }}"},{"t":"Hablar con el Tigre por voz","u":"{{ url_for('tigre_voz') }}"},{"s":1},{"t":"Elegir con quién","u":"{{ url_for('chatbot') }}"}]'>
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 8V4H8"/><rect width="16" height="12" x="4" y="8" rx="2"/><path d="M2 14h2M20 14h2M15 13v2M9 13v2"/></svg>
     </a>
     <a class="dock-item" href="{{ url_for('diario') }}" aria-label="Mi diario de ánimo" data-etiqueta="Mi diario de ánimo" data-menu='[{"t":"Abrir mi diario","u":"{{ url_for('diario') }}"},{"t":"Autoevaluaciones","u":"{{ url_for('tests') }}"}]'>

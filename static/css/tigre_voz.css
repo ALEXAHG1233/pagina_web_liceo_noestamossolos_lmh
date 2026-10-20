@@ -1,0 +1,162 @@
+/* Página "Habla con el Tigre": el diseño de la página propia del Tigre LMH
+   (fondo verde bosque, tarjeta con borde dorado y los ojos grandes). */
+.tigre-body {
+  margin: 0;
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 56px 16px 32px;
+  background: radial-gradient(circle, #243b2a, #07110b 80%);
+  background-attachment: fixed;
+  color: #fff;
+  font-family: var(--letra-texto, system-ui, sans-serif);
+}
+
+.solo-lector {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+.tigre-volver {
+  position: fixed;
+  top: 14px;
+  left: 16px;
+  z-index: 5;
+  padding: 8px 14px;
+  border-radius: 999px;
+  background: rgba(10, 28, 18, 0.7);
+  border: 1px solid #d5ad4566;
+  color: #f5d878;
+  font-weight: 700;
+  text-decoration: none;
+}
+.tigre-volver:hover { background: #183c28; }
+
+.tigre-panel {
+  width: min(100%, 650px);
+  padding: 28px 20px 26px;
+  text-align: center;
+  background: linear-gradient(145deg, #183c28, #0a1c12);
+  border: 3px solid #d5ad45;
+  border-radius: 35px;
+  box-shadow: 0 0 35px #d5ad4530;
+}
+
+.tigre-aviso {
+  display: inline-block;
+  margin: 0 0 14px;
+  padding: 5px 12px;
+  border-radius: 999px;
+  background: rgba(195, 233, 86, 0.14);
+  color: #dce9d8;
+  font-size: 13px;
+}
+
+/* La cara grande, del tamaño de la página original. */
+.cara-tigre-grande { --ojo-ancho: 190px; --ojo-alto: 125px; gap: 0; }
+.cara-tigre-grande .cara-tigre-boina { padding: 12px 35px; font-size: 16px; }
+.cara-tigre-grande .cara-tigre-ojos { margin: 26px auto 22px; gap: 25px; }
+.cara-tigre-grande .cara-tigre-ojo { border-width: 5px; box-shadow: 0 0 25px #b8e8a855; }
+.tigre-titulo {
+  margin: 24px 0 0;
+  color: #f5d878;
+  font-family: var(--letra-titulo, Georgia, serif);
+  font-size: clamp(20px, 4vw, 28px);
+  font-weight: 700;
+  letter-spacing: 2px;
+}
+
+.tigre-estado { margin: 0 0 10px; min-height: 28px; font-size: 18px; color: #dce9d8; }
+
+.tigre-dialogo { display: flex; flex-direction: column; gap: 10px; margin: 6px 0 16px; text-align: left; }
+.tigre-dijiste, .tigre-respuesta { margin: 0; padding: 12px 16px; line-height: 1.5; border-radius: 20px; }
+.tigre-dijiste { align-self: flex-end; max-width: 85%; background: #d5ad45; color: #102016; border-bottom-right-radius: 6px; }
+.tigre-respuesta {
+  align-self: flex-start;
+  max-width: 92%;
+  background: #22482f;
+  color: #eef6ea;
+  border: 1px solid #d5ad4566;
+  border-bottom-left-radius: 6px;
+  font-size: 17px;
+}
+
+.tigre-botones { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin: 8px 0; }
+.tigre-boton {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 25px;
+  background: #d5ad45;
+  color: #102016;
+  border: none;
+  border-radius: 30px;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.2s;
+}
+.tigre-boton:hover { background: #f5d878; transform: scale(1.04); }
+.tigre-boton:disabled { opacity: 0.55; cursor: not-allowed; transform: none; }
+.tigre-boton-voz { padding: 16px 30px; font-size: 17px; }
+.tigre-boton-voz[aria-pressed="true"] { background: #f5d878; box-shadow: 0 0 0 6px #f5d87855; animation: tigreLatido 1.2s ease-in-out infinite; }
+.tigre-boton-texto { background: transparent; color: #f5d878; border: 2px solid #d5ad45; }
+.tigre-boton-texto:hover { background: #d5ad4522; }
+.tigre-boton:focus-visible, .tigre-formulario textarea:focus-visible, .tigre-opcion input:focus-visible,
+.tigre-volver:focus-visible, .tigre-panel a:focus-visible, .tigre-historial summary:focus-visible {
+  outline: 3px solid #f5d878;
+  outline-offset: 3px;
+}
+
+.tigre-formulario { display: flex; gap: 10px; margin: 12px 0; }
+.tigre-formulario textarea {
+  flex: 1;
+  padding: 12px 14px;
+  font: inherit;
+  color: #102016;
+  background: #eef6ea;
+  border: 2px solid #d5ad45;
+  border-radius: 18px;
+  resize: none;
+}
+
+.tigre-opcion { display: inline-flex; align-items: center; gap: 8px; margin-top: 8px; color: #dce9d8; font-size: 15px; cursor: pointer; }
+.tigre-opcion input { width: 18px; height: 18px; accent-color: #d5ad45; }
+
+.tigre-historial { margin: 14px 0 0; text-align: left; }
+.tigre-historial summary { cursor: pointer; color: #f5d878; font-weight: 700; text-align: center; }
+.tigre-historial-lista { max-height: 240px; overflow-y: auto; margin-top: 10px; padding: 10px 12px; border-radius: 16px; background: #0a1c12aa; }
+.tigre-linea { margin: 0 0 8px; line-height: 1.45; color: #dce9d8; }
+.tigre-linea strong { color: #f5d878; }
+
+.tigre-ayuda { margin: 18px 0 0; font-size: 14px; line-height: 1.5; color: #b9cdb5; }
+.tigre-ayuda a { color: #f5d878; font-weight: 700; }
+
+.tigre-panel .apoyo-emergencia { margin: 12px 0; text-align: left; }
+
+@keyframes tigreLatido { 0%, 100% { box-shadow: 0 0 0 4px #f5d87855; } 50% { box-shadow: 0 0 0 10px #f5d87822; } }
+
+@media (max-width: 480px) {
+  .tigre-body { padding-top: 60px; }
+  .cara-tigre-grande { --ojo-ancho: 130px; --ojo-alto: 92px; }
+  .cara-tigre-grande .cara-tigre-ojos { gap: 14px; }
+  .tigre-formulario { flex-direction: column; }
+  .tigre-boton { justify-content: center; }
+  .tigre-botones .tigre-boton { width: 100%; }
+}
+@media (max-width: 340px) {
+  .cara-tigre-grande { --ojo-ancho: 110px; --ojo-alto: 80px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .tigre-boton-voz[aria-pressed="true"] { animation: none; }
+}
+
+/* Lo que está escondido se queda escondido aunque tenga su propio "display". */
+.tigre-body [hidden] { display: none !important; }

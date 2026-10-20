@@ -78,6 +78,7 @@ PERSONAJES = {
     },
     "tigre": {
         "nombre": "Tigre LMH",
+        "solo_voz": True,  # no sale en el chat: tiene su propia página, /tigre
         "avatar": "T",
         "imagen": "images/tigrito_sin_fondo.png",
         "color": "#d5ad45",

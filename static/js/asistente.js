@@ -157,7 +157,6 @@ Voz.iniciar({
   etiqueta: ASISTENTE_ES_IA ? "Asistente con inteligencia artificial · no es una persona" : "Asistente virtual · no es una persona",
   esperando: `${NOMBRE_ASISTENTE} está pensando…`,
   vozMasculina: PERSONA === "leo" || PERSONA === "tigre",
-  cara: document.getElementById("plantilla-cara-tigre")?.innerHTML.trim() || "",
   tono: { sami: 1.05, leo: 0.95, nia: 1.15, tigre: 0.9 }[PERSONA] || 1,
   enviar: (texto) => {
     Sonidos.desbloquear();

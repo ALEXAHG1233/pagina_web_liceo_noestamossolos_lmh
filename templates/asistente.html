@@ -8,7 +8,6 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/pop.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/voz.css') }}">
-  {% if persona_id == "tigre" %}<link rel="stylesheet" href="{{ url_for('static', filename='css/cara_tigre.css') }}">{% endif %}
 </head>
 <body class="chat-wa-body">
   <div class="chat-container chat-wa">
@@ -46,28 +45,6 @@
       </div>
     </div>
 
-    {% if persona_id == "tigre" %}
-    <div class="cara-tigre cara-tigre-chat" aria-hidden="true">
-      <div class="cara-tigre-ojos">
-        <div class="cara-tigre-ojo"><div class="cara-tigre-pupila"></div></div>
-        <div class="cara-tigre-ojo"><div class="cara-tigre-pupila"></div></div>
-      </div>
-      <div class="cara-tigre-texto">
-        <span class="cara-tigre-boina">LMH</span>
-        <p class="cara-tigre-nombre">NO ESTAMOS SOLOS</p>
-        <p class="cara-tigre-frase">Estoy aquí contigo.</p>
-      </div>
-    </div>
-    <template id="plantilla-cara-tigre">
-      <div class="cara-tigre">
-        <span class="cara-tigre-boina">LMH</span>
-        <div class="cara-tigre-ojos">
-          <div class="cara-tigre-ojo"><div class="cara-tigre-pupila"></div></div>
-          <div class="cara-tigre-ojo"><div class="cara-tigre-pupila"></div></div>
-        </div>
-      </div>
-    </template>
-    {% endif %}
     <div id="mensajes" class="mensajes wa-mensajes">
       <div class="wa-fecha"><span>Hoy</span></div>
       <div class="wa-aviso">
@@ -99,6 +76,5 @@
   <script src="{{ url_for('static', filename='js/common.js') }}"></script>
   <script src="{{ url_for('static', filename='js/voz.js') }}"></script>
   <script src="{{ url_for('static', filename='js/asistente.js') }}"></script>
-  {% if persona_id == "tigre" %}<script src="{{ url_for('static', filename='js/cara_tigre.js') }}"></script>{% endif %}
 </body>
 </html>
