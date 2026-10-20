@@ -22,12 +22,15 @@ from werkzeug.security import check_password_hash, generate_password_hash
 
 DB_PATH = None
 
-# Avatares: (clave, dibujo, color de fondo).
+# Avatares: (clave, imagen dentro de static/, color de fondo). Las claves son las
+# que ya están guardadas en la base de datos, por eso no cambian.
 AVATARES = [
-    ("tigre", "🐯", "#c3e956"), ("buho", "🦉", "#91eaaf"), ("panda", "🐼", "#dff7e8"),
-    ("zorro", "🦊", "#f7c99b"), ("tortuga", "🐢", "#91eaaf"), ("delfin", "🐬", "#a9d8f5"),
-    ("leon", "🦁", "#f5d27a"), ("koala", "🐨", "#d8dde0"), ("girasol", "🌻", "#c3e956"),
-    ("estrella", "⭐", "#fff1b8"), ("cohete", "🚀", "#cfd8ff"), ("planta", "🌱", "#c4ebd2"),
+    ("tigre", "images/tigrito_sin_fondo.png", "#c3e956"), ("buho", "img/3d/obj_luna.webp", "#91eaaf"),
+    ("panda", "img/3d/cara_bien.webp", "#dff7e8"), ("zorro", "img/3d/obj_hoja_lima.webp", "#f7c99b"),
+    ("tortuga", "img/3d/obj_escudo.webp", "#91eaaf"), ("delfin", "img/3d/obj_gota.webp", "#a9d8f5"),
+    ("leon", "img/3d/obj_corazon.webp", "#f5d27a"), ("koala", "img/3d/obj_nube.webp", "#d8dde0"),
+    ("girasol", "img/3d/obj_bombillo.webp", "#c3e956"), ("estrella", "img/3d/obj_estrella.webp", "#fff1b8"),
+    ("cohete", "img/3d/obj_rayo.webp", "#cfd8ff"), ("planta", "img/3d/obj_hoja_menta.webp", "#c4ebd2"),
 ]
 AVATARES_POR_CLAVE = {a[0]: a for a in AVATARES}
 

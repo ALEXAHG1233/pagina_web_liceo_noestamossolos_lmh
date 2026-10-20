@@ -63,7 +63,7 @@
             {% for clave, dibujo, color in avatares %}
               <label class="avatar-opcion" style="--fondo: {{ color }};">
                 <input type="radio" name="avatar" value="{{ clave }}" {% if datos.avatar == clave %}checked{% endif %}>
-                <span class="avatar-circulo" aria-hidden="true">{{ dibujo }}</span>
+                <span class="avatar-circulo" aria-hidden="true"><img src="{{ url_for('static', filename=dibujo) }}" alt="" width="40" height="40" loading="lazy"></span>
                 <span class="sr-only">{{ clave }}</span>
               </label>
             {% endfor %}

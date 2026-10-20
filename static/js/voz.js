@@ -1,8 +1,8 @@
 // Voz en los chats, según lo que le sea más cómodo a cada persona:
-//  - 🎙 Hablar: graba lo que dices, lo convierte en texto y lo envía al chat.
-//  - 🔊 Respuestas en voz: quien responde (Sami, Leo, Nia o la psicóloga) lee su
+//  - Hablar: graba lo que dices, lo convierte en texto y lo envía al chat.
+//  - Respuestas en voz: quien responde (Sami, Leo, Nia o la psicóloga) lee su
 //    mensaje en voz alta.
-//  - 📞 Modo voz: pantalla completa con quien te responde; hablas, te contesta
+//  - Modo voz: pantalla completa con quien te responde; hablas, te contesta
 //    con voz y subtítulos, y vuelve a escucharte. Sin tocar nada.
 // El audio se convierte en texto en el servidor (Whisper en Groq) y no se guarda.
 // Si eso no está disponible, se usa el reconocimiento de voz del navegador.
@@ -184,8 +184,8 @@ const Voz = (() => {
         <div class="voz-onda" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
         <p class="voz-subtitulo" aria-live="polite"></p>
         <div class="voz-opciones" role="group" aria-label="Cómo quieres que te responda">
-          <button type="button" class="voz-modo" data-modo="voz">🔊 Me responde con voz</button>
-          <button type="button" class="voz-modo" data-modo="texto">💬 Me responde con texto</button>
+          <button type="button" class="voz-modo" data-modo="voz"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4Z"/><path d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12"/></svg> Me responde con voz</button>
+          <button type="button" class="voz-modo" data-modo="texto"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M20 12a8 8 0 0 1-11.8 7L4 20l1-4A8 8 0 1 1 20 12Z"/></svg> Me responde con texto</button>
         </div>
         <div class="voz-botones">
           <button type="button" class="voz-mic" aria-pressed="false"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg><span>Hablar</span></button>
@@ -303,7 +303,7 @@ const Voz = (() => {
       const voz = document.createElement("button");
       voz.type = "button";
       voz.className = "btn-sonido wa-icono voz-boton";
-      voz.textContent = "🔊 Voz";
+      voz.innerHTML = '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4Z"/><path d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12"/></svg> Voz';
       voz.setAttribute("aria-label", "Escuchar las respuestas en voz alta");
       ui.botonVoz = voz;
       voz.addEventListener("click", () => {
@@ -317,7 +317,7 @@ const Voz = (() => {
       const llamar = document.createElement("button");
       llamar.type = "button";
       llamar.className = "btn-sonido wa-icono voz-boton voz-boton-llamar";
-      llamar.textContent = "📞 Modo voz";
+      llamar.innerHTML = '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M5 3h4l2 5-2.5 1.5a11 11 0 0 0 6 6L16 13l5 2v4a2 2 0 0 1-2 2A17 17 0 0 1 3 5a2 2 0 0 1 2-2Z"/></svg> Modo voz';
       llamar.setAttribute("aria-label", `Conversar por voz con ${cfg.nombre}`);
       ui.botonLlamada = llamar;
       llamar.addEventListener("click", abrirLlamada);

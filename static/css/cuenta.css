@@ -101,3 +101,6 @@
   text-align: center;
 }
 .diario-invitacion a { color: var(--amarillo); font-weight: 700; font-size: 15px; }
+
+/* Avatares con imagen 3D del proyecto. */
+.avatar-circulo img { width: 72%; height: 72%; object-fit: contain; display: block; }

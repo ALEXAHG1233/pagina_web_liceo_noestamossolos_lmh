@@ -33,14 +33,9 @@
   font-size: 18px;
   line-height: 1.6;
   color: var(--texto);
-  cursor: auto;
 }
-.landing-body :is(a, button, [role="button"]) { cursor: pointer; }
 .landing-body :is(p, li, span, a, button, small, strong, label, input, textarea) { font-family: var(--lectura); }
 
-/* Menos estímulos: fuera los rayos que se mecen, la línea de fondo y las esquinas decorativas. */
-.landing-body :is(.rayos-fondo, .linea-fondo, .cyber-deco, .girar-pista, .barrido) { display: none !important; }
-.landing-body .boton-metal { animation: none !important; background-image: none !important; }
 
 /* ---------- Tipografía ---------- */
 .landing-body :is(h1, h2, h3) {
@@ -77,10 +72,6 @@
 }
 .landing-body .seccion { padding: clamp(36px, 5vw, 64px) clamp(18px, 4vw, 40px); }
 
-/* La entrada al bajar y subir: más corta y sin desenfoque, para no marear. */
-.landing-body .reveal { --desde: 18px; transform: translateY(var(--desde)); filter: none; }
-.landing-body .reveal.desde-arriba { --desde: -18px; }
-.landing-body .reveal.visible { transform: none; }
 
 /* ---------- Menú ---------- */
 .landing-body .nav-principal {
@@ -105,7 +96,6 @@
   padding: 9px 18px !important;
   box-shadow: none;
 }
-.landing-body .nav-enlaces a.nav-boton-ayuda::before { content: "♥ "; }
 /* En celular, "Ayuda" queda siempre a la vista junto al menú. */
 .nav-ayuda-movil { display: none; }
 @media (max-width: 859px) {
@@ -125,14 +115,8 @@
   .landing-body .nav-buscar-texto { display: none; }
 }
 @media (max-width: 360px) { .landing-body .nav-marca span { display: none; } }
-/* Una sola señal de dónde estás: la píldora sigue al capítulo que se ve. */
-.landing-body .gooey-capa { display: none; }
-.landing-body .nav-enlaces[data-gooey] a.gooey-activo:not(.capitulo-actual) { color: var(--texto) !important; }
-.landing-body .nav-enlaces a.capitulo-actual:not(.nav-boton-ayuda) {
-  background: rgba(195, 233, 86, 0.16);
-  color: var(--lima) !important;
-  border-radius: 999px;
-}
+/* El capítulo que se ve queda en lima; la burbuja gooey sigue al mouse. */
+.landing-body .nav-enlaces a.capitulo-actual:not(.nav-boton-ayuda) { color: var(--lima); }
 /* Los temas de psicología no son pasos en orden: sin números. */
 .landing-body .recurso-numero { display: none; }
 
@@ -344,14 +328,6 @@
 .landing-body .emergencia-acciones { gap: 10px; }
 .landing-body .emergencia-boton { border-radius: 999px; padding: 12px 20px; font-size: 16px; }
 
-/* ---------- Tarjetas y botones: más calmados ---------- */
-.landing-body :is(.tarjeta, .opcion, .historia, .bento-cuadro, .test-grande, .playlist-card, .recurso-card, .contador, .red-card, .tarjeta-extra) {
-  border-radius: var(--radio);
-  box-shadow: none;
-}
-.landing-body :is(.tarjeta, .opcion, .bento-cuadro, .contador, .tarjeta-extra) { border-color: rgba(145, 234, 175, 0.22); }
-.landing-body :is(.tarjeta, .opcion, .recurso-card, .test-grande, .red-card, .tarjeta-extra) { transition: transform 0.25s, border-color 0.25s, background 0.25s; }
-.landing-body :is(.tarjeta, .opcion, .recurso-card, .test-grande, .red-card, .tarjeta-extra):hover { transform: translateY(-3px); border-color: var(--menta); }
 .landing-body .banner-seccion-img { border-radius: var(--radio-grande); }
 
 /* Historias: se leen como citas, con la letra de títulos. */
@@ -372,5 +348,11 @@
 .landing-body :is(a, button):focus-visible { outline: 3px solid var(--lima); outline-offset: 3px; border-radius: 10px; }
 @media (prefers-reduced-motion: reduce) {
   .landing-body .hero-pro::before { display: none; }
-  .puerta, .landing-body :is(.tarjeta, .opcion, .recurso-card, .test-grande, .red-card, .tarjeta-extra) { transition: none; }
+  .puerta { transition: none; }
 }
+
+/* Las piezas nuevas reciben los mismos efectos que el resto (esquinas, brillo, inclinación). */
+.puertas > .puerta, .capitulo-cabeza { position: relative; }
+.capitulo-cabeza { border-radius: var(--radio-grande); padding: clamp(14px, 2vw, 22px); }
+.icono-corazon { vertical-align: -2px; margin-right: 6px; }
+.nav-tema-icono svg { display: block; }

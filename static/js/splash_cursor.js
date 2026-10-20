@@ -782,6 +782,32 @@
       clickSplat();
       despertar();
     });
+
+    // Pantallas táctiles: al tocar sale un chorro de tinta y al deslizar el dedo
+    // la tinta lo sigue. Son pasivos para no frenar el desplazamiento.
+    window.addEventListener("touchstart", (e) => {
+      const t = e.touches[0];
+      if (!t) return;
+      pointer.texcoordX = scaleByPixelRatio(t.clientX) / canvas.width;
+      pointer.texcoordY = 1.0 - scaleByPixelRatio(t.clientY) / canvas.height;
+      pointer.prevTexcoordX = pointer.texcoordX;
+      pointer.prevTexcoordY = pointer.texcoordY;
+      pointer.color = generateColor();
+      clickSplat();
+      despertar();
+    }, { passive: true });
+    window.addEventListener("touchmove", (e) => {
+      const t = e.touches[0];
+      if (!t) return;
+      pointer.prevTexcoordX = pointer.texcoordX;
+      pointer.prevTexcoordY = pointer.texcoordY;
+      pointer.texcoordX = scaleByPixelRatio(t.clientX) / canvas.width;
+      pointer.texcoordY = 1.0 - scaleByPixelRatio(t.clientY) / canvas.height;
+      pointer.deltaX = correctDeltaX(pointer.texcoordX - pointer.prevTexcoordX);
+      pointer.deltaY = correctDeltaY(pointer.texcoordY - pointer.prevTexcoordY);
+      pointer.moved = Math.abs(pointer.deltaX) > 0 || Math.abs(pointer.deltaY) > 0;
+      if (pointer.moved) despertar();
+    }, { passive: true });
   }
 
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", iniciar);

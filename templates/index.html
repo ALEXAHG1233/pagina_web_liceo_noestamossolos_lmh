@@ -50,9 +50,9 @@
           <kbd class="nav-buscar-atajo">Ctrl K</kbd>
         </button>
         <button type="button" class="nav-tema" id="nav-tema" aria-label="Cambiar a modo claro" aria-pressed="false">
-          <span class="nav-tema-icono" aria-hidden="true">☀️</span>
+          <span class="nav-tema-icono" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg></span>
         </button>
-        <a href="#ayuda-ahora" class="nav-ayuda-movil" aria-label="Necesito ayuda ahora">♥ Ayuda</a>
+        <a href="#ayuda-ahora" class="nav-ayuda-movil" aria-label="Necesito ayuda ahora"><svg class="icono-corazon" viewBox="0 0 24 24" width="15" height="15" fill="currentColor" aria-hidden="true"><path d="M12 21s-7.5-4.6-9.6-9.3C.9 8.2 3 4.5 6.6 4.5c2.1 0 3.6 1.2 5.4 3.2 1.8-2 3.3-3.2 5.4-3.2 3.6 0 5.7 3.7 4.2 7.2C19.5 16.4 12 21 12 21Z"/></svg>Ayuda</a>
         <button type="button" class="nav-hamburguesa" id="nav-hamburguesa" aria-label="Abrir menú" aria-expanded="false" aria-controls="nav-enlaces">
           <span></span><span></span><span></span>
         </button>
@@ -64,8 +64,8 @@
         <a href="#juntos">Comunidad</a>
         <a href="{{ url_for('diario') }}">Mi diario</a>
         <a href="#contacto">Contacto</a>
-        {% if usuario %}<a href="{{ url_for('cuenta') }}">{{ usuario.avatar_dibujo }} {{ usuario.apodo }}</a>{% else %}<a href="{{ url_for('cuenta_entrar') }}">Mi cuenta</a>{% endif %}
-        <a href="#ayuda-ahora" class="nav-boton-ayuda boton-metal">Necesito ayuda ahora</a>
+        {% if usuario %}<a href="{{ url_for('cuenta') }}"><img class="nav-avatar" src="{{ url_for('static', filename=usuario.avatar_dibujo) }}" alt="" width="22" height="22"> {{ usuario.apodo }}</a>{% else %}<a href="{{ url_for('cuenta_entrar') }}">Mi cuenta</a>{% endif %}
+        <a href="#ayuda-ahora" class="nav-boton-ayuda boton-metal"><svg class="icono-corazon" viewBox="0 0 24 24" width="15" height="15" fill="currentColor" aria-hidden="true"><path d="M12 21s-7.5-4.6-9.6-9.3C.9 8.2 3 4.5 6.6 4.5c2.1 0 3.6 1.2 5.4 3.2 1.8-2 3.3-3.2 5.4-3.2 3.6 0 5.7 3.7 4.2 7.2C19.5 16.4 12 21 12 21Z"/></svg>Necesito ayuda ahora</a>
       </div>
     </div>
   </nav>
@@ -100,7 +100,7 @@
         </filter>
       </svg>
       <p class="bienvenida-texto">No tienes que cargar con todo tú solo. Habla con alguien hoy: es anónimo, es gratis y puedes entrar a cualquier hora.</p>
-      <p class="linea-ayuda"><span aria-hidden="true">♥</span> ¿Estás en peligro ahora? Llama gratis al <a href="tel:150">150</a> o al <a href="tel:911">911</a>, o <a href="#ayuda-ahora">mira cómo pedir ayuda</a>.</p>
+      <p class="linea-ayuda"><svg class="icono-corazon" viewBox="0 0 24 24" width="15" height="15" fill="currentColor" aria-hidden="true"><path d="M12 21s-7.5-4.6-9.6-9.3C.9 8.2 3 4.5 6.6 4.5c2.1 0 3.6 1.2 5.4 3.2 1.8-2 3.3-3.2 5.4-3.2 3.6 0 5.7 3.7 4.2 7.2C19.5 16.4 12 21 12 21Z"/></svg>¿Estás en peligro ahora? Llama gratis al <a href="tel:150">150</a> o al <a href="tel:911">911</a>, o <a href="#ayuda-ahora">mira cómo pedir ayuda</a>.</p>
       </div>
       <div class="puertas">
         <a class="puerta puerta-principal" href="{{ url_for('estudiante') }}">

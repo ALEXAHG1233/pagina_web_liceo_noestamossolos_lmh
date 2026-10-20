@@ -111,7 +111,7 @@
 }
 .nav-boton-ayuda:hover { background: var(--amarillo); }
 
-/* Botón ☀️/🌙 + hamburguesa, juntos a la derecha del escudo. */
+/* Botón sol/luna + hamburguesa, juntos a la derecha del escudo. */
 .nav-acciones { display: flex; align-items: center; gap: 8px; }
 .nav-tema {
   display: grid;
@@ -1867,7 +1867,7 @@ body:has(.dock) .whatsapp-flotante { bottom: 80px; }
 .tema-video img { display: block; width: 100%; height: auto; border-radius: 10px; border: 1px solid rgba(145, 234, 175, 0.4); margin-bottom: 6px; }
 .tema-video:hover span { color: var(--amarillo); }
 
-/* ---------- Modo claro (botón ☀️/🌙 del menú) ----------
+/* ---------- Modo claro (botón sol/luna del menú) ----------
    El menú, la portada y el pie se quedan en verde oscuro (identidad del
    Liceo); solo las secciones de contenido pasan a fondo claro. Se
    redefinen los mismos tokens que ya usan las tarjetas, así no hay que
@@ -2906,3 +2906,5 @@ body:has(.dock) .whatsapp-flotante { bottom: 80px; }
   cursor: pointer;
 }
 .instalar-ayuda { margin: 10px auto 0; max-width: 360px; font-size: 15px; line-height: 1.5; color: var(--blanco-suave); }
+
+.nav-avatar { width: 22px; height: 22px; object-fit: contain; vertical-align: -5px; }

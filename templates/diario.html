@@ -26,7 +26,7 @@
 
   {% if usuario %}
     <section class="diario-saludo">
-      <span class="avatar-circulo" style="--fondo: {{ usuario.avatar_color }};" aria-hidden="true">{{ usuario.avatar_dibujo }}</span>
+      <span class="avatar-circulo" style="--fondo: {{ usuario.avatar_color }};" aria-hidden="true"><img src="{{ url_for('static', filename=usuario.avatar_dibujo) }}" alt="" width="36" height="36"></span>
       <div class="diario-saludo-texto">
         <strong>Hola, {{ usuario.apodo }}</strong>
         <a href="{{ url_for('cuenta') }}">Mi cuenta: cambiar apodo o avatar</a>

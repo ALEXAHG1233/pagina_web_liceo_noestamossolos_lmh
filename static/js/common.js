@@ -60,7 +60,7 @@ function activarNavPrincipal() {
 
 document.addEventListener("DOMContentLoaded", activarNavPrincipal);
 
-// Botón ☀️/🌙 del menú: alterna entre el modo oscuro (verde, el de siempre)
+// Botón sol/luna del menú: alterna entre el modo oscuro (verde, el de siempre)
 // y el modo claro. La preferencia se guarda en este navegador; el <head>
 // de la portada la aplica antes de pintar para que no "parpadee".
 function activarCambioTema() {
@@ -71,7 +71,7 @@ function activarCambioTema() {
 
   function pintarBoton() {
     const claro = raiz.dataset.tema === "claro";
-    icono.textContent = claro ? "🌙" : "☀️";
+    icono.innerHTML = claro ? '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5Z"/></svg>' : '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>';
     boton.setAttribute("aria-label", claro ? "Cambiar a modo oscuro" : "Cambiar a modo claro");
     boton.setAttribute("aria-pressed", claro ? "true" : "false");
   }
@@ -90,12 +90,10 @@ document.addEventListener("DOMContentLoaded", activarCambioTema);
 
 const SIN_MOVIMIENTO = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-// Diseño sereno: los efectos que llenaban de estímulos la pantalla (bordes
-// eléctricos, estela del cursor, relieve 3D en cada título, letras elásticas,
-// esquinas y destellos en cada cuadro, tarjetas que esconden su texto al voltear)
-// quedan apagados para que leer y navegar sea cómodo. Para volver a encenderlos,
-// cambia true por false.
-const CALMA = true;
+// Interruptor de los efectos (bordes eléctricos, estela del cursor, relieve 3D en
+// los títulos, letras elásticas, esquinas y destellos en cada cuadro, tarjetas que
+// se voltean). Con false están encendidos; con true la página queda serena.
+const CALMA = false;
 
 // Mientras la persona baja o sube la página, los efectos que se dibujan solos
 // esperan un momento: así el desplazamiento va suave.
@@ -1080,7 +1078,7 @@ document.addEventListener("DOMContentLoaded", activarLibro);
 // Cuadros "cyber" de la portada: les agrega los adornos (esquinas,
 // brillo, línea de escaneo, partículas) y, con mouse, los inclina hacia
 // donde apunta el cursor (hasta 10° arriba/abajo y 8° a los lados).
-const CYBER_SELECTOR = ".seccion :is(.tarjeta, .opcion, .playlist-card)";
+const CYBER_SELECTOR = ".seccion :is(.tarjeta, .opcion, .playlist-card), .puertas > .puerta";
 
 // Los demás cuadros de todas las páginas reciben los mismos 4 adornos
 // (esquinas, brillo, escaneo y partículas), sin la inclinación 3D.
@@ -1089,7 +1087,7 @@ const ADORNOS_SELECTOR = [
   ".test-grande", ".test-pregunta", ".test-resultado",
   ".herramienta-completa", ".categoria-sintomas", ".articulo-completo", ".glosario-item",
   ".racha-card", ".stat-card", ".login-card", ".muro-card", ".resena-card",
-  ".playlist-card", ".amigo-card", ".futuro-panel", ".historias .historia",
+  ".playlist-card", ".amigo-card", ".futuro-panel", ".historias .historia", ".capitulo-cabeza",
 ].join(", ");
 
 function agregarAdornos(cuadro) {
@@ -1146,8 +1144,8 @@ document.addEventListener("DOMContentLoaded", activarCuadrosCyber);
 // celular gastaría batería y se activaría al hacer scroll con el dedo.
 function cargarEstelaCursor() {
   if (CALMA) return;
-  const conMouse = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
-  if (!conMouse || SIN_MOVIMIENTO || document.getElementById("script-estela")) return;
+  // También en celulares y tabletas: la tinta sigue al dedo.
+  if (SIN_MOVIMIENTO || document.getElementById("script-estela")) return;
   const script = document.createElement("script");
   script.id = "script-estela";
   script.src = "/static/js/splash_cursor.js";
@@ -1786,7 +1784,7 @@ document.addEventListener("DOMContentLoaded", activarPilaTarjetas);
 // y "vibra". Si la persona pidió menos movimiento, no se aplica.
 const ONDULADO_SELECTOR = [
   ".seccion h2:not(.sr-only)", ".multitud-texto h2", ".pila-titulo",
-  ".diario-header h1", ".informate-categoria-titulo", ".categoria-titulo", ".hero-amigos h1",
+  ".diario-header h1", ".informate-categoria-titulo", ".categoria-titulo", ".hero-amigos h1", ".capitulo-titulo",
 ].join(", ");
 const ONDULADOS = [
   { id: "ondulado-suave", escala: [4, 5], paso: 90 },
@@ -2442,7 +2440,7 @@ document.addEventListener("DOMContentLoaded", medirEncabezado);
 // Infórmate y los recursos de psicología. Solo se animan los que se ven.
 const ELECTRICO_SELECTOR = [
   ".marco-scroll", ".multitud", ".pasos-caja",
-  ".tarjetas > .girar-caja", ".opcion-recurso", ".recursos-grid > .recurso-card",
+  ".tarjetas > .girar-caja", ".opcion-recurso", ".recursos-grid > .recurso-card", ".puerta-principal",
 ].join(", ");
 
 function activarBordeElectrico() {
@@ -2989,7 +2987,7 @@ function activarSintomas() {
       if (!n) { respuesta.hidden = true; return; }
       respuesta.hidden = false;
       respuesta.innerHTML = n < 3
-        ? "Es normal sentir esto a veces. Prueba una de las herramientas de abajo 👇"
+        ? "Es normal sentir esto a veces. Prueba una de las herramientas de abajo."
         : `Son varias señales juntas. Prueba una herramienta y, si sigue pasando, <a href="${hablar}">habla con la psicóloga</a>.`;
     }));
   });
