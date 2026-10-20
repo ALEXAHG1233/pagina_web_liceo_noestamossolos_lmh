@@ -23,6 +23,7 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='css/tests.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/interactivo.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/pop.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/portada_pro.css') }}">
 </head>
 {% from "_tests_tarjetas.html" import tarjetas_tests with context %}
 <body class="landing-body">
@@ -51,49 +52,70 @@
         <button type="button" class="nav-tema" id="nav-tema" aria-label="Cambiar a modo claro" aria-pressed="false">
           <span class="nav-tema-icono" aria-hidden="true">☀️</span>
         </button>
+        <a href="#ayuda-ahora" class="nav-ayuda-movil" aria-label="Necesito ayuda ahora">♥ Ayuda</a>
         <button type="button" class="nav-hamburguesa" id="nav-hamburguesa" aria-label="Abrir menú" aria-expanded="false" aria-controls="nav-enlaces">
           <span></span><span></span><span></span>
         </button>
       </div>
       <div class="nav-enlaces" id="nav-enlaces" data-gooey>
-        <a href="{{ url_for('index') }}">Inicio</a>
-        <a href="#recursos">Recursos</a>
-        <a href="{{ url_for('diario') }}">Mi diario de ánimo</a>
-        <a href="{{ url_for('muro') }}">Muro interactivo</a>
-        <a href="{{ url_for('futuro') }}">Mi futuro</a>
+        <a href="#hablar">Hablar</a>
+        <a href="#cuidate">Cuídate hoy</a>
+        <a href="#entiende">Entiende</a>
+        <a href="#juntos">Comunidad</a>
+        <a href="{{ url_for('diario') }}">Mi diario</a>
         <a href="#contacto">Contacto</a>
         {% if usuario %}<a href="{{ url_for('cuenta') }}">{{ usuario.avatar_dibujo }} {{ usuario.apodo }}</a>{% else %}<a href="{{ url_for('cuenta_entrar') }}">Mi cuenta</a>{% endif %}
-        <a href="{{ url_for('estudiante') }}" class="nav-boton-ayuda boton-metal">Necesito ayuda</a>
+        <a href="#ayuda-ahora" class="nav-boton-ayuda boton-metal">Necesito ayuda ahora</a>
       </div>
     </div>
   </nav>
 
-  <section class="hero hero-con-banner">
-    <h1 class="sr-only">No Estás Solo LMH — Programa de Apoyo Psicopedagógico, Liceo Militar de Honduras</h1>
+  <section class="hero hero-con-banner hero-pro" data-aurora>
     <div class="hero-banner-wrap">
       <img
         src="{{ url_for('static', filename='images/banner_no_estas_solo.webp') }}"
         alt="No Estás Solo — Programa Psicopedagógico, Liceo Militar de Honduras"
         class="hero-banner-img">
     </div>
-    <div class="logo-zona">
-      <img class="logo-centrado" src="{{ url_for('static', filename='images/logo_liceo.png') }}"
-        alt="Logo del Liceo Militar de Honduras: Verdad, Honor, Servicio" width="180" height="190">
-    </div>
-    <div class="morph" data-palabras="ESCUCHA|APOYO|ESPERANZA" data-intervalo="2500">
-      <p class="sr-only">Escucha, apoyo y esperanza. No estamos solos LMH.</p>
-      <div class="morph-palabras" aria-hidden="true">
-        <span class="morph-texto">ESCUCHA</span>
-        <span class="morph-texto"></span>
+    <div class="bienvenida">
+      <div class="bienvenida-saludo">
+      <div class="bienvenida-marca">
+        <img class="bienvenida-logo" src="{{ url_for('static', filename='images/logo_liceo.png') }}"
+          alt="Logo del Liceo Militar de Honduras: Verdad, Honor, Servicio" width="180" height="190">
+        <p>Programa psicopedagógico del Liceo Militar de Honduras</p>
       </div>
-      <p class="morph-subtexto" aria-hidden="true">No estamos solos LMH</p>
+      <h1 class="bienvenida-titulo">
+        <span class="bienvenida-linea">Aquí hay</span>
+        <span class="morph bienvenida-morph" data-palabras="escucha|apoyo|esperanza|alguien para ti" data-intervalo="2800">
+          <span class="sr-only">escucha, apoyo y esperanza.</span>
+          <span class="morph-palabras" aria-hidden="true">
+            <span class="morph-texto">escucha</span>
+            <span class="morph-texto"></span>
+          </span>
+        </span>
+      </h1>
       <svg class="morph-filtro" aria-hidden="true" focusable="false">
         <filter id="filtro-morph">
           <feColorMatrix in="SourceGraphic" type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 255 -140" />
         </filter>
       </svg>
-    </div>
-    <p class="hero-frase">Lo que escribas aquí es completamente anónimo. Nadie sabrá que fuiste tú.</p>
+      <p class="bienvenida-texto">No tienes que cargar con todo tú solo. Habla con alguien hoy: es anónimo, es gratis y puedes entrar a cualquier hora.</p>
+      <p class="linea-ayuda"><span aria-hidden="true">♥</span> ¿Estás en peligro ahora? Llama gratis al <a href="tel:150">150</a> o al <a href="tel:911">911</a>, o <a href="#ayuda-ahora">mira cómo pedir ayuda</a>.</p>
+      </div>
+      <div class="puertas">
+        <a class="puerta puerta-principal" href="{{ url_for('estudiante') }}">
+          <span class="puerta-icono" aria-hidden="true"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12a8 8 0 0 1-11.8 7L4 20l1-4A8 8 0 1 1 20 12Z"/><path d="M8.5 11.5c1 1.8 2.2 2.6 3.5 2.6s2.5-.8 3.5-2.6"/></svg></span>
+          <span class="puerta-texto"><strong>Hablar con la psicóloga</strong><small>Una persona real del liceo, sin dar tu nombre</small></span>
+        </a>
+        <a class="puerta" href="{{ url_for('chatbot') }}">
+          <span class="puerta-icono" aria-hidden="true"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="8" width="16" height="12" rx="3"/><path d="M12 4v4M9 13h.01M15 13h.01M9.5 17h5"/></svg></span>
+          <span class="puerta-texto"><strong>Conversar con Sami, Leo o Nia</strong><small>{{ "Asistente con inteligencia artificial, a toda hora" if ia_activa else "Asistente automático, a toda hora" }}</small></span>
+        </a>
+        <a class="puerta" href="#mural">
+          <span class="puerta-icono" aria-hidden="true"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9h11a3 3 0 1 0-3-3M3 15h15a3 3 0 1 1-3 3M3 12h8"/></svg></span>
+          <span class="puerta-texto"><strong>Respirar un momento</strong><small>Un ejercicio guiado de un minuto</small></span>
+        </a>
+      </div>
     <div class="isla" id="isla-musica" data-vista="idle">
       <button type="button" class="isla-barra" id="isla-boton" aria-expanded="false" aria-controls="isla-panel">
         <svg class="isla-icono" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
@@ -117,8 +139,8 @@
         <div class="isla-reproductor"></div>
       </div>
     </div>
+    </div>
   </section>
-
   <section class="marquesina" aria-label="Lo que encuentras aquí" data-marquesina>
     <div class="marquesina-foco" aria-hidden="true"></div>
     {% set palabras_marquesina = ["Escucha", "Apoyo", "Esperanza", "100 % anónimo", "Sin juicios", "Asistente a toda hora", "Psicóloga del liceo", "Línea 150", "Herramientas para calmarte", "Dios · Patria · Familia", "No estás solo/a"] %}
@@ -159,18 +181,7 @@
     </div>
   </section>
 
-  <section class="multitud" aria-labelledby="titulo-multitud">
-    <div class="multitud-texto">
-      <span class="multitud-etiqueta">Hablar ayuda</span>
-      <h2 id="titulo-multitud">Miles de personas salen adelante cada año al identificar lo que sienten y hablarlo.</h2>
-      <p>Reconocer las señales, contarle a alguien de confianza y pedir ayuda a tiempo cambia historias. La tuya también puede cambiar.</p>
-    </div>
-    <canvas class="multitud-lienzo" data-multitud aria-hidden="true"
-      data-personas="{{ url_for('static', filename='images/personas/persona1.png') }}|{{ url_for('static', filename='images/personas/persona2.png') }}|{{ url_for('static', filename='images/personas/persona3.png') }}|{{ url_for('static', filename='images/personas/persona4.png') }}|{{ url_for('static', filename='images/personas/persona5.png') }}|{{ url_for('static', filename='images/personas/persona6.png') }}|{{ url_for('static', filename='images/personas/persona7.png') }}|{{ url_for('static', filename='images/personas/persona8.png') }}"
-      data-miran="-1,1,1,1,-1,-1,1,1"></canvas>
-  </section>
-
-  <section class="seccion tigre-3d reveal">
+  <section id="tigrito" class="seccion tigre-3d reveal">
     <h2>Conoce a Tigrito</h2>
     {% if modelo_tigre %}
       <p class="seccion-subtitulo">La mascota del programa. Gíralo con el mouse o con el dedo.</p>
@@ -190,57 +201,41 @@
     {% endif %}
   </section>
 
-  <section class="seccion seccion-con-banner reveal">
-    <h2 class="sr-only">¿Por qué hablar ayuda?</h2>
-    <img
-      src="{{ url_for('static', filename='images/banner_por_que_hablar.webp') }}"
-      alt="¿Por qué hablar ayuda? Tigrito te lo explica"
-      class="banner-seccion-img">
-    <div class="tarjetas">
-      <div class="tarjeta tarjeta-naranja">
-        <h3>Poner en palabras lo que sientes</h3>
-        <p>Cuando lo dices o lo escribes, tu mente empieza a ordenarlo. Muchas veces las cosas pesan menos en cuanto dejan de dar vueltas solo en tu cabeza.</p>
+
+  <div class="capitulo capitulo-hablar" id="hablar">
+    <header class="capitulo-cabeza reveal">
+      <img class="capitulo-ilustracion" src="{{ url_for('static', filename='img/3d/obj_burbuja.webp') }}" alt="" width="120" height="120" loading="lazy">
+      <div>
+        <h2 class="capitulo-titulo">Hablar ayuda</h2>
+        <p class="capitulo-texto">Elige con quién hablar, a tu ritmo y sin dar tu nombre.</p>
+        <nav class="capitulo-indice" aria-label="En este capítulo">
+          <ul>
+          <li><a href="#elegir-con-quien">Con quién hablar</a></li>
+          <li><a href="#como-funciona">Cómo funciona</a></li>
+          <li><a href="#por-que-hablar">Por qué hablar ayuda</a></li>
+          <li><a href="#historias">Historias</a></li>
+          </ul>
+        </nav>
       </div>
-      <div class="tarjeta">
-        <h3>No estás solo/a en esto</h3>
-        <p>Muchos estudiantes han sentido lo mismo que tú, aunque no lo digan. Hablar de lo que te pasa es más común de lo que crees.</p>
-      </div>
-      <div class="tarjeta">
-        <h3>Entenderte a ti mismo/a</h3>
-        <p>A veces no sabes bien qué te pasa hasta que alguien te ayuda a verlo con claridad. Esa es la parte más valiosa de hablarlo con alguien preparado.</p>
-      </div>
+    </header>
+  <section id="elegir-con-quien" class="seccion cta-final cta-elegir reveal">
+    <h2>¿Con quién deseas hablar hoy?</h2>
+    <p class="cta-elegir-subtitulo">No tienes que pasar por esto solo. Elige la opción que más necesites.</p>
+    <div class="opciones opciones-grandes">
+      <a href="{{ url_for('estudiante') }}" class="opcion opcion-psicologa opcion-grande opcion-principal">
+        <h3>Hablar con la psicóloga</h3>
+        <p>Una persona real, capacitada y dispuesta a escucharte.</p>
+        <span class="opcion-boton boton-metal">Hablar ahora</span>
+      </a>
+      <a href="{{ url_for('chatbot') }}" class="opcion opcion-chatbot opcion-grande">
+        <h3>Hablar con el asistente</h3>
+        <p>Disponible en cualquier momento para ayudarte a ordenar tus ideas.</p>
+        <span class="opcion-boton boton-metal">Comenzar</span>
+      </a>
     </div>
   </section>
 
-  <section class="seccion seccion-con-banner reveal">
-    <h2 class="sr-only">Muro interactivo — Describe tu experiencia</h2>
-    <a href="{{ url_for('muro') }}">
-      <img
-        src="{{ url_for('static', filename='images/banner_muro_interactivo.webp') }}"
-        alt="Muro interactivo — Describe tu experiencia"
-        class="banner-seccion-img">
-    </a>
-    <a href="{{ url_for('muro') }}" class="opcion opcion-recurso opcion-naranja">
-      <h3>Escribe en el muro</h3>
-      <p>Comparte tu experiencia de forma anónima y lee lo que otros estudiantes han vivido.</p>
-    </a>
-  </section>
-
-  <section class="seccion historias reveal">
-    <h2>Historias de quienes ya dieron el paso</h2>
-
-    {% for texto, anio in textos.historias %}
-      <div class="historia">
-        <p>"{{ texto }}"</p>
-        <div class="historia-pie">
-          <span class="historia-avatar" aria-hidden="true">{{ anio ~ '°' if anio else '★' }}</span>
-          <span class="historia-autor">{{ ('Estudiante de ' ~ anio ~ '.° año') if anio else 'Estudiante del liceo' }}</span>
-        </div>
-      </div>
-    {% endfor %}
-  </section>
-
-  <section class="seccion seccion-con-banner como-funciona reveal">
+  <section id="como-funciona" class="seccion seccion-con-banner como-funciona reveal">
     <h2 class="sr-only">¿Cómo funciona? Pasos para charlar anónimamente</h2>
     <img
       src="{{ url_for('static', filename='images/banner_pasos_charlar.webp') }}"
@@ -268,71 +263,46 @@
     </div>
   </section>
 
-  <section id="elegir-con-quien" class="seccion cta-final cta-elegir reveal">
-    <h2>¿Con quién deseas hablar hoy?</h2>
-    <p class="cta-elegir-subtitulo">No tienes que pasar por esto solo. Elige la opción que más necesites.</p>
-    <div class="opciones opciones-grandes">
-      <a href="{{ url_for('estudiante') }}" class="opcion opcion-psicologa opcion-grande opcion-principal">
-        <h3>Hablar con la psicóloga</h3>
-        <p>Una persona real, capacitada y dispuesta a escucharte.</p>
-        <span class="opcion-boton boton-metal">Hablar ahora</span>
-      </a>
-      <a href="{{ url_for('chatbot') }}" class="opcion opcion-chatbot opcion-grande">
-        <h3>Hablar con el asistente</h3>
-        <p>Disponible en cualquier momento para ayudarte a ordenar tus ideas.</p>
-        <span class="opcion-boton boton-metal">Comenzar</span>
-      </a>
-    </div>
-  </section>
-
-  <section class="seccion reveal">
-    <h2>¿Cómo podemos ayudarte?</h2>
-    <p class="seccion-subtitulo">Elige lo que más se parece a lo que estás viviendo.</p>
-    {% set h = url_for('herramientas') %}
-    {% set paginas_libro = [
-      ("Estoy pasando por un momento difícil", "Habla con la psicóloga del liceo, de forma anónima. Es una persona real, preparada para escucharte, y no necesitas dar tu nombre.",
-        [("Hablar con la psicóloga", url_for('estudiante'))]),
-      ("Siento ansiedad, enojo o tristeza", "Ponerle nombre a lo que sientes es el primer paso. Elige el que más se parece y encontrarás ejercicios sencillos para ese momento.",
-        [("Ansiedad o nervios", h ~ "#ansiedad"), ("Enojo (ira)", h ~ "#enojo"), ("Tristeza (depresión)", h ~ "#tristeza")]),
-      ("Necesito hablar con alguien", ("El asistente (Sami, Leo o Nia) es una inteligencia artificial: está disponible a cualquier hora, te hace preguntas para entenderte mejor y, si nota que estás en riesgo, avisa a la psicóloga." if ia_activa else "El asistente (Sami, Leo o Nia) es automático, no una persona: está disponible a cualquier hora y, si nota que estás en riesgo, avisa a la psicóloga."),
-        [("Hablar con el asistente", url_for('chatbot'))]),
-      ("Lo que necesito ahora", "A veces lo que hace falta es algo concreto: estudiar sin estrés, dormir bien o saber cómo decir lo que sientes.",
-        [("Estudiar mejor", h ~ "#estudiar"), ("Dormir mejor", h ~ "#dormir"), ("Decir lo que siento", h ~ "#decir"), ("Calmar mi mente", h ~ "#calma")]),
-      ("Quiero entender lo que siento", "Registra tu ánimo día a día en tu diario y mira cómo va cambiando con el tiempo.",
-        [("Abrir mi diario", url_for('diario'))]),
-      ("Quiero conocerme mejor", "Autoevaluaciones sobre estrés, alimentación y hábitos de estudio. No son diagnósticos: son una señal para reflexionar.",
-        [("Hacer una autoevaluación", url_for('tests'))]),
-    ] %}
-    <div class="libro" data-libro>
-      <div class="libro-paginas" aria-live="polite">
-        <article class="libro-pagina libro-portada">
-          <span class="libro-portada-etiqueta">No estamos solos LMH</span>
-          <h3 class="libro-titulo">Así te podemos acompañar</h3>
-          <p class="libro-texto">Pasa las páginas: en cada una hay una forma distinta en que te podemos acompañar.</p>
-          <span class="libro-pista" aria-hidden="true">Desliza o toca → para empezar</span>
-        </article>
-        {% for titulo, texto, enlaces in paginas_libro %}
-          <article class="libro-pagina">
-            <span class="libro-numero">{{ "%02d"|format(loop.index) }}</span>
-            <h3 class="libro-titulo">{{ titulo }}</h3>
-            <p class="libro-texto">{{ texto }}</p>
-            <div class="libro-enlaces">
-              {% for accion, enlace in enlaces %}
-                <a class="libro-enlace{% if enlaces|length > 1 %} libro-enlace-chico{% endif %}" href="{{ enlace }}">{{ accion }}{% if enlaces|length == 1 %} →{% endif %}</a>
-              {% endfor %}
-            </div>
-          </article>
-        {% endfor %}
+  <section id="por-que-hablar" class="seccion seccion-con-banner reveal">
+    <h2 class="sr-only">¿Por qué hablar ayuda?</h2>
+    <img
+      src="{{ url_for('static', filename='images/banner_por_que_hablar.webp') }}"
+      alt="¿Por qué hablar ayuda? Tigrito te lo explica"
+      class="banner-seccion-img">
+    <div class="tarjetas">
+      <div class="tarjeta tarjeta-naranja">
+        <h3>Poner en palabras lo que sientes</h3>
+        <p>Cuando lo dices o lo escribes, tu mente empieza a ordenarlo. Muchas veces las cosas pesan menos en cuanto dejan de dar vueltas solo en tu cabeza.</p>
       </div>
-      <div class="libro-controles">
-        <button type="button" class="libro-boton" data-libro-anterior aria-label="Página anterior">←</button>
-        <span class="libro-contador" data-libro-contador>1 / {{ paginas_libro|length + 1 }}</span>
-        <button type="button" class="libro-boton" data-libro-siguiente aria-label="Página siguiente">→</button>
+      <div class="tarjeta">
+        <h3>No estás solo/a en esto</h3>
+        <p>Muchos estudiantes han sentido lo mismo que tú, aunque no lo digan. Hablar de lo que te pasa es más común de lo que crees.</p>
+      </div>
+      <div class="tarjeta">
+        <h3>Entenderte a ti mismo/a</h3>
+        <p>A veces no sabes bien qué te pasa hasta que alguien te ayuda a verlo con claridad. Esa es la parte más valiosa de hablarlo con alguien preparado.</p>
       </div>
     </div>
   </section>
 
-  <section class="seccion reveal" aria-labelledby="titulo-emergencia">
+  <section id="historias" class="seccion historias reveal">
+    <h2>Historias de quienes ya dieron el paso</h2>
+
+    {% for texto, anio in textos.historias %}
+      <div class="historia">
+        <p>"{{ texto }}"</p>
+        <div class="historia-pie">
+          <span class="historia-avatar" aria-hidden="true">{{ anio ~ '°' if anio else '★' }}</span>
+          <span class="historia-autor">{{ ('Estudiante de ' ~ anio ~ '.° año') if anio else 'Estudiante del liceo' }}</span>
+        </div>
+      </div>
+    {% endfor %}
+  </section>
+
+  </div>
+
+  <div class="capitulo capitulo-urgente" id="si-es-urgente">
+  <section id="ayuda-ahora" class="seccion reveal" aria-labelledby="titulo-emergencia">
     <div class="emergencia">
       <div class="emergencia-contenido">
         <h2 id="titulo-emergencia">¿Estás en peligro ahora mismo?</h2>
@@ -348,165 +318,7 @@
     </div>
   </section>
 
-  <section id="recursos" class="seccion seccion-con-banner recurso-individual reveal">
-    <h2 class="sr-only">Herramientas técnicas</h2>
-    <img
-      src="{{ url_for('static', filename='images/banner_herramientas.webp') }}"
-      alt="Herramientas para sentirme mejor — Ansiedad, enojo, tristeza y más"
-      class="banner-seccion-img">
-    <a href="{{ url_for('herramientas') }}" class="opcion opcion-recurso opcion-naranja">
-      <h3>Técnicas para el momento</h3>
-      <p>Ejercicios sencillos para la ansiedad, el enojo, la tristeza, el sueño y el estudio. Disponibles las 24 horas, a tu ritmo.</p>
-    </a>
-  </section>
-
-  <section class="seccion seccion-con-banner recurso-individual reveal">
-    <h2 class="sr-only">Infórmate</h2>
-    <img
-      src="{{ url_for('static', filename='images/banner_informate.webp') }}"
-      alt="Infórmate"
-      class="banner-seccion-img">
-    <a href="{{ url_for('informate') }}" class="opcion opcion-recurso opcion-naranja">
-      <h3>Entiende lo que sientes y lo que te rodea</h3>
-      <p>Artículos sobre salud mental, fobias, maltrato hacia la mujer y más, explicados con claridad.</p>
-    </a>
-    {% set imagenes_temas = {
-      "Cuídate": "banner_herramientas.webp",
-      "Identifica": "banner_con_quien_hablar.webp",
-      "Infórmate": "banner_informate.webp",
-      "Conceptos": "banner_psicopedagogia_canva.png",
-    } %}
-    <div class="acordeon" data-acordeon data-inicial="1" data-proporcion="0.52">
-      {% for tema in temas_informate %}
-        <div class="acordeon-panel" style="--i: {{ loop.index0 }};">
-          <img class="acordeon-foto" src="{{ url_for('static', filename='images/' ~ imagenes_temas.get(tema.nombre, 'banner_informate.webp')) }}" alt="" loading="lazy" draggable="false">
-          <div class="acordeon-velo"></div>
-          <div class="acordeon-contenido">
-            <a class="acordeon-titulo" href="{{ url_for('informate') }}#cat-{{ tema.nombre|lower }}">{{ tema.nombre }}</a>
-            <span class="acordeon-total">{{ tema.total }} artículos</span>
-            <div class="acordeon-detalle"><div class="acordeon-detalle-interior">
-              <p>{{ tema.descripcion }}</p>
-              <ul>
-                {% for slug, titulo in tema.ejemplos %}
-                  <li><a href="{{ url_for('informate', _anchor=slug) }}">{{ titulo }}</a></li>
-                {% endfor %}
-              </ul>
-              <a class="acordeon-ver" href="{{ url_for('informate') }}#cat-{{ tema.nombre|lower }}">Ver todo →</a>
-            </div></div>
-          </div>
-        </div>
-      {% endfor %}
-    </div>
-    {% if videos_informate %}
-      <p class="temas-informate-videos-titulo">Artículos con video</p>
-      <div class="temas-informate-videos">
-        {% for slug, titulo, video in videos_informate %}
-          <a class="tema-video" href="{{ url_for('informate', _anchor=slug) }}">
-            <img src="https://i.ytimg.com/vi/{{ video }}/mqdefault.jpg" alt="" loading="lazy" width="320" height="180">
-            <span>▶ {{ titulo }}</span>
-          </a>
-        {% endfor %}
-      </div>
-    {% endif %}
-  </section>
-
-  <section class="seccion reveal">
-    <h2>Recursos de psicología</h2>
-    <p class="seccion-subtitulo">Temas para entender tu mente, explicados de forma sencilla.</p>
-    <div class="recursos-grid">
-      {% for r in recursos_psicologia %}
-        <a href="{{ url_for('informate', _anchor=r.slug) }}" class="recurso-card">
-          <img class="recurso-imagen" src="{{ url_for('static', filename='images/recursos/' ~ r.slug ~ '.svg') }}" alt="" loading="lazy" width="160" height="100">
-          <span class="recurso-numero">{{ "%02d"|format(loop.index) }}</span>
-          <span class="recurso-titulo">{{ r.titulo }}</span>
-          <span class="recurso-resumen">{{ r.resumen }}</span>
-        </a>
-      {% endfor %}
-    </div>
-    <a href="{{ url_for('informate') }}" class="video-ver-mas">Ver todos los artículos →</a>
-  </section>
-
-  <section class="seccion estante-seccion reveal" id="libros" aria-labelledby="titulo-libros">
-    <h2 id="titulo-libros">Libros de apoyo</h2>
-    <p class="seccion-subtitulo">Libros reales que ayudan a entender lo que sentimos. Toca un lomo para sacarlo del estante.</p>
-    <div class="estante" role="tablist" aria-label="Libros del estante" data-estante>
-      {% for l in libros %}
-        <button type="button" role="tab" class="estante-lomo{% if loop.first %} activo{% endif %}"
-          id="lomo-{{ l.id }}" aria-controls="libro-{{ l.id }}" aria-selected="{{ 'true' if loop.first else 'false' }}"
-          style="--lomo: {{ l.lomo }}; --tinta: {{ l.tinta }}; --alto: {{ l.alto }}px;">
-          <span class="estante-lomo-titulo">{{ l.titulo }}</span>
-          <span class="estante-lomo-autor">{{ l.autor.split(' ')[-1] }}</span>
-        </button>
-      {% endfor %}
-    </div>
-    <div class="estante-tabla" aria-hidden="true"></div>
-    {% for l in libros %}
-      <article class="estante-detalle" role="tabpanel" id="libro-{{ l.id }}" aria-labelledby="lomo-{{ l.id }}"
-        {% if not loop.first %}hidden{% endif %} style="--lomo: {{ l.lomo }}; --tinta: {{ l.tinta }};">
-        <div class="libro3d" aria-hidden="true">
-          <div class="libro3d-cuerpo">
-            <div class="libro3d-tapa">
-              <span class="libro3d-tapa-titulo">{{ l.titulo }}</span>
-              <span class="libro3d-tapa-linea"></span>
-              <span class="libro3d-tapa-autor">{{ l.autor }}</span>
-            </div>
-            <div class="libro3d-paginas"></div>
-            <div class="libro3d-lomo"><span>{{ l.titulo }}</span></div>
-          </div>
-        </div>
-        <div class="estante-info">
-          <span class="estante-ayuda">Te ayuda con: {{ l.ayuda }}</span>
-          <h3>{{ l.titulo }}</h3>
-          <p class="estante-autor">{{ l.autor }} · {{ l.anio }}</p>
-          <p>{{ l.desc }}</p>
-          <p class="estante-nota">Búscalo en una biblioteca o librería, o pregúntale a la psicóloga por él.</p>
-        </div>
-      </article>
-    {% endfor %}
-  </section>
-
-  <section class="seccion reveal" id="autoevaluaciones">
-    <h2>Autoevaluaciones</h2>
-    <p class="seccion-subtitulo">Mira tus patrones con más claridad. No son diagnósticos, solo una señal para reflexionar.</p>
-    {{ tarjetas_tests(tests) }}
-  </section>
-
-  <section class="seccion seccion-con-banner recurso-individual reveal">
-    <h2 class="sr-only">Videos informativos — Salud mental</h2>
-    <img
-      src="{{ url_for('static', filename='images/banner_videos.webp') }}"
-      alt="Videos informativos — Salud mental"
-      class="banner-seccion-img">
-    <div class="video-landing-grid">
-      {% for cat_id, cat in categorias_video.items() %}
-        {% for v in cat.videos %}
-          <div class="playlist-card">
-            <span class="video-landing-etiqueta">{{ cat.titulo }}</span>
-            <h3>{{ v.titulo }}</h3>
-            <p>{{ v.descripcion }}</p>
-            {% if v.tipo == "embed" %}
-              <div class="playlist-embed video-embed">
-                <iframe
-                  src="https://www.youtube.com/embed/{{ v.youtube_id }}"
-                  width="100%"
-                  height="200"
-                  frameborder="0"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                  allowfullscreen
-                  loading="lazy">
-                </iframe>
-              </div>
-            {% else %}
-              <a href="{{ v.url }}" target="_blank" rel="noopener noreferrer" class="video-enlace-externo">Ver en YouTube →</a>
-            {% endif %}
-          </div>
-        {% endfor %}
-      {% endfor %}
-    </div>
-    <a href="{{ url_for('video') }}" class="video-ver-mas">Ver más videos →</a>
-  </section>
-
-  <section class="seccion recurso-individual prevencion-suicidio reveal">
+  <section id="prevencion" class="seccion recurso-individual prevencion-suicidio reveal">
     <img
       src="{{ url_for('static', filename='images/banner_prevencion_suicidio.webp') }}"
       alt="10 de septiembre — Día Mundial para la Prevención del Suicidio"
@@ -535,6 +347,24 @@
     </a>
   </section>
 
+  </div>
+
+  <div class="capitulo capitulo-cuidate" id="cuidate">
+    <header class="capitulo-cabeza reveal">
+      <img class="capitulo-ilustracion" src="{{ url_for('static', filename='img/3d/obj_hoja_menta.webp') }}" alt="" width="120" height="120" loading="lazy">
+      <div>
+        <h2 class="capitulo-titulo">Cuídate hoy</h2>
+        <p class="capitulo-texto">Ejercicios cortos para calmarte, saber cómo estás y sentirte un poco mejor ahora.</p>
+        <nav class="capitulo-indice" aria-label="En este capítulo">
+          <ul>
+          <li><a href="#mural">Mural de psicología</a></li>
+          <li><a href="#como-ayudarte">Qué te puede ayudar</a></li>
+          <li><a href="#recursos">Herramientas</a></li>
+          <li><a href="#autoevaluaciones">Autoevaluaciones</a></li>
+          </ul>
+        </nav>
+      </div>
+    </header>
   <section class="seccion mural reveal" id="mural" aria-labelledby="titulo-mural">
     <h2 id="titulo-mural">Mural de psicología</h2>
     <p class="seccion-subtitulo">Toca cada cuadro: respira, descubre datos y pon a prueba lo que sabes.</p>
@@ -640,7 +470,273 @@
     </div>
   </section>
 
-  <section class="seccion contadores reveal" aria-labelledby="titulo-contadores">
+  <section id="como-ayudarte" class="seccion reveal">
+    <h2>¿Cómo podemos ayudarte?</h2>
+    <p class="seccion-subtitulo">Elige lo que más se parece a lo que estás viviendo.</p>
+    {% set h = url_for('herramientas') %}
+    {% set paginas_libro = [
+      ("Estoy pasando por un momento difícil", "Habla con la psicóloga del liceo, de forma anónima. Es una persona real, preparada para escucharte, y no necesitas dar tu nombre.",
+        [("Hablar con la psicóloga", url_for('estudiante'))]),
+      ("Siento ansiedad, enojo o tristeza", "Ponerle nombre a lo que sientes es el primer paso. Elige el que más se parece y encontrarás ejercicios sencillos para ese momento.",
+        [("Ansiedad o nervios", h ~ "#ansiedad"), ("Enojo (ira)", h ~ "#enojo"), ("Tristeza (depresión)", h ~ "#tristeza")]),
+      ("Necesito hablar con alguien", ("El asistente (Sami, Leo o Nia) es una inteligencia artificial: está disponible a cualquier hora, te hace preguntas para entenderte mejor y, si nota que estás en riesgo, avisa a la psicóloga." if ia_activa else "El asistente (Sami, Leo o Nia) es automático, no una persona: está disponible a cualquier hora y, si nota que estás en riesgo, avisa a la psicóloga."),
+        [("Hablar con el asistente", url_for('chatbot'))]),
+      ("Lo que necesito ahora", "A veces lo que hace falta es algo concreto: estudiar sin estrés, dormir bien o saber cómo decir lo que sientes.",
+        [("Estudiar mejor", h ~ "#estudiar"), ("Dormir mejor", h ~ "#dormir"), ("Decir lo que siento", h ~ "#decir"), ("Calmar mi mente", h ~ "#calma")]),
+      ("Quiero entender lo que siento", "Registra tu ánimo día a día en tu diario y mira cómo va cambiando con el tiempo.",
+        [("Abrir mi diario", url_for('diario'))]),
+      ("Quiero conocerme mejor", "Autoevaluaciones sobre estrés, alimentación y hábitos de estudio. No son diagnósticos: son una señal para reflexionar.",
+        [("Hacer una autoevaluación", url_for('tests'))]),
+    ] %}
+    <div class="libro" data-libro>
+      <div class="libro-paginas" aria-live="polite">
+        <article class="libro-pagina libro-portada">
+          <span class="libro-portada-etiqueta">No estamos solos LMH</span>
+          <h3 class="libro-titulo">Así te podemos acompañar</h3>
+          <p class="libro-texto">Pasa las páginas: en cada una hay una forma distinta en que te podemos acompañar.</p>
+          <span class="libro-pista" aria-hidden="true">Desliza o toca → para empezar</span>
+        </article>
+        {% for titulo, texto, enlaces in paginas_libro %}
+          <article class="libro-pagina">
+            <span class="libro-numero">{{ "%02d"|format(loop.index) }}</span>
+            <h3 class="libro-titulo">{{ titulo }}</h3>
+            <p class="libro-texto">{{ texto }}</p>
+            <div class="libro-enlaces">
+              {% for accion, enlace in enlaces %}
+                <a class="libro-enlace{% if enlaces|length > 1 %} libro-enlace-chico{% endif %}" href="{{ enlace }}">{{ accion }}{% if enlaces|length == 1 %} →{% endif %}</a>
+              {% endfor %}
+            </div>
+          </article>
+        {% endfor %}
+      </div>
+      <div class="libro-controles">
+        <button type="button" class="libro-boton" data-libro-anterior aria-label="Página anterior">←</button>
+        <span class="libro-contador" data-libro-contador>1 / {{ paginas_libro|length + 1 }}</span>
+        <button type="button" class="libro-boton" data-libro-siguiente aria-label="Página siguiente">→</button>
+      </div>
+    </div>
+  </section>
+
+  <section id="recursos" class="seccion seccion-con-banner recurso-individual reveal">
+    <h2 class="sr-only">Herramientas técnicas</h2>
+    <img
+      src="{{ url_for('static', filename='images/banner_herramientas.webp') }}"
+      alt="Herramientas para sentirme mejor — Ansiedad, enojo, tristeza y más"
+      class="banner-seccion-img">
+    <a href="{{ url_for('herramientas') }}" class="opcion opcion-recurso opcion-naranja">
+      <h3>Técnicas para el momento</h3>
+      <p>Ejercicios sencillos para la ansiedad, el enojo, la tristeza, el sueño y el estudio. Disponibles las 24 horas, a tu ritmo.</p>
+    </a>
+  </section>
+
+  <section class="seccion reveal" id="autoevaluaciones">
+    <h2>Autoevaluaciones</h2>
+    <p class="seccion-subtitulo">Mira tus patrones con más claridad. No son diagnósticos, solo una señal para reflexionar.</p>
+    {{ tarjetas_tests(tests) }}
+  </section>
+
+  </div>
+
+  <div class="capitulo capitulo-entiende" id="entiende">
+    <header class="capitulo-cabeza reveal">
+      <img class="capitulo-ilustracion" src="{{ url_for('static', filename='img/3d/obj_libro.webp') }}" alt="" width="120" height="120" loading="lazy">
+      <div>
+        <h2 class="capitulo-titulo">Entiende lo que sientes</h2>
+        <p class="capitulo-texto">Artículos, libros y videos para ponerle nombre a lo que te pasa.</p>
+        <nav class="capitulo-indice" aria-label="En este capítulo">
+          <ul>
+          <li><a href="#informate">Infórmate</a></li>
+          <li><a href="#recursos-psicologia">Recursos de psicología</a></li>
+          <li><a href="#libros">Libros de apoyo</a></li>
+          <li><a href="#videos">Videos</a></li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+  <section id="informate" class="seccion seccion-con-banner recurso-individual reveal">
+    <h2 class="sr-only">Infórmate</h2>
+    <img
+      src="{{ url_for('static', filename='images/banner_informate.webp') }}"
+      alt="Infórmate"
+      class="banner-seccion-img">
+    <a href="{{ url_for('informate') }}" class="opcion opcion-recurso opcion-naranja">
+      <h3>Entiende lo que sientes y lo que te rodea</h3>
+      <p>Artículos sobre salud mental, fobias, maltrato hacia la mujer y más, explicados con claridad.</p>
+    </a>
+    {% set imagenes_temas = {
+      "Cuídate": "banner_herramientas.webp",
+      "Identifica": "banner_con_quien_hablar.webp",
+      "Infórmate": "banner_informate.webp",
+      "Conceptos": "banner_psicopedagogia_canva.png",
+    } %}
+    <div class="acordeon" data-acordeon data-inicial="1" data-proporcion="0.52">
+      {% for tema in temas_informate %}
+        <div class="acordeon-panel" style="--i: {{ loop.index0 }};">
+          <img class="acordeon-foto" src="{{ url_for('static', filename='images/' ~ imagenes_temas.get(tema.nombre, 'banner_informate.webp')) }}" alt="" loading="lazy" draggable="false">
+          <div class="acordeon-velo"></div>
+          <div class="acordeon-contenido">
+            <a class="acordeon-titulo" href="{{ url_for('informate') }}#cat-{{ tema.nombre|lower }}">{{ tema.nombre }}</a>
+            <span class="acordeon-total">{{ tema.total }} artículos</span>
+            <div class="acordeon-detalle"><div class="acordeon-detalle-interior">
+              <p>{{ tema.descripcion }}</p>
+              <ul>
+                {% for slug, titulo in tema.ejemplos %}
+                  <li><a href="{{ url_for('informate', _anchor=slug) }}">{{ titulo }}</a></li>
+                {% endfor %}
+              </ul>
+              <a class="acordeon-ver" href="{{ url_for('informate') }}#cat-{{ tema.nombre|lower }}">Ver todo →</a>
+            </div></div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+    {% if videos_informate %}
+      <p class="temas-informate-videos-titulo">Artículos con video</p>
+      <div class="temas-informate-videos">
+        {% for slug, titulo, video in videos_informate %}
+          <a class="tema-video" href="{{ url_for('informate', _anchor=slug) }}">
+            <img src="https://i.ytimg.com/vi/{{ video }}/mqdefault.jpg" alt="" loading="lazy" width="320" height="180">
+            <span>▶ {{ titulo }}</span>
+          </a>
+        {% endfor %}
+      </div>
+    {% endif %}
+  </section>
+
+  <section id="recursos-psicologia" class="seccion reveal">
+    <h2>Recursos de psicología</h2>
+    <p class="seccion-subtitulo">Temas para entender tu mente, explicados de forma sencilla.</p>
+    <div class="recursos-grid">
+      {% for r in recursos_psicologia %}
+        <a href="{{ url_for('informate', _anchor=r.slug) }}" class="recurso-card">
+          <img class="recurso-imagen" src="{{ url_for('static', filename='images/recursos/' ~ r.slug ~ '.svg') }}" alt="" loading="lazy" width="160" height="100">
+          <span class="recurso-numero">{{ "%02d"|format(loop.index) }}</span>
+          <span class="recurso-titulo">{{ r.titulo }}</span>
+          <span class="recurso-resumen">{{ r.resumen }}</span>
+        </a>
+      {% endfor %}
+    </div>
+    <a href="{{ url_for('informate') }}" class="video-ver-mas">Ver todos los artículos →</a>
+  </section>
+
+  <section class="seccion estante-seccion reveal" id="libros" aria-labelledby="titulo-libros">
+    <h2 id="titulo-libros">Libros de apoyo</h2>
+    <p class="seccion-subtitulo">Libros reales que ayudan a entender lo que sentimos. Toca un lomo para sacarlo del estante.</p>
+    <div class="estante" role="tablist" aria-label="Libros del estante" data-estante>
+      {% for l in libros %}
+        <button type="button" role="tab" class="estante-lomo{% if loop.first %} activo{% endif %}"
+          id="lomo-{{ l.id }}" aria-controls="libro-{{ l.id }}" aria-selected="{{ 'true' if loop.first else 'false' }}"
+          style="--lomo: {{ l.lomo }}; --tinta: {{ l.tinta }}; --alto: {{ l.alto }}px;">
+          <span class="estante-lomo-titulo">{{ l.titulo }}</span>
+          <span class="estante-lomo-autor">{{ l.autor.split(' ')[-1] }}</span>
+        </button>
+      {% endfor %}
+    </div>
+    <div class="estante-tabla" aria-hidden="true"></div>
+    {% for l in libros %}
+      <article class="estante-detalle" role="tabpanel" id="libro-{{ l.id }}" aria-labelledby="lomo-{{ l.id }}"
+        {% if not loop.first %}hidden{% endif %} style="--lomo: {{ l.lomo }}; --tinta: {{ l.tinta }};">
+        <div class="libro3d" aria-hidden="true">
+          <div class="libro3d-cuerpo">
+            <div class="libro3d-tapa">
+              <span class="libro3d-tapa-titulo">{{ l.titulo }}</span>
+              <span class="libro3d-tapa-linea"></span>
+              <span class="libro3d-tapa-autor">{{ l.autor }}</span>
+            </div>
+            <div class="libro3d-paginas"></div>
+            <div class="libro3d-lomo"><span>{{ l.titulo }}</span></div>
+          </div>
+        </div>
+        <div class="estante-info">
+          <span class="estante-ayuda">Te ayuda con: {{ l.ayuda }}</span>
+          <h3>{{ l.titulo }}</h3>
+          <p class="estante-autor">{{ l.autor }} · {{ l.anio }}</p>
+          <p>{{ l.desc }}</p>
+          <p class="estante-nota">Búscalo en una biblioteca o librería, o pregúntale a la psicóloga por él.</p>
+        </div>
+      </article>
+    {% endfor %}
+  </section>
+
+  <section id="videos" class="seccion seccion-con-banner recurso-individual reveal">
+    <h2 class="sr-only">Videos informativos — Salud mental</h2>
+    <img
+      src="{{ url_for('static', filename='images/banner_videos.webp') }}"
+      alt="Videos informativos — Salud mental"
+      class="banner-seccion-img">
+    <div class="video-landing-grid">
+      {% for cat_id, cat in categorias_video.items() %}
+        {% for v in cat.videos %}
+          <div class="playlist-card">
+            <span class="video-landing-etiqueta">{{ cat.titulo }}</span>
+            <h3>{{ v.titulo }}</h3>
+            <p>{{ v.descripcion }}</p>
+            {% if v.tipo == "embed" %}
+              <div class="playlist-embed video-embed">
+                <iframe
+                  src="https://www.youtube.com/embed/{{ v.youtube_id }}"
+                  width="100%"
+                  height="200"
+                  frameborder="0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowfullscreen
+                  loading="lazy">
+                </iframe>
+              </div>
+            {% else %}
+              <a href="{{ v.url }}" target="_blank" rel="noopener noreferrer" class="video-enlace-externo">Ver en YouTube →</a>
+            {% endif %}
+          </div>
+        {% endfor %}
+      {% endfor %}
+    </div>
+    <a href="{{ url_for('video') }}" class="video-ver-mas">Ver más videos →</a>
+  </section>
+
+  </div>
+
+  <div class="capitulo capitulo-juntos" id="juntos">
+    <header class="capitulo-cabeza reveal">
+      <img class="capitulo-ilustracion" src="{{ url_for('static', filename='img/3d/obj_corazon.webp') }}" alt="" width="120" height="120" loading="lazy">
+      <div>
+        <h2 class="capitulo-titulo">No estás solo</h2>
+        <p class="capitulo-texto">Lo que vive un estudiante del liceo, otros también lo han vivido y han salido adelante.</p>
+        <nav class="capitulo-indice" aria-label="En este capítulo">
+          <ul>
+          <li><a href="#muro">Muro interactivo</a></li>
+          <li><a href="#numeros">Nuestra comunidad</a></li>
+          <li><a href="#redes">Síguenos</a></li>
+          <li><a href="#mas-para-ti">Más para ti</a></li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+  <section id="muro" class="seccion seccion-con-banner reveal">
+    <h2 class="sr-only">Muro interactivo — Describe tu experiencia</h2>
+    <a href="{{ url_for('muro') }}">
+      <img
+        src="{{ url_for('static', filename='images/banner_muro_interactivo.webp') }}"
+        alt="Muro interactivo — Describe tu experiencia"
+        class="banner-seccion-img">
+    </a>
+    <a href="{{ url_for('muro') }}" class="opcion opcion-recurso opcion-naranja">
+      <h3>Escribe en el muro</h3>
+      <p>Comparte tu experiencia de forma anónima y lee lo que otros estudiantes han vivido.</p>
+    </a>
+  </section>
+
+  <section class="multitud" aria-labelledby="titulo-multitud">
+    <div class="multitud-texto">
+      <span class="multitud-etiqueta">Hablar ayuda</span>
+      <h2 id="titulo-multitud">Miles de personas salen adelante cada año al identificar lo que sienten y hablarlo.</h2>
+      <p>Reconocer las señales, contarle a alguien de confianza y pedir ayuda a tiempo cambia historias. La tuya también puede cambiar.</p>
+    </div>
+    <canvas class="multitud-lienzo" data-multitud aria-hidden="true"
+      data-personas="{{ url_for('static', filename='images/personas/persona1.png') }}|{{ url_for('static', filename='images/personas/persona2.png') }}|{{ url_for('static', filename='images/personas/persona3.png') }}|{{ url_for('static', filename='images/personas/persona4.png') }}|{{ url_for('static', filename='images/personas/persona5.png') }}|{{ url_for('static', filename='images/personas/persona6.png') }}|{{ url_for('static', filename='images/personas/persona7.png') }}|{{ url_for('static', filename='images/personas/persona8.png') }}"
+      data-miran="-1,1,1,1,-1,-1,1,1"></canvas>
+  </section>
+
+  <section id="numeros" class="seccion contadores reveal" aria-labelledby="titulo-contadores">
     <h2 id="titulo-contadores">Juntos en esta comunidad</h2>
     <p class="seccion-subtitulo">Números reales de la página, contados de forma anónima.</p>
     <div class="contadores-grid">
@@ -658,7 +754,7 @@
     </div>
   </section>
 
-  <section class="seccion recurso-individual reveal">
+  <section id="redes" class="seccion recurso-individual reveal">
     <h2>Síguenos</h2>
     <p class="video-landing-intro">También estamos en redes: contenido de apoyo, recordatorios y un espacio para la comunidad.</p>
     <div class="redes-grid" data-foco-redes>
@@ -683,7 +779,7 @@
     </div>
   </section>
 
-  <section class="seccion reveal">
+  <section id="mas-para-ti" class="seccion reveal">
     <h2>Más para ti</h2>
     <div class="tarjetas-extra">
       <a href="{{ url_for('diario') }}" class="tarjeta-extra">
@@ -728,15 +824,18 @@
     </div>
   </section>
 
+  </div>
   <section class="lema" aria-label="Dios, Patria, Familia. Liceo Militar.">
     <p class="roll roll-lema" data-roll>DIOS · PATRIA · FAMILIA</p>
     <p class="roll roll-liceo" data-roll data-roll-centro>LICEO MILITAR</p>
   </section>
 
+
+
   <footer class="pie-pagina" id="contacto">
     <div class="pie-contenido">
       <img src="{{ url_for('static', filename='images/logo_liceo.png') }}" alt="Logo del Liceo Militar de Honduras: Verdad, Honor, Servicio" class="pie-logo">
-      <h2 class="pie-titulo">CONTÁCTENOS</h2>
+      <h2 class="pie-titulo">Contáctenos</h2>
       <p class="pie-dato"><a href="mailto:noestamossoloslmh@gmail.com">noestamossoloslmh@gmail.com</a></p>
       <p class="pie-dato">Teléfono: 3174-6810</p>
       <p class="pie-dato">San Pedro Sula, Honduras</p>

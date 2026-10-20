@@ -21,7 +21,7 @@
 
 /* Las secciones que están lejos de la pantalla no se dibujan hasta que te acercas
    (la página va más fluida). common.js mide antes la altura real de cada una. */
-.landing-body.dibujo-diferido > section.seccion { content-visibility: auto; }
+.landing-body.dibujo-diferido section.seccion { content-visibility: auto; }
 
 
 /* Barra de navegación superior, fija, con menú hamburguesa en celular. */
@@ -166,7 +166,7 @@
 }
 
 #recursos, #contacto, #elegir-con-quien,
-.landing-body > section[id] { scroll-margin-top: 78px; }  /* que el menú fijo no tape el título */
+.landing-body section[id], .landing-body .capitulo { scroll-margin-top: 78px; }  /* que el menú fijo no tape el título */
 
 /* Subrayado dorado animado en los enlaces del menú (solo escritorio). */
 @media (min-width: 860px) {
@@ -286,7 +286,7 @@
 
 .seccion { padding: 36px 24px; }
 .seccion h2 {
-  font-family: "Fraunces", Georgia, serif;
+  font-family: var(--letra-titulo);
   font-weight: 600;
   font-size: 27px;
   line-height: 1.15;
@@ -411,7 +411,7 @@
 }
 .historia p {
   margin: 0 0 8px;
-  font-family: "Fraunces", Georgia, serif;
+  font-family: var(--letra-titulo);
   font-style: italic;
   font-size: 18px;
   line-height: 1.5;
@@ -759,7 +759,7 @@
 }
 .libro-titulo {
   margin: 0;
-  font-family: "Fraunces", Georgia, serif;
+  font-family: var(--letra-titulo);
   font-size: 24px;
   font-weight: 600;
   line-height: 1.2;
@@ -768,7 +768,7 @@
 .libro-portada .libro-titulo { color: #c3e956; font-size: 28px; }
 .libro-texto { margin: 0; font-size: 15px; line-height: 1.55; color: inherit; opacity: 0.88; }
 .libro-numero {
-  font-family: "Fraunces", Georgia, serif;
+  font-family: var(--letra-titulo);
   font-size: 15px;
   color: #4d7111;
 }
@@ -893,7 +893,7 @@
 .recurso-card:hover,
 .recurso-card:focus-visible { transform: translateY(-3px); border-color: var(--amarillo); }
 .recurso-numero {
-  font-family: "Fraunces", Georgia, serif;
+  font-family: var(--letra-titulo);
   font-size: 26px;
   font-weight: 700;
   line-height: 1;
@@ -1044,7 +1044,7 @@
   border: 1px solid var(--tarjeta-borde);
   border-radius: 999px;
   color: var(--blanco);
-  font: 500 13px "Montserrat", Helvetica, Arial, sans-serif;
+  font: 500 13px var(--letra-texto);
   cursor: pointer;
   transition: border-color var(--transicion-suave), background var(--transicion-suave);
 }
@@ -1052,7 +1052,7 @@
 .nav-buscar-texto, .nav-buscar-atajo { display: none; }
 .nav-buscar-atajo,
 .buscador kbd {
-  font: 600 10px "Montserrat", Helvetica, Arial, sans-serif;
+  font: 600 10px var(--letra-texto);
   padding: 2px 6px;
   border: 1px solid rgba(255, 255, 255, 0.25);
   border-radius: 5px;
@@ -1096,7 +1096,7 @@
   border: none;
   outline: none;
   color: var(--blanco);
-  font: 500 16px "Montserrat", Helvetica, Arial, sans-serif;
+  font: 500 16px var(--letra-texto);
 }
 .buscador-entrada input::placeholder { color: rgba(255, 255, 255, 0.5); }
 .buscador-entrada input::-webkit-search-cancel-button { display: none; }
@@ -1245,7 +1245,7 @@
   font-weight: 600;
 }
 .dock-tooltip kbd {
-  font: 600 10px "Montserrat", Helvetica, Arial, sans-serif;
+  font: 600 10px var(--letra-texto);
   padding: 1px 5px;
   border: 1px solid rgba(255, 255, 255, 0.25);
   border-radius: 4px;
@@ -1303,7 +1303,7 @@ body:has(.dock) .whatsapp-flotante { bottom: 80px; }
   background: none;
   border: none;
   color: #ffffff;
-  font: 600 13px "Montserrat", Helvetica, Arial, sans-serif;
+  font: 600 13px var(--letra-texto);
   cursor: pointer;
   transition: opacity 200ms ease;
 }
@@ -1538,7 +1538,7 @@ body:has(.dock) .whatsapp-flotante { bottom: 80px; }
   position: absolute;
   inset: 0;
   display: block;
-  font-family: "Montserrat", Helvetica, Arial, sans-serif;
+  font-family: var(--letra-texto);
   font-weight: 800;
   font-size: clamp(2.2rem, 10vw, 3.6rem);
   line-height: 1.15;
@@ -1786,7 +1786,7 @@ body:has(.dock) .whatsapp-flotante { bottom: 80px; }
   justify-content: center;
   padding: 16px 24px;
   text-align: center;
-  font-family: "Fraunces", Georgia, serif;
+  font-family: var(--letra-titulo);
   font-weight: 600;
   font-size: 0;
   line-height: 1.2;
@@ -1799,7 +1799,7 @@ body:has(.dock) .whatsapp-flotante { bottom: 80px; }
 }
 .img-volteo-texto { flex-direction: column; gap: 6px; }
 .img-volteo-texto small {
-  font-family: "Montserrat", Helvetica, Arial, sans-serif;
+  font-family: var(--letra-texto);
   font-size: 0.5em;
   font-weight: 600;
   letter-spacing: 0.04em;
@@ -1837,13 +1837,13 @@ body:has(.dock) .whatsapp-flotante { bottom: 80px; }
   align-items: baseline;
   justify-content: space-between;
   gap: 8px;
-  font-family: "Fraunces", Georgia, serif;
+  font-family: var(--letra-titulo);
   font-size: 19px;
   font-weight: 600;
   color: var(--amarillo);
   text-decoration: none;
 }
-.tema-informate-titulo span { font-family: "Montserrat", sans-serif; font-size: 11px; color: var(--blanco-suave); }
+.tema-informate-titulo span { font-family: var(--letra-texto); font-size: 11px; color: var(--blanco-suave); }
 .tema-informate p { margin: 4px 0 8px; font-size: 13px; color: var(--blanco-suave); }
 .tema-informate ul { margin: 0; padding-left: 16px; font-size: 13px; line-height: 1.6; }
 .tema-informate a:not(.tema-informate-titulo) { color: var(--blanco); text-decoration: none; }
@@ -1976,7 +1976,7 @@ body:has(.dock) .whatsapp-flotante { bottom: 80px; }
   text-align: center;
 }
 .contador-numero {
-  font-family: "Fraunces", Georgia, serif;
+  font-family: var(--letra-titulo);
   font-size: clamp(34px, 9vw, 52px);
   font-weight: 700;
   line-height: 1;
@@ -2113,7 +2113,7 @@ body:has(.dock) .whatsapp-flotante { bottom: 80px; }
 .estante-lomo-titulo {
   writing-mode: vertical-rl;
   rotate: 180deg;
-  font-family: "Fraunces", Georgia, serif;
+  font-family: var(--letra-titulo);
   font-size: 13px;
   font-weight: 700;
   line-height: 1.15;
@@ -2171,7 +2171,7 @@ body:has(.dock) .whatsapp-flotante { bottom: 80px; }
   box-sizing: border-box;
   box-shadow: 0 20px 34px -12px rgba(0, 0, 0, 0.7);
 }
-.libro3d-tapa-titulo { font-family: "Fraunces", Georgia, serif; font-size: 19px; font-weight: 700; line-height: 1.15; }
+.libro3d-tapa-titulo { font-family: var(--letra-titulo); font-size: 19px; font-weight: 700; line-height: 1.15; }
 .libro3d-tapa-linea { width: 40px; height: 3px; background: currentColor; opacity: 0.7; }
 .libro3d-tapa-autor { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; opacity: 0.9; }
 .libro3d-paginas {
@@ -2337,7 +2337,7 @@ body:has(.dock) .whatsapp-flotante { bottom: 80px; }
 /* Mito o realidad / dato / frase */
 .mito-frase, .frase-texto { margin: 0; font-size: 18px; font-weight: 700; line-height: 1.4; color: var(--blanco); }
 .mito-botones { display: flex; gap: 8px; }
-.dato-termino { margin: 0; font-family: "Fraunces", Georgia, serif; font-size: 24px; font-weight: 700; color: var(--blanco); }
+.dato-termino { margin: 0; font-family: var(--letra-titulo); font-size: 24px; font-weight: 700; color: var(--blanco); }
 
 /* Cerebro */
 .cerebro-partes { display: grid; grid-template-columns: 1fr; gap: 10px; }
@@ -2397,7 +2397,7 @@ body:has(.dock) .whatsapp-flotante { bottom: 80px; }
 }
 .multitud-texto h2 {
   margin: 0 0 12px;
-  font-family: "Fraunces", Georgia, serif;
+  font-family: var(--letra-titulo);
   font-size: clamp(26px, 6vw, 40px);
   line-height: 1.15;
   color: #183020;
@@ -2612,7 +2612,7 @@ body:has(.dock) .whatsapp-flotante { bottom: 80px; }
   gap: 4px;
 }
 .acordeon-titulo {
-  font-family: "Fraunces", Georgia, serif;
+  font-family: var(--letra-titulo);
   font-size: 24px;
   font-weight: 700;
   color: #ffffff;
@@ -2660,7 +2660,7 @@ body:has(.dock) .whatsapp-flotante { bottom: 80px; }
   position: absolute;
   top: 4px;
   left: 30px;
-  font-family: "Fraunces", Georgia, serif;
+  font-family: var(--letra-titulo);
   font-size: 72px;
   line-height: 1;
   color: var(--amarillo);
@@ -2682,7 +2682,7 @@ body:has(.dock) .whatsapp-flotante { bottom: 80px; }
   place-items: center;
   background: var(--amarillo);
   color: var(--verde-oscuro);
-  font-family: "Fraunces", Georgia, serif;
+  font-family: var(--letra-titulo);
   font-size: 18px;
   font-weight: 800;
   flex: none;

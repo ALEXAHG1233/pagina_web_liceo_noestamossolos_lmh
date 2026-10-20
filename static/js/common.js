@@ -90,6 +90,13 @@ document.addEventListener("DOMContentLoaded", activarCambioTema);
 
 const SIN_MOVIMIENTO = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
+// Diseño sereno: los efectos que llenaban de estímulos la pantalla (bordes
+// eléctricos, estela del cursor, relieve 3D en cada título, letras elásticas,
+// esquinas y destellos en cada cuadro, tarjetas que esconden su texto al voltear)
+// quedan apagados para que leer y navegar sea cómodo. Para volver a encenderlos,
+// cambia true por false.
+const CALMA = true;
+
 // Mientras la persona baja o sube la página, los efectos que se dibujan solos
 // esperan un momento: así el desplazamiento va suave.
 let ultimoDesplazamiento = 0;
@@ -949,6 +956,7 @@ document.addEventListener("DOMContentLoaded", activarTextoRodante);
 // Línea de fondo de la portada: muestra del 50 % al 100 % del trazo
 // según cuánto se ha bajado por la página.
 function activarLineaFondo() {
+  if (CALMA) return;
   const trazo = document.getElementById("linea-fondo-trazo");
   if (!trazo || SIN_MOVIMIENTO) return;
   let pendiente = false;
@@ -1098,6 +1106,7 @@ function agregarAdornos(cuadro) {
 }
 
 function activarAdornosEnTodo() {
+  if (CALMA) return;
   document.querySelectorAll(ADORNOS_SELECTOR).forEach((cuadro) => {
     if (cuadro.matches(CYBER_SELECTOR)) return;   // esos ya los maneja activarCuadrosCyber
     cuadro.classList.add("con-adornos");
@@ -1108,6 +1117,7 @@ function activarAdornosEnTodo() {
 document.addEventListener("DOMContentLoaded", activarAdornosEnTodo);
 
 function activarCuadrosCyber() {
+  if (CALMA) return;
   const cuadros = document.querySelectorAll(CYBER_SELECTOR);
   cuadros.forEach(agregarAdornos);
 
@@ -1135,6 +1145,7 @@ document.addEventListener("DOMContentLoaded", activarCuadrosCyber);
 // computadoras con mouse y si no se pidió reducir el movimiento: en
 // celular gastaría batería y se activaría al hacer scroll con el dedo.
 function cargarEstelaCursor() {
+  if (CALMA) return;
   const conMouse = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
   if (!conMouse || SIN_MOVIMIENTO || document.getElementById("script-estela")) return;
   const script = document.createElement("script");
@@ -1783,6 +1794,7 @@ const ONDULADOS = [
 ];
 
 function activarTextoOndulado() {
+  if (CALMA) return;
   if (SIN_MOVIMIENTO) return;
   const titulos = document.querySelectorAll(ONDULADO_SELECTOR);
   if (!titulos.length) return;
@@ -2010,6 +2022,7 @@ function agregarBrilloEInclinacion(elemento, inclinar) {
 }
 
 function activarTarjetasGiratorias() {
+  if (CALMA) return;
   document.querySelectorAll(GIRAR_SELECTOR).forEach((t) => {
     if (t.closest(".girar-caja")) return;
     agregarBrilloEInclinacion(prepararGiro(t), true);
@@ -2087,6 +2100,7 @@ document.addEventListener("DOMContentLoaded", activarFocoRedes);
 // que se ven en pantalla. El ondulado se pasa a la cara del texto, porque
 // un filtro en el título aplanaría el 3D.
 function activarTextoProfundo() {
+  if (CALMA) return;
   if (SIN_MOVIMIENTO) return;
   const titulos = Array.from(document.querySelectorAll(ONDULADO_SELECTOR));
   if (!titulos.length) return;
@@ -2329,6 +2343,7 @@ document.addEventListener("DOMContentLoaded", activarBolaPlasma);
 // mouse se acerca (70 px) las letras se estiran hacia él, al presionar se
 // aplastan, y al soltar rebotan con un resorte hasta quedarse quietas.
 function activarLetrasElasticas() {
+  if (CALMA) return;
   if (SIN_MOVIMIENTO) return;
   const AMARILLO = "rgb(195, 233, 86)";
   const candidatos = document.querySelectorAll("h3, h4, .glosario-termino, .cerebro-parte strong, .categoria-sintomas strong");
@@ -2431,6 +2446,7 @@ const ELECTRICO_SELECTOR = [
 ].join(", ");
 
 function activarBordeElectrico() {
+  if (CALMA) return;
   const AJUSTES = { color: [195, 233, 86], velocidad: 1, caos: 0.5, separacion: 0.6, rayos: 3, grosor: 1.5, radio: 24 };
   const [R, G, B] = AJUSTES.color;
   const MARGEN = 16;
@@ -2577,6 +2593,7 @@ document.addEventListener("DOMContentLoaded", activarBordeElectrico);
 const BARRIDO_IMAGENES = ".img-volteo, .perspectiva-foto, .pila-tarjeta, .libro3d-tapa, .video-ligero";
 
 function activarBarrido() {
+  if (CALMA) return;
   document.querySelectorAll(ADORNOS_SELECTOR + ", " + CYBER_SELECTOR + ", " + BARRIDO_IMAGENES + ", .red-card").forEach((el) => {
     if (el.querySelector(":scope > .barrido")) return;
     const capa = document.createElement("span");
@@ -3022,7 +3039,7 @@ document.addEventListener("DOMContentLoaded", activarTestPasoAPaso);
 function activarDibujoDiferido() {
   const cuerpo = document.querySelector(".landing-body");
   if (!cuerpo || !("contentVisibility" in document.body.style)) return;
-  const secciones = Array.from(cuerpo.querySelectorAll(":scope > section.seccion"));
+  const secciones = Array.from(cuerpo.querySelectorAll("section.seccion"));
   const reservar = () => {
     cuerpo.classList.remove("dibujo-diferido");
     secciones.forEach((s) => { s.style.containIntrinsicSize = "auto " + s.offsetHeight + "px"; });
@@ -3034,3 +3051,43 @@ function activarDibujoDiferido() {
   window.addEventListener("resize", () => { clearTimeout(espera); espera = setTimeout(reservar, 400); });
 }
 document.addEventListener("DOMContentLoaded", activarDibujoDiferido);
+
+
+// Portada serena: una luz suave sigue al cursor en la bienvenida (en lugar de la
+// estela de tinta), y el menú marca en qué capítulo estás.
+function activarPortadaSerena() {
+  const hero = document.querySelector("[data-aurora]");
+  if (hero && !SIN_MOVIMIENTO && window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
+    let pendiente = false, x = 50, y = 40;
+    hero.addEventListener("pointermove", (e) => {
+      const r = hero.getBoundingClientRect();
+      x = ((e.clientX - r.left) / r.width) * 100;
+      y = ((e.clientY - r.top) / r.height) * 100;
+      if (pendiente) return;
+      pendiente = true;
+      requestAnimationFrame(() => {
+        pendiente = false;
+        hero.style.setProperty("--ax", x.toFixed(1) + "%");
+        hero.style.setProperty("--ay", y.toFixed(1) + "%");
+      });
+    }, { passive: true });
+  }
+
+  const enlaces = new Map();
+  document.querySelectorAll('.nav-enlaces a[href^="#"]').forEach((a) => enlaces.set(a.getAttribute("href").slice(1), a));
+  const capitulos = Array.from(document.querySelectorAll(".capitulo[id]")).filter((c) => enlaces.has(c.id));
+  if (!capitulos.length || !("IntersectionObserver" in window)) return;
+  const observador = new IntersectionObserver((entradas) => {
+    entradas.forEach((e) => {
+      const enlace = enlaces.get(e.target.id);
+      if (!enlace) return;
+      if (e.isIntersecting) {
+        enlaces.forEach((a) => { a.classList.remove("capitulo-actual"); a.removeAttribute("aria-current"); });
+        enlace.classList.add("capitulo-actual");
+        enlace.setAttribute("aria-current", "location");
+      }
+    });
+  }, { rootMargin: "-45% 0px -50% 0px" });
+  capitulos.forEach((c) => observador.observe(c));
+}
+document.addEventListener("DOMContentLoaded", activarPortadaSerena);

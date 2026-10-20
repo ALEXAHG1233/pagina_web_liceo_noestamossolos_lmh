@@ -1,6 +1,10 @@
-@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Montserrat:wght@400;500;600;700;800&family=Poppins:wght@500;600;700&display=swap');
+/* Letras de toda la página: Fraunces (títulos, cálida y humana; su grosor se puede
+   animar) y Atkinson Hyperlegible (textos, hecha para que todos lean con facilidad). */
+@import url('https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Fraunces:ital,opsz,wght,SOFT@0,9..144,400..700,100;1,9..144,400..700,100&display=swap');
 
 :root {
+  --letra-titulo: "Fraunces", Georgia, serif;
+  --letra-texto: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
   --verde-liceo: #1f4b2c;
   --verde-liceo-claro: #4d7111;
   --verde-suave: #e6fbef;
@@ -52,7 +56,7 @@ body {
      tiene instalada (es común en Mac), la usa directamente — sin necesidad
      de descargarla ni alojarla nosotros (no se puede, es de pago). Si no la
      tiene, cae en Arial, que es prácticamente idéntica visualmente. */
-  font-family: "Montserrat", Helvetica, Arial, sans-serif;
+  font-family: var(--letra-texto);
   font-weight: 400;
   background: linear-gradient(180deg, var(--verde-liceo) 0%, var(--verde-oscuro) 100%);
   /* "background-attachment: fixed" crea el efecto parallax: el fondo se
@@ -106,12 +110,13 @@ body {
 }
 
 h1, h2, h3 {
-  font-family: "Montserrat", Helvetica, Arial, sans-serif;
-  font-weight: 700;
-  letter-spacing: 0.01em;
+  font-family: var(--letra-titulo);
+  font-variation-settings: "SOFT" 100;
+  font-weight: 600;
+  letter-spacing: -0.01em;
   color: var(--amarillo);
 }
-h1 { font-weight: 800; }
+h1 { font-weight: 650; }
 h3 { font-weight: 600; }
 
 a { color: var(--amarillo); }
@@ -312,7 +317,7 @@ button, .opcion-boton, .btn-sonido, input[type="submit"] { font-weight: 700; }
   display: flex;
   align-items: center;
   justify-content: center;
-  font-family: "Poppins", sans-serif;
+  font-family: var(--letra-texto);
   font-size: 13px;
   font-weight: 600;
   color: #fff;
@@ -534,7 +539,7 @@ button, .opcion-boton, .btn-sonido, input[type="submit"] { font-weight: 700; }
   .whatsapp-flotante-texto {
     display: inline-block;
     color: #fff;
-    font-family: "Montserrat", Helvetica, Arial, sans-serif;
+    font-family: var(--letra-texto);
     font-weight: 600;
     font-size: 14px;
     white-space: nowrap;

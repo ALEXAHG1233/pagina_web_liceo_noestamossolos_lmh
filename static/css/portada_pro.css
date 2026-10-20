@@ -1,0 +1,376 @@
+/* =============================================================================
+   Portada serena: el mismo "No estamos solos LMH" (verde del liceo, Tigrito, las
+   imágenes y todas las funciones), ordenado en capítulos y con menos ruido.
+
+   Idea: un lugar tranquilo con un camino claro. Llegas, te saludan, eliges una
+   puerta. La ayuda inmediata siempre está a un toque.
+
+   Paleta del proyecto (Green Screen), cada color con un trabajo:
+     --bosque  #1F4B2C  superficies de los capítulos emocionales
+     --noche   #122E1B  fondo de la página
+     --musgo   #4D7111  bordes y detalles
+     --lima    #C3E956  solo acciones y foco (lo que se toca)
+     --menta   #91EAAF  realces suaves
+     --niebla  #F4FFFC  texto sobre verde y paneles de lectura
+   Letras: Fraunces (títulos, cálida y humana) y Atkinson Hyperlegible (texto,
+   hecha para que todos lean con facilidad).
+   ============================================================================= */
+
+.landing-body {
+  --bosque: #1f4b2c;
+  --noche: #122e1b;
+  --musgo: #4d7111;
+  --lima: #c3e956;
+  --menta: #91eaaf;
+  --niebla: #f4fffc;
+  --texto: rgba(244, 255, 252, 0.88);
+  --texto-suave: rgba(244, 255, 252, 0.72);
+  --titulo: var(--letra-titulo);
+  --lectura: var(--letra-texto);
+  --radio-grande: 28px;
+  --radio: 18px;
+  font-family: var(--lectura);
+  font-size: 18px;
+  line-height: 1.6;
+  color: var(--texto);
+  cursor: auto;
+}
+.landing-body :is(a, button, [role="button"]) { cursor: pointer; }
+.landing-body :is(p, li, span, a, button, small, strong, label, input, textarea) { font-family: var(--lectura); }
+
+/* Menos estímulos: fuera los rayos que se mecen, la línea de fondo y las esquinas decorativas. */
+.landing-body :is(.rayos-fondo, .linea-fondo, .cyber-deco, .girar-pista, .barrido) { display: none !important; }
+.landing-body .boton-metal { animation: none !important; background-image: none !important; }
+
+/* ---------- Tipografía ---------- */
+.landing-body :is(h1, h2, h3) {
+  font-family: var(--titulo);
+  font-variation-settings: "SOFT" 100;
+  letter-spacing: -0.01em;
+  color: var(--niebla);
+  text-wrap: balance;
+}
+/* Lo que va dentro de un título (palabras animadas, enlaces) usa la letra del título. */
+.landing-body :is(h1, h2, h3, h4) :is(span, a, strong, em) { font-family: inherit; }
+.landing-body .seccion h2 {
+  font-size: clamp(30px, 3.6vw, 44px);
+  line-height: 1.1;
+  font-weight: 600;
+  margin: 0 0 12px;
+  text-align: left;
+}
+.landing-body .seccion h3 { font-weight: 600; letter-spacing: -0.005em; }
+.landing-body :is(.seccion-subtitulo, .cta-elegir-subtitulo, .video-landing-intro) {
+  max-width: 62ch;
+  margin: 0 0 28px;
+  font-size: 18px;
+  line-height: 1.55;
+  color: var(--texto-suave);
+  text-align: left;
+}
+.landing-body p { max-width: 68ch; }
+
+/* ---------- Ancho y ritmo ---------- */
+@media (min-width: 960px) {
+  .landing-body .capitulo > section,
+  .landing-body .capitulo > .capitulo-cabeza { max-width: 1120px; margin-left: auto; margin-right: auto; }
+}
+.landing-body .seccion { padding: clamp(36px, 5vw, 64px) clamp(18px, 4vw, 40px); }
+
+/* La entrada al bajar y subir: más corta y sin desenfoque, para no marear. */
+.landing-body .reveal { --desde: 18px; transform: translateY(var(--desde)); filter: none; }
+.landing-body .reveal.desde-arriba { --desde: -18px; }
+.landing-body .reveal.visible { transform: none; }
+
+/* ---------- Menú ---------- */
+.landing-body .nav-principal {
+  background: rgba(18, 46, 27, 0.92);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid rgba(145, 234, 175, 0.18);
+}
+.landing-body .nav-marca span { font-family: var(--titulo); font-size: 17px; letter-spacing: 0; color: var(--niebla); }
+.landing-body .nav-enlaces a { font-size: 15px; color: var(--texto); white-space: nowrap; }
+/* Pantallas medianas: el menú cabe en una sola fila sin partir palabras. */
+@media (min-width: 860px) and (max-width: 1179px) {
+  .landing-body .nav-enlaces { gap: 12px; }
+  .landing-body .nav-enlaces a { font-size: 14px; }
+  .landing-body .nav-enlaces a.nav-boton-ayuda { padding: 8px 14px !important; }
+  .landing-body .nav-buscar-texto, .landing-body .nav-buscar kbd { display: none; }
+}
+.landing-body .nav-enlaces a.nav-boton-ayuda {
+  background: var(--lima) !important;
+  color: var(--noche) !important;
+  border-radius: 999px;
+  font-weight: 700 !important;
+  padding: 9px 18px !important;
+  box-shadow: none;
+}
+.landing-body .nav-enlaces a.nav-boton-ayuda::before { content: "♥ "; }
+/* En celular, "Ayuda" queda siempre a la vista junto al menú. */
+.nav-ayuda-movil { display: none; }
+@media (max-width: 859px) {
+  .landing-body .nav-ayuda-movil {
+    display: inline-flex;
+    align-items: center;
+    height: 34px;
+    padding: 0 12px;
+    border-radius: 999px;
+    background: var(--lima);
+    color: var(--noche);
+    font-weight: 700;
+    font-size: 14px;
+    text-decoration: none;
+    white-space: nowrap;
+  }
+  .landing-body .nav-buscar-texto { display: none; }
+}
+@media (max-width: 360px) { .landing-body .nav-marca span { display: none; } }
+/* Una sola señal de dónde estás: la píldora sigue al capítulo que se ve. */
+.landing-body .gooey-capa { display: none; }
+.landing-body .nav-enlaces[data-gooey] a.gooey-activo:not(.capitulo-actual) { color: var(--texto) !important; }
+.landing-body .nav-enlaces a.capitulo-actual:not(.nav-boton-ayuda) {
+  background: rgba(195, 233, 86, 0.16);
+  color: var(--lima) !important;
+  border-radius: 999px;
+}
+/* Los temas de psicología no son pasos en orden: sin números. */
+.landing-body .recurso-numero { display: none; }
+
+/* ---------- Bienvenida: la única pieza grande y memorable ---------- */
+.landing-body .hero-pro {
+  position: relative;
+  padding: clamp(12px, 2vw, 20px) clamp(12px, 3vw, 28px) 0;
+  isolation: isolate;
+}
+/* Luz que sigue al cursor con suavidad (reemplaza la estela de tinta). */
+.landing-body .hero-pro::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: radial-gradient(520px circle at var(--ax, 50%) var(--ay, 40%), rgba(195, 233, 86, 0.16), transparent 65%);
+  transition: background-position 0.2s;
+}
+.landing-body .hero-banner-wrap { border-radius: var(--radio-grande); overflow: hidden; box-shadow: 0 30px 60px -30px rgba(0, 0, 0, 0.6); }
+.landing-body .hero-banner-img { display: block; width: 100%; height: auto; border-radius: 0; }
+
+.bienvenida {
+  position: relative;
+  max-width: 1120px;
+  margin: clamp(14px, 2vw, 22px) auto 0;
+  padding: clamp(26px, 4vw, 48px) clamp(20px, 4vw, 52px) clamp(22px, 3vw, 36px);
+  border-radius: var(--radio-grande);
+  background: linear-gradient(160deg, rgba(31, 75, 44, 0.97), rgba(18, 46, 27, 0.98));
+  border: 1px solid rgba(145, 234, 175, 0.2);
+  box-shadow: 0 30px 70px -40px rgba(0, 0, 0, 0.8);
+  text-align: left;
+}
+.bienvenida-marca { display: flex; align-items: center; gap: 14px; margin-bottom: 18px; }
+.bienvenida-logo { width: 54px; height: auto; flex: none; filter: drop-shadow(0 6px 10px rgba(0, 0, 0, 0.35)); }
+.bienvenida-marca p { margin: 0; font-size: 15px; color: var(--texto-suave); max-width: 32ch; }
+
+.landing-body .bienvenida-titulo {
+  margin: 0;
+  font-size: clamp(44px, 7.4vw, 92px);
+  line-height: 0.98;
+  font-weight: 620;
+  letter-spacing: -0.025em;
+  color: var(--niebla);
+}
+.bienvenida-linea { display: block; }
+.landing-body .bienvenida-morph { display: block; padding: 0; text-align: left; }
+.landing-body .bienvenida-morph .morph-palabras { display: block; position: relative; height: 1.12em; filter: url(#filtro-morph) blur(0.4px); }
+.landing-body .bienvenida-morph .morph-texto {
+  font-family: var(--titulo);
+  font-style: italic;
+  font-variation-settings: "SOFT" 100;
+  font-weight: 600;
+  font-size: 1em;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  color: var(--lima);
+  text-align: left;
+}
+.bienvenida-texto { margin: 18px 0 0; font-size: clamp(18px, 1.6vw, 21px); line-height: 1.55; color: var(--texto); max-width: 56ch; }
+
+/* Tres puertas: lo primero que puede hacer quien llega. */
+.puertas { display: grid; grid-template-columns: 1fr; gap: 12px; margin-top: 24px; }
+@media (min-width: 760px) and (max-width: 959px) { .puertas { grid-template-columns: repeat(3, 1fr); } }
+/* En computadora: el saludo a la izquierda y las puertas una sobre otra a la derecha. */
+@media (min-width: 960px) {
+  .bienvenida { display: grid; grid-template-columns: 1.1fr 0.9fr; column-gap: clamp(32px, 4vw, 64px); align-items: center; }
+  .bienvenida .puertas { margin-top: 0; }
+  .bienvenida .isla { grid-column: 1 / -1; }
+  .puerta { padding: 18px 20px; }
+}
+.puerta {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px 18px;
+  border-radius: var(--radio);
+  border: 1px solid rgba(145, 234, 175, 0.28);
+  background: rgba(244, 255, 252, 0.05);
+  color: var(--niebla);
+  text-decoration: none;
+  transition: background 0.25s, border-color 0.25s, transform 0.25s;
+}
+.puerta:hover, .puerta:focus-visible { background: rgba(244, 255, 252, 0.1); border-color: var(--menta); transform: translateY(-2px); }
+.puerta-icono {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  background: rgba(145, 234, 175, 0.14);
+  color: var(--menta);
+}
+.puerta-texto { display: flex; flex-direction: column; gap: 2px; }
+.puerta-texto strong { font-family: var(--titulo); font-variation-settings: "SOFT" 100; font-weight: 560; font-size: 18px; line-height: 1.25; transition: font-weight 0.35s; }
+.puerta-texto small { font-size: 14.5px; color: var(--texto-suave); line-height: 1.35; }
+.puerta-principal { background: var(--lima); border-color: var(--lima); color: var(--noche); }
+.puerta-principal .puerta-icono { background: rgba(18, 46, 27, 0.12); color: var(--noche); }
+.puerta-principal .puerta-texto small { color: rgba(18, 46, 27, 0.75); }
+.puerta-principal:hover, .puerta-principal:focus-visible { background: #d2f170; border-color: #d2f170; }
+
+.linea-ayuda { margin: 20px 0 0; font-size: 16px; color: var(--texto-suave); }
+.linea-ayuda span { color: #f2a08c; }
+.linea-ayuda a { color: var(--niebla); font-weight: 700; text-decoration-color: rgba(195, 233, 86, 0.6); text-underline-offset: 3px; }
+.landing-body .bienvenida .isla { margin: 18px 0 0; }
+
+/* Cinta que se desliza: más discreta. */
+.landing-body .marquesina { margin-top: clamp(28px, 4vw, 48px); opacity: 0.85; }
+
+/* ---------- Apertura de cada capítulo ---------- */
+.capitulo { position: relative; padding-top: clamp(40px, 6vw, 90px); }
+.capitulo-cabeza {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: clamp(16px, 3vw, 32px);
+  align-items: center;
+  padding: 0 clamp(18px, 4vw, 40px);
+}
+.capitulo-ilustracion { width: clamp(72px, 9vw, 120px); height: auto; filter: drop-shadow(0 14px 18px rgba(0, 0, 0, 0.35)); }
+.landing-body .capitulo-titulo {
+  margin: 0;
+  font-size: clamp(40px, 6vw, 72px);
+  line-height: 1;
+  font-weight: 600;
+  letter-spacing: -0.025em;
+}
+/* Al llegar a un capítulo, su título va ganando cuerpo despacio, como al respirar:
+   el grosor variable de Fraunces pasa de fino a firme. Un solo gesto por capítulo. */
+@media (prefers-reduced-motion: no-preference) {
+  .landing-body .capitulo-cabeza .capitulo-titulo {
+    font-weight: 380;
+    letter-spacing: -0.01em;
+    transition: font-weight 1.6s cubic-bezier(0.22, 1, 0.36, 1), letter-spacing 1.6s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .landing-body .capitulo-cabeza.visible .capitulo-titulo { font-weight: 640; letter-spacing: -0.025em; }
+  /* En la bienvenida, el título hace lo mismo una vez al abrir la página. */
+  .landing-body .bienvenida-titulo .bienvenida-linea { animation: ganarCuerpo 1.8s cubic-bezier(0.22, 1, 0.36, 1) 0.3s both; }
+}
+@keyframes ganarCuerpo {
+  from { font-weight: 360; letter-spacing: 0.01em; opacity: 0.4; }
+  to { font-weight: 620; letter-spacing: -0.025em; opacity: 1; }
+}
+/* Al pasar por una puerta, su título se afirma un poco. */
+.puerta:hover .puerta-texto strong, .puerta:focus-visible .puerta-texto strong { font-weight: 680; }
+/* Números de la comunidad con la letra de títulos y cifras de igual ancho. */
+.landing-body .contador-numero { font-family: var(--titulo); font-variant-numeric: tabular-nums lining-nums; font-weight: 600; }
+.capitulo-texto { margin: 10px 0 16px; font-size: clamp(18px, 1.5vw, 20px); color: var(--texto); }
+.capitulo-indice ul { display: flex; flex-wrap: wrap; gap: 8px; margin: 0; padding: 0; list-style: none; }
+.capitulo-indice a {
+  display: inline-block;
+  padding: 7px 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(145, 234, 175, 0.3);
+  color: var(--niebla);
+  font-size: 15px;
+  text-decoration: none;
+  transition: background 0.2s, border-color 0.2s;
+}
+.capitulo-indice a:hover, .capitulo-indice a:focus-visible { background: rgba(145, 234, 175, 0.14); border-color: var(--menta); }
+@media (max-width: 560px) {
+  .capitulo-cabeza { grid-template-columns: 1fr; }
+  .capitulo-ilustracion { width: 64px; }
+}
+
+/* Cada capítulo con su propio tono de verde, para saber dónde estás. */
+.capitulo-hablar { background: linear-gradient(180deg, transparent, rgba(31, 75, 44, 0.55) 18%, rgba(31, 75, 44, 0.55) 82%, transparent); }
+.capitulo-juntos { background: linear-gradient(180deg, transparent, rgba(77, 113, 17, 0.22) 20%, rgba(31, 75, 44, 0.5) 100%); }
+
+/* ---------- Capítulo de lectura: panel claro, más cómodo para leer ---------- */
+.capitulo-entiende {
+  --blanco: #183020;
+  --blanco-suave: #3b5143;
+  --amarillo: #4d7111;
+  --dorado: #4d7111;
+  --linea: rgba(24, 48, 32, 0.14);
+  --verde-liceo-claro: #ffffff;
+  --tarjeta-fondo: #ffffff;
+  --sombra-suave: 0 2px 10px rgba(31, 77, 44, 0.1);
+  --sombra-media: 0 10px 26px rgba(31, 77, 44, 0.14);
+  --texto: #2a4433;
+  --texto-suave: #4a6152;
+  margin: clamp(40px, 6vw, 90px) clamp(0px, 2vw, 24px) 0;
+  padding-bottom: clamp(24px, 4vw, 48px);
+  border-radius: clamp(0px, 3vw, 40px);
+  background: var(--niebla);
+  color: var(--texto);
+}
+.capitulo-entiende :is(h2, h3, .capitulo-titulo) { color: #183020; }
+.capitulo-entiende .capitulo-indice a { color: #183020; border-color: rgba(24, 48, 32, 0.22); }
+.capitulo-entiende .capitulo-indice a:hover { background: rgba(77, 113, 17, 0.1); border-color: var(--musgo); }
+.capitulo-entiende :is(.recurso-card, .playlist-card, .estante-detalle, .tema-video) { background: #ffffff; border-color: rgba(24, 48, 32, 0.12); }
+.capitulo-entiende .video-ver-mas { color: var(--musgo); }
+.capitulo-entiende .banner-seccion-img { box-shadow: 0 20px 40px -26px rgba(24, 48, 32, 0.5); }
+
+/* ---------- Si es urgente: una banda clara y tranquila, nunca escondida ---------- */
+.capitulo-urgente { padding-top: clamp(32px, 5vw, 64px); }
+.landing-body .emergencia {
+  max-width: 1040px;
+  margin: 0 auto;
+  padding: clamp(24px, 4vw, 44px);
+  border-radius: var(--radio-grande);
+  border: 1px solid rgba(242, 160, 140, 0.45);
+  border-left-width: 1px;
+  background: linear-gradient(150deg, rgba(107, 35, 35, 0.6), rgba(60, 22, 22, 0.55));
+}
+.landing-body .emergencia h2 { font-size: clamp(30px, 4vw, 46px); color: #fff3ef; }
+.landing-body .emergencia p { color: rgba(255, 243, 239, 0.88); font-size: 18px; }
+.landing-body .emergencia-acciones { gap: 10px; }
+.landing-body .emergencia-boton { border-radius: 999px; padding: 12px 20px; font-size: 16px; }
+
+/* ---------- Tarjetas y botones: más calmados ---------- */
+.landing-body :is(.tarjeta, .opcion, .historia, .bento-cuadro, .test-grande, .playlist-card, .recurso-card, .contador, .red-card, .tarjeta-extra) {
+  border-radius: var(--radio);
+  box-shadow: none;
+}
+.landing-body :is(.tarjeta, .opcion, .bento-cuadro, .contador, .tarjeta-extra) { border-color: rgba(145, 234, 175, 0.22); }
+.landing-body :is(.tarjeta, .opcion, .recurso-card, .test-grande, .red-card, .tarjeta-extra) { transition: transform 0.25s, border-color 0.25s, background 0.25s; }
+.landing-body :is(.tarjeta, .opcion, .recurso-card, .test-grande, .red-card, .tarjeta-extra):hover { transform: translateY(-3px); border-color: var(--menta); }
+.landing-body .banner-seccion-img { border-radius: var(--radio-grande); }
+
+/* Historias: se leen como citas, con la letra de títulos. */
+.landing-body .historia p {
+  font-family: var(--titulo);
+  font-style: italic;
+  font-variation-settings: "SOFT" 100;
+  font-size: clamp(19px, 1.8vw, 23px);
+  line-height: 1.45;
+  color: var(--niebla);
+}
+
+/* ---------- Lema y pie ---------- */
+.landing-body .lema { padding-top: clamp(48px, 7vw, 96px); }
+.landing-body .pie-titulo { font-family: var(--titulo); letter-spacing: 0; text-transform: none; }
+
+/* ---------- Accesibilidad ---------- */
+.landing-body :is(a, button):focus-visible { outline: 3px solid var(--lima); outline-offset: 3px; border-radius: 10px; }
+@media (prefers-reduced-motion: reduce) {
+  .landing-body .hero-pro::before { display: none; }
+  .puerta, .landing-body :is(.tarjeta, .opcion, .recurso-card, .test-grande, .red-card, .tarjeta-extra) { transition: none; }
+}
