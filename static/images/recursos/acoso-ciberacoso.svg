@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 100" role="img" aria-hidden="true">
+  <defs>
+    <linearGradient id="f" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#4d7111"/>
+      <stop offset="1" stop-color="#0d2214"/>
+    </linearGradient>
+    <radialGradient id="l" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#c3e956" stop-opacity="0.28"/>
+      <stop offset="1" stop-color="#c3e956" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="160" height="100" fill="url(#f)"/>
+  <circle cx="80" cy="50" r="46" fill="url(#l)"/>
+  <circle cx="22" cy="18" r="1.6" fill="#c3e956" opacity="0.5"/>
+  <circle cx="140" cy="82" r="1.6" fill="#c3e956" opacity="0.5"/>
+  <circle cx="134" cy="16" r="1" fill="#fff" opacity="0.5"/>
+  <circle cx="28" cy="84" r="1" fill="#fff" opacity="0.5"/>
+  <g fill="none" stroke="#c3e956" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="64" y="20" width="32" height="60" rx="6"/><path d="M76 72h8"/><path d="M80 34v14M80 55v.5"/><path d="M36 30h18v12h-10l-5 5v-5h-3zM106 50h18v12h-3v5l-5-5h-10z"/>
+  </g>
+</svg>

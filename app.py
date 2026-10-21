@@ -464,6 +464,8 @@ def obtener_resumen_resenas():
 # (slugs de artículos). El título y la descripción salen del propio
 # artículo, así nunca se desincronizan.
 RECURSOS_PORTADA = [
+    "bullying",
+    "acoso-ciberacoso",
     "controlar-emociones",
     "apego-evitativo",
     "dopamina",

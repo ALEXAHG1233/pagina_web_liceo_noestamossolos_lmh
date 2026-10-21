@@ -289,6 +289,33 @@ ARTICULOS = {
             "Esto no significa que \"todo esté en tu cabeza\" cuando algo te duele de verdad — significa que la actitud y la esperanza sí tienen un efecto físico real, y vale la pena cuidarlas.",
         ],
     },
+    "bullying": {
+        "titulo": "Bullying: cuando te molestan una y otra vez",
+        "categoria": "Identifica",
+        "resumen": "No es una broma ni \"cosas de muchachos\": si se repite y te hace daño, es bullying y se puede parar.",
+        "contenido": [
+            "El bullying (o acoso escolar) es cuando una o varias personas molestan, humillan, dejan fuera o lastiman a alguien una y otra vez, y esa persona no logra defenderse sola.",
+            "Puede ser con golpes o empujones, con apodos y burlas, con rumores, dejando a alguien fuera del grupo a propósito, o quitándole o rompiéndole sus cosas.",
+            "Si te está pasando a ti: no es tu culpa y no te lo mereces. Cuéntaselo a un adulto de confianza, a un profesor o a la psicóloga del liceo. Pedir ayuda no es ser \"soplón\": es cuidarte.",
+            "Anota qué pasó, cuándo y quién estaba. Eso ayuda a que los adultos puedan actuar rápido.",
+            "Si lo ves: no te rías ni lo compartas. Acércate a la persona, acompáñala y avisa a un adulto. Cuando alguien rompe el silencio, el bullying pierde fuerza (lee también \"El efecto espectador\").",
+            "Si tú eres quien molesta: todavía puedes cambiarlo. Pedir perdón y hablar con la psicóloga te puede ayudar a entender qué te lleva a hacerlo.",
+            "Si lo que pasa te hace pensar en hacerte daño o en no querer estar aquí, habla hoy mismo con la psicóloga o llama gratis al 150.",
+        ],
+    },
+    "acoso-ciberacoso": {
+        "titulo": "Acoso y ciberacoso: nadie tiene derecho a hacerte sentir miedo",
+        "categoria": "Identifica",
+        "resumen": "Mensajes, amenazas, fotos o comentarios que no paran, en persona o por internet. Así se reconoce y así se pide ayuda.",
+        "contenido": [
+            "Acoso es cuando alguien te persigue, te presiona o te hace sentir incómodo/a una y otra vez, aunque le hayas dicho que pare. El ciberacoso es lo mismo, pero por el celular, las redes sociales o los videojuegos.",
+            "Algunas señales: mensajes que no paran, insultos o burlas en grupos, cuentas falsas para molestarte, fotos tuyas publicadas sin permiso, o alguien que quiere controlar con quién hablas.",
+            "El acoso también puede ser sexual: comentarios sobre tu cuerpo, que te toquen sin permiso o que te pidan fotos íntimas. Eso nunca es normal ni es tu culpa, aunque venga de alguien conocido o mayor que tú.",
+            "Si alguien te pide fotos o te amenaza con publicar algo tuyo: no envíes nada más, no cedas a lo que te pide, guarda las pruebas y cuéntaselo hoy a un adulto de confianza o a la psicóloga.",
+            "Guarda pruebas (capturas de pantalla con la fecha), no respondas con insultos, bloquea y reporta la cuenta en la aplicación.",
+            "Si te sientes en peligro o te amenazan con hacerte daño, llama al 911. Si te sientes muy mal por lo que está pasando, también puedes llamar gratis al 150, el Teléfono de la Esperanza.",
+        ],
+    },
     "autosabotaje": {
         "titulo": "Autosabotaje",
         "categoria": "Identifica",
