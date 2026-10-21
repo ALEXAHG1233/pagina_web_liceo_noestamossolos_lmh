@@ -1,9 +1,11 @@
-// Página "Habla con el Tigre": le hablas (o le escribes) y te responde con su voz.
+// "Habla con el Tigre": le hablas (o le escribes) y te responde con su voz.
+// Funciona en su página (/tigre) y en la portada. La conversación anónima se crea
+// solo cuando la persona le habla por primera vez.
 // Los mensajes van por el mismo camino que el chat ("mensaje_chatbot"), así que
 // pasan por el filtro de riesgo: si hay peligro, la psicóloga recibe el aviso y
 // nunca responde la IA. La voz la pone voz.js y los ojos cara_tigre.js.
 (() => {
-  const socket = io();
+  if (!document.getElementById("tigre-microfono")) return;
   const estado = document.getElementById("tigre-estado");
   const dijiste = document.getElementById("tigre-dijiste");
   const respuesta = document.getElementById("tigre-respuesta");
@@ -14,13 +16,39 @@
   const conVoz = document.getElementById("tigre-con-voz");
   const historial = document.getElementById("tigre-historial");
   const lista = document.getElementById("tigre-historial-lista");
-  const apoyoDiv = document.getElementById("apoyo-emergencia");
+  const apoyoDiv = document.getElementById("tigre-apoyo");
   const avisar = (e) => window.dispatchEvent(new CustomEvent("voz-estado", { detail: e }));
 
   let escuchando = false;
   let esperando = false;
+  let token = typeof TOKEN !== "undefined" && TOKEN ? TOKEN : null;
+  let socket = null;
+  let conectando = null;
 
-  socket.emit("unirse", { token: TOKEN });
+  const cargarScript = (src) => new Promise((ok, falla) => {
+    const s = document.createElement("script");
+    s.src = src;
+    s.onload = ok;
+    s.onerror = falla;
+    document.head.appendChild(s);
+  });
+
+  // Se conecta la primera vez que la persona le habla al Tigre.
+  function conectar() {
+    if (socket) return Promise.resolve();
+    if (conectando) return conectando;
+    const csrf = document.querySelector('meta[name="csrf-token"]')?.content || "";
+    conectando = (window.io ? Promise.resolve() : cargarScript("https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.5/socket.io.min.js"))
+      .then(() => token || fetch("/api/tigre/sesion", { method: "POST", headers: { "X-CSRF": csrf } })
+        .then((r) => r.json()).then((j) => { if (!j.token) throw new Error("sin sesión"); token = j.token; }))
+      .then(() => {
+        socket = io();
+        socket.emit("unirse", { token });
+        escucharSocket();
+      })
+      .catch((e) => { conectando = null; throw e; });
+    return conectando;
+  }
 
   Voz.configurar({
     nombre: NOMBRE_ASISTENTE,
@@ -59,7 +87,13 @@
     dijiste.textContent = "Dijiste: " + texto;
     estado.textContent = "El Tigre está pensando...";
     avisar("pensando");
-    socket.emit("mensaje_chatbot", { token: TOKEN, contenido: texto, persona: "tigre" });
+    conectar()
+      .then(() => socket.emit("mensaje_chatbot", { token, contenido: texto, persona: "tigre" }))
+      .catch(() => {
+        esperando = false;
+        avisar("listo");
+        estado.textContent = "No me puedo conectar ahora. Revisa tu internet e intenta otra vez.";
+      });
   }
 
   function marcarMicrofono(activo) {
@@ -106,6 +140,7 @@
     if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); formulario.requestSubmit(); }
   });
 
+  function escucharSocket() {
   socket.on("nuevo_mensaje", (data) => {
     if (data.emisor === "estudiante") { anotar("yo", data.contenido); return; }
     esperando = false;
@@ -122,7 +157,7 @@
     esperando = false;
     avisar("crisis");
     estado.textContent = "No estás solo. La psicóloga ya recibió un aviso.";
-    mostrarApoyoEmergencia(apoyoDiv, socket, TOKEN, data.mensaje);
+    mostrarApoyoEmergencia(apoyoDiv, socket, token, data.mensaje);
     apoyoDiv.scrollIntoView({ behavior: "smooth", block: "center" });
   });
   socket.on("contacto_emergencia_confirmado", (data) => {
@@ -137,4 +172,5 @@
     estado.textContent = "No me puedo conectar ahora. Revisa tu internet e intenta otra vez.";
     avisar("listo");
   });
+  }
 })();

@@ -702,6 +702,18 @@ def tigre_voz():
     return render_template("tigre_voz.html", token=session["token"], persona=PERSONAJES["tigre"])
 
 
+@app.route("/api/tigre/sesion", methods=["POST"])
+def tigre_sesion():
+    """Crea la conversación anónima del Tigre la primera vez que alguien le habla
+    desde la portada (así no se registra a quien solo mira la página)."""
+    if not request.headers.get("X-CSRF") or request.headers.get("X-CSRF") != session.get("csrf"):
+        return jsonify({"error": "sesion"}), 403
+    if "token" not in session:
+        session["token"] = f"Usuario-{uuid.uuid4().hex[:6]}"
+        registrar_sesion(session["token"])
+    return jsonify({"token": session["token"]})
+
+
 @app.route("/chatbot/<persona>")
 def chatbot_persona(persona):
     if persona == "tigre":

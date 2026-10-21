@@ -160,3 +160,34 @@
 
 /* Lo que está escondido se queda escondido aunque tenga su propio "display". */
 .tigre-body [hidden] { display: none !important; }
+
+.tigre-panel [hidden] { display: none !important; }
+
+/* ---------- En la portada, dentro de "Conoce a Tigrito" ---------- */
+.tigre-panel-portada { margin: 24px auto 0; color: #fff; }
+.tigre-portada-titulo {
+  margin: 0 0 10px;
+  font-family: var(--letra-titulo, Georgia, serif);
+  font-size: clamp(24px, 2.6vw, 30px);
+  color: #f5d878;
+}
+.tigre-panel-portada .cara-tigre-grande { --ojo-ancho: 150px; --ojo-alto: 100px; }
+.tigre-panel-portada .tigre-titulo { margin-top: 16px; }
+.tigre-pantalla-completa { display: inline-block; margin-top: 12px; color: #f5d878; font-weight: 700; font-size: 15px; }
+@media (min-width: 960px) {
+  .tigre-con-panel {
+    display: grid;
+    grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+    grid-template-areas: "titulo titulo" "sub sub" "visor panel";
+    align-items: center;
+    column-gap: 32px;
+  }
+  .tigre-con-panel > h2 { grid-area: titulo; }
+  .tigre-con-panel > .seccion-subtitulo { grid-area: sub; }
+  .tigre-con-panel > .visor-tigre { grid-area: visor; }
+  .tigre-con-panel > .tigre-panel-portada { grid-area: panel; margin: 0; width: 100%; }
+}
+@media (max-width: 480px) {
+  .tigre-panel-portada { padding: 22px 14px; border-radius: 26px; }
+  .tigre-panel-portada .cara-tigre-grande { --ojo-ancho: 118px; --ojo-alto: 82px; }
+}

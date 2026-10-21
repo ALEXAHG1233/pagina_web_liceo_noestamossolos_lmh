@@ -24,6 +24,8 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='css/interactivo.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/pop.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/portada_pro.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/cara_tigre.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/tigre_voz.css') }}">
 </head>
 {% from "_tests_tarjetas.html" import tarjetas_tests with context %}
 <body class="landing-body">
@@ -181,7 +183,7 @@
     </div>
   </section>
 
-  <section id="tigrito" class="seccion tigre-3d reveal">
+  <section id="tigrito" class="seccion tigre-3d tigre-con-panel reveal">
     <h2>Conoce a Tigrito</h2>
     {% if modelo_tigre %}
       <p class="seccion-subtitulo">La mascota del programa. Gíralo con el mouse o con el dedo.</p>
@@ -199,10 +201,11 @@
         <img class="tigrito-foto tigrito-sin-fondo" src="{{ url_for('static', filename='images/tigrito_psicologo.png') }}" alt="Tigrito, la mascota del programa: un tigre con boina militar y bata de psicólogo, con su libreta y un conejito en el bolsillo" loading="lazy" width="286" height="466">
       </div>
     {% endif %}
-    <p class="tigrito-hablar">
-      <a class="opcion-boton boton-metal tigrito-boton" href="{{ url_for('tigre_voz') }}">Hablar con el Tigre por voz</a>
-      <small>Le hablas y te responde con su voz. {{ "Usa inteligencia artificial, no es una persona." if ia_activa else "Es un asistente automático, no una persona." }}</small>
-    </p>
+    <div class="tigre-panel tigre-panel-portada" id="habla-con-el-tigre">
+      <h3 class="tigre-portada-titulo">Habla con el Tigre</h3>
+      {% include "_tigre_panel.html" %}
+      <a class="tigre-pantalla-completa" href="{{ url_for('tigre_voz') }}">Abrir en pantalla completa</a>
+    </div>
   </section>
 
 
@@ -926,5 +929,9 @@
     }
     activarIslaMusica();
   </script>
+  <script>const NOMBRE_ASISTENTE = "Tigre LMH";</script>
+  <script src="{{ url_for('static', filename='js/voz.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/cara_tigre.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/tigre_voz.js') }}"></script>
 </body>
 </html>

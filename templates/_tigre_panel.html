@@ -1,0 +1,52 @@
+{# El Tigre LMH que habla: cara con ojos, micrófono, escribirle y respuesta con voz.
+   Se usa en su página (/tigre) y en la portada. Lo maneja static/js/tigre_voz.js. #}
+<p class="tigre-aviso">{{ "Inteligencia artificial" if ia_activa else "Asistente automático" }} · no es una persona</p>
+
+<div class="cara-tigre cara-tigre-grande" id="cara-tigre" aria-hidden="true">
+  <span class="cara-tigre-boina">LMH</span>
+  <p class="tigre-titulo">NO ESTAMOS SOLOS</p>
+  <div class="cara-tigre-ojos">
+    <div class="cara-tigre-ojo"><div class="cara-tigre-pupila"></div></div>
+    <div class="cara-tigre-ojo"><div class="cara-tigre-pupila"></div></div>
+  </div>
+</div>
+<p class="tigre-estado" id="tigre-estado" aria-live="polite">Hola, soy el Tigre LMH. Estoy aquí contigo.</p>
+
+<div class="tigre-dialogo" id="tigre-dialogo" aria-live="polite">
+  <p class="tigre-dijiste" id="tigre-dijiste" hidden></p>
+  <p class="tigre-respuesta" id="tigre-respuesta" hidden></p>
+</div>
+
+<div id="tigre-apoyo" class="apoyo-emergencia" hidden></div>
+
+<div class="tigre-botones">
+  <button type="button" class="tigre-boton tigre-boton-voz" id="tigre-microfono" aria-pressed="false">
+    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg>
+    <span>HABLAR CON EL TIGRE</span>
+  </button>
+  <button type="button" class="tigre-boton tigre-boton-texto" id="tigre-escribir" aria-expanded="false" aria-controls="tigre-formulario">
+    <span>ESCRIBIRLE</span>
+  </button>
+</div>
+
+<form class="tigre-formulario" id="tigre-formulario" hidden>
+  <label for="tigre-mensaje" class="solo-lector">Escribe lo que sientes</label>
+  <textarea id="tigre-mensaje" rows="2" maxlength="1000" placeholder="Escribe aquí lo que sientes..."></textarea>
+  <button type="submit" class="tigre-boton">ENVIAR</button>
+</form>
+
+<label class="tigre-opcion">
+  <input type="checkbox" id="tigre-con-voz" checked>
+  El Tigre me responde con voz
+</label>
+
+<details class="tigre-historial" id="tigre-historial" hidden>
+  <summary>Ver toda la conversación</summary>
+  <div class="tigre-historial-lista" id="tigre-historial-lista"></div>
+</details>
+
+<p class="tigre-ayuda">
+  Lo que dices se convierte en texto y el audio no se guarda. Si algo es serio, la psicóloga recibe un aviso.
+  ¿Estás en peligro? Llama gratis al <a href="tel:150">150</a> o al <a href="tel:911">911</a>,
+  o <a href="{{ url_for('estudiante') }}">habla con la psicóloga</a>.
+</p>
