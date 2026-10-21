@@ -651,7 +651,8 @@
         {% if not loop.first %}hidden{% endif %} style="--lomo: {{ l.lomo }}; --tinta: {{ l.tinta }};">
         <div class="libro3d" aria-hidden="true">
           <div class="libro3d-cuerpo">
-            <div class="libro3d-tapa">
+            {% set foto_libro = portada_libro(l.id) %}
+            <div class="libro3d-tapa{% if foto_libro %} libro3d-tapa-foto{% endif %}"{% if foto_libro %} style="--foto: url('{{ url_for('static', filename=foto_libro) }}');"{% endif %}>
               <span class="libro3d-tapa-titulo">{{ l.titulo }}</span>
               <span class="libro3d-tapa-linea"></span>
               <span class="libro3d-tapa-autor">{{ l.autor }}</span>

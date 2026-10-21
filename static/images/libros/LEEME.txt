@@ -1,0 +1,16 @@
+Fotos de las portadas de los libros del estante.
+
+Pon aquí la foto con el nombre del libro (el "id" de libros_bot.py) y una de
+estas extensiones: .webp, .jpg, .jpeg o .png. Si un libro no tiene foto, se
+dibuja su portada con colores.
+
+  principito.jpg                El principito
+  nino-topo.jpg                 El niño, el topo, el zorro y el caballo
+  wonder.jpg                    Wonder: La lección de August
+  siete-habitos.jpg             Los 7 hábitos de los adolescentes altamente efectivos
+  mindset.jpg                   Mindset: La actitud del éxito
+  inteligencia-emocional.jpg    Inteligencia emocional
+  busca-sentido.jpg             El hombre en busca de sentido
+
+Lo mejor: una foto tomada por el equipo del libro de la biblioteca del liceo,
+o una imagen con permiso de uso. Las portadas oficiales tienen derechos de autor.

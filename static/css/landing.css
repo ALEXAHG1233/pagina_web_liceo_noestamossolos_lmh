@@ -2925,3 +2925,13 @@ body:has(.dock) .whatsapp-flotante { bottom: 80px; }
 }
 .respira-circulo [data-respira-fase] { display: inline-block; }
 .landing-body .respira-lema, .landing-body .respira-lema span { font-family: var(--letra-titulo); }
+
+/* Libros con foto de portada (static/images/libros/<id>.webp): la foto cubre la tapa. */
+.libro3d-tapa.libro3d-tapa-foto {
+  background:
+    linear-gradient(90deg, rgba(0, 0, 0, 0.32), transparent 9%),
+    radial-gradient(circle at 70% 20%, rgba(255, 255, 255, 0.16), transparent 60%),
+    var(--foto) center / cover no-repeat,
+    var(--lomo);
+}
+.libro3d-tapa-foto > span { visibility: hidden; }

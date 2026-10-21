@@ -543,6 +543,17 @@ def imagen_recurso(slug, solo_foto=False):
     return None
 
 
+@app.template_global()
+def portada_libro(libro_id):
+    """Foto de la portada de un libro (static/images/libros/<id>.webp, .jpg o .png).
+    Si no hay foto, el estante dibuja la portada con los colores del libro."""
+    for ext in ("webp", "jpg", "jpeg", "png"):
+        ruta = f"images/libros/{libro_id}.{ext}"
+        if os.path.exists(os.path.join(app.static_folder, ruta)):
+            return ruta
+    return None
+
+
 @app.route("/")
 def index():
     registrar_visita()
@@ -829,28 +840,6 @@ VIDEOS_CURADOS = {
                 "youtube_id": "QVZdMXK4kvk",
                 "titulo": "La salud mental juvenil no es tan complicada como creemos",
                 "descripcion": "Charla TEDx sobre salud mental en adolescentes, de forma cercana y sin tecnicismos.",
-            },
-        ],
-    },
-    "lgbt": {
-        "titulo": "Comunidad LGBT+",
-        "videos": [
-            {
-                "tipo": "enlace",
-                "url": "https://www.youtube.com/user/itgetsbetterproject/videos",
-                "titulo": "It Gets Better Project",
-                "descripcion": "Canal oficial del proyecto internacional que acompaña a jóvenes LGBT+ con historias reales de que las cosas mejoran.",
-            },
-        ],
-    },
-    "hombres_adultos": {
-        "titulo": "Para hombres adultos",
-        "videos": [
-            {
-                "tipo": "embed",
-                "youtube_id": "ExqTHyfHN-c",
-                "titulo": "Hombres, hablemos de salud mental",
-                "descripcion": "Charla TEDx sobre por qué a los hombres les cuesta más pedir ayuda, y por qué vale la pena hacerlo.",
             },
         ],
     },
