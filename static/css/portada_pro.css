@@ -286,31 +286,8 @@
 .capitulo-hablar { background: linear-gradient(180deg, transparent, rgba(31, 75, 44, 0.55) 18%, rgba(31, 75, 44, 0.55) 82%, transparent); }
 .capitulo-juntos { background: linear-gradient(180deg, transparent, rgba(77, 113, 17, 0.22) 20%, rgba(31, 75, 44, 0.5) 100%); }
 
-/* ---------- Capítulo de lectura: panel claro, más cómodo para leer ---------- */
-.capitulo-entiende {
-  --blanco: #183020;
-  --blanco-suave: #3b5143;
-  --amarillo: #4d7111;
-  --dorado: #4d7111;
-  --linea: rgba(24, 48, 32, 0.14);
-  --verde-liceo-claro: #ffffff;
-  --tarjeta-fondo: #ffffff;
-  --sombra-suave: 0 2px 10px rgba(31, 77, 44, 0.1);
-  --sombra-media: 0 10px 26px rgba(31, 77, 44, 0.14);
-  --texto: #2a4433;
-  --texto-suave: #4a6152;
-  margin: clamp(40px, 6vw, 90px) clamp(0px, 2vw, 24px) 0;
-  padding-bottom: clamp(24px, 4vw, 48px);
-  border-radius: clamp(0px, 3vw, 40px);
-  background: var(--niebla);
-  color: var(--texto);
-}
-.capitulo-entiende :is(h2, h3, .capitulo-titulo) { color: #183020; }
-.capitulo-entiende .capitulo-indice a { color: #183020; border-color: rgba(24, 48, 32, 0.22); }
-.capitulo-entiende .capitulo-indice a:hover { background: rgba(77, 113, 17, 0.1); border-color: var(--musgo); }
-.capitulo-entiende :is(.recurso-card, .playlist-card, .estante-detalle, .tema-video) { background: #ffffff; border-color: rgba(24, 48, 32, 0.12); }
-.capitulo-entiende .video-ver-mas { color: var(--musgo); }
-.capitulo-entiende .banner-seccion-img { box-shadow: 0 20px 40px -26px rgba(24, 48, 32, 0.5); }
+/* Capítulo de lectura: el mismo verde que los demás, con un tono propio para saber dónde estás. */
+.capitulo-entiende { background: linear-gradient(180deg, transparent, rgba(31, 75, 44, 0.45) 15%, rgba(18, 46, 27, 0.6) 85%, transparent); }
 
 /* ---------- Si es urgente: una banda clara y tranquila, nunca escondida ---------- */
 .capitulo-urgente { padding-top: clamp(32px, 5vw, 64px); }
@@ -362,5 +339,3 @@
 .tigrito-hablar small { color: var(--texto-suave); font-size: 15px; }
 .tigrito-boton { padding: 13px 30px; font-size: 16px; text-decoration: none; background: var(--dorado); color: var(--verde-oscuro); }
 
-/* En el panel claro, las tarjetas que siguen oscuras (con fondo verde) mantienen su texto claro. */
-.capitulo-entiende .opcion-recurso :is(h2, h3) { color: #f4fffc; }
