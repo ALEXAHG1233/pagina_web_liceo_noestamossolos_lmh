@@ -339,3 +339,6 @@
 .tigrito-hablar small { color: var(--texto-suave); font-size: 15px; }
 .tigrito-boton { padding: 13px 30px; font-size: 16px; text-decoration: none; background: var(--dorado); color: var(--verde-oscuro); }
 
+
+/* "Hablar ayuda" (la multitud) tiene fondo claro: su título va en verde oscuro. */
+.landing-body .multitud-texto h2 { color: #183020; }

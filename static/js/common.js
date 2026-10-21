@@ -1829,7 +1829,7 @@ document.addEventListener("DOMContentLoaded", activarPilaTarjetas);
 // (semilla y fuerza al azar dentro de un rango), así parece dibujado a mano
 // y "vibra". Si la persona pidió menos movimiento, no se aplica.
 const ONDULADO_SELECTOR = [
-  ".seccion h2:not(.sr-only)", ".multitud-texto h2", ".pila-titulo",
+  ".seccion h2:not(.sr-only)", ".pila-titulo",  // el título claro de .multitud queda sin relieve: sobre fondo claro se veía roto
   ".diario-header h1", ".informate-categoria-titulo", ".categoria-titulo", ".hero-amigos h1", ".capitulo-titulo",
 ].join(", ");
 const ONDULADOS = [
