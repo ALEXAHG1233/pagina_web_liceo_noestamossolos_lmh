@@ -9,8 +9,8 @@ $pres = $ppt.Presentations.Open($src, $false, $false, $false)
 $total = 0
 function Efecto($s, $sh, $tipo, $retraso, $dur, $direccion) {
   $e = $s.TimeLine.MainSequence.AddEffect($sh, $tipo, 0, 2)   # 2 = con la anterior
-  $e.Timing.TriggerDelayTime = $retraso
-  $e.Timing.Duration = $dur
+  $e.Timing.TriggerDelayTime = [single]$retraso
+  $e.Timing.Duration = [single]$dur
   if ($direccion) { try { $e.EffectParameters.Direction = $direccion } catch {} }
 }
 foreach ($s in $pres.Slides) {
