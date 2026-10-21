@@ -361,3 +361,6 @@
 .tigrito-hablar { display: flex; flex-direction: column; align-items: center; gap: 10px; margin: 24px 0 0; text-align: center; }
 .tigrito-hablar small { color: var(--texto-suave); font-size: 15px; }
 .tigrito-boton { padding: 13px 30px; font-size: 16px; text-decoration: none; background: var(--dorado); color: var(--verde-oscuro); }
+
+/* En el panel claro, las tarjetas que siguen oscuras (con fondo verde) mantienen su texto claro. */
+.capitulo-entiende .opcion-recurso :is(h2, h3) { color: #f4fffc; }
