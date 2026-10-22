@@ -111,7 +111,7 @@
         </a>
         <a class="puerta" href="{{ url_for('chatbot') }}">
           <span class="puerta-icono" aria-hidden="true"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="8" width="16" height="12" rx="3"/><path d="M12 4v4M9 13h.01M15 13h.01M9.5 17h5"/></svg></span>
-          <span class="puerta-texto"><strong>Conversar con Sami, Leo o Nia</strong><small>{{ "Asistente con inteligencia artificial, a toda hora" if ia_activa else "Asistente automático, a toda hora" }}</small></span>
+          <span class="puerta-texto"><strong>Conversar con Sami o Nia</strong><small>{{ "Asistente con inteligencia artificial, a toda hora" if ia_activa else "Asistente automático, a toda hora" }}</small></span>
         </a>
         <a class="puerta" href="#mural">
           <span class="puerta-icono" aria-hidden="true"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9h11a3 3 0 1 0-3-3M3 15h15a3 3 0 1 1-3 3M3 12h8"/></svg></span>
@@ -265,7 +265,7 @@
       </ol>
     </div>
     <div class="teclado-demo" data-teclado data-velocidad="50,130"
-      data-frases="No necesitas registrarte ni dar tu nombre.|Escribe lo que sientes, sin miedo: nadie sabe quién eres.|Elige con quién hablar: Sami, Leo, Nia o la psicóloga.|Aquí no estás solo/a.">
+      data-frases="No necesitas registrarte ni dar tu nombre.|Escribe lo que sientes, sin miedo: nadie sabe quién eres.|Elige con quién hablar: Sami, Nia o la psicóloga.|Aquí no estás solo/a.">
       <div class="teclado-pantalla">
         <div class="pantalla-barra" aria-hidden="true"><i></i><i></i><i></i><span>Chat anónimo</span></div>
         <p class="pantalla-texto"><span data-teclado-texto></span><span class="pantalla-cursor" aria-hidden="true"></span></p>
@@ -492,7 +492,7 @@
         [("Hablar con la psicóloga", url_for('estudiante'))]),
       ("Siento ansiedad, enojo o tristeza", "Ponerle nombre a lo que sientes es el primer paso. Elige el que más se parece y encontrarás ejercicios sencillos para ese momento.",
         [("Ansiedad o nervios", h ~ "#ansiedad"), ("Enojo (ira)", h ~ "#enojo"), ("Tristeza (depresión)", h ~ "#tristeza")]),
-      ("Necesito hablar con alguien", ("El asistente (Sami, Leo o Nia) es una inteligencia artificial: está disponible a cualquier hora, te hace preguntas para entenderte mejor y, si nota que estás en riesgo, avisa a la psicóloga." if ia_activa else "El asistente (Sami, Leo o Nia) es automático, no una persona: está disponible a cualquier hora y, si nota que estás en riesgo, avisa a la psicóloga."),
+      ("Necesito hablar con alguien", ("El asistente (Sami o Nia) es una inteligencia artificial: está disponible a cualquier hora, te hace preguntas para entenderte mejor y, si nota que estás en riesgo, avisa a la psicóloga." if ia_activa else "El asistente (Sami o Nia) es automático, no una persona: está disponible a cualquier hora y, si nota que estás en riesgo, avisa a la psicóloga."),
         [("Hablar con el asistente", url_for('chatbot'))]),
       ("Lo que necesito ahora", "A veces lo que hace falta es algo concreto: estudiar sin estrés, dormir bien o saber cómo decir lo que sientes.",
         [("Estudiar mejor", h ~ "#estudiar"), ("Dormir mejor", h ~ "#dormir"), ("Decir lo que siento", h ~ "#decir"), ("Calmar mi mente", h ~ "#calma")]),
@@ -853,6 +853,7 @@
       <p class="pie-dato"><a href="mailto:noestamossoloslmh@gmail.com">noestamossoloslmh@gmail.com</a></p>
       <p class="pie-dato">Teléfono: 3174-6810</p>
       <p class="pie-dato">San Pedro Sula, Honduras</p>
+      <p class="pie-dato"><a href="{{ url_for('psicologa_login') }}">Acceso para la psicóloga</a></p>
       <div class="instalar-app" data-instalar hidden>
         <button type="button" class="instalar-boton" data-instalar-boton>
           <img src="{{ url_for('static', filename='iconos/favicon-64.png') }}" alt="" width="28" height="28"> Instalar la app en mi celular
@@ -889,7 +890,7 @@
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></svg>
       <span class="dock-insignia" hidden></span>
     </a>
-    <a class="dock-item" href="{{ url_for('chatbot') }}" aria-label="Hablar con el asistente" data-etiqueta="Hablar con el asistente" data-siempre-activo data-menu='[{"t":"Hablar con Sami","u":"{{ url_for('chatbot_persona', persona='sami') }}"},{"t":"Hablar con Leo","u":"{{ url_for('chatbot_persona', persona='leo') }}"},{"t":"Hablar con Nia","u":"{{ url_for('chatbot_persona', persona='nia') }}"},{"t":"Hablar con el Tigre por voz","u":"{{ url_for('tigre_voz') }}"},{"s":1},{"t":"Elegir con quién","u":"{{ url_for('chatbot') }}"}]'>
+    <a class="dock-item" href="{{ url_for('chatbot') }}" aria-label="Hablar con el asistente" data-etiqueta="Hablar con el asistente" data-siempre-activo data-menu='[{"t":"Hablar con Sami","u":"{{ url_for('chatbot_persona', persona='sami') }}"},{"t":"Hablar con Nia","u":"{{ url_for('chatbot_persona', persona='nia') }}"},{"t":"Hablar con el Tigre por voz","u":"{{ url_for('tigre_voz') }}"},{"s":1},{"t":"Elegir con quién","u":"{{ url_for('chatbot') }}"}]'>
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 8V4H8"/><rect width="16" height="12" x="4" y="8" rx="2"/><path d="M2 14h2M20 14h2M15 13v2M9 13v2"/></svg>
     </a>
     <a class="dock-item" href="{{ url_for('diario') }}" aria-label="Mi diario de ánimo" data-etiqueta="Mi diario de ánimo" data-menu='[{"t":"Abrir mi diario","u":"{{ url_for('diario') }}"},{"t":"Autoevaluaciones","u":"{{ url_for('tests') }}"}]'>

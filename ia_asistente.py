@@ -1,5 +1,5 @@
 """
-Respuestas del asistente (Sami, Leo, Nia y el Tigre LMH) con inteligencia artificial.
+Respuestas del asistente (Sami, Nia y el Tigre LMH) con inteligencia artificial.
 Usa varios servicios en cadena (Claude, Groq, Gemini, Mistral, OpenRouter,
 NVIDIA, Hugging Face): si uno se queda sin saldo o falla, pasa al siguiente
 (ver ia_proveedores.py).
@@ -52,9 +52,10 @@ Límites (muy importantes):
 """
 
 PERSONALIDADES = {
-    "sami": "cálida, tranquila y paciente, como una amiga que sabe escuchar.",
-    "leo": "cercano, animado y directo, como un compañero mayor que da buenos consejos.",
-    "nia": "dulce, creativa y curiosa, que usa ejemplos sencillos y de la vida diaria.",
+    "sami": "eres un señor mayor, sabio, sereno y paciente, como un abuelo cariñoso: hablas con calma, "
+            "compartes lo que la vida te ha enseñado con frases sencillas y nunca regañas.",
+    "nia": "eres una mujer cálida, dulce y positiva, como una amiga de confianza: usas ejemplos "
+           "sencillos de la vida diaria y das ánimo con cariño.",
     "tigre": "eres Tigrito, la mascota del programa: un tigre amable, paciente y motivador que escucha sin juzgar, "
              "ayuda a comprender las emociones y recuerda con cariño que nadie está solo.",
 }

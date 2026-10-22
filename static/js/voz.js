@@ -1,6 +1,6 @@
 // Voz en los chats, según lo que le sea más cómodo a cada persona:
 //  - Hablar: graba lo que dices, lo convierte en texto y lo envía al chat.
-//  - Respuestas en voz: quien responde (Sami, Leo, Nia o la psicóloga) lee su
+//  - Respuestas en voz: quien responde (Sami, Nia o la psicóloga) lee su
 //    mensaje en voz alta.
 //  - Modo voz: pantalla completa con quien te responde; hablas, te contesta
 //    con voz y subtítulos, y vuelve a escucharte. Sin tocar nada.
@@ -24,6 +24,15 @@ const Voz = (() => {
   let ui = {};
   // Avisa a la página qué está pasando (lo usa la cara del Tigre para mover los ojos).
   const avisar = (estado) => window.dispatchEvent(new CustomEvent("voz-estado", { detail: estado }));
+
+  // Por qué no se pudo usar el micrófono, dicho de forma que se pueda arreglar.
+  // El navegador solo da el micrófono en https:// o en localhost.
+  function motivoMicrofono(err) {
+    if (!window.isSecureContext) return "Micrófono bloqueado: abre la página como localhost:5000";
+    if (err?.name === "NotAllowedError") return "Permite el micrófono en el candado junto a la dirección";
+    if (err?.name === "NotFoundError") return "No se encontró un micrófono conectado";
+    return "No se pudo usar el micrófono";
+  }
 
   // ---------- Grabar y convertir en texto ----------
   function grabarServidor(alTerminar, conSilencio) {
@@ -300,7 +309,7 @@ const Voz = (() => {
           else fin(texto || "");
         };
         const arrancar = servidor ? grabarServidor(terminar, true) : grabarNavegador(terminar);
-        arrancar.catch(() => { mic.classList.remove("grabando"); avisar("listo"); input.placeholder = "No se pudo usar el micrófono"; });
+        arrancar.catch((err) => { mic.classList.remove("grabando"); avisar("listo"); input.placeholder = motivoMicrofono(err); });
       });
     }
     const barra = cfg.barra;

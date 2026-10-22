@@ -488,7 +488,7 @@ RECURSOS_PORTADA = [
 # "palabras" son términos extra con los que alguien podría buscarlas.
 PAGINAS_BUSCADOR = [
     ("estudiante", None, "Hablar con la psicóloga", "Chat anónimo con una persona real", "ayuda triste ansiedad miedo hablar chat"),
-    ("chatbot", None, "Hablar con el asistente", "Disponible a cualquier hora", "bot sami leo nia conversar"),
+    ("chatbot", None, "Hablar con el asistente", "Disponible a cualquier hora", "bot sami nia conversar"),
     ("tigre_voz", None, "Habla con el Tigre por voz", "Le hablas y te responde con su voz", "tigre tigrito voz hablar escuchar microfono"),
     ("diario", None, "Mi diario de ánimo", "Registra cómo te sientes cada día", "emociones registro animo"),
     ("herramientas", None, "Herramientas para sentirme mejor", "Ansiedad, enojo, tristeza, dormir y estudiar", "calma tecnicas relajacion respiracion ira depresion estres"),

@@ -34,39 +34,24 @@ PERSONAJES = {
     "sami": {
         "nombre": "Sami",
         "avatar": "S",
-        "imagen": "images/avatares/avatar_chica.png",
-        "color": "#c9a227",
-        "tagline": "Cálido y directo, va al grano con cariño.",
-        "saludos": [
-            "Hola, soy Sami. Qué bueno que decidiste escribir. ¿Cómo va tu día?",
-            "Hola, aquí estoy. Cuéntame qué traes en mente, sin filtro.",
-        ],
-        "despedidas": [
-            "Con gusto. Aquí sigo si quieres seguir hablando.",
-            "Para eso estoy. Vuelve cuando quieras, aquí voy a estar.",
-        ],
-    },
-    "leo": {
-        "nombre": "Leo",
-        "avatar": "L",
         "imagen": "images/avatares/avatar_realista.webp",
-        "color": "#0072ce",
-        "tagline": "Tranquilo y reflexivo, con calma para pensar juntos.",
+        "color": "#8a6d3b",
+        "tagline": "Un señor mayor, sabio y sereno, como un abuelo que escucha sin apuro.",
         "saludos": [
-            "Hola, soy Leo. Vamos con calma: ¿qué tal ha estado tu día?",
-            "Hola. Tómate tu tiempo, no hay prisa aquí. ¿Qué tienes en mente?",
+            "Hola, soy Sami. Siéntate un rato conmigo, aquí no hay prisa. ¿Cómo has estado?",
+            "Hola. A mis años he aprendido que hablar alivia. Cuéntame qué traes en el corazón.",
         ],
         "despedidas": [
-            "Con gusto te acompaño. Aquí sigo, a tu ritmo.",
-            "Cuando quieras seguimos pensándolo juntos.",
+            "Fue un gusto platicar contigo. Aquí sigo, con calma, cuando quieras volver.",
+            "Recuerda: todo pasa, y nadie tiene que cargar solo. Vuelve cuando quieras.",
         ],
     },
     "nia": {
         "nombre": "Nia",
         "avatar": "N",
-        "imagen": "images/avatares/avatar_lego.png",
+        "imagen": "images/avatares/avatar_chica.png",
         "color": "#1f4d2c",
-        "tagline": "Positiva, con humor ligero cuando el momento lo permite.",
+        "tagline": "Una mujer cálida y positiva, que escucha como una amiga de confianza.",
         "saludos": [
             "¡Hola! Soy Nia. ¿Cómo va todo por tu mundo hoy?",
             "Hola, qué gusto verte por aquí. ¿Qué me cuentas?",

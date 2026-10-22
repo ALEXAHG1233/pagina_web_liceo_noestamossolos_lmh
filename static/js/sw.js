@@ -1,10 +1,12 @@
 // Service worker: hace que la página funcione como aplicación instalable.
 // - Guarda los estilos, scripts, íconos e imágenes ya vistos, para que abra rápido.
-// - Las páginas se piden siempre a internet primero (así se ven los cambios
-//   de la psicóloga); si no hay conexión, se muestra la última copia o la
-//   página "Sin conexión", que recuerda las líneas 150 y 911.
+// - Las páginas se piden siempre a internet (así se ven los cambios de la
+//   psicóloga y el diseño nuevo); si no hay conexión o el servidor está
+//   apagado, se muestra la página "Sin conexión", que recuerda las líneas
+//   150 y 911. No se muestran copias viejas de las páginas: confundían,
+//   porque parecía que la página había vuelto al diseño anterior.
 // - Nunca guarda el chat, el panel de la psicóloga ni las cuentas.
-const VERSION = "v8";
+const VERSION = "v9";
 const CACHE = `no-estamos-solos-${VERSION}`;
 const PRECARGA = [
   "/sin-conexion",
@@ -45,16 +47,8 @@ self.addEventListener("fetch", (evento) => {
   }
 
   if (pedido.mode === "navigate") {
-    // Páginas: internet primero, copia guardada si no hay conexión.
-    evento.respondWith(
-      fetch(pedido)
-        .then((resp) => {
-          const copia = resp.clone();
-          if (resp.ok) caches.open(CACHE).then((c) => c.put(pedido, copia));
-          return resp;
-        })
-        .catch(() => caches.match(pedido).then((r) => r || caches.match("/sin-conexion")))
-    );
+    // Páginas: siempre de internet; sin conexión, la página de aviso.
+    evento.respondWith(fetch(pedido).catch(() => caches.match("/sin-conexion")));
     return;
   }
 

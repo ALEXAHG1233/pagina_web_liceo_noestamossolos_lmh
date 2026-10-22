@@ -595,9 +595,9 @@ ARTICULOS = {
         # descripción, x %, y %, giro en grados). x/y mueven cada foto
         # respecto al centro, en % de su propio tamaño.
         "collage": [
-            ("avatares/avatar_chica.png", "Sami, uno de los personajes de la página", -95, -6, -12),
-            ("avatares/avatar_realista.webp", "Leo, uno de los personajes de la página", -32, 10, 5),
-            ("avatares/avatar_lego.png", "Nia, una de las personajes de la página", 32, -8, -6),
+            ("avatares/avatar_chica.png", "Nia, una de las personajes de la página", -95, -6, -12),
+            ("avatares/avatar_realista.webp", "Sami, uno de los personajes de la página", -32, 10, 5),
+            ("avatares/avatar_lego.png", "El Tigre LMH en versión de juguete", 32, -8, -6),
             ("avatares/avatar_sticker.webp", "Personaje de la página en forma de sticker", 95, 6, 11),
         ],
         "resumen": "Varios personajes conocidos están escritos mostrando un trastorno psicológico real. Verlo en ellos ayuda a reconocerlo y a quitarle el estigma.",

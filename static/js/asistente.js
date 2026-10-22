@@ -156,8 +156,8 @@ Voz.iniciar({
   imagen: IMAGEN_ASISTENTE,
   etiqueta: ASISTENTE_ES_IA ? "Asistente con inteligencia artificial · no es una persona" : "Asistente virtual · no es una persona",
   esperando: `${NOMBRE_ASISTENTE} está pensando…`,
-  vozMasculina: PERSONA === "leo" || PERSONA === "tigre",
-  tono: { sami: 1.05, leo: 0.95, nia: 1.15, tigre: 0.9 }[PERSONA] || 1,
+  vozMasculina: PERSONA === "sami" || PERSONA === "tigre",
+  tono: { sami: 0.8, nia: 1.15, tigre: 0.9 }[PERSONA] || 1,
   enviar: (texto) => {
     Sonidos.desbloquear();
     socket.emit("mensaje_chatbot", { token: TOKEN, contenido: texto, persona: PERSONA });
