@@ -12,6 +12,51 @@
 </head>
 <body class="login-body">
   <div class="login-card">
+    {# Cuadro con el logo que se abre al pasar el mouse (diseño de Uiverse.io por Smit-Prajapati) #}
+    <div class="tarjeta-logo" aria-hidden="true">
+      <div class="tl-borde"></div>
+      <div class="tl-contenido">
+        <div class="tl-logo">
+          <span class="tl-logo1">LMH</span>
+          <span class="tl-logo2">No estamos solos</span>
+          <span class="tl-estela"></span>
+        </div>
+        <span class="tl-texto-logo">panel</span>
+      </div>
+      <span class="tl-texto-abajo">liceo militar de honduras</span>
+    </div>
+    <script>
+      // Mide "LMH" y "No estamos solos" con la letra real y los ajusta para
+      // que, abiertos, quepan dentro del cuadro (achica la letra si hace falta).
+      (function () {
+        const cuadro = document.querySelector(".tarjeta-logo");
+        const l1 = cuadro.querySelector(".tl-logo1");
+        const l2 = cuadro.querySelector(".tl-logo2");
+        function ancho(el) {
+          const copia = el.cloneNode(true);
+          copia.style.cssText = "position:absolute;width:auto;visibility:hidden";
+          el.parentNode.appendChild(copia);
+          const w = copia.getBoundingClientRect().width;
+          copia.remove();
+          return Math.ceil(w);
+        }
+        function ajustar() {
+          l1.style.fontSize = l2.style.fontSize = "";
+          let w1 = ancho(l1), w2 = ancho(l2);
+          const cabe = cuadro.clientWidth - 48;
+          if (w1 + w2 > cabe) {
+            const f = cabe / (w1 + w2);
+            l1.style.fontSize = parseFloat(getComputedStyle(l1).fontSize) * f + "px";
+            l2.style.fontSize = parseFloat(getComputedStyle(l2).fontSize) * f + "px";
+            w1 = ancho(l1); w2 = ancho(l2);
+          }
+          cuadro.style.setProperty("--ancho-lmh", w1 + "px");
+          cuadro.style.setProperty("--ancho-frase", w2 + "px");
+        }
+        (document.fonts ? document.fonts.ready : Promise.resolve()).then(ajustar);
+        window.addEventListener("resize", ajustar);
+      })();
+    </script>
     <h1>Panel de la psicóloga</h1>
     <p class="flip-lema">Aquí estamos para <span data-flip-palabras="escuchar|acompañar|cuidar|orientar">escuchar</span></p>
     <p class="login-nota">Acceso privado. Solo para el personal autorizado del liceo.</p>
@@ -23,13 +68,19 @@
     <form method="POST" action="{{ url_for('psicologa_login') }}" class="login-form">
       <input type="text" name="usuario" placeholder="Usuario" autocomplete="username" required autofocus>
       <input type="password" name="clave" placeholder="Clave" autocomplete="current-password" required>
-      <button type="submit">Entrar</button>
+      {# Botón con brillo de colores girando (diseño de Uiverse.io por nazar-gavrylyk) #}
+      <span class="arcoiris-envoltura">
+        <button type="submit" class="boton-arcoiris">
+          <span class="arcoiris-texto">Entrar</span>
+          <span class="arcoiris-contenedor" aria-hidden="true"><span class="arcoiris-degradado"></span></span>
+        </button>
+      </span>
     </form>
 
     <a href="{{ url_for('index') }}" class="login-volver">← Volver al inicio</a>
   </div>
   <script src="{{ url_for('static', filename='js/common.js') }}"></script>
   <script src="{{ url_for('static', filename='js/flip_fade.js') }}"></script>
-  <script src="{{ url_for('static', filename='js/wave_grid.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/fondo_fluido.js') }}"></script>
 </body>
 </html>

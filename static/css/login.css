@@ -188,3 +188,243 @@
 .form-entrar .icon { width: 1.5rem; height: 1.5rem; flex: none; }
 .form-entrar .login-urgencia { margin: -6px 0 0; text-align: center; color: var(--font-color); }
 .form-entrar .login-volver { margin: 0; color: var(--font-color); }
+
+/* Cuadro con el logo del liceo en la entrada del panel
+   (diseño de Uiverse.io por Smit-Prajapati, con "LMH" y "No estamos solos"
+   en lugar del logo original). Al pasar el mouse el cuadro crece, aparece un
+   marco dorado y "LMH" se abre para mostrar "No estamos solos". */
+.tarjeta-logo {
+  --dorado-tl: #bd9f67;
+  --fondo-tl: #243137;
+  --ancho-lmh: 66px;
+  --ancho-frase: 150px;
+  width: 100%;
+  max-width: 300px;
+  height: 150px;
+  margin: 0 auto 16px;
+  background: var(--fondo-tl);
+  position: relative;
+  display: grid;
+  place-content: center;
+  border-radius: 10px;
+  overflow: hidden;
+  transition: all 0.5s ease-in-out;
+}
+.tl-borde {
+  position: absolute;
+  inset: 0;
+  border: 2px solid var(--dorado-tl);
+  opacity: 0;
+  transform: rotate(10deg);
+  transition: all 0.5s ease-in-out;
+}
+.tl-texto-abajo {
+  position: absolute;
+  left: 50%;
+  bottom: 13px;
+  transform: translateX(-50%);
+  font-size: 7px;
+  text-transform: uppercase;
+  white-space: nowrap;
+  padding: 0 5px 0 8px;
+  color: var(--dorado-tl);
+  background: var(--fondo-tl);
+  opacity: 0;
+  letter-spacing: 7px;
+  transition: all 0.5s ease-in-out;
+}
+.tl-contenido { transition: all 0.5s ease-in-out; }
+.tl-logo {
+  height: 35px;
+  position: relative;
+  width: var(--ancho-lmh);
+  overflow: hidden;
+  transition: all 1s ease-in-out;
+}
+.tl-logo1, .tl-logo2 {
+  position: absolute;
+  top: 0;
+  height: 33px;
+  line-height: 33px;
+  white-space: nowrap;
+  font-family: var(--letra-titulo);
+  font-weight: 800;
+}
+.tl-logo1 { left: 0; width: var(--ancho-lmh); font-size: 28px; color: var(--dorado-tl); }
+.tl-logo2 {
+  left: var(--ancho-lmh);
+  width: var(--ancho-frase);
+  padding-left: 6px;
+  font-size: 19px;
+  color: transparent;
+  -webkit-text-stroke: 1px var(--dorado-tl);
+}
+.tl-estela {
+  position: absolute;
+  right: 0;
+  height: 100%;
+  width: 100%;
+  opacity: 0;
+}
+.tl-texto-logo {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  margin-top: 30px;
+  color: var(--dorado-tl);
+  padding-left: 8px;
+  font-size: 11px;
+  text-transform: uppercase;
+  opacity: 0;
+  transition: all 0.5s ease-in-out 0.5s;
+}
+
+/* Abierto: al pasar el mouse, y siempre en pantallas táctiles (no hay mouse) */
+.tarjeta-logo:hover { border-radius: 0; transform: scale(1.05); }
+.tarjeta-logo:hover .tl-logo,
+.tarjeta-logo:hover .tl-borde,
+.tarjeta-logo:hover .tl-texto-abajo,
+.tarjeta-logo:hover .tl-texto-logo { transition-delay: 0s; }
+.tarjeta-logo:hover .tl-logo {
+  width: calc(var(--ancho-lmh) + var(--ancho-frase));
+  animation: tlLinea 1s ease-in-out;
+}
+.tarjeta-logo:hover .tl-borde { inset: 12px; opacity: 1; transform: rotate(0); }
+.tarjeta-logo:hover .tl-texto-abajo { letter-spacing: 3px; opacity: 1; transform: translateX(-50%); }
+.tarjeta-logo:hover .tl-texto-logo { opacity: 1; letter-spacing: 9.5px; transition-delay: 0.5s; }
+.tarjeta-logo:hover .tl-estela { animation: tlEstela 1s ease-in-out; }
+
+@media (hover: none) {
+  .tarjeta-logo { border-radius: 0; }
+  .tarjeta-logo .tl-logo { width: calc(var(--ancho-lmh) + var(--ancho-frase)); animation: tlLinea 1s ease-in-out 0.4s; }
+  .tarjeta-logo .tl-borde { inset: 12px; opacity: 1; transform: rotate(0); }
+  .tarjeta-logo .tl-texto-abajo { letter-spacing: 3px; opacity: 1; }
+  .tarjeta-logo .tl-texto-logo { opacity: 1; letter-spacing: 9.5px; }
+}
+
+@keyframes tlLinea {
+  0% { border-right: 1px solid transparent; }
+  10% { border-right: 1px solid var(--dorado-tl); }
+  80% { border-right: 1px solid var(--dorado-tl); }
+  100% { border-right: 1px solid transparent; }
+}
+@keyframes tlEstela {
+  0% { background: linear-gradient(90deg, rgba(189, 159, 103, 0) 90%, rgb(189, 159, 103) 100%); opacity: 0; }
+  30% { background: linear-gradient(90deg, rgba(189, 159, 103, 0) 70%, rgb(189, 159, 103) 100%); opacity: 1; }
+  70% { background: linear-gradient(90deg, rgba(189, 159, 103, 0) 70%, rgb(189, 159, 103) 100%); opacity: 1; }
+  95% { background: linear-gradient(90deg, rgba(189, 159, 103, 0) 90%, rgb(189, 159, 103) 100%); opacity: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .tarjeta-logo, .tarjeta-logo * { transition: none !important; animation: none !important; }
+}
+/* Pantallas angostas: letras más chicas para que "No estamos solos" quepa abierto */
+@media (max-width: 380px) {
+  .tarjeta-logo { --ancho-lmh: 50px; --ancho-frase: 118px; height: 130px; }
+  .tl-logo1 { font-size: 21px; }
+  .tl-logo2 { font-size: 15px; padding-left: 4px; }
+  .tl-texto-abajo { font-size: 6px; }
+}
+
+/* Botón "Entrar" del panel con brillo de colores que gira detrás
+   (diseño de Uiverse.io por nazar-gavrylyk). La envoltura aísla las capas
+   de atrás para que el brillo quede detrás del botón y no del cuadro. */
+.arcoiris-envoltura {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  justify-content: center;
+  margin: 10px 0 6px;
+}
+.login-form .boton-arcoiris {
+  border: none !important;
+  outline: none;
+  background: #3a3a3a;
+  width: 100%;
+  max-width: 260px;
+  height: 60px;
+  padding: 0;
+  font-size: 18px;
+  color: #fff;
+  font-weight: 600;
+  border-radius: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  position: relative;
+  box-shadow: none;
+  translate: none;
+  transition: all 0.3s;
+}
+.login-form .boton-arcoiris:hover,
+.login-form .boton-arcoiris:active { background: #3a3a3a; box-shadow: none; translate: none; }
+.boton-arcoiris::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(255, 255, 255, 0.2);
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+  width: 106%;
+  height: 120%;
+  z-index: -1;
+  border-radius: inherit;
+  transition: all 0.3s;
+}
+.arcoiris-contenedor {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 106%;
+  height: 115%;
+  overflow: hidden;
+  border-radius: inherit;
+  z-index: -2;
+  filter: blur(10px);
+  transition: all 0.3s;
+}
+.arcoiris-degradado {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 110%;
+  aspect-ratio: 1;
+  border-radius: 100%;
+  transition: all 0.3s;
+  background-image: linear-gradient(
+    90deg,
+    hsl(226, 81%, 64%),
+    hsl(271, 81%, 64%),
+    hsl(316, 81%, 64%),
+    hsl(1, 81%, 64%),
+    hsl(46, 81%, 64%),
+    hsl(91, 81%, 64%),
+    hsl(136, 81%, 64%),
+    hsl(181, 81%, 64%)
+  );
+  animation: arcoirisGira 2s linear infinite;
+  filter: blur(10px);
+}
+.arcoiris-texto {
+  width: calc(100% - 24px);
+  height: 45px;
+  text-align: center;
+  line-height: 45px;
+  border-radius: 22px;
+  background-color: rgb(43, 43, 43);
+  background-image: linear-gradient(180deg, rgb(43, 43, 43) 0%, rgb(68, 68, 68) 100%);
+}
+.boton-arcoiris:hover .arcoiris-contenedor { transform: translate(-50%, -50%) scale(0.98); filter: blur(5px); }
+.boton-arcoiris:hover .arcoiris-degradado { filter: blur(5px); }
+.boton-arcoiris:focus-visible { outline: 3px solid #f5c400; outline-offset: 6px; }
+@keyframes arcoirisGira {
+  0% { transform: translate(-50%, -50%) rotate(0deg); }
+  100% { transform: translate(-50%, -50%) rotate(360deg); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .arcoiris-degradado { animation: none; }
+}

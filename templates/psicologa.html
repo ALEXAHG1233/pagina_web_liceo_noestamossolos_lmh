@@ -27,7 +27,36 @@
         <button type="button" data-nivel="medio" class="nivel-medio" aria-pressed="false">Medio <span>0</span></button>
         <button type="button" data-nivel="bajo" class="nivel-bajo" aria-pressed="false">Bajo <span>0</span></button>
       </div>
-      <input type="search" id="buscar-correo" class="buscar-correo" placeholder="Buscar por correo" aria-label="Buscar por correo">
+      {# Buscador con borde brillante que gira (diseño de Uiverse.io por Lakshay-art) #}
+      <div class="buscador-brillo">
+        <div class="bb-resplandor"></div>
+        <div class="bb-oscuro"></div>
+        <div class="bb-oscuro"></div>
+        <div class="bb-oscuro"></div>
+        <div class="bb-blanco"></div>
+        <div class="bb-borde"></div>
+        <div class="bb-centro">
+          <input type="search" id="buscar-correo" class="bb-input" placeholder="Buscar por correo" aria-label="Buscar por correo">
+          <div class="bb-mascara"></div>
+          <div class="bb-rosa"></div>
+          <div class="bb-lupa" aria-hidden="true">
+            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" fill="none">
+              <circle stroke="url(#bb-lupa-aro)" r="8" cy="11" cx="11"></circle>
+              <line stroke="url(#bb-lupa-mango)" y2="16.65" y1="22" x2="16.65" x1="22"></line>
+              <defs>
+                <linearGradient gradientTransform="rotate(50)" id="bb-lupa-aro">
+                  <stop stop-color="#f8e7f8" offset="0%"></stop>
+                  <stop stop-color="#b6a9b7" offset="50%"></stop>
+                </linearGradient>
+                <linearGradient id="bb-lupa-mango">
+                  <stop stop-color="#b6a9b7" offset="0%"></stop>
+                  <stop stop-color="#837484" offset="50%"></stop>
+                </linearGradient>
+              </defs>
+            </svg>
+          </div>
+        </div>
+      </div>
       <ul id="lista-tokens"></ul>
       <p id="lista-vacia" class="lista-vacia" hidden>No hay conversaciones con este filtro.</p>
     </aside>
@@ -67,6 +96,6 @@
   <script src="{{ url_for('static', filename='js/common.js') }}"></script>
   <script src="{{ url_for('static', filename='js/psicologa.js') }}"></script>
   <script src="{{ url_for('static', filename='js/flip_fade.js') }}"></script>
-  <script src="{{ url_for('static', filename='js/wave_grid.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/fondo_fluido.js') }}"></script>
 </body>
 </html>
