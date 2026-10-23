@@ -240,3 +240,49 @@ button[disabled] {
 }
 .panel-body .form-mensaje button:not([disabled]):active { translate: 0 0; box-shadow: none; }
 .panel-body .form-mensaje button:focus-visible { outline: 3px solid #f5c400; outline-offset: 2px; }
+
+/* Cada correo de la lista de conversaciones como botón de borde degradado
+   (basado en el diseño de Uiverse.io por cssbuttons-io): borde morado-azul-
+   celeste por fuera, caja azul oscuro por dentro; al pasar el mouse o con
+   el chat abierto, la caja se aclara y se ve todo el degradado. */
+.lista-chats .chat-item {
+  display: flex;
+  padding: 3px;
+  border: 0;
+  border-left: 0;
+  border-radius: 8px;
+  background-image: linear-gradient(144deg, #af40ff, #5b42f3 50%, #00ddeb);
+  box-shadow: rgba(151, 65, 252, 0.2) 0 15px 30px -5px;
+  color: #fff;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  transition: all 0.3s;
+}
+.lista-chats .chat-item-interior {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  background-color: rgb(5, 6, 45);
+  padding: 10px 12px;
+  border-radius: 6px;
+  transition: 300ms;
+}
+.lista-chats .chat-item:hover,
+.lista-chats .chat-item.activo { background: none; background-image: linear-gradient(144deg, #af40ff, #5b42f3 50%, #00ddeb); transform: none; }
+.lista-chats .chat-item:hover .chat-item-interior,
+.lista-chats .chat-item.activo .chat-item-interior { background: none; }
+.lista-chats .chat-item:active { transform: scale(0.97); }
+.lista-chats .chat-item .chat-correo { color: #fff; }
+.lista-chats .chat-item .chat-fecha,
+.lista-chats .chat-item .etiqueta { color: rgba(255, 255, 255, 0.78); }
+/* El nivel de riesgo se sigue viendo: una franja de color a la izquierda */
+.lista-chats .chat-item.riesgo-medio .chat-item-interior { box-shadow: inset 4px 0 0 #dba62a; }
+.lista-chats .chat-item.riesgo-alto .chat-item-interior { box-shadow: inset 4px 0 0 #e0602f; }
+.lista-chats .chat-item.riesgo-critico .chat-item-interior { box-shadow: inset 4px 0 0 #ff5a6e; }
+/* Alerta nueva: brillo rojo que late */
+.lista-chats .chat-item.alerta {
+  color: #fff;
+  box-shadow: 0 0 0 3px #ff5a6e, rgba(255, 90, 110, 0.35) 0 15px 30px -5px;
+  animation: pulso 1.6s ease-in-out 2;
+}

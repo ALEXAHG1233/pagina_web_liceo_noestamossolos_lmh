@@ -90,6 +90,10 @@ function dibujarLista() {
     item.classList.add("chat-item", "riesgo-" + chat.nivelRiesgo);
     if (token === chatActivo) item.classList.add("activo");
     if (chat.alertaNueva) item.classList.add("alerta");
+    // Borde de colores por fuera y el contenido en una caja oscura por dentro
+    const interior = document.createElement("span");
+    interior.classList.add("chat-item-interior");
+    item.appendChild(interior);
 
     const fila = document.createElement("span");
     fila.classList.add("chat-item-fila");
@@ -106,22 +110,22 @@ function dibujarLista() {
       fila.append(globo);
     }
     fila.append(chipNivel(chat.nivelRiesgo));
-    item.appendChild(fila);
+    interior.appendChild(fila);
 
     if (chat.ultimo) {
       const fecha = document.createElement("span");
       fecha.classList.add("chat-fecha");
       fecha.textContent = textoFecha(chat.ultimo);
       fecha.title = new Date(chat.ultimo).toLocaleString();
-      item.appendChild(fecha);
+      interior.appendChild(fecha);
     }
     if (chat.categorias.length) {
       const etiqueta = document.createElement("span");
       etiqueta.classList.add("etiqueta");
       etiqueta.textContent = textoCategorias(chat.categorias);
-      item.appendChild(etiqueta);
+      interior.appendChild(etiqueta);
     }
-    if (chat.contacto) item.appendChild(enlaceContacto(chat.contacto));
+    if (chat.contacto) interior.appendChild(enlaceContacto(chat.contacto));
     item.addEventListener("click", () => abrirChat(token));
     listaTokens.appendChild(item);
   });
