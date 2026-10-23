@@ -12,7 +12,7 @@ const input = document.getElementById("input-mensaje");
 
 let chatActivo = null;
 let filtroNivel = "todos";
-// token -> { correo, nivelRiesgo, categorias, ultimo, mensajes: [], cargado }
+// token -> { correo, nivelRiesgo, categorias, ultimo (milisegundos), sinLeer, mensajes: [], cargado }
 const chats = {};
 let sonidoActivado = false;
 let filaEscribiendo = null;
@@ -49,7 +49,7 @@ function chipNivel(nivel) {
 
 function obtenerChat(token, correo) {
   if (!chats[token]) {
-    chats[token] = { correo: null, nivelRiesgo: "bajo", categorias: [], ultimo: "", mensajes: [], cargado: false };
+    chats[token] = { correo: null, nivelRiesgo: "bajo", categorias: [], ultimo: 0, sinLeer: 0, mensajes: [], cargado: false };
   }
   if (correo) chats[token].correo = correo;
   return chats[token];
@@ -60,12 +60,23 @@ function subirRiesgo(chat, nivel, categorias) {
   (categorias || []).forEach((c) => { if (!chat.categorias.includes(c)) chat.categorias.push(c); });
 }
 
-// La lista: primero el riesgo más alto y, dentro de cada nivel, lo más reciente.
+// Fecha del último mensaje: hoy solo la hora, ayer "Ayer" y si no el día.
+function textoFecha(ms) {
+  const d = new Date(ms);
+  const hoy = new Date();
+  const ayer = new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate() - 1);
+  const hora = d.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+  if (d.toDateString() === hoy.toDateString()) return "Hoy, " + hora;
+  if (d.toDateString() === ayer.toDateString()) return "Ayer, " + hora;
+  return d.toLocaleDateString([], { day: "2-digit", month: "short", year: "numeric" }) + ", " + hora;
+}
+
+// La lista: arriba el chat que acaba de recibir un mensaje, como en WhatsApp.
+// El riesgo se ve en la etiqueta de color y con los filtros de arriba.
 function dibujarLista() {
   const conteo = { todos: 0, bajo: 0, medio: 0, alto: 0, critico: 0 };
   const texto = buscarCorreo.value.trim().toLowerCase();
-  const tokens = Object.keys(chats).sort((a, b) =>
-    (ORDEN[chats[b].nivelRiesgo] - ORDEN[chats[a].nivelRiesgo]) || chats[b].ultimo.localeCompare(chats[a].ultimo));
+  const tokens = Object.keys(chats).sort((a, b) => chats[b].ultimo - chats[a].ultimo);
 
   listaTokens.innerHTML = "";
   tokens.forEach((token) => {
@@ -85,9 +96,25 @@ function dibujarLista() {
     const nombre = document.createElement("span");
     nombre.classList.add("chat-correo");
     nombre.textContent = chat.correo || token;
-    fila.append(nombre, chipNivel(chat.nivelRiesgo));
+    fila.append(nombre);
+    if (chat.sinLeer) {
+      item.classList.add("sin-leer");
+      const globo = document.createElement("span");
+      globo.classList.add("sin-leer-globo");
+      globo.textContent = chat.sinLeer;
+      globo.title = chat.sinLeer === 1 ? "1 mensaje nuevo" : chat.sinLeer + " mensajes nuevos";
+      fila.append(globo);
+    }
+    fila.append(chipNivel(chat.nivelRiesgo));
     item.appendChild(fila);
 
+    if (chat.ultimo) {
+      const fecha = document.createElement("span");
+      fecha.classList.add("chat-fecha");
+      fecha.textContent = textoFecha(chat.ultimo);
+      fecha.title = new Date(chat.ultimo).toLocaleString();
+      item.appendChild(fecha);
+    }
     if (chat.categorias.length) {
       const etiqueta = document.createElement("span");
       etiqueta.classList.add("etiqueta");
@@ -127,6 +154,7 @@ async function abrirChat(token) {
   chatActivo = token;
   const chat = chats[token];
   chat.alertaNueva = false;
+  chat.sinLeer = 0;
   socket.emit("unirse", { token });
   dibujarLista();
   dibujarCabecera();
@@ -243,7 +271,9 @@ fetch("/psicologa/api/conversaciones")
     lista.forEach((c) => {
       const chat = obtenerChat(c.token, c.correo);
       subirRiesgo(chat, c.nivel);
-      if ((c.ultimo || "") > chat.ultimo) chat.ultimo = c.ultimo || "";
+      // La fecha guardada es hora local sin zona; Date la lee igual que la del navegador.
+      const cuando = Date.parse(c.ultimo || "") || 0;
+      if (cuando > chat.ultimo) chat.ultimo = cuando;
     });
     dibujarLista();
   })
@@ -260,8 +290,14 @@ socket.on("nuevo_mensaje_panel", (data) => {
     autor: data.autor,
   };
   chat.mensajes.push(mensaje);
-  chat.ultimo = mensaje.fecha;
-  if (data.emisor === "estudiante") subirRiesgo(chat, data.nivel_riesgo, data.categorias);
+  chat.ultimo = Date.now();  // sube al principio de la lista
+  if (data.emisor === "estudiante") {
+    subirRiesgo(chat, data.nivel_riesgo, data.categorias);
+    if (data.token !== chatActivo) {
+      chat.sinLeer = (chat.sinLeer || 0) + 1;
+      if (sonidoActivado) Sonidos.recibido();
+    }
+  }
   dibujarLista();
 
   if (data.token === chatActivo) {

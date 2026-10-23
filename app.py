@@ -131,7 +131,7 @@ def cuenta_panel(usuario, clave):
 # (separados por coma). Se cambian con la variable DOMINIOS_CORREO del .env.
 DOMINIOS_CORREO = [
     d.strip().lower().lstrip("@")
-    for d in os.environ.get("DOMINIOS_CORREO", "lmh.edu,lmh.edu.hn").split(",")
+    for d in os.environ.get("DOMINIOS_CORREO", "lmh.edu,lmh.edu.hn,gmail.com").split(",")
     if d.strip()
 ]
 
@@ -427,9 +427,11 @@ def correo_de(token):
 
 
 def pide_correo():
-    """Los chats (psicóloga, asistentes y Tigre) piden el correo del liceo
-    antes de empezar. Devuelve la redirección si todavía no lo puso."""
-    if session.get("correo") and session.get("token"):
+    """Los chats (psicóloga, asistentes y Tigre) piden el correo cada vez que
+    alguien entra: primero la página del correo y después el chat. El permiso
+    sirve para una sola entrada a ese chat. Devuelve la redirección si falta."""
+    permiso = session.pop("entrada_chat", None)
+    if permiso == request.path and session.get("correo") and session.get("token"):
         return None
     return redirect(url_for("entrar_correo", siguiente=request.path))
 
@@ -783,10 +785,11 @@ def entrar_correo():
         if not csrf_valido():
             error = "La página se venció. Vuelve a escribir tu correo."
         elif not correo_valido(correo):
-            error = "Usa tu correo del liceo (termina en @" + " o @".join(DOMINIOS_CORREO) + ")."
+            error = "Usa un correo que termine en @" + ", @".join(DOMINIOS_CORREO) + "."
         else:
             session["token"] = token_de_correo(correo, session.get("token"))
             session["correo"] = correo
+            session["entrada_chat"] = siguiente  # deja pasar una vez a ese chat
             return redirect(siguiente)
     return render_template("entrar_correo.html", error=error, siguiente=siguiente, dominios=DOMINIOS_CORREO)
 
@@ -1545,8 +1548,19 @@ def on_guardar_contacto_emergencia(data):
     )
 
 
+def sin_correo(data):
+    """Nadie escribe en un chat sin haber puesto su correo: si falta, se le
+    manda a la página del correo y el mensaje no se guarda."""
+    if session.get("correo") and data.get("token") == session.get("token"):
+        return False
+    emit("pide_correo", {"ir": url_for("entrar_correo")})
+    return True
+
+
 @socketio.on("mensaje_estudiante")
 def on_mensaje_estudiante(data):
+    if sin_correo(data):
+        return
     token = data["token"]
     contenido = data["contenido"]
 
@@ -1599,6 +1613,8 @@ def on_mensaje_estudiante(data):
 
 @socketio.on("mensaje_chatbot")
 def on_mensaje_chatbot(data):
+    if sin_correo(data):
+        return
     token = data["token"]
     contenido = data["contenido"]
     persona = data.get("persona")

@@ -12,17 +12,18 @@
 <body class="login-body">
   <div class="login-card">
     <h1>Antes de empezar a hablar</h1>
-    <p class="login-nota">Escribe tu correo del liceo para empezar.</p>
+    <p class="login-nota">Escribe tu correo del liceo o tu Gmail para empezar.</p>
 
     {% if error %}
       <p class="login-error">{{ error }}</p>
     {% endif %}
 
-    <form method="POST" action="{{ url_for('entrar_correo') }}" class="login-form">
+    <form method="POST" action="{{ url_for('entrar_correo') }}" class="login-form" id="form-correo">
       <input type="hidden" name="csrf" value="{{ csrf_token() }}">
       <input type="hidden" name="siguiente" value="{{ siguiente }}">
-      <label class="login-etiqueta" for="correo">Correo institucional</label>
-      <input type="email" id="correo" name="correo" placeholder="usuario@{{ dominios[0] }}" autocomplete="email" required autofocus>
+      <label class="login-etiqueta" for="correo">Tu correo</label>
+      <input type="email" id="correo" name="correo" placeholder="usuario@{{ dominios[0] }} o tucorreo@gmail.com"
+             autocomplete="email" inputmode="email" autocapitalize="off" spellcheck="false" required autofocus>
       <button type="submit">Empezar a hablar</button>
     </form>
 
@@ -30,5 +31,28 @@
     <a href="{{ url_for('index') }}" class="login-volver">← Volver al inicio</a>
   </div>
   <script src="{{ url_for('static', filename='js/common.js') }}"></script>
+  <script>
+    // Escribe solo el correo que usó la última vez en este dispositivo y, al
+    // enviarlo, el botón avisa que está entrando (así no parece trabado).
+    (function () {
+      const form = document.getElementById("form-correo");
+      const campo = document.getElementById("correo");
+      const boton = form.querySelector("button");
+      try {
+        const anterior = localStorage.getItem("correo_chat");
+        if (anterior && !campo.value) campo.value = anterior;
+      } catch (e) { /* sin almacenamiento: se escribe a mano */ }
+      form.addEventListener("submit", () => {
+        try { localStorage.setItem("correo_chat", campo.value.trim().toLowerCase()); } catch (e) {}
+        boton.disabled = true;
+        boton.textContent = "Entrando…";
+      });
+      // Si vuelve con el botón "atrás", el botón vuelve a servir
+      window.addEventListener("pageshow", () => {
+        boton.disabled = false;
+        boton.textContent = "Empezar a hablar";
+      });
+    })();
+  </script>
 </body>
 </html>

@@ -1,4 +1,6 @@
 const socket = io();
+// Sin correo no se puede escribir: el servidor manda a la página del correo.
+socket.on("pide_correo", (data) => { location.href = data.ir + "?siguiente=" + encodeURIComponent(location.pathname); });
 
 const mensajesDiv = document.getElementById("mensajes");
 const form = document.getElementById("form-mensaje");

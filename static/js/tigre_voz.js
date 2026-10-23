@@ -145,6 +145,8 @@
   });
 
   function escucharSocket() {
+  // Sin correo no se puede hablar: el servidor manda a la página del correo.
+  socket.on("pide_correo", (data) => { location.href = data.ir + "?siguiente=/tigre"; });
   socket.on("nuevo_mensaje", (data) => {
     if (data.emisor === "estudiante") { anotar("yo", data.contenido); return; }
     esperando = false;

@@ -26,3 +26,16 @@ presentacion/recursos/
 presentacion/*.pptx
 
 graphify-out/
+
+# Archivos generados del informe y la presentación (se crean con sus scripts)
+informe/*.docx
+informe/*.pdf
+informe/informe.html
+presentacion/*.pdf
+presentacion/*.jpg
+presentacion/cotizaciones/
+presentacion/defensa/
+presentacion/vista_v7/
+
+# Bot de WhatsApp aparte (no es parte de la página)
+whatsapp-chatgpt-bot/
