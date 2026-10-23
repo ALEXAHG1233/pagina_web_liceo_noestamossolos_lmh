@@ -11,14 +11,27 @@
 <body class="panel-body">
   <div class="panel-container">
     <aside class="lista-chats">
-      <h2>Chats activos</h2>
+      <p class="panel-quien">Sesión de {{ nombre_panel }}</p>
+      <h2>Conversaciones</h2>
+      <div class="filtro-riesgo" role="group" aria-label="Filtro de riesgo">
+        <button type="button" data-nivel="todos" class="activo" aria-pressed="true">Todas <span>0</span></button>
+        <button type="button" data-nivel="critico" class="nivel-critico" aria-pressed="false">Crítico <span>0</span></button>
+        <button type="button" data-nivel="alto" class="nivel-alto" aria-pressed="false">Alto <span>0</span></button>
+        <button type="button" data-nivel="medio" class="nivel-medio" aria-pressed="false">Medio <span>0</span></button>
+        <button type="button" data-nivel="bajo" class="nivel-bajo" aria-pressed="false">Bajo <span>0</span></button>
+      </div>
+      <input type="search" id="buscar-correo" class="buscar-correo" placeholder="Buscar por correo" aria-label="Buscar por correo">
       <ul id="lista-tokens"></ul>
+      <p id="lista-vacia" class="lista-vacia" hidden>No hay conversaciones con este filtro.</p>
     </aside>
 
     <main class="chat-container">
       <header class="chat-header">
         <div class="chat-header-top">
-          <h1 id="chat-titulo">Selecciona un chat</h1>
+          <div>
+            <h1 id="chat-titulo">Selecciona una conversación</h1>
+            <p id="chat-riesgo" class="chat-riesgo" hidden></p>
+          </div>
           <div class="acciones-header">
             <a href="{{ url_for('psicologa_contenido') }}" class="btn-sonido">Contenido de la página</a>
             <a href="{{ url_for('psicologa_estadisticas') }}" class="btn-sonido">Estadísticas</a>

@@ -1,15 +1,24 @@
 const socket = io();
 
 const listaTokens = document.getElementById("lista-tokens");
+const listaVacia = document.getElementById("lista-vacia");
 const mensajesDiv = document.getElementById("mensajes");
 const chatTitulo = document.getElementById("chat-titulo");
+const chatRiesgo = document.getElementById("chat-riesgo");
+const buscarCorreo = document.getElementById("buscar-correo");
+const botonesFiltro = document.querySelectorAll(".filtro-riesgo button");
 const form = document.getElementById("form-mensaje");
 const input = document.getElementById("input-mensaje");
 
 let chatActivo = null;
-const chats = {}; // token -> { nivelRiesgo, mensajes: [] }
+let filtroNivel = "todos";
+// token -> { correo, nivelRiesgo, categorias, ultimo, mensajes: [], cargado }
+const chats = {};
 let sonidoActivado = false;
 let filaEscribiendo = null;
+
+const ORDEN = { bajo: 0, medio: 1, alto: 2, critico: 3 };
+const NOMBRE_NIVEL = { bajo: "Bajo", medio: "Medio", alto: "Alto", critico: "Crítico" };
 
 document.getElementById("btn-activar-sonido").addEventListener("click", (e) => {
   Sonidos.desbloquear();
@@ -21,38 +30,130 @@ document.getElementById("btn-activar-sonido").addEventListener("click", (e) => {
 
 crearSelectorFondo("selector-fondo", mensajesDiv, "fondo_chat_psicologa");
 
-socket.emit("unirse_panel");
+// Cada vez que se conecta (también al reconectarse tras un corte de internet)
+// vuelve a entrar a la sala del panel; si no, esta cuenta dejaría de recibir
+// los mensajes nuevos hasta recargar la página.
+socket.on("connect", () => {
+  socket.emit("unirse_panel");
+  if (chatActivo) socket.emit("unirse", { token: chatActivo });
+});
 
-function obtenerOCrearItem(token) {
-  let item = document.getElementById("item-" + token);
-  if (!item) {
-    item = document.createElement("li");
-    item.id = "item-" + token;
-    item.classList.add("chat-item");
-    item.innerHTML = `${token}<span class="etiqueta"></span>`;
-    item.addEventListener("click", () => abrirChat(token));
-    listaTokens.prepend(item);
-    chats[token] = { nivelRiesgo: "bajo", mensajes: [] };
-  }
-  return item;
+const textoCategorias = (lista) => lista.map((c) => c.replace(/_/g, " ")).join(", ");
+
+function chipNivel(nivel) {
+  const chip = document.createElement("span");
+  chip.classList.add("nivel-chip", "nivel-" + nivel);
+  chip.textContent = NOMBRE_NIVEL[nivel] || nivel;
+  return chip;
 }
 
-function abrirChat(token) {
+function obtenerChat(token, correo) {
+  if (!chats[token]) {
+    chats[token] = { correo: null, nivelRiesgo: "bajo", categorias: [], ultimo: "", mensajes: [], cargado: false };
+  }
+  if (correo) chats[token].correo = correo;
+  return chats[token];
+}
+
+function subirRiesgo(chat, nivel, categorias) {
+  if ((ORDEN[nivel] ?? 0) > (ORDEN[chat.nivelRiesgo] ?? 0)) chat.nivelRiesgo = nivel;
+  (categorias || []).forEach((c) => { if (!chat.categorias.includes(c)) chat.categorias.push(c); });
+}
+
+// La lista: primero el riesgo más alto y, dentro de cada nivel, lo más reciente.
+function dibujarLista() {
+  const conteo = { todos: 0, bajo: 0, medio: 0, alto: 0, critico: 0 };
+  const texto = buscarCorreo.value.trim().toLowerCase();
+  const tokens = Object.keys(chats).sort((a, b) =>
+    (ORDEN[chats[b].nivelRiesgo] - ORDEN[chats[a].nivelRiesgo]) || chats[b].ultimo.localeCompare(chats[a].ultimo));
+
+  listaTokens.innerHTML = "";
+  tokens.forEach((token) => {
+    const chat = chats[token];
+    conteo.todos++;
+    conteo[chat.nivelRiesgo]++;
+    if (filtroNivel !== "todos" && chat.nivelRiesgo !== filtroNivel) return;
+    if (texto && !(chat.correo || token).toLowerCase().includes(texto)) return;
+
+    const item = document.createElement("li");
+    item.classList.add("chat-item", "riesgo-" + chat.nivelRiesgo);
+    if (token === chatActivo) item.classList.add("activo");
+    if (chat.alertaNueva) item.classList.add("alerta");
+
+    const fila = document.createElement("span");
+    fila.classList.add("chat-item-fila");
+    const nombre = document.createElement("span");
+    nombre.classList.add("chat-correo");
+    nombre.textContent = chat.correo || token;
+    fila.append(nombre, chipNivel(chat.nivelRiesgo));
+    item.appendChild(fila);
+
+    if (chat.categorias.length) {
+      const etiqueta = document.createElement("span");
+      etiqueta.classList.add("etiqueta");
+      etiqueta.textContent = textoCategorias(chat.categorias);
+      item.appendChild(etiqueta);
+    }
+    if (chat.contacto) item.appendChild(enlaceContacto(chat.contacto));
+    item.addEventListener("click", () => abrirChat(token));
+    listaTokens.appendChild(item);
+  });
+
+  botonesFiltro.forEach((b) => { b.querySelector("span").textContent = conteo[b.dataset.nivel]; });
+  listaVacia.hidden = listaTokens.children.length > 0;
+}
+
+botonesFiltro.forEach((boton) => boton.addEventListener("click", () => {
+  filtroNivel = boton.dataset.nivel;
+  botonesFiltro.forEach((b) => {
+    b.classList.toggle("activo", b === boton);
+    b.setAttribute("aria-pressed", b === boton ? "true" : "false");
+  });
+  dibujarLista();
+}));
+buscarCorreo.addEventListener("input", dibujarLista);
+
+function dibujarCabecera() {
+  const chat = chats[chatActivo];
+  if (!chat) return;
+  chatTitulo.textContent = chat.correo || chatActivo;
+  chatRiesgo.hidden = false;
+  chatRiesgo.innerHTML = "Filtro de riesgo: ";
+  chatRiesgo.appendChild(chipNivel(chat.nivelRiesgo));
+  if (chat.categorias.length) chatRiesgo.append(" " + textoCategorias(chat.categorias));
+}
+
+async function abrirChat(token) {
   chatActivo = token;
-  chatTitulo.textContent = token;
+  const chat = chats[token];
+  chat.alertaNueva = false;
   socket.emit("unirse", { token });
-
-  document.querySelectorAll(".chat-item").forEach((el) => el.classList.remove("activo"));
-  document.getElementById("item-" + token).classList.add("activo");
-
+  dibujarLista();
+  dibujarCabecera();
   ocultarEscribiendo();
   mensajesDiv.innerHTML = "";
-  (chats[token]?.mensajes || []).forEach((m) => agregarMensajeDOM(m.emisor, m.contenido));
+
+  if (!chat.cargado) {
+    try {
+      const r = await fetch(`/psicologa/api/conversacion/${encodeURIComponent(token)}`);
+      if (r.ok) {
+        // Los que llegaron en vivo antes de cargar ya están en la base de datos.
+        chat.mensajes = await r.json();
+        chat.cargado = true;
+        chat.mensajes.forEach((m) => { if (m.emisor === "estudiante") subirRiesgo(chat, m.nivel, m.categorias); });
+      }
+    } catch (e) { /* sin conexión: se muestra lo que llegó en vivo */ }
+    if (chatActivo !== token) return;
+    dibujarLista();
+    dibujarCabecera();
+  }
+  mensajesDiv.innerHTML = "";
+  chat.mensajes.forEach((m) => agregarMensajeDOM(m));
 }
 
 const AVATARES = { estudiante: "E", psicologa: "P", asistente: "A" };
 
-function agregarMensajeDOM(emisor, contenido) {
+function agregarMensajeDOM({ emisor, contenido, nivel, categorias, fecha, autor }) {
   const fila = document.createElement("div");
   fila.classList.add("msg-fila", emisor);
 
@@ -69,9 +170,25 @@ function agregarMensajeDOM(emisor, contenido) {
 
   const hora = document.createElement("span");
   hora.classList.add("msg-hora");
-  hora.textContent = new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+  const cuando = fecha ? new Date(fecha) : new Date();
+  hora.textContent = cuando.toLocaleString([], { day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit" });
 
+  // Todas las cuentas ven la misma conversación: cada respuesta dice quién la escribió.
+  if (emisor === "psicologa" && autor) {
+    const quien = document.createElement("span");
+    quien.classList.add("msg-autor");
+    quien.textContent = autor;
+    contenedor.appendChild(quien);
+  }
   contenedor.appendChild(burbuja);
+  // Cada mensaje del estudiante lleva el nivel que le dio el filtro de riesgo.
+  if (emisor === "estudiante" && nivel) {
+    const riesgo = document.createElement("span");
+    riesgo.classList.add("msg-riesgo");
+    riesgo.appendChild(chipNivel(nivel));
+    if (categorias && categorias.length) riesgo.append(" " + textoCategorias(categorias));
+    contenedor.appendChild(riesgo);
+  }
   contenedor.appendChild(hora);
   fila.appendChild(avatar);
   fila.appendChild(contenedor);
@@ -119,13 +236,38 @@ input.addEventListener("input", () => {
   }, 1500);
 });
 
+// Al abrir el panel se cargan todas las conversaciones guardadas.
+fetch("/psicologa/api/conversaciones")
+  .then((r) => (r.ok ? r.json() : []))
+  .then((lista) => {
+    lista.forEach((c) => {
+      const chat = obtenerChat(c.token, c.correo);
+      subirRiesgo(chat, c.nivel);
+      if ((c.ultimo || "") > chat.ultimo) chat.ultimo = c.ultimo || "";
+    });
+    dibujarLista();
+  })
+  .catch(() => dibujarLista());
+
 socket.on("nuevo_mensaje_panel", (data) => {
-  obtenerOCrearItem(data.token);
-  chats[data.token].mensajes.push({ emisor: data.emisor, contenido: data.contenido });
+  const chat = obtenerChat(data.token, data.correo);
+  const mensaje = {
+    emisor: data.emisor,
+    contenido: data.contenido,
+    nivel: data.nivel_riesgo,
+    categorias: data.categorias || [],
+    fecha: new Date().toISOString(),
+    autor: data.autor,
+  };
+  chat.mensajes.push(mensaje);
+  chat.ultimo = mensaje.fecha;
+  if (data.emisor === "estudiante") subirRiesgo(chat, data.nivel_riesgo, data.categorias);
+  dibujarLista();
 
   if (data.token === chatActivo) {
+    dibujarCabecera();
     if (data.emisor === "estudiante") ocultarEscribiendo();
-    agregarMensajeDOM(data.emisor, data.contenido);
+    agregarMensajeDOM(mensaje);
     if (data.emisor !== "psicologa") Sonidos.recibido();
   }
 });
@@ -140,34 +282,33 @@ socket.on("alguien_dejo_de_escribir", (data) => {
 
 socket.on("alerta_riesgo", (data) => {
   if (sonidoActivado) Sonidos.alerta();
-  const item = obtenerOCrearItem(data.token);
-  chats[data.token].nivelRiesgo = data.nivel;
-  item.classList.add("alerta");
-  item.querySelector(".etiqueta").textContent =
-    `Alerta: ${data.nivel} (${data.categorias.join(", ")})`;
-  listaTokens.prepend(item); // sube al inicio de la lista
+  const chat = obtenerChat(data.token, data.correo);
+  subirRiesgo(chat, data.nivel, data.categorias);
+  if (data.token !== chatActivo) chat.alertaNueva = true;
+  dibujarLista();
+  if (data.token === chatActivo) dibujarCabecera();
 });
 
-socket.on("contacto_emergencia_panel", (data) => {
-  const item = obtenerOCrearItem(data.token);
-  chats[data.token].contacto = { telefono: data.telefono, plataforma: data.plataforma };
-
-  let enlaceContacto = item.querySelector(".enlace-contacto");
-  if (!enlaceContacto) {
-    enlaceContacto = document.createElement("a");
-    enlaceContacto.classList.add("enlace-contacto");
-    enlaceContacto.target = "_blank";
-    enlaceContacto.rel = "noopener noreferrer";
-    item.appendChild(enlaceContacto);
-  }
-
-  const soloNumeros = data.telefono.replace(/[^\d+]/g, "");
-  if (data.plataforma === "whatsapp") {
-    enlaceContacto.href = `https://wa.me/${soloNumeros.replace("+", "")}`;
-    enlaceContacto.textContent = `Abrir WhatsApp (${data.telefono})`;
+function enlaceContacto(contacto) {
+  const enlace = document.createElement("a");
+  enlace.classList.add("enlace-contacto");
+  enlace.target = "_blank";
+  enlace.rel = "noopener noreferrer";
+  enlace.addEventListener("click", (e) => e.stopPropagation());
+  const soloNumeros = contacto.telefono.replace(/[^\d+]/g, "");
+  if (contacto.plataforma === "whatsapp") {
+    enlace.href = `https://wa.me/${soloNumeros.replace("+", "")}`;
+    enlace.textContent = `Abrir WhatsApp (${contacto.telefono})`;
   } else {
-    enlaceContacto.href = "#";
-    enlaceContacto.textContent = `Telegram: ${data.telefono}`;
-    enlaceContacto.onclick = (e) => e.preventDefault();
+    enlace.href = "#";
+    enlace.textContent = `Telegram: ${contacto.telefono}`;
+    enlace.onclick = (e) => { e.preventDefault(); e.stopPropagation(); };
   }
+  return enlace;
+}
+
+socket.on("contacto_emergencia_panel", (data) => {
+  const chat = obtenerChat(data.token);
+  chat.contacto = { telefono: data.telefono, plataforma: data.plataforma };
+  dibujarLista();
 });

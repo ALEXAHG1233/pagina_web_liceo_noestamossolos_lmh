@@ -15,7 +15,7 @@
       <div class="chat-header-top">
         <div>
           <h1>Espacio seguro</h1>
-          <p>Tu conversación es anónima. Nadie más que la psicóloga la verá.</p>
+          <p>Entraste con {{ correo }}. <a href="{{ url_for('cambiar_correo', siguiente=request.path) }}">Cambiar correo</a></p>
         </div>
         <div class="acciones-header">
           <button id="btn-musica" class="btn-sonido" type="button">Música</button>

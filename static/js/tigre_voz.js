@@ -40,7 +40,11 @@
     const csrf = document.querySelector('meta[name="csrf-token"]')?.content || "";
     conectando = (window.io ? Promise.resolve() : cargarScript("https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.5/socket.io.min.js"))
       .then(() => token || fetch("/api/tigre/sesion", { method: "POST", headers: { "X-CSRF": csrf } })
-        .then((r) => r.json()).then((j) => { if (!j.token) throw new Error("sin sesión"); token = j.token; }))
+        .then((r) => r.json()).then((j) => {
+          if (j.ir) { location.href = j.ir; throw new Error("falta el correo"); } // primero se pone el correo del liceo
+          if (!j.token) throw new Error("sin sesión");
+          token = j.token;
+        }))
       .then(() => {
         socket = io();
         socket.emit("unirse", { token });

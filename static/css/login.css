@@ -62,3 +62,7 @@
   text-decoration: none;
 }
 .login-volver:hover { color: var(--verde-liceo); }
+
+.login-etiqueta { text-align: left; font-size: 12px; font-weight: 600; color: var(--verde-liceo); margin-bottom: -4px; }
+.login-urgencia { margin: 18px 0 0; font-size: 12px; line-height: 1.5; color: #5f5d55; }
+.login-urgencia a { color: #a32d2d; font-weight: 700; }

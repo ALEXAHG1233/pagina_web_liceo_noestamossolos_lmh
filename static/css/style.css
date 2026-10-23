@@ -343,6 +343,13 @@ button, .opcion-boton, .btn-sonido, input[type="submit"] { font-weight: 700; }
   padding: 0 4px;
 }
 .msg-fila.estudiante .msg-hora { text-align: right; }
+/* Nombre de la cuenta del panel que respondió */
+.msg-autor {
+  font-size: 11px;
+  font-weight: 600;
+  color: #6b675c;
+  padding: 0 4px 2px;
+}
 
 /* Indicador de "escribiendo..." */
 .msg-fila.escribiendo { opacity: 0.9; }
@@ -810,3 +817,52 @@ body:has(.chat-container) .whatsapp-flotante {
   font-weight: 800;
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.3);
 }
+
+/* --- Panel: filtro de riesgo por conversación --- */
+.panel-quien { margin: 2px 8px 10px; font-size: 12px; color: #5f5d55; }
+.filtro-riesgo { display: flex; flex-wrap: wrap; gap: 6px; margin: 0 4px 10px; }
+.filtro-riesgo button {
+  padding: 5px 10px;
+  border: 1px solid #d3d1c7;
+  border-radius: 999px;
+  background: #fff;
+  font: inherit;
+  font-size: 12px;
+  cursor: pointer;
+}
+.filtro-riesgo button span { font-weight: 700; margin-left: 2px; }
+.filtro-riesgo button.activo { background: var(--verde-liceo); border-color: var(--verde-liceo); color: #fff; }
+.filtro-riesgo button:focus-visible, .buscar-correo:focus-visible { outline: 2px solid var(--azul-honduras); outline-offset: 2px; }
+.buscar-correo {
+  width: 100%;
+  box-sizing: border-box;
+  margin: 0 0 10px;
+  padding: 8px 12px;
+  border: 1px solid #d3d1c7;
+  border-radius: 10px;
+  font: inherit;
+  font-size: 13px;
+}
+.lista-vacia { margin: 8px; font-size: 13px; color: #7a7870; }
+.chat-item-fila { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.chat-correo { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
+.chat-item.riesgo-medio { border-left: 4px solid #c98a0b; }
+.chat-item.riesgo-alto { border-left: 4px solid #d4541b; }
+.chat-item.riesgo-critico { border-left: 4px solid #a32d2d; }
+
+.nivel-chip {
+  flex: none;
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1.4;
+}
+.nivel-chip.nivel-bajo { background: #e3f1e6; color: #1f5a2e; }
+.nivel-chip.nivel-medio { background: #fbefcf; color: #7a5200; }
+.nivel-chip.nivel-alto { background: #fbdcc9; color: #8a3008; }
+.nivel-chip.nivel-critico { background: #a32d2d; color: #fff; }
+
+.chat-riesgo { margin: 4px 0 0; font-size: 13px; position: relative; z-index: 1; }
+.msg-riesgo { display: block; margin-top: 3px; font-size: 11px; color: #5f5d55; }

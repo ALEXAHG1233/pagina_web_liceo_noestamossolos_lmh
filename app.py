@@ -1,5 +1,7 @@
+import hmac
 import os
 import random
+import re
 import time
 import sqlite3
 import uuid
@@ -102,6 +104,37 @@ cuentas.configurar(DB_PATH)
 PSICOLOGA_USUARIO = os.environ.get("PSICOLOGA_USUARIO", "psicologa")
 PSICOLOGA_CLAVE = os.environ.get("PSICOLOGA_CLAVE", "cambia-esta-clave")
 
+# Cuentas del panel: usuario -> nombre que se muestra. La clave de cada una
+# va en el .env (o en el panel de Render) como CLAVE_<USUARIO>, por ejemplo
+# CLAVE_MAYRA_RODRIGUEZ. Una cuenta sin clave configurada no puede entrar.
+CUENTAS_PANEL = {
+    "mayra.rodriguez": "Mayra Rodríguez",
+    "subteniente.aleman": "Subteniente Alemán",
+    "lesly.ruiz": "Lesly Ruiz",
+    "lic.gemmi": "Lic. Gemmi",
+}
+
+
+def cuenta_panel(usuario, clave):
+    """Devuelve el nombre de quien entra al panel, o None si no coincide."""
+    usuario = ".".join(usuario.strip().lower().split())
+    if usuario in CUENTAS_PANEL:
+        guardada = os.environ.get("CLAVE_" + usuario.upper().replace(".", "_"))
+        if guardada and hmac.compare_digest(clave, guardada):
+            return CUENTAS_PANEL[usuario]
+        return None
+    if usuario == PSICOLOGA_USUARIO and hmac.compare_digest(clave, PSICOLOGA_CLAVE):
+        return "Psicóloga"
+    return None
+
+# Dominios de correo del liceo con los que se puede entrar a los chats
+# (separados por coma). Se cambian con la variable DOMINIOS_CORREO del .env.
+DOMINIOS_CORREO = [
+    d.strip().lower().lstrip("@")
+    for d in os.environ.get("DOMINIOS_CORREO", "lmh.edu,lmh.edu.hn").split(",")
+    if d.strip()
+]
+
 # IDs de conexión (socket.io) de la psicóloga con el panel abierto ahora mismo.
 # Sirve solo para avisarle al estudiante si hay alguien del otro lado o no —
 # no decide nada, solo informa.
@@ -186,6 +219,16 @@ def init_db():
         cur.execute("ALTER TABLE resenas ADD COLUMN foto TEXT")
     except sqlite3.OperationalError:
         pass  # ya existe (base de datos creada antes de agregar esta columna)
+    try:
+        cur.execute("ALTER TABLE sesiones ADD COLUMN correo TEXT")
+    except sqlite3.OperationalError:
+        pass  # ya existe
+    try:
+        # Quién del panel respondió (Mayra Rodríguez, Lesly Ruiz...), para que
+        # todas las cuentas vean la misma conversación y sepan quién contestó.
+        cur.execute("ALTER TABLE mensajes ADD COLUMN autor TEXT")
+    except sqlite3.OperationalError:
+        pass  # ya existe
     cur.execute(
         """
         CREATE TABLE IF NOT EXISTS contactos_emergencia (
@@ -302,12 +345,12 @@ def obtener_historial(token, limite=20):
     return list(reversed(filas))
 
 
-def guardar_mensaje(token, emisor, contenido, analisis):
+def guardar_mensaje(token, emisor, contenido, analisis, autor=None):
     conn = sqlite3.connect(DB_PATH)
     cur = conn.cursor()
     cur.execute(
-        """INSERT INTO mensajes (token, emisor, contenido, nivel_riesgo, categorias, fecha)
-           VALUES (?, ?, ?, ?, ?, ?)""",
+        """INSERT INTO mensajes (token, emisor, contenido, nivel_riesgo, categorias, fecha, autor)
+           VALUES (?, ?, ?, ?, ?, ?, ?)""",
         (
             token,
             emisor,
@@ -315,6 +358,7 @@ def guardar_mensaje(token, emisor, contenido, analisis):
             analisis["nivel"],
             ",".join(analisis["categorias"]),
             datetime.now().isoformat(),
+            autor,
         ),
     )
     # Actualiza el nivel máximo de riesgo visto en esa sesión
@@ -339,6 +383,55 @@ def registrar_sesion(token):
     )
     conn.commit()
     conn.close()
+
+
+def correo_valido(correo):
+    usuario, arroba, dominio = correo.partition("@")
+    return bool(arroba) and bool(re.fullmatch(r"[a-z0-9._%+-]+", usuario)) and dominio in DOMINIOS_CORREO
+
+
+def token_de_correo(correo, token_actual=None):
+    """Cada correo tiene una sola conversación: si ya habló antes (aunque sea
+    desde otro dispositivo) sigue la misma. Si no, se le pone el correo a la
+    conversación de este navegador, o se crea una nueva si esa ya es de otro correo."""
+    conn = sqlite3.connect(DB_PATH)
+    cur = conn.cursor()
+    cur.execute("SELECT token FROM sesiones WHERE correo = ? ORDER BY creado_en DESC LIMIT 1", (correo,))
+    fila = cur.fetchone()
+    if fila:
+        conn.close()
+        return fila[0]
+    if token_actual:
+        cur.execute("SELECT correo FROM sesiones WHERE token = ?", (token_actual,))
+        fila = cur.fetchone()
+        if fila and fila[0]:
+            token_actual = None
+    token = token_actual or f"Usuario-{uuid.uuid4().hex[:6]}"
+    cur.execute(
+        "INSERT OR IGNORE INTO sesiones (token, creado_en) VALUES (?, ?)",
+        (token, datetime.now().isoformat()),
+    )
+    cur.execute("UPDATE sesiones SET correo = ? WHERE token = ?", (correo, token))
+    conn.commit()
+    conn.close()
+    return token
+
+
+def correo_de(token):
+    conn = sqlite3.connect(DB_PATH)
+    cur = conn.cursor()
+    cur.execute("SELECT correo FROM sesiones WHERE token = ?", (token,))
+    fila = cur.fetchone()
+    conn.close()
+    return fila[0] if fila else None
+
+
+def pide_correo():
+    """Los chats (psicóloga, asistentes y Tigre) piden el correo del liceo
+    antes de empezar. Devuelve la redirección si todavía no lo puso."""
+    if session.get("correo") and session.get("token"):
+        return None
+    return redirect(url_for("entrar_correo", siguiente=request.path))
 
 
 def guardar_animo(token, estado):
@@ -678,13 +771,39 @@ def foto_resena(nombre):
     return send_from_directory(CARPETA_FOTOS_RESENAS, secure_filename(nombre))
 
 
+@app.route("/entrar", methods=["GET", "POST"])
+def entrar_correo():
+    """Antes de hablar con la psicóloga o con un asistente se pone el correo del liceo."""
+    siguiente = request.values.get("siguiente") or url_for("chatbot")
+    if not siguiente.startswith("/") or siguiente.startswith("//"):
+        siguiente = url_for("chatbot")
+    error = None
+    if request.method == "POST":
+        correo = request.form.get("correo", "").strip().lower()
+        if not csrf_valido():
+            error = "La página se venció. Vuelve a escribir tu correo."
+        elif not correo_valido(correo):
+            error = "Usa tu correo del liceo (termina en @" + " o @".join(DOMINIOS_CORREO) + ")."
+        else:
+            session["token"] = token_de_correo(correo, session.get("token"))
+            session["correo"] = correo
+            return redirect(siguiente)
+    return render_template("entrar_correo.html", error=error, siguiente=siguiente, dominios=DOMINIOS_CORREO)
+
+
+@app.route("/entrar/cambiar")
+def cambiar_correo():
+    session.pop("correo", None)
+    session.pop("token", None)
+    return redirect(url_for("entrar_correo", siguiente=request.args.get("siguiente") or url_for("chatbot")))
+
+
 @app.route("/estudiante")
 def estudiante():
-    # Genera un token anónimo único si no existe ya en la sesión del navegador
-    if "token" not in session:
-        session["token"] = f"Usuario-{uuid.uuid4().hex[:6]}"
-        registrar_sesion(session["token"])
-    return render_template("estudiante.html", token=session["token"])
+    falta = pide_correo()
+    if falta:
+        return falta
+    return render_template("estudiante.html", token=session["token"], correo=session["correo"])
 
 
 @app.route("/chatbot")
@@ -709,9 +828,9 @@ def chatbot_sorpresa():
 def tigre_voz():
     """Hablar con el Tigre LMH por voz: su cara, sus ojos y su voz, sin chat.
     Usa el mismo camino que el chat (filtro de riesgo, aviso a la psicóloga, IA)."""
-    if "token" not in session:
-        session["token"] = f"Usuario-{uuid.uuid4().hex[:6]}"
-        registrar_sesion(session["token"])
+    falta = pide_correo()
+    if falta:
+        return falta
     return render_template("tigre_voz.html", token=session["token"], persona=PERSONAJES["tigre"])
 
 
@@ -721,9 +840,8 @@ def tigre_sesion():
     desde la portada (así no se registra a quien solo mira la página)."""
     if not request.headers.get("X-CSRF") or request.headers.get("X-CSRF") != session.get("csrf"):
         return jsonify({"error": "sesion"}), 403
-    if "token" not in session:
-        session["token"] = f"Usuario-{uuid.uuid4().hex[:6]}"
-        registrar_sesion(session["token"])
+    if not session.get("correo") or not session.get("token"):
+        return jsonify({"error": "correo", "ir": url_for("entrar_correo", siguiente=url_for("tigre_voz"))}), 401
     return jsonify({"token": session["token"]})
 
 
@@ -733,12 +851,13 @@ def chatbot_persona(persona):
         return redirect(url_for("tigre_voz"))
     if persona not in PERSONAJES:
         return redirect(url_for("chatbot"))
-    if "token" not in session:
-        session["token"] = f"Usuario-{uuid.uuid4().hex[:6]}"
-        registrar_sesion(session["token"])
+    falta = pide_correo()
+    if falta:
+        return falta
     return render_template(
         "asistente.html",
         token=session["token"],
+        correo=session["correo"],
         persona_id=persona,
         persona=PERSONAJES[persona],
     )
@@ -1053,8 +1172,10 @@ def psicologa_login():
     if request.method == "POST":
         usuario = request.form.get("usuario", "")
         clave = request.form.get("clave", "")
-        if usuario == PSICOLOGA_USUARIO and clave == PSICOLOGA_CLAVE:
+        nombre = cuenta_panel(usuario, clave)
+        if nombre:
             session["es_psicologa"] = True
+            session["nombre_panel"] = nombre
             return redirect(url_for("psicologa"))
         error = "Usuario o clave incorrectos."
     return render_template("psicologa_login.html", error=error)
@@ -1063,6 +1184,7 @@ def psicologa_login():
 @app.route("/psicologa/logout")
 def psicologa_logout():
     session.pop("es_psicologa", None)
+    session.pop("nombre_panel", None)
     return redirect(url_for("psicologa_login"))
 
 
@@ -1070,7 +1192,48 @@ def psicologa_logout():
 def psicologa():
     if not session.get("es_psicologa"):
         return redirect(url_for("psicologa_login"))
-    return render_template("psicologa.html")
+    return render_template("psicologa.html", nombre_panel=session.get("nombre_panel", "Psicóloga"))
+
+
+@app.route("/psicologa/api/conversaciones")
+def psicologa_conversaciones():
+    """Todas las conversaciones con su correo y el nivel de riesgo más alto que tuvieron."""
+    if not session.get("es_psicologa"):
+        return jsonify({"error": "sesion"}), 403
+    conn = sqlite3.connect(DB_PATH)
+    cur = conn.cursor()
+    cur.execute(
+        """SELECT s.token, s.correo, s.nivel_riesgo_max, COUNT(m.id), MAX(m.fecha)
+           FROM sesiones s JOIN mensajes m ON m.token = s.token
+           GROUP BY s.token ORDER BY MAX(m.fecha) DESC LIMIT 500"""
+    )
+    filas = cur.fetchall()
+    conn.close()
+    return jsonify([
+        {"token": t, "correo": c, "nivel": n or "bajo", "mensajes": total, "ultimo": ultimo}
+        for t, c, n, total, ultimo in filas
+    ])
+
+
+@app.route("/psicologa/api/conversacion/<token>")
+def psicologa_conversacion(token):
+    """Los mensajes de una conversación, cada uno con el riesgo que le dio el filtro."""
+    if not session.get("es_psicologa"):
+        return jsonify({"error": "sesion"}), 403
+    conn = sqlite3.connect(DB_PATH)
+    cur = conn.cursor()
+    cur.execute(
+        """SELECT emisor, contenido, nivel_riesgo, categorias, fecha, autor FROM mensajes
+           WHERE token = ? ORDER BY id DESC LIMIT 500""",
+        (token,),
+    )
+    filas = cur.fetchall()
+    conn.close()
+    return jsonify([
+        {"emisor": e, "contenido": c, "nivel": n or "bajo",
+         "categorias": [x for x in (cat or "").split(",") if x], "fecha": f, "autor": a}
+        for e, c, n, cat, f, a in reversed(filas)
+    ])
 
 
 @app.route("/psicologa/estadisticas")
@@ -1401,6 +1564,8 @@ def on_mensaje_estudiante(data):
             "emisor": "estudiante",
             "contenido": contenido,
             "nivel_riesgo": analisis["nivel"],
+            "categorias": analisis["categorias"],
+            "correo": correo_de(token),
         },
         room="panel_psicologa",
     )
@@ -1413,6 +1578,7 @@ def on_mensaje_estudiante(data):
                 "token": token,
                 "nivel": analisis["nivel"],
                 "categorias": analisis["categorias"],
+                "correo": correo_de(token),
             },
             room="panel_psicologa",
         )
@@ -1451,6 +1617,8 @@ def on_mensaje_chatbot(data):
             "emisor": "estudiante",
             "contenido": contenido,
             "nivel_riesgo": analisis["nivel"],
+            "categorias": analisis["categorias"],
+            "correo": correo_de(token),
         },
         room="panel_psicologa",
     )
@@ -1461,7 +1629,8 @@ def on_mensaje_chatbot(data):
         conversacion_bot.olvidar(token)  # después no sigue con el tema anterior como si nada
         emit(
             "alerta_riesgo",
-            {"token": token, "nivel": analisis["nivel"], "categorias": analisis["categorias"]},
+            {"token": token, "nivel": analisis["nivel"], "categorias": analisis["categorias"],
+             "correo": correo_de(token)},
             room="panel_psicologa",
         )
         if analisis["nivel"] == "critico":
@@ -1500,13 +1669,17 @@ def on_mensaje_psicologa(data):
     token = data["token"]
     contenido = data["contenido"]
 
+    autor = session.get("nombre_panel", "Psicóloga")
+
     analisis = analizar_riesgo(contenido)  # se registra igual, aunque no genera alerta
-    guardar_mensaje(token, "psicologa", contenido, analisis)
+    guardar_mensaje(token, "psicologa", contenido, analisis, autor=autor)
 
     emit("nuevo_mensaje", {"emisor": "psicologa", "contenido": contenido}, room=token)
+    # Les llega a todas las cuentas del panel, con el nombre de quien respondió
     emit(
         "nuevo_mensaje_panel",
-        {"token": token, "emisor": "psicologa", "contenido": contenido, "nivel_riesgo": "bajo"},
+        {"token": token, "emisor": "psicologa", "contenido": contenido, "nivel_riesgo": "bajo",
+         "autor": autor},
         room="panel_psicologa",
     )
 
