@@ -1,9 +1,12 @@
 import hmac
+import json
 import os
 import random
 import re
 import time
 import sqlite3
+import urllib.parse
+import urllib.request
 import uuid
 from datetime import datetime
 
@@ -131,9 +134,33 @@ def cuenta_panel(usuario, clave):
 # (separados por coma). Se cambian con la variable DOMINIOS_CORREO del .env.
 DOMINIOS_CORREO = [
     d.strip().lower().lstrip("@")
-    for d in os.environ.get("DOMINIOS_CORREO", "lmh.edu,lmh.edu.hn,gmail.com").split(",")
+    for d in os.environ.get("DOMINIOS_CORREO", "lmh.edu.hn,lmh.edu").split(",")
     if d.strip()
 ]
+
+# Entrar con la cuenta de Google del liceo. Con GOOGLE_CLIENT_ID puesto (se
+# crea en console.cloud.google.com → Credenciales → ID de cliente de OAuth,
+# tipo "Aplicación web"), los chats solo dejan entrar con el botón de Google;
+# sin él, se escribe el correo a mano (sirve para probar en la computadora).
+GOOGLE_CLIENT_ID = os.environ.get("GOOGLE_CLIENT_ID", "").strip()
+
+
+def correo_de_google(credencial):
+    """Le pregunta a Google si el inicio de sesión es de verdad y devuelve el
+    correo de esa cuenta, o None si no es válido o no es para esta página."""
+    try:
+        url = "https://oauth2.googleapis.com/tokeninfo?" + urllib.parse.urlencode({"id_token": credencial})
+        with urllib.request.urlopen(url, timeout=10) as respuesta:
+            datos = json.load(respuesta)
+    except Exception:
+        return None
+    if datos.get("aud") != GOOGLE_CLIENT_ID:
+        return None
+    if datos.get("iss") not in ("accounts.google.com", "https://accounts.google.com"):
+        return None
+    if str(datos.get("email_verified")).lower() != "true":
+        return None
+    return (datos.get("email") or "").strip().lower() or None
 
 # IDs de conexión (socket.io) de la psicóloga con el panel abierto ahora mismo.
 # Sirve solo para avisarle al estudiante si hay alguien del otro lado o no —
@@ -291,23 +318,44 @@ def guardar_resultado_test(test_id, nivel):
     conn.close()
 
 
-def obtener_estadisticas():
+def obtener_conversaciones_por_dia():
+    """Para la gráfica de Estadísticas: cuántas conversaciones tuvieron mensajes
+    de estudiantes cada día, separadas por el riesgo más alto de ese día.
+    También cuenta las de la psicóloga y las de los asistentes. Solo conteos."""
+    orden = {"bajo": 0, "medio": 1, "alto": 2, "critico": 3}
     conn = sqlite3.connect(DB_PATH)
     cur = conn.cursor()
-    cur.execute("SELECT COUNT(*) FROM visitas")
-    visitas = cur.fetchone()[0]
-    cur.execute("SELECT COUNT(DISTINCT token) FROM mensajes WHERE emisor = 'asistente'")
-    teleorientaciones = cur.fetchone()[0]
-    cur.execute("SELECT COUNT(DISTINCT token) FROM mensajes WHERE emisor = 'psicologa'")
-    teleconsultas = cur.fetchone()[0]
-    cur.execute("SELECT COUNT(*) FROM resultados_test")
-    tests_realizados = cur.fetchone()[0]
+    cur.execute("SELECT token, substr(fecha, 1, 10), nivel_riesgo FROM mensajes WHERE emisor = 'estudiante'")
+    por_dia = {}  # día -> token -> riesgo más alto
+    for token, dia, nivel in cur.fetchall():
+        if not dia:
+            continue
+        nivel = nivel if nivel in orden else "bajo"
+        conversaciones = por_dia.setdefault(dia, {})
+        if orden[nivel] >= orden.get(conversaciones.get(token), -1):
+            conversaciones[token] = nivel
+    cur.execute("SELECT DISTINCT token FROM mensajes WHERE emisor = 'psicologa'")
+    con_psicologa = {fila[0] for fila in cur.fetchall()}
+    cur.execute("SELECT DISTINCT token FROM mensajes WHERE emisor = 'asistente'")
+    con_asistente = {fila[0] for fila in cur.fetchall()}
     conn.close()
+
+    todas = {t for conversaciones in por_dia.values() for t in conversaciones}
+    # Cada conversación lleva un número (no su código), para contar cuántas
+    # distintas hubo en un período sin contar dos veces la que habló varios días
+    numero = {t: i for i, t in enumerate(sorted(todas))}
+    dias = []
+    for dia in sorted(por_dia):
+        cuenta = {"fecha": dia, "bajo": 0, "medio": 0, "alto": 0, "critico": 0, "ids": []}
+        for token, nivel in por_dia[dia].items():
+            cuenta[nivel] += 1
+            cuenta["ids"].append(numero[token])
+        dias.append(cuenta)
     return {
-        "visitas": visitas,
-        "teleorientaciones": teleorientaciones,
-        "teleconsultas": teleconsultas,
-        "tests_realizados": tests_realizados,
+        "dias": dias,
+        "total": len(todas),
+        "con_psicologa": len(todas & con_psicologa),
+        "con_asistente": len(todas & con_asistente),
     }
 
 
@@ -773,25 +821,59 @@ def foto_resena(nombre):
     return send_from_directory(CARPETA_FOTOS_RESENAS, secure_filename(nombre))
 
 
-@app.route("/entrar", methods=["GET", "POST"])
-def entrar_correo():
-    """Antes de hablar con la psicóloga o con un asistente se pone el correo del liceo."""
+def siguiente_seguro():
     siguiente = request.values.get("siguiente") or url_for("chatbot")
     if not siguiente.startswith("/") or siguiente.startswith("//"):
         siguiente = url_for("chatbot")
+    return siguiente
+
+
+def dejar_entrar(correo, siguiente):
+    session["token"] = token_de_correo(correo, session.get("token"))
+    session["correo"] = correo
+    session["entrada_chat"] = siguiente  # deja pasar una vez a ese chat
+    return redirect(siguiente)
+
+
+def pagina_entrar(siguiente, error=None):
+    return render_template("entrar_correo.html", error=error, siguiente=siguiente,
+                           dominios=DOMINIOS_CORREO, google_client_id=GOOGLE_CLIENT_ID)
+
+
+@app.route("/entrar", methods=["GET", "POST"])
+def entrar_correo():
+    """Antes de hablar con la psicóloga o con un asistente se entra con el correo
+    del liceo: con el botón de Google si está configurado, o escribiéndolo."""
+    siguiente = siguiente_seguro()
     error = None
     if request.method == "POST":
         correo = request.form.get("correo", "").strip().lower()
-        if not csrf_valido():
+        if GOOGLE_CLIENT_ID:
+            error = "Entra con el botón de Google."  # escrito a mano no se puede comprobar
+        elif not csrf_valido():
             error = "La página se venció. Vuelve a escribir tu correo."
         elif not correo_valido(correo):
             error = "Usa un correo que termine en @" + ", @".join(DOMINIOS_CORREO) + "."
         else:
-            session["token"] = token_de_correo(correo, session.get("token"))
-            session["correo"] = correo
-            session["entrada_chat"] = siguiente  # deja pasar una vez a ese chat
-            return redirect(siguiente)
-    return render_template("entrar_correo.html", error=error, siguiente=siguiente, dominios=DOMINIOS_CORREO)
+            return dejar_entrar(correo, siguiente)
+    return pagina_entrar(siguiente, error)
+
+
+@app.route("/entrar/google", methods=["POST"])
+def entrar_google():
+    """Recibe el inicio de sesión del botón de Google y deja entrar solo a
+    cuentas del liceo que Google confirma."""
+    siguiente = siguiente_seguro()
+    if not GOOGLE_CLIENT_ID:
+        return redirect(url_for("entrar_correo", siguiente=siguiente))
+    if not csrf_valido():
+        return pagina_entrar(siguiente, "La página se venció. Vuelve a intentarlo.")
+    correo = correo_de_google(request.form.get("credential", ""))
+    if not correo:
+        return pagina_entrar(siguiente, "No se pudo comprobar tu cuenta de Google. Vuelve a intentarlo.")
+    if not correo_valido(correo):
+        return pagina_entrar(siguiente, "Entra con tu cuenta del liceo (@" + ", @".join(DOMINIOS_CORREO) + ").")
+    return dejar_entrar(correo, siguiente)
 
 
 @app.route("/entrar/cambiar")
@@ -1243,7 +1325,7 @@ def psicologa_conversacion(token):
 def psicologa_estadisticas():
     if not session.get("es_psicologa"):
         return redirect(url_for("psicologa_login"))
-    return render_template("psicologa_estadisticas.html", stats=obtener_estadisticas())
+    return render_template("psicologa_estadisticas.html", conversaciones=obtener_conversaciones_por_dia())
 
 
 # ---------------------------------------------------------------------------

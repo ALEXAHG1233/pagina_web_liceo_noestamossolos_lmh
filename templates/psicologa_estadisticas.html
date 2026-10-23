@@ -9,35 +9,58 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='css/diario.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/estadisticas.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/pop.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/pop_panel.css') }}">
 </head>
 <body class="diario-body">
 
   <header class="diario-header">
-    <a href="{{ url_for('psicologa') }}" class="volver">← Volver al panel</a>
+    {% include "_menu_panel.html" %}
     <h1>Estadísticas</h1>
   </header>
 
-  <section class="stats-grid">
-    <div class="stat-card">
-      <span class="stat-numero">{{ stats.visitas }}</span>
-      <span class="stat-texto">Visitas a la página</span>
+  <section class="grafica-tarjeta" aria-labelledby="grafica-titulo">
+    <div class="grafica-cabeza">
+      <div>
+        <h2 id="grafica-titulo">Conversaciones por día</h2>
+        <p class="grafica-sub">Cada barra es un día. Los colores dicen el riesgo más alto que tuvo cada conversación ese día.</p>
+      </div>
+      <div class="grafica-rango" role="group" aria-label="Período">
+        <button type="button" data-dias="7">7 días</button>
+        <button type="button" data-dias="30" class="activo" aria-pressed="true">30 días</button>
+        <button type="button" data-dias="90">90 días</button>
+        <button type="button" data-dias="0">Todo</button>
+      </div>
     </div>
-    <div class="stat-card">
-      <span class="stat-numero">{{ stats.teleorientaciones }}</span>
-      <span class="stat-texto">Tele-orientaciones (chatbot)</span>
+
+    <div class="grafica-totales">
+      <div><span class="grafica-numero" id="total-periodo">0</span><span class="grafica-etiqueta">conversaciones en el período</span></div>
+      <div><span class="grafica-numero">{{ conversaciones.total }}</span><span class="grafica-etiqueta">conversaciones en total</span></div>
+      <div><span class="grafica-numero">{{ conversaciones.con_psicologa }}</span><span class="grafica-etiqueta">atendidas por la psicóloga</span></div>
+      <div><span class="grafica-numero">{{ conversaciones.con_asistente }}</span><span class="grafica-etiqueta">con un asistente</span></div>
     </div>
-    <div class="stat-card">
-      <span class="stat-numero">{{ stats.teleconsultas }}</span>
-      <span class="stat-texto">Tele-consultas (con la psicóloga)</span>
+
+    <ul class="grafica-leyenda" id="grafica-leyenda"></ul>
+    <div class="grafica-area" id="grafica-area">
+      <svg id="grafica" role="img" aria-labelledby="grafica-titulo"></svg>
+      <div class="grafica-tooltip" id="grafica-tooltip" hidden></div>
     </div>
-    <div class="stat-card">
-      <span class="stat-numero">{{ stats.tests_realizados }}</span>
-      <span class="stat-texto">Autoevaluaciones realizadas</span>
-    </div>
+    <p class="grafica-vacia" id="grafica-vacia" hidden>Todavía no hay conversaciones en este período.</p>
+
+    <details class="grafica-tabla">
+      <summary>Ver como tabla</summary>
+      <table>
+        <thead><tr><th>Día</th><th>Bajo</th><th>Medio</th><th>Alto</th><th>Crítico</th><th>Total</th></tr></thead>
+        <tbody id="tabla-cuerpo"></tbody>
+      </table>
+    </details>
   </section>
 
-  <p class="stats-nota">Estos números son totales acumulados desde que la página está en funcionamiento. No incluyen nombres ni datos personales — solo conteos.</p>
+  <p class="stats-nota">Solo se cuentan conversaciones, nunca nombres ni mensajes. Una conversación que habló varios días cuenta una vez en cada día.</p>
 
+  <script>window.CONVERSACIONES_POR_DIA = {{ conversaciones.dias | tojson }};</script>
   <script src="{{ url_for('static', filename='js/common.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/estadisticas.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/flip_fade.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/wave_grid.js') }}"></script>
 </body>
 </html>

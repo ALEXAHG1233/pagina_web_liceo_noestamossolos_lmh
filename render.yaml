@@ -35,3 +35,13 @@ services:
         sync: false
       - key: ANTHROPIC_API_KEY
         sync: false           # opcional: sin ella el asistente usa respuestas por reglas
+      - key: GOOGLE_CLIENT_ID
+        sync: false           # ID de cliente de Google: los chats piden entrar con la cuenta del liceo
+      - key: CLAVE_MAYRA_RODRIGUEZ
+        sync: false
+      - key: CLAVE_SUBTENIENTE_ALEMAN
+        sync: false
+      - key: CLAVE_LESLY_RUIZ
+        sync: false
+      - key: CLAVE_LIC_GEMMI
+        sync: false

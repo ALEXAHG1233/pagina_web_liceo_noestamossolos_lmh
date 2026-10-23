@@ -30,6 +30,8 @@
 }
 
 .login-form { display: flex; flex-direction: column; gap: 10px; }
+/* Botón "Iniciar sesión con Google" centrado */
+.login-google { display: flex; justify-content: center; min-height: 44px; margin: 8px 0; }
 .login-form input {
   padding: 11px 14px;
   border: 1px solid #d3d1c7;
@@ -66,3 +68,123 @@
 .login-etiqueta { text-align: left; font-size: 12px; font-weight: 600; color: var(--verde-liceo); margin-bottom: -4px; }
 .login-urgencia { margin: 18px 0 0; font-size: 12px; line-height: 1.5; color: #5f5d55; }
 .login-urgencia a { color: #a32d2d; font-weight: 700; }
+
+/* Tarjeta para entrar a los chats (templates/entrar_correo.html).
+   Diseño basado en Uiverse.io por D3OXY: gris claro, bordes negros y
+   sombras sólidas; los botones se llenan de negro al pasar el mouse. */
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; }
+.form-entrar {
+  --background: #d3d3d3;
+  --input-focus: #2d8cf0;
+  --font-color: #323232;
+  --font-color-sub: #666;
+  --bg-color: #fff;
+  --main-color: #323232;
+  width: min(330px, calc(100% - 32px));
+  padding: 20px;
+  background: var(--background);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  border-radius: 5px;
+  border: 2px solid var(--main-color);
+  box-shadow: 4px 4px var(--main-color);
+}
+.form-entrar-titulo {
+  align-self: flex-start;
+  font-family: var(--letra-titulo);
+  color: var(--font-color);
+  font-weight: 700;
+  font-size: 22px;
+  margin: 0 0 4px;
+  display: flex;
+  flex-direction: column;
+}
+.form-entrar-titulo > span {
+  font-family: var(--letra-texto);
+  color: var(--font-color-sub);
+  font-weight: 600;
+  font-size: 16px;
+}
+.form-entrar-nota { margin: 0; font-size: 14px; color: var(--font-color); align-self: flex-start; }
+.form-entrar .login-error { align-self: stretch; margin: 0; }
+.form-entrar-correo { display: flex; flex-direction: column; align-items: center; gap: 18px; width: 100%; }
+
+.form-entrar .separator {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+.form-entrar .separator > div {
+  flex: 1;
+  max-width: 100px;
+  height: 3px;
+  border-radius: 5px;
+  background-color: var(--font-color-sub);
+}
+.form-entrar .separator > span { color: var(--font-color); font-weight: 600; font-size: 13px; }
+
+.form-entrar .oauthButton {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  width: 250px;
+  max-width: 100%;
+  height: 40px;
+  padding: 0 15px;
+  border-radius: 5px;
+  border: 2px solid var(--main-color);
+  background-color: var(--bg-color);
+  box-shadow: 4px 4px var(--main-color);
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--font-color);
+  cursor: pointer;
+  transition: all 250ms;
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+}
+.form-entrar .oauthButton::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 0;
+  background-color: #212121;
+  z-index: -1;
+  box-shadow: 4px 8px 19px -3px rgba(0, 0, 0, 0.27);
+  transition: all 250ms;
+}
+.form-entrar .oauthButton:hover { color: #e8e8e8; }
+.form-entrar .oauthButton:hover::before { width: 100%; }
+.form-entrar .oauthButton:disabled { cursor: wait; opacity: 0.8; }
+.form-entrar .oauthButton:focus-visible { outline: 3px solid var(--input-focus); outline-offset: 3px; }
+/* El botón de Google lo dibuja Google: aquí solo va el marco */
+.form-entrar .oauth-google { height: auto; min-height: 44px; padding: 0; background: #fff; cursor: default; }
+.form-entrar .oauth-google::before { display: none; }
+
+.form-entrar input[type="email"] {
+  width: 250px;
+  max-width: 100%;
+  height: 40px;
+  border-radius: 5px;
+  border: 2px solid var(--main-color);
+  background-color: var(--bg-color);
+  box-shadow: 4px 4px var(--main-color);
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--font-color);
+  padding: 5px 10px;
+  outline: none;
+}
+.form-entrar input[type="email"]:focus { border-color: var(--input-focus); }
+.form-entrar .icon { width: 1.5rem; height: 1.5rem; flex: none; }
+.form-entrar .login-urgencia { margin: -6px 0 0; text-align: center; color: var(--font-color); }
+.form-entrar .login-volver { margin: 0; color: var(--font-color); }

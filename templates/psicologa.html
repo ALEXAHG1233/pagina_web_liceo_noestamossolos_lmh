@@ -7,6 +7,7 @@
   {% include "_cabeza.html" %}
   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/pop.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/pop_panel.css') }}">
 </head>
 <body class="panel-body">
   <div class="panel-container">
@@ -32,11 +33,7 @@
             <h1 id="chat-titulo">Selecciona una conversación</h1>
             <p id="chat-riesgo" class="chat-riesgo" hidden></p>
           </div>
-          <div class="acciones-header">
-            <a href="{{ url_for('psicologa_contenido') }}" class="btn-sonido">Contenido de la página</a>
-            <a href="{{ url_for('psicologa_estadisticas') }}" class="btn-sonido">Estadísticas</a>
-            <a href="{{ url_for('psicologa_logout') }}" class="btn-sonido">Cerrar sesión</a>
-          </div>
+          {% include "_menu_panel.html" %}
         </div>
         <button id="btn-activar-sonido" class="btn-sonido">Activar alertas sonoras</button>
         <div id="selector-fondo" class="selector-fondo">
@@ -55,5 +52,7 @@
   <script src="{{ url_for('static', filename='js/sonidos.js') }}"></script>
   <script src="{{ url_for('static', filename='js/common.js') }}"></script>
   <script src="{{ url_for('static', filename='js/psicologa.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/flip_fade.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/wave_grid.js') }}"></script>
 </body>
 </html>

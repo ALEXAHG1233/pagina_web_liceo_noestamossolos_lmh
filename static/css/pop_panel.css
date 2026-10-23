@@ -1,0 +1,242 @@
+/* Botones "pop" del panel de la psicóloga: borde negro y una sombra sólida
+   corrida. Al pasar el mouse el botón se levanta (la sombra crece) y al
+   tocarlo se hunde sobre su sombra, como un botón de verdad.
+   Solo lo cargan las páginas del panel; va después de pop.css. */
+button:not(.fondo-swatch):not([disabled]),
+.btn-sonido,
+.pc-boton,
+.pc-accion,
+.volver {
+  --pop-sombra: 4px;
+  border: 2px solid #111 !important;
+  box-shadow: var(--pop-sombra) var(--pop-sombra) 0 #111;
+  font-weight: 700;
+  cursor: pointer;
+  translate: 0 0;
+}
+
+/* Los filtros de riesgo son más chicos: sombra más corta */
+.filtro-riesgo button:not([disabled]) { --pop-sombra: 3px; }
+
+@media (hover: hover) {
+  button:not(.fondo-swatch):not([disabled]):hover,
+  .btn-sonido:hover,
+  .pc-boton:hover,
+  .pc-accion:hover,
+  .volver:hover {
+    translate: -2px -2px;
+    box-shadow: calc(var(--pop-sombra) + 2px) calc(var(--pop-sombra) + 2px) 0 #111;
+  }
+}
+
+button:not(.fondo-swatch):not([disabled]):active,
+.btn-sonido:active,
+.pc-boton:active,
+.pc-accion:active,
+.volver:active {
+  translate: var(--pop-sombra) var(--pop-sombra);
+  box-shadow: 0 0 0 #111;
+}
+
+button:not(.fondo-swatch):focus-visible,
+.btn-sonido:focus-visible,
+.pc-boton:focus-visible,
+.pc-accion:focus-visible,
+.volver:focus-visible {
+  outline: 3px solid #f5c400;
+  outline-offset: 3px;
+}
+
+/* El botón ya usado ("Alertas sonoras activadas") queda plano */
+button[disabled] {
+  border: 2px solid #111;
+  box-shadow: none;
+  opacity: 0.7;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  button, .btn-sonido, .pc-boton, .pc-accion, .volver { translate: none !important; }
+}
+
+/* Letras que giran y aparecen (las arma static/js/flip_fade.js) */
+.flip-palabra { display: inline-block; white-space: nowrap; }
+.flip-letra { display: inline-block; transform-origin: 50% 100%; backface-visibility: hidden; }
+.flip-entra .flip-letra { animation: flipEntra 520ms cubic-bezier(0.22, 1, 0.36, 1) both; }
+.flip-sale .flip-letra { animation: flipSale 320ms ease-in both; }
+@keyframes flipEntra {
+  from { opacity: 0; transform: perspective(400px) rotateX(-90deg) translateY(0.3em); filter: blur(3px); }
+  to   { opacity: 1; transform: perspective(400px) rotateX(0) translateY(0); filter: blur(0); }
+}
+@keyframes flipSale {
+  from { opacity: 1; transform: perspective(400px) rotateX(0); filter: blur(0); }
+  to   { opacity: 0; transform: perspective(400px) rotateX(90deg) translateY(-0.3em); filter: blur(3px); }
+}
+/* Frase con la palabra que cambia, debajo del título */
+.flip-lema { margin: -4px 0 12px; font-size: 15px; color: #555; }
+.flip-lema [data-flip-palabras] { font-weight: 800; color: #1f5c3a; }
+
+/* Fondo de cuadrícula con ondas (lo dibuja static/js/wave_grid.js):
+   fijo detrás de todo el contenido y sin atrapar los clics */
+.fondo-ondas {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: -1;
+  pointer-events: none;
+}
+
+/* Menú de vidrio del panel (templates/_menu_panel.html).
+   Basado en el diseño de Uiverse.io por mymiamo. */
+.menu {
+  --glass-border: rgba(255, 255, 255, 0.45);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  position: relative;
+  isolation: isolate;
+  width: calc(100% - 20px);
+  max-width: 520px;
+  margin: 0 auto 10px;
+  backdrop-filter: blur(12px) saturate(180%) contrast(200%);
+  -webkit-backdrop-filter: blur(12px) saturate(180%) contrast(200%);
+  background: rgba(0, 122, 255, 0.404);
+  border: 1px solid var(--glass-border);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
+  padding: 8px;
+  border-radius: 99rem;
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  z-index: 50;
+}
+.menu::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  box-shadow:
+    inset 2px 2px 5px -2px rgba(255, 255, 255, 0.4),
+    inset -2px -2px 5px 2px rgba(255, 255, 255, 0.4),
+    inset 0 -2px 0 rgba(255, 255, 255, 0.2);
+  pointer-events: none;
+  z-index: -1;
+}
+.menu a {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1 1 0;
+  min-width: 0;
+  color: rgba(255, 255, 255, 0.9);
+  text-decoration: none;
+  padding: 10px 6px;
+  border-radius: 999rem;
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    background 0.18s var(--ease-spring),
+    color 0.18s var(--ease-spring),
+    transform 0.18s var(--ease-spring),
+    box-shadow 0.3s ease-in-out;
+}
+.menu a:hover {
+  background-color: rgba(255, 255, 255, 0.3);
+  box-shadow:
+    inset 2px 2px 5px -2px rgba(255, 255, 255, 0.4),
+    inset -2px -1px 5px 0 rgba(255, 255, 255, 0.4),
+    inset 0 -2px 0 rgba(255, 255, 255, 0.2);
+  color: rgba(0, 122, 255, 0.7);
+}
+.menu a svg { width: 1.4rem; height: 1.4rem; }
+.menu a span {
+  font-size: 0.8rem;
+  font-weight: 600;
+  line-height: 1.1;
+  margin-top: 4px;
+  max-width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+/* Pantallas angostas: letras y espacios más chicos para que quepan las 4 */
+@media (max-width: 420px) {
+  .menu { gap: 2px; padding: 6px; }
+  .menu a { padding: 8px 2px; }
+  .menu a span { font-size: 0.66rem; }
+}
+.menu a.active {
+  background: rgba(237, 237, 237, 0.6);
+  color: rgba(0, 122, 255, 0.9);
+}
+.menu a:active { transform: scale(0.98); }
+.menu a:focus-visible { outline: 3px solid #f5c400; outline-offset: 2px; }
+/* En pantallas angostas el chat no puede ser más ancho que la pantalla
+   (antes se salía por la derecha y cortaba el menú y el botón Enviar) */
+.panel-container .chat-container { min-width: 0; width: 100%; }
+.panel-container .form-mensaje input { min-width: 0; }
+/* En el panel de chats el menú va a la derecha del título */
+.chat-header-top .menu { margin: 0; flex: 1 1 300px; min-width: 0; max-width: 420px; }
+
+/* Chat del panel con estilo de tarjeta de chat
+   (basado en el diseño de Uiverse.io por ahmed150up):
+   encabezado oscuro, ventana blanca, fila de escribir con línea arriba y
+   botón Enviar oscuro que se vuelve blanco al pasar el mouse. */
+.panel-body .chat-container {
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+@media (min-width: 700px) {
+  .panel-body .chat-container { margin: 10px; height: calc(100vh - 20px); }
+}
+.panel-body .chat-header {
+  background: #333;
+  color: #fff;
+  padding: 10px 14px;
+  font-size: 18px;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+}
+.panel-body .chat-header::after { display: none; }
+.panel-body .mensajes { overflow-y: scroll; }
+.panel-body .form-mensaje {
+  align-items: center;
+  padding: 10px;
+  border-top: 1px solid #ccc;
+  background: #fff;
+}
+.panel-body .form-mensaje input {
+  flex: 1;
+  border: none;
+  border-radius: 0;
+  outline: none;
+  padding: 5px;
+  font-size: 14px;
+  box-shadow: none;
+}
+.panel-body .form-mensaje input:focus { box-shadow: none; }
+/* El botón Enviar lleva el estilo de la tarjeta en vez del "pop" */
+.panel-body .form-mensaje button:not([disabled]) {
+  border: none !important;
+  outline: none;
+  border-radius: 0;
+  background-color: #333;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 400;
+  padding: 5px 10px;
+  cursor: pointer;
+  box-shadow: none;
+  translate: 0 0;
+  transform: none;
+  transition: background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+}
+.panel-body .form-mensaje button:not([disabled]):hover {
+  background-color: rgb(255, 255, 255);
+  color: rgb(0, 0, 0);
+  box-shadow: 0 4px 18px 0 rgba(0, 0, 0, 0.25);
+  translate: 0 0;
+  transform: none;
+}
+.panel-body .form-mensaje button:not([disabled]):active { translate: 0 0; box-shadow: none; }
+.panel-body .form-mensaje button:focus-visible { outline: 3px solid #f5c400; outline-offset: 2px; }

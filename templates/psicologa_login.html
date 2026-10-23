@@ -8,10 +8,12 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/pop.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/pop_panel.css') }}">
 </head>
 <body class="login-body">
   <div class="login-card">
     <h1>Panel de la psicóloga</h1>
+    <p class="flip-lema">Aquí estamos para <span data-flip-palabras="escuchar|acompañar|cuidar|orientar">escuchar</span></p>
     <p class="login-nota">Acceso privado. Solo para el personal autorizado del liceo.</p>
 
     {% if error %}
@@ -27,5 +29,7 @@
     <a href="{{ url_for('index') }}" class="login-volver">← Volver al inicio</a>
   </div>
   <script src="{{ url_for('static', filename='js/common.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/flip_fade.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/wave_grid.js') }}"></script>
 </body>
 </html>

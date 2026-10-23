@@ -33,3 +33,63 @@
 @media (min-width: 420px) {
   .stats-grid { grid-template-columns: repeat(4, 1fr); }
 }
+
+/* Gráfica de conversaciones por día (la dibuja static/js/estadisticas.js).
+   Va en una tarjeta blanca: los colores de riesgo se eligieron para fondo claro. */
+.grafica-tarjeta {
+  margin: 20px;
+  padding: 18px 18px 14px;
+  background: #fcfcfb;
+  color: #1c1c1a;
+  border: 2px solid #111;
+  border-radius: 16px;
+  box-shadow: 5px 5px 0 #111;
+}
+.grafica-cabeza { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; align-items: flex-start; }
+.grafica-cabeza h2 { margin: 0; font-size: 18px; color: #1c1c1a; }
+.grafica-sub { margin: 4px 0 0; font-size: 13px; color: #5b5a55; max-width: 46ch; }
+.grafica-rango { display: flex; flex-wrap: wrap; gap: 8px; }
+.grafica-rango button:not([disabled]) {
+  background: #fff; color: #1c1c1a; border-radius: 999px; padding: 6px 12px; font-size: 13px;
+  --pop-sombra: 3px;
+}
+.grafica-rango button.activo:not([disabled]) { background: #1f5c3a; color: #fff; }
+
+.grafica-totales { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin: 16px 0 10px; }
+.grafica-totales > div { display: flex; flex-direction: column; }
+.grafica-numero { font-size: 28px; font-weight: 800; color: #1c1c1a; line-height: 1.1; }
+.grafica-etiqueta { font-size: 12px; color: #5b5a55; }
+@media (min-width: 640px) { .grafica-totales { grid-template-columns: repeat(4, 1fr); } }
+
+.grafica-leyenda { display: flex; flex-wrap: wrap; gap: 6px 16px; list-style: none; padding: 0; margin: 6px 0 8px; font-size: 13px; color: #1c1c1a; }
+.grafica-leyenda li, .grafica-tooltip li { display: flex; align-items: center; gap: 6px; }
+.muestra { width: 12px; height: 12px; border-radius: 3px; flex: none; }
+
+.grafica-area { position: relative; width: 100%; }
+#grafica { display: block; width: 100%; overflow: visible; }
+#grafica .eje-guia { stroke: #e7e5df; stroke-width: 1; }
+#grafica .eje-base { stroke: #a9a79f; stroke-width: 1; }
+#grafica .eje-texto { font-size: 11px; fill: #6f6d66; }
+#grafica .barra { transition: opacity 150ms ease; }
+#grafica .barra.apagada { opacity: 0.3; }
+#grafica .zona { fill: transparent; cursor: pointer; }
+
+.grafica-tooltip {
+  position: absolute; z-index: 2; pointer-events: none; min-width: 170px;
+  background: #fff; color: #1c1c1a; border: 2px solid #111; border-radius: 10px;
+  box-shadow: 3px 3px 0 #111; padding: 8px 10px; font-size: 12px;
+}
+.grafica-tooltip strong { display: block; margin-bottom: 4px; }
+.grafica-tooltip strong::first-letter { text-transform: uppercase; }
+.grafica-tooltip ul { list-style: none; margin: 0; padding: 0; }
+.grafica-tooltip li b { margin-left: auto; padding-left: 12px; }
+.grafica-tooltip p { margin: 6px 0 0; padding-top: 4px; border-top: 1px solid #e7e5df; display: flex; }
+.grafica-tooltip p b { margin-left: auto; }
+
+.grafica-vacia { text-align: center; color: #5b5a55; font-size: 13px; margin: 4px 0 0; }
+
+.grafica-tabla { margin-top: 12px; font-size: 13px; }
+.grafica-tabla summary { cursor: pointer; font-weight: 700; color: #1f5c3a; }
+.grafica-tabla table { width: 100%; border-collapse: collapse; margin-top: 8px; }
+.grafica-tabla th, .grafica-tabla td { padding: 5px 6px; text-align: right; border-bottom: 1px solid #e7e5df; }
+.grafica-tabla th:first-child, .grafica-tabla td:first-child { text-align: left; }

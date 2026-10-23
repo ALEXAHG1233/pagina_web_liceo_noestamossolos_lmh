@@ -8,10 +8,13 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/diario.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/panel_contenido.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/pop.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/pop_panel.css') }}">
 </head>
 <body class="diario-body panel-contenido">
 
   <header class="diario-header">
+    {% include "_menu_panel.html" %}
     <a href="{{ url_for('psicologa_contenido', _anchor='articulos' if tipo == 'articulo' else 'herramientas') }}" class="volver">← Volver al contenido</a>
     <h1>{{ 'Nuevo' if nuevo else 'Editar' }} {{ 'artículo' if tipo == 'articulo' else 'herramienta' }}</h1>
   </header>
@@ -64,5 +67,7 @@
   </section>
 
   <script src="{{ url_for('static', filename='js/common.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/flip_fade.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/wave_grid.js') }}"></script>
 </body>
 </html>

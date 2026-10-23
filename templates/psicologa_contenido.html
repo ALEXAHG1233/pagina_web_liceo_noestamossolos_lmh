@@ -8,11 +8,13 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/diario.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/panel_contenido.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/pop.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/pop_panel.css') }}">
 </head>
 <body class="diario-body panel-contenido">
 
   <header class="diario-header">
-    <a href="{{ url_for('psicologa') }}" class="volver">← Volver a los chats</a>
+    {% include "_menu_panel.html" %}
     <h1>Contenido de la página</h1>
   </header>
 
@@ -181,5 +183,7 @@
   </section>
 
   <script src="{{ url_for('static', filename='js/common.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/flip_fade.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/wave_grid.js') }}"></script>
 </body>
 </html>
