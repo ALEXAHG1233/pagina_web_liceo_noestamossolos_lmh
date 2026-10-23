@@ -183,7 +183,26 @@ async function abrirChat(token) {
   chat.mensajes.forEach((m) => agregarMensajeDOM(m));
 }
 
-const AVATARES = { estudiante: "E", psicologa: "P", asistente: "A" };
+const AVATARES = { estudiante: "🎒", psicologa: "🌷", asistente: "🐯" };
+
+// Saludo según la hora y una frase bonita distinta cada vez que se abre el panel
+(function saludar() {
+  const hola = document.getElementById("saludo-hola");
+  const frase = document.getElementById("saludo-frase");
+  if (!hola) return;
+  const hora = new Date().getHours();
+  const inicio = hora < 12 ? "¡Buenos días" : hora < 19 ? "¡Buenas tardes" : "¡Buenas noches";
+  const icono = hora < 12 ? "☀️" : hora < 19 ? "🌸" : "🌙";
+  hola.textContent = `${inicio}, ${hola.dataset.nombre}! ${icono}`;
+  const FRASES = [
+    "Gracias por cuidar a los estudiantes 💚",
+    "Escuchar también es ayudar 🫶",
+    "Un mensaje tuyo puede cambiar un día ✨",
+    "Respira hondo, vas muy bien 🌿",
+    "Hoy también estás haciendo la diferencia 🌷",
+  ];
+  frase.textContent = FRASES[Math.floor(Math.random() * FRASES.length)];
+})();
 
 function agregarMensajeDOM({ emisor, contenido, nivel, categorias, fecha, autor }) {
   const fila = document.createElement("div");

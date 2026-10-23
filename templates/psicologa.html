@@ -12,14 +12,20 @@
 <body class="panel-body">
   <div class="panel-container">
     <aside class="lista-chats">
-      <p class="panel-quien">Sesión de {{ nombre_panel }}</p>
+      <div class="saludo-panel">
+        <img src="{{ url_for('static', filename='images/tigrito_sin_fondo.png') }}" alt="" class="saludo-tigrito">
+        <div>
+          <p class="saludo-hola" id="saludo-hola" data-nombre="{{ nombre_panel }}">¡Hola, {{ nombre_panel }}! 🌸</p>
+          <p class="saludo-frase" id="saludo-frase">Gracias por cuidar a los estudiantes 💚</p>
+        </div>
+      </div>
       <h2>Conversaciones</h2>
       <div class="filtro-riesgo" role="group" aria-label="Filtro de riesgo">
-        <button type="button" data-nivel="todos" class="activo" aria-pressed="true">Todas <span>0</span></button>
-        <button type="button" data-nivel="critico" class="nivel-critico" aria-pressed="false">Crítico <span>0</span></button>
-        <button type="button" data-nivel="alto" class="nivel-alto" aria-pressed="false">Alto <span>0</span></button>
-        <button type="button" data-nivel="medio" class="nivel-medio" aria-pressed="false">Medio <span>0</span></button>
-        <button type="button" data-nivel="bajo" class="nivel-bajo" aria-pressed="false">Bajo <span>0</span></button>
+        <button type="button" data-nivel="todos" class="activo" aria-pressed="true">✨ Todas <span>0</span></button>
+        <button type="button" data-nivel="critico" class="nivel-critico" aria-pressed="false">🚨 Crítico <span>0</span></button>
+        <button type="button" data-nivel="alto" class="nivel-alto" aria-pressed="false">🔥 Alto <span>0</span></button>
+        <button type="button" data-nivel="medio" class="nivel-medio" aria-pressed="false">🌼 Medio <span>0</span></button>
+        <button type="button" data-nivel="bajo" class="nivel-bajo" aria-pressed="false">🌿 Bajo <span>0</span></button>
       </div>
       <input type="search" id="buscar-correo" class="buscar-correo" placeholder="Buscar por correo" aria-label="Buscar por correo">
       <ul id="lista-tokens"></ul>
@@ -40,10 +46,18 @@
           <span>Fondo:</span>
         </div>
       </header>
-      <div id="mensajes" class="mensajes"></div>
+      <div id="mensajes" class="mensajes">
+        {# Se ve hasta que se abre una conversación (psicologa.js lo reemplaza) #}
+        <div class="chat-vacio">
+          <span class="chat-vacio-corazones" aria-hidden="true"><i>♡</i><i>✦</i><i>♡</i><i>✦</i><i>♡</i></span>
+          <img src="{{ url_for('static', filename='images/tigrito_sin_fondo.png') }}" alt="" class="chat-vacio-tigrito">
+          <p class="chat-vacio-titulo">Elige una conversación de la lista 💌</p>
+          <p class="chat-vacio-texto">Aquí vas a ver los mensajes. Cada respuesta tuya puede hacer el día de alguien un poquito mejor.</p>
+        </div>
+      </div>
       <form id="form-mensaje" class="form-mensaje">
-        <input type="text" id="input-mensaje" placeholder="Responder..." autocomplete="off" required>
-        <button type="submit">Enviar</button>
+        <input type="text" id="input-mensaje" placeholder="Escribe una respuesta con cariño…" autocomplete="off" required>
+        <button type="submit">Enviar 💌</button>
       </form>
     </main>
   </div>
